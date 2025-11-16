@@ -5,8 +5,9 @@ import { getSwaggerConfig } from 'src/config';
 export const setupSwagger = (app: INestApplication) => {
 	const config = getSwaggerConfig();
 
-	const documentFactory = () => SwaggerModule.createDocument(app, config);
-	SwaggerModule.setup('/docs', app, documentFactory, {
+	const document = SwaggerModule.createDocument(app, config);
+
+	SwaggerModule.setup('/docs', app, document, {
 		customSiteTitle: 'Uptime Monitoring API Docs',
 		jsonDocumentUrl: '/docs/json',
 		yamlDocumentUrl: '/docs/yaml',

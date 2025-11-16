@@ -1,0 +1,18 @@
+model User {
+  id String @id @default(uuid())
+
+  email    String  @unique
+  password String?
+
+  emailVerified Boolean @default(false) @map("email_verified")
+
+  role UserRole @default(USER)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  providers UserProvider[]
+  tokens    Token[]
+
+  @@map("users")
+}

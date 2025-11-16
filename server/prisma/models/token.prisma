@@ -1,0 +1,19 @@
+model Token {
+  id String @id @default(uuid())
+
+  userId String @map("user_id")
+
+  hashedValidator String  @map("hashed_validator")
+  selector        String?
+
+  type TokenType
+
+  createdAt DateTime @default(now()) @map("created_at")
+  expiresAt DateTime @map("expires_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([selector, type])
+  @@index([userId, type])
+  @@map("tokens")
+}

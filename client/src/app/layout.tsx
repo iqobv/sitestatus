@@ -9,7 +9,10 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-	title: 'Uptime Monitor',
+	title: {
+		default: 'Uptime Monitor',
+		template: '%s - Uptime Monitor',
+	},
 	description: 'Monitor the uptime of your services easily.',
 };
 

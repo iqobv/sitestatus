@@ -1,0 +1,38 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+'use client';
+
+export const fetcher = async <T>(
+	url: string,
+	init?: RequestInit,
+	token?: string
+): Promise<T> => {
+	const isFormData = init?.body instanceof FormData;
+
+	const res = await fetch(url, {
+		...init,
+		...(!!token ? { Credentials: 'include' } : {}),
+		headers: {
+			...(isFormData ? {} : { 'Content-Type': 'application/json' }),
+			...(!!token ? { Authorization: `Bearer ${token}` } : {}),
+			...init?.headers,
+		},
+	});
+
+	let data: any = null;
+	const text = await res.text();
+
+	if (text) {
+		try {
+			data = JSON.parse(text);
+		} catch {
+			data = text;
+		}
+	}
+
+	if (!res.ok) {
+		throw new Error(data?.message || res.statusText || 'Something went wrong');
+	}
+
+	return data as T;
+};

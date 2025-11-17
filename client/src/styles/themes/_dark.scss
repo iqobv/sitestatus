@@ -6,4 +6,31 @@ html.dark {
 	--color-main-text: #ffffff;
 	--secondary-color: #b9bec3;
 	--header-height: 70px;
+
+	/* Loader */
+	--loader-color: #ffffff;
+
+	/* Button Variants */
+	--btn-bg-contained: #e5e5e5;
+	--btn-bg-contained-hover: #e5e5e5d4;
+	--btn-color-contained: #171717;
+
+	--btn-bg-secondary: #262626;
+	--btn-bg-secondary-hover: #262626cc;
+	--btn-color-secondary: #fafafa;
+
+	--btn-bg-outlined: #ffffff26;
+	--btn-bg-outlined-hover: #28282833;
+	--btn-border-outlined: #ffffff26;
+	--btn-border-outlined-hover: #ffffff66;
+	--btn-color-outlined: #0d141c;
+
+	--btn-bg-text-hover: #26262699;
+	--btn-color-text: #e8edf2;
+
+	--btn-color-link: #e5e5e5;
+
+	--btn-danger-bg: #ff6467;
+	--btn-danger-bg-hover: #ff6467b3;
+	--btn-danger-color: #ffffff;
 }

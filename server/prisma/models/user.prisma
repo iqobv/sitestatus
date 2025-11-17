@@ -13,6 +13,7 @@ model User {
 
   providers UserProvider[]
   tokens    Token[]
+  monitors  Monitor[]
 
   @@map("users")
 }

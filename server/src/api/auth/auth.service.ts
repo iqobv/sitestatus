@@ -10,6 +10,7 @@ import { Request, Response } from 'express';
 import { TokenType, User } from 'generated/prisma/client';
 import ms, { StringValue } from 'ms';
 import { getCookieConfig } from 'src/config';
+import { MailService } from 'src/infra/mail/mail.service';
 import { comparePassword } from 'src/libs/utils';
 import { TokenService } from '../token/token.service';
 import { CreateUserDto } from '../user/dto';
@@ -23,6 +24,7 @@ export class AuthService {
 		private readonly tokenService: TokenService,
 		private readonly jwtService: JwtService,
 		private readonly configService: ConfigService,
+		private readonly mailService: MailService,
 	) {}
 
 	async register(dto: CreateUserDto) {
@@ -37,11 +39,10 @@ export class AuthService {
 			expiresAt,
 		});
 
-		const verificationUrl = `http://localhost:5000/v1/auth/verify-email?userId=${user.id}&token=${token}`;
+		await this.mailService.sendVerficationEmail(user.email, user.id, token);
 
 		return {
 			message: 'Registration successful. Please check your email.',
-			verificationUrl,
 		};
 	}
 

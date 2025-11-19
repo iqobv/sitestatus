@@ -1,6 +1,6 @@
 export const PAGES = {
 	home: '/',
-	verifyEmail: '/verify-email',
+	verifyEmail: '/email-verify',
 	login: '/login',
 	signUp: '/sign-up',
 	dashboard: '/dashboard',

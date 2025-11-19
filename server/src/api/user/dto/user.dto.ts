@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, OmitType } from '@nestjs/swagger';
 
 export class UserDto {
 	@ApiProperty({ example: '22ee1ae1-d8e9-45d2-906c-b7846eee5eaa' })
@@ -22,3 +22,8 @@ export class UserDto {
 	@ApiProperty({ example: new Date().toISOString() })
 	updatedAt: Date;
 }
+
+export class UserWithoutPasswordDto extends OmitType(UserDto, [
+	'password',
+	'updatedAt',
+]) {}

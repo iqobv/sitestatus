@@ -19,6 +19,19 @@ export class OauthController {
 		@Res({ passthrough: true }) res: Response,
 	) {
 		const user = req.user as User;
-		return await this.oauthService.login(user, res);
+		const session = await this.oauthService.login(user, res);
+
+		res.send(`
+			<script>
+				window.opener.postMessage(
+					{
+						accessToken: '${session.accessToken}',
+						user: ${JSON.stringify(session.user)}
+					},
+					'${process.env.GOOGLE_REDIRECT_ORIGIN}'
+				);
+				window.close();
+			</script>
+		`);
 	}
 }

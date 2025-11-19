@@ -14,7 +14,7 @@ export class MailService {
 		this.transport = getMailerConfig(configService);
 	}
 
-	async sendVerficationEmail(email: string, userId: string, token: string) {
+	async sendVerificationEmail(email: string, userId: string, token: string) {
 		const domain = this.configService.getOrThrow<string>('MAIL_TO_URL');
 		const html = await render(
 			VerificationEmailTemplate({ domain, userId, token }),

@@ -5,6 +5,7 @@ import {
 } from '@/api';
 import { QUERY_KEYS } from '@/config';
 import { useTokenStore, useUserStore } from '@/store';
+import { IUser } from '@/types';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
@@ -24,7 +25,7 @@ export const useAuth = () => {
 	const setToken = useTokenStore((state) => state.setToken);
 	const resetToken = useTokenStore((state) => state.resetToken);
 
-	const login = (userData: typeof user, tokenData: string) => {
+	const login = (userData: IUser, tokenData: string) => {
 		setUser(userData);
 		setToken(tokenData);
 		setIsAuthenticated(true);

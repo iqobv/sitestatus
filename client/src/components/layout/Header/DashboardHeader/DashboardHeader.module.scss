@@ -1,0 +1,16 @@
+@use '../../../../styles/mixins' as *;
+
+.header__buttons {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-direction: row;
+}
+
+.header__button-text {
+	display: none;
+
+	@include response('md') {
+		display: inline;
+	}
+}

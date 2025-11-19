@@ -39,10 +39,11 @@ export class AuthService {
 			expiresAt,
 		});
 
-		await this.mailService.sendVerficationEmail(user.email, user.id, token);
+		await this.mailService.sendVerificationEmail(user.email, user.id, token);
 
 		return {
 			message: 'Registration successful. Please check your email.',
+			email: user.email,
 		};
 	}
 
@@ -50,7 +51,11 @@ export class AuthService {
 		const user = await this.validateUser(dto);
 
 		if (!user.emailVerified) {
-			throw new ForbiddenException('Please verify your email first.');
+			throw new ForbiddenException({
+				message: 'Email not verified',
+				code: 'EMAIL_NOT_VERIFIED',
+				email: user.email,
+			});
 		}
 
 		return await this.createSession(user, res);
@@ -79,12 +84,15 @@ export class AuthService {
 
 		this.setRefreshTokenCookie(res, refreshToken, expiresAt);
 
+		const { password: _, ...userWithoutPassword } = user;
+
 		return {
 			accessToken,
+			user: userWithoutPassword,
 		};
 	}
 
-	async verifyEmail(userId: string, token: string) {
+	async verifyEmail(userId: string, token: string, res: Response) {
 		const isValid = await this.tokenService.validateTokenForUser(
 			userId,
 			token,
@@ -97,7 +105,29 @@ export class AuthService {
 
 		await this.userService.update(userId, { emailVerified: true });
 
-		return { message: 'Email verified successfully' };
+		const user = await this.userService.findById(userId);
+
+		const session = await this.createSession(user, res);
+
+		return { message: 'Email verified successfully', ...session };
+	}
+
+	async resendVerificationEmail(email: string) {
+		const user = await this.userService.findByEmail(email);
+
+		if (user && !user.emailVerified) {
+			const token = await this.tokenService.createToken({
+				userId: user.id,
+				type: TokenType.EMAIL_VERIFICATION,
+				expiresAt: new Date(Date.now() + 3600 * 1000),
+			});
+
+			await this.mailService.sendVerificationEmail(user.email, user.id, token);
+		}
+
+		return {
+			message: 'Verification email has sent.',
+		};
 	}
 
 	async refreshTokens(req: Request, res: Response) {
@@ -130,6 +160,7 @@ export class AuthService {
 
 		return {
 			accessToken,
+			user,
 		};
 	}
 

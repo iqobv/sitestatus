@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { PAGES } from './config';
 import { IUser } from './types';
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
 	const cookiesStore = await cookies();
 	const hasSession = cookiesStore.has('refreshToken');
 	const allCookies = cookiesStore.toString();

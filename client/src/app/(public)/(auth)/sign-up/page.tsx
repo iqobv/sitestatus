@@ -1,5 +1,6 @@
 import { Register } from '@/components/auth';
 import { Metadata } from 'next';
+import styles from '../authPage.module.scss'
 
 export const metadata: Metadata = {
 	title: 'Sign Up',
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function SignUpPage() {
 	return (
-		<div>
+		<div className={styles.page}>
 			<Register />
 		</div>
 	);

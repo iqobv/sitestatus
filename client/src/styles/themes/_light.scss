@@ -7,6 +7,10 @@
 	--secondary-color: #464f58;
 	--header-height: 70px;
 
+	/* Section Header */
+	--section-title-color: #0d141c;
+	--section-description-color: #1d1d1e;
+
 	/* Loader */
 	--loader-color: #000;
 
@@ -32,4 +36,12 @@
 	--btn-danger-bg: #e7000bb3;
 	--btn-danger-bg-hover: #e7000bcc;
 	--btn-danger-color: #ffffff;
+
+	/* Inputs & Forms */
+	--input-bg: #f8f8f8;
+	--input-color: #000000;
+	--input-border: #e1e1e1;
+	--input-border-focus: #a1a1a1;
+	--input-border-error: #e7000b;
+	--input-color-error: #ff0000;
 }

@@ -7,5 +7,7 @@ export const QUERY_KEYS = {
 		profile: (token: string) => ['profile', token] as const,
 		verifyEmail: (userId: string, token: string) =>
 			['verifyEmail', userId, token] as const,
+		resendVerificationEmail: (email: string) =>
+			['resendVerificationEmail', email] as const,
 	},
 } as const;

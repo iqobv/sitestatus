@@ -1,38 +1,69 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 'use client';
+
+interface FetcherOptions extends RequestInit {
+	token?: string;
+}
 
 export const fetcher = async <T>(
 	url: string,
-	init?: RequestInit,
-	token?: string
+	options: FetcherOptions = {}
 ): Promise<T> => {
-	const isFormData = init?.body instanceof FormData;
+	const { token, headers, ...restOptions } = options;
 
-	const res = await fetch(url, {
-		...init,
-		...(!!token ? { Credentials: 'include' } : {}),
-		headers: {
+	const getHeaders = (accessToken?: string) => {
+		const isFormData = restOptions.body instanceof FormData;
+		return {
 			...(isFormData ? {} : { 'Content-Type': 'application/json' }),
-			...(!!token ? { Authorization: `Bearer ${token}` } : {}),
-			...init?.headers,
-		},
-	});
+			...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+			...headers,
+		};
+	};
 
-	let data: any = null;
-	const text = await res.text();
+	const performRequest = async (accessToken?: string) => {
+		return fetch(url, {
+			...restOptions,
+			credentials: 'include',
+			headers: getHeaders(accessToken),
+		});
+	};
 
-	if (text) {
+	let res = await performRequest(token);
+
+	if (res.status === 401 && token) {
 		try {
-			data = JSON.parse(text);
-		} catch {
-			data = text;
+			const refreshRes = await fetch('/api/v1/auth/refresh', {
+				method: 'POST',
+				credentials: 'include',
+			});
+
+			if (refreshRes.ok) {
+				const refreshData = await refreshRes.json();
+				const newAccessToken = refreshData.accessToken;
+
+				res = await performRequest(newAccessToken);
+			}
+		} catch (error) {
+			console.error('Auto-refresh failed', error);
 		}
 	}
 
 	if (!res.ok) {
-		throw new Error(data?.message || res.statusText || 'Something went wrong');
+		let errorMessage = 'Something went wrong';
+		try {
+			const errorData = await res.json();
+			errorMessage = errorData.message || res.statusText;
+		} catch {
+			errorMessage = res.statusText;
+		}
+		throw new Error(errorMessage);
 	}
 
-	return data as T;
+	const text = await res.text();
+	if (!text) return null as T;
+
+	try {
+		return JSON.parse(text) as T;
+	} catch {
+		return text as unknown as T;
+	}
 };

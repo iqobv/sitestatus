@@ -1,3 +1,4 @@
+import { Monitors } from '@/components/monitors';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -6,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function DashboardPage() {
-	return <div></div>;
+	return <Monitors />;
 }

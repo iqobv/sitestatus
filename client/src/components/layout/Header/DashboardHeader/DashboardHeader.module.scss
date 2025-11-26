@@ -7,6 +7,17 @@
 	flex-direction: row;
 }
 
+.header__add-button {
+	padding: 12px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+
+	@include response('md') {
+		padding: 12px 20px;
+	}
+}
+
 .header__button-text {
 	display: none;
 

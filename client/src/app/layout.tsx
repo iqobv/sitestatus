@@ -1,10 +1,10 @@
 import MainProvider from '@/providers/MainProvider';
 import type { Metadata } from 'next';
-import { Geist } from 'next/font/google';
+import { Roboto } from 'next/font/google';
 import './index.scss';
 
-const geistSans = Geist({
-	variable: '--font-geist-sans',
+const roboto = Roboto({
+	variable: '--font-roboto',
 	subsets: ['latin'],
 });
 
@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en" suppressHydrationWarning>
-			<body className={`${geistSans.variable}`}>
+			<body className={`${roboto.variable}`}>
 				<MainProvider>{children}</MainProvider>
 			</body>
 		</html>

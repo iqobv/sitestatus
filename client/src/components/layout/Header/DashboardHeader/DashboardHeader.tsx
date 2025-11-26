@@ -15,7 +15,7 @@ const DashboardHeader = () => {
 		<HeaderContainer>
 			<Link href="/dashboard">Dashboard</Link>
 			<div className={styles['header__buttons']}>
-				<Button>
+				<Button className={styles['header__add-button']}>
 					<FiPlus size={20} />
 					<p className={styles['header__button-text']}>Add New Monitor</p>
 				</Button>

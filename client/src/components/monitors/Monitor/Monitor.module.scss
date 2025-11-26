@@ -1,0 +1,12 @@
+@use '../../../styles/mixins' as *;
+
+.monitor {
+	padding-top: 80px;
+	padding-bottom: 90px;
+}
+
+.monitor__content {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+}

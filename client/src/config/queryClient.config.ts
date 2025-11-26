@@ -10,4 +10,8 @@ export const QUERY_KEYS = {
 		resendVerificationEmail: (email: string) =>
 			['resendVerificationEmail', email] as const,
 	},
+	monitors: {
+		list: (userId: string) => ['monitors-list', userId] as const,
+		byId: (monitorId: string) => ['monitor', monitorId] as const,
+	},
 } as const;

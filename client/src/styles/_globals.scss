@@ -81,7 +81,14 @@ select:-webkit-autofill:focus {
 }
 
 .page {
-	min-height: calc(100vh - var(--header-height));
+	min-height: 100vh;
+}
+
+.card {
+	background: var(--card-bg);
+	border: 1px solid var(--card-border);
+	border-radius: 8px;
+	padding: 16px;
 }
 
 .fade-in {

@@ -4,4 +4,5 @@ export const PAGES = {
 	login: '/login',
 	signUp: '/sign-up',
 	dashboard: '/dashboard',
+	monitor: (id: string) => `/dashboard/monitor/${id}`,
 } as const;

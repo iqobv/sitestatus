@@ -1,0 +1,35 @@
+.uptime-status {
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+	justify-content: start;
+	padding: 3px 5px;
+}
+
+.uptime-status__indicator {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	display: inline-block;
+	margin-right: 6px;
+}
+
+.uptime-status__indicator--up {
+	background-color: var(--status-up);
+}
+
+.uptime-status__indicator--down {
+	background-color: var(--status-down);
+}
+
+.uptime-status__indicator--unknown {
+	background-color: var(--status-unknown);
+}
+
+.uptime-status__indicator--paused {
+	background-color: var(--status-paused);
+}
+
+.uptime-status__indicator--na {
+	background-color: var(--status-na);
+}

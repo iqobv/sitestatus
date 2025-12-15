@@ -37,7 +37,7 @@ const EmailVerification = ({ userId, token }: EmailVerificationProps) => {
 				login(user, accessToken);
 				// eslint-disable-next-line react-hooks/set-state-in-effect
 				setLoginCompleted(true);
-				router.push(PAGES.dashboard);
+				router.push(PAGES.DASHBOARD);
 			}
 		}
 	}, [isSuccess, data, login, router, loginCompleted]);
@@ -45,7 +45,7 @@ const EmailVerification = ({ userId, token }: EmailVerificationProps) => {
 	useEffect(() => {
 		if (error) {
 			toast.error(error.message);
-			router.push(PAGES.verifyEmail);
+			router.push(PAGES.VERIFY_EMAIL);
 		}
 	}, [error, router]);
 

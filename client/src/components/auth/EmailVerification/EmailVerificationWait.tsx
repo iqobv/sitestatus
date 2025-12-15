@@ -65,7 +65,7 @@ const EmailVerificationWait = () => {
 						? `Resend Verification Email (${timer})`
 						: 'Resend Verification Email'}
 				</Button>
-				<Button onClick={handleChangeEmail} href={PAGES.signUp}>
+				<Button onClick={handleChangeEmail} href={PAGES.SIGN_UP}>
 					Change Email
 				</Button>
 			</div>

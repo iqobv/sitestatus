@@ -1,6 +1,7 @@
 'use client';
 
 import { Button, SectionHeader } from '@/components/ui';
+import { PAGES } from '@/config';
 import { IMonitorWithPingResults } from '@/types';
 import { MdOutlineDelete, MdOutlineEdit } from 'react-icons/md';
 import styles from './MonitorHeader.module.scss';
@@ -17,7 +18,11 @@ const MonitorHeader = ({ monitor }: MonitorHeaderProps) => {
 				description={'Details about the monitor'}
 			/>
 			<div className={styles['monitor-header__actions']}>
-				<Button fullWidth variant="outlined">
+				<Button
+					href={PAGES.MONITOR_EDIT(monitor.id)}
+					fullWidth
+					variant="outlined"
+				>
 					<MdOutlineEdit size={20} />
 					Edit Monitor
 				</Button>

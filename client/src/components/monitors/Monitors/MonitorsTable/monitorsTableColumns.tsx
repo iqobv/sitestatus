@@ -38,7 +38,7 @@ export const COLUMNS: Column[] = [
 		header: '',
 		accessor: 'details',
 		render: (monitor) => (
-			<Button variant="link" size="sm" href={PAGES.monitor(monitor.id)}>
+			<Button variant="link" size="sm" href={PAGES.MONITOR(monitor.id)}>
 				View Details
 			</Button>
 		),

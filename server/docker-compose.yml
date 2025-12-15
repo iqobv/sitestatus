@@ -12,7 +12,7 @@ services:
     networks:
       - uptime_monitor_network
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql
 
   redis:
     container_name: uptime_monitor_redis

@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui';
+import { PAGES } from '@/config';
 import { useAuth } from '@/hooks';
 import Link from 'next/link';
 import { FiPlus } from 'react-icons/fi';
@@ -15,7 +16,10 @@ const DashboardHeader = () => {
 		<HeaderContainer>
 			<Link href="/dashboard">Dashboard</Link>
 			<div className={styles['header__buttons']}>
-				<Button className={styles['header__add-button']}>
+				<Button
+					className={styles['header__add-button']}
+					href={PAGES.CREATE_MONITOR}
+				>
 					<FiPlus size={20} />
 					<p className={styles['header__button-text']}>Add New Monitor</p>
 				</Button>

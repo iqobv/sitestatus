@@ -1,5 +1,3 @@
-'use client';
-
 import Link from 'next/link';
 import { buttonVariants } from './butonStyles';
 import { ButtonProps } from './Button.types';

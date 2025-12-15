@@ -14,7 +14,7 @@ const HeaderMain = () => {
 
 	return (
 		<HeaderContainer>
-			<Link href={PAGES.home}>SiteStatus</Link>
+			<Link href={PAGES.HOME}>SiteStatus</Link>
 			{isLoading && (
 				<div>
 					<Loader />
@@ -22,10 +22,10 @@ const HeaderMain = () => {
 			)}
 			{!isLoading && !isAuthenticated && (
 				<div className={styles['header__buttons']}>
-					<Button variant="text" href={PAGES.login}>
+					<Button variant="text" href={PAGES.LOGIN}>
 						Log in
 					</Button>
-					<Button href={PAGES.signUp}>Sign Up</Button>
+					<Button href={PAGES.SIGN_UP}>Sign Up</Button>
 				</div>
 			)}
 			{!isLoading && isAuthenticated && (
@@ -33,7 +33,7 @@ const HeaderMain = () => {
 					<Button variant="outlined" isIcon>
 						<MdNotificationsNone size={20} />
 					</Button>
-					<Button href={PAGES.dashboard} variant="secondary">
+					<Button href={PAGES.DASHBOARD} variant="secondary">
 						Dashboard
 					</Button>
 					<Button onClick={() => logout()} isIcon>

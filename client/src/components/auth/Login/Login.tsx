@@ -38,7 +38,7 @@ const Login = () => {
 				bottomText={
 					<>
 						Don&apos;t have an account?{' '}
-						<Link style={{ fontWeight: 600 }} href={PAGES.signUp}>
+						<Link style={{ fontWeight: 600 }} href={PAGES.SIGN_UP}>
 							Sign Up
 						</Link>
 					</>

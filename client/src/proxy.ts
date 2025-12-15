@@ -57,21 +57,21 @@ export async function proxy(request: NextRequest) {
 
 	const path = request.nextUrl.pathname;
 
-	if (!isAuthenticated && path.startsWith(PAGES.dashboard)) {
-		response = NextResponse.redirect(new URL(PAGES.login, request.url));
+	if (!isAuthenticated && path.startsWith(PAGES.DASHBOARD)) {
+		response = NextResponse.redirect(new URL(PAGES.LOGIN, request.url));
 	} else if (
 		isAuthenticated &&
 		user?.emailVerified &&
-		path.startsWith(PAGES.verifyEmail)
+		path.startsWith(PAGES.VERIFY_EMAIL)
 	) {
-		response = NextResponse.redirect(new URL(PAGES.dashboard, request.url));
+		response = NextResponse.redirect(new URL(PAGES.DASHBOARD, request.url));
 	} else if (
 		isAuthenticated &&
-		(path.startsWith(PAGES.login) ||
-			path.startsWith(PAGES.signUp) ||
-			path.startsWith(PAGES.verifyEmail))
+		(path.startsWith(PAGES.LOGIN) ||
+			path.startsWith(PAGES.SIGN_UP) ||
+			path.startsWith(PAGES.VERIFY_EMAIL))
 	) {
-		response = NextResponse.redirect(new URL(PAGES.dashboard, request.url));
+		response = NextResponse.redirect(new URL(PAGES.DASHBOARD, request.url));
 	} else {
 		response = NextResponse.next();
 	}

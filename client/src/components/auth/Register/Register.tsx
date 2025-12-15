@@ -21,7 +21,7 @@ const Register = () => {
 				bottomText={
 					<>
 						Already have an account?{' '}
-						<Link style={{ fontWeight: 600 }} href={PAGES.login}>
+						<Link style={{ fontWeight: 600 }} href={PAGES.LOGIN}>
 							Log In
 						</Link>
 					</>
@@ -36,7 +36,7 @@ const Register = () => {
 						data.message === 'Registration successful. Please check your email.'
 					) {
 						localStorage.setItem('registrationEmail', data.email);
-						router.push(PAGES.verifyEmail);
+						router.push(PAGES.VERIFY_EMAIL);
 					}
 				}}
 				mutationFn={register}

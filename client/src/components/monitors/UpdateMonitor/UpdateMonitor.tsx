@@ -1,0 +1,47 @@
+'use client';
+
+import { getMonitorById, updateMonitor } from '@/api';
+import { QUERY_KEYS } from '@/config';
+import { UpdateMonitorDto } from '@/dto';
+import { useAuth } from '@/hooks';
+import { updateMonitorSchema } from '@/schemas';
+import { IMonitor } from '@/types';
+import { useQuery } from '@tanstack/react-query';
+import MonitorForm from '../MonitorForm/MonitorForm';
+import { UPDATE_MONITOR_FIELDS } from './updateMonitorFields';
+
+interface UpdateMonitorProps {
+	monitorId: string;
+}
+
+const UpdateMonitor = ({ monitorId }: UpdateMonitorProps) => {
+	const { user, token } = useAuth();
+
+	const { data, isLoading } = useQuery({
+		queryKey: QUERY_KEYS.monitors.byId(monitorId),
+		queryFn: () => getMonitorById(token!, monitorId),
+		enabled: !!token && !!monitorId && !!user,
+	});
+
+	return (
+		<div>
+			{isLoading && <p>Loading monitor data...</p>}
+			{!isLoading && data && (
+				<MonitorForm<UpdateMonitorDto, IMonitor>
+					fields={UPDATE_MONITOR_FIELDS}
+					mutationFn={(token, data) => updateMonitor(token, monitorId, data)}
+					buttonLabel="Update Monitor"
+					schema={updateMonitorSchema}
+					defaultValues={{
+						name: data.name,
+						url: data.url,
+						checkIntervalSeconds: data.checkIntervalSeconds / 60,
+						isActive: data.isActive,
+					}}
+				/>
+			)}
+		</div>
+	);
+};
+
+export default UpdateMonitor;

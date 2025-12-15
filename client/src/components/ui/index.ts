@@ -1,3 +1,4 @@
+export { default as BackButton } from './BackButton/BackButton';
 export { default as Button } from './Button/Button';
 export { default as FormLabel } from './FormLabel/FormLabel';
 export { default as Loader } from './Loader/Loader';

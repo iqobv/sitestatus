@@ -7,8 +7,8 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { OauthModule } from './oauth/oauth.module';
 import { OauthService } from './oauth/oauth.service';
-import { GoogleStrategy, LocalStrategy } from './strategies';
 import { SessionSerializer } from './passport.serializer';
+import { GoogleStrategy, LocalStrategy } from './strategies';
 
 @Module({
 	imports: [
@@ -19,7 +19,13 @@ import { SessionSerializer } from './passport.serializer';
 		OauthModule,
 	],
 	controllers: [AuthController],
-	providers: [AuthService, SessionSerializer, LocalStrategy, GoogleStrategy, OauthService],
+	providers: [
+		AuthService,
+		SessionSerializer,
+		LocalStrategy,
+		GoogleStrategy,
+		OauthService,
+	],
 	exports: [AuthService],
 })
 export class AuthModule {}

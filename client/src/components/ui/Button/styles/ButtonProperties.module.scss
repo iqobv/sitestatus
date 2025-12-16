@@ -1,0 +1,23 @@
+.fullWidth {
+	&--true {
+		width: 100%;
+	}
+
+	&--false {
+		width: fit-content;
+	}
+}
+
+.disabled {
+	&--true {
+		opacity: 0.5;
+		cursor: default;
+		pointer-events: none;
+	}
+}
+
+.rounded {
+	&--true {
+		border-radius: 50%;
+	}
+}

@@ -1,0 +1,27 @@
+@use '../../../../styles/mixins' as *;
+
+.header__buttons {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-direction: row;
+}
+
+.header__add-button {
+	padding: 12px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+
+	@include response('md') {
+		padding: 12px 20px;
+	}
+}
+
+.header__button-text {
+	display: none;
+
+	@include response('md') {
+		display: inline;
+	}
+}

@@ -1,0 +1,16 @@
+.header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: var(--header-height);
+	background-color: var(--bg-header);
+	z-index: 1200;
+}
+
+.header__content {
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}

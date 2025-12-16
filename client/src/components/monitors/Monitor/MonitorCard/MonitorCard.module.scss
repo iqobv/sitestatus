@@ -1,0 +1,19 @@
+.monitor-card__header {
+	display: flex;
+	flex-direction: row;
+	gap: 8px;
+	align-items: center;
+	color: var(--secondary-color);
+	margin-bottom: 12px;
+}
+
+.monitor-card__title {
+	font-size: 1rem;
+	color: var(--secondary-color);
+}
+
+.monitor-card__info-icon {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}

@@ -21,6 +21,7 @@
 		"strictBindCallApply": false,
 		"noFallthroughCasesInSwitch": false,
 		"esModuleInterop": true,
+		"jsx": "react",
 		"types": ["jest", "node"]
 	}
 }

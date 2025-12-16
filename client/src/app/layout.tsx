@@ -1,27 +1,34 @@
 import MainProvider from '@/providers/MainProvider';
+import { IUser } from '@/types';
+import { serverFetcher } from '@/utils';
 import type { Metadata } from 'next';
-import { Geist } from 'next/font/google';
+import { Roboto } from 'next/font/google';
 import './index.scss';
 
-const geistSans = Geist({
-	variable: '--font-geist-sans',
+const roboto = Roboto({
+	variable: '--font-roboto',
 	subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-	title: 'Uptime Monitor',
+	title: {
+		default: 'SiteStatus',
+		template: '%s - SiteStatus',
+	},
 	description: 'Monitor the uptime of your services easily.',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const user = await serverFetcher<IUser>('/v1/auth/me').catch(() => null);
+
 	return (
 		<html lang="en" suppressHydrationWarning>
-			<body className={`${geistSans.variable}`}>
-				<MainProvider>{children}</MainProvider>
+			<body className={`${roboto.variable}`}>
+				<MainProvider user={user}>{children}</MainProvider>
 			</body>
 		</html>
 	);

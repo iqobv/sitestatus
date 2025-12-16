@@ -5,5 +5,10 @@ export const getSwaggerConfig = () => {
 		.setTitle('Uptime monitror API')
 		.setDescription('Uptime monitor API documentation')
 		.setVersion('1.0.0')
+		.addBearerAuth({
+			type: 'http',
+			scheme: 'bearer',
+			bearerFormat: 'JWT',
+		})
 		.build();
 };

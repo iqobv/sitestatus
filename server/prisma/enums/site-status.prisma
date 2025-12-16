@@ -1,0 +1,5 @@
+enum SiteStatus {
+  UNKNOWN
+  UP
+  DOWN
+}

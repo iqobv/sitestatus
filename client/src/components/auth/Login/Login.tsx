@@ -6,7 +6,7 @@ import { PAGES } from '@/config';
 import { LoginDto } from '@/dto';
 import { useAuth } from '@/hooks';
 import { LoginSchema } from '@/schemas';
-import { ILoginResponse } from '@/types';
+import { IUser } from '@/types';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import AuthForm from '../AuthForm/AuthForm';
@@ -19,16 +19,15 @@ const Login = () => {
 
 	return (
 		<AuthWrapper header={<SectionHeader title="Log in to your account" />}>
-			<AuthForm<LoginDto, ILoginResponse>
+			<AuthForm<LoginDto, IUser>
 				fields={LOGIN_FIELDS}
 				defaultValues={{
 					email: '',
 					password: '',
 				}}
 				onSuccess={(data) => {
-					const { user } = data;
-					if (user) {
-						login(user);
+					if (data) {
+						login(data);
 						router.refresh();
 					}
 				}}

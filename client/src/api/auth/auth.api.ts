@@ -1,9 +1,9 @@
 import { LoginDto, RegisterDto } from '@/dto';
-import { ILoginResponse, IUser } from '@/types';
+import { IUser } from '@/types';
 import { fetcher } from '@/utils';
 
 export const login = async (dto: LoginDto) =>
-	await fetcher<ILoginResponse>('/api/v1/auth/login', {
+	await fetcher<IUser>('/api/v1/auth/login', {
 		method: 'POST',
 		body: JSON.stringify(dto),
 	});

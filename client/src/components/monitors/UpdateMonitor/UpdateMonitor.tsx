@@ -15,12 +15,12 @@ interface UpdateMonitorProps {
 }
 
 const UpdateMonitor = ({ monitorId }: UpdateMonitorProps) => {
-	const { user, token } = useAuth();
+	const { user } = useAuth();
 
 	const { data, isLoading } = useQuery({
 		queryKey: QUERY_KEYS.monitors.byId(monitorId),
-		queryFn: () => getMonitorById(token!, monitorId),
-		enabled: !!token && !!monitorId && !!user,
+		queryFn: () => getMonitorById(monitorId),
+		enabled: !!monitorId && !!user,
 	});
 
 	return (
@@ -29,7 +29,7 @@ const UpdateMonitor = ({ monitorId }: UpdateMonitorProps) => {
 			{!isLoading && data && (
 				<MonitorForm<UpdateMonitorDto, IMonitor>
 					fields={UPDATE_MONITOR_FIELDS}
-					mutationFn={(token, data) => updateMonitor(token, monitorId, data)}
+					mutationFn={(data) => updateMonitor(monitorId, data)}
 					buttonLabel="Update Monitor"
 					schema={updateMonitorSchema}
 					defaultValues={{

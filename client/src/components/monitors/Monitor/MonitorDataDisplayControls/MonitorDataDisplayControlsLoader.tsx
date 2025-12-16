@@ -1,5 +1,3 @@
-'use client';
-
 import styles from './MonitorDataDisplayControls.module.scss';
 import MonitorRangeButtonsLoader from './MonitorRangeButtons/MonitorRangeButtonsLoader';
 import MonitorRefreshTimerLoader from './MonitorRefreshTimer/MonitorRefreshTimerLoader';

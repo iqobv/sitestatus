@@ -4,7 +4,7 @@ import { useAuth } from '@/hooks';
 import { useRouter } from 'next/navigation';
 
 export const useLoginWindow = (url: string) => {
-	const { login } = useAuth();
+	const { getProfile } = useAuth();
 
 	const router = useRouter();
 
@@ -23,8 +23,8 @@ export const useLoginWindow = (url: string) => {
 
 		const messageListener = (event: MessageEvent) => {
 			if (event.origin !== window.location.origin) return;
-			if (event.data?.accessToken && event.data?.user) {
-				login(event.data.user, event.data.accessToken);
+			if (event.data?.success) {
+				getProfile();
 				router.refresh();
 				window.removeEventListener('message', messageListener);
 			}

@@ -1,28 +1,19 @@
-import {
-	BadRequestException,
-	ForbiddenException,
-	Injectable,
-	UnauthorizedException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
 import { Request, Response } from 'express';
 import { TokenType, User } from 'generated/prisma/client';
-import ms, { StringValue } from 'ms';
 import { getCookieConfig } from 'src/config';
 import { MailService } from 'src/infra/mail/mail.service';
 import { comparePassword } from 'src/libs/utils';
 import { TokenService } from '../token/token.service';
 import { CreateUserDto } from '../user/dto';
 import { UserService } from '../user/user.service';
-import { LoginDto } from './dto';
 
 @Injectable()
 export class AuthService {
 	constructor(
 		private readonly userService: UserService,
 		private readonly tokenService: TokenService,
-		private readonly jwtService: JwtService,
 		private readonly configService: ConfigService,
 		private readonly mailService: MailService,
 	) {}
@@ -47,52 +38,47 @@ export class AuthService {
 		};
 	}
 
-	async login(dto: LoginDto, res: Response) {
-		const user = await this.validateUser(dto);
+	async login(user: User, req: Request) {
+		return new Promise((resolve, reject) => {
+			req.login(user, (err) => {
+				if (err)
+					return reject(err instanceof Error ? err : new Error(String(err)));
+				const { password, ...result } = user;
 
-		if (!user.emailVerified) {
-			throw new ForbiddenException({
-				message: 'Email not verified',
-				code: 'EMAIL_NOT_VERIFIED',
-				email: user.email,
+				resolve(result);
 			});
-		}
-
-		return await this.createSession(user, res);
+		});
 	}
 
 	async logout(req: Request, res: Response) {
-		const token = req.cookies['refreshToken'] as string;
-		const user = req.user as User;
-
-		if (!token || !user) return;
-
-		this.setRefreshTokenCookie(res, '', 0);
-
-		await this.tokenService.removeTokenWithSelector(
-			user.id,
-			token,
-			TokenType.REFRESH,
-		);
-
-		return true;
+		return new Promise<void>((resolve, reject) => {
+			req.session.destroy((err) => {
+				if (err)
+					return reject(err instanceof Error ? err : new Error(String(err)));
+				res.clearCookie(
+					this.configService.getOrThrow<string>('SESSION_NAME') || 'sid',
+					getCookieConfig(this.configService),
+				);
+				resolve();
+			});
+		});
 	}
 
-	async createSession(user: User, res: Response) {
-		const { accessToken, refreshToken } = await this.generateTokens(user);
-		const expiresAt = this.getRefreshExpiresAt();
+	async validateUser(email: string, password: string) {
+		const user = await this.userService.findByEmail(email, true);
+		if (!user) return null;
 
-		this.setRefreshTokenCookie(res, refreshToken, expiresAt);
+		const isMatch =
+			!!password &&
+			!!user.password &&
+			(await comparePassword(password, user?.password));
 
-		const { password: _, ...userWithoutPassword } = user;
+		if (!isMatch) return null;
 
-		return {
-			accessToken,
-			user: userWithoutPassword,
-		};
+		return user;
 	}
 
-	async verifyEmail(userId: string, token: string, res: Response) {
+	async verifyEmail(userId: string, token: string, req: Request) {
 		const isValid = await this.tokenService.validateTokenForUser(
 			userId,
 			token,
@@ -107,9 +93,9 @@ export class AuthService {
 
 		const user = await this.userService.findById(userId);
 
-		const session = await this.createSession(user, res);
+		await this.login(user, req);
 
-		return { message: 'Email verified successfully', ...session };
+		return { message: 'Email verified successfully', user };
 	}
 
 	async resendVerificationEmail(email: string) {
@@ -127,106 +113,6 @@ export class AuthService {
 
 		return {
 			message: 'Verification email has sent.',
-		};
-	}
-
-	async refreshTokens(req: Request, res: Response) {
-		const oldRefreshToken = req.cookies['refreshToken'] as string;
-
-		if (!oldRefreshToken) {
-			throw new UnauthorizedException('No refresh token provided');
-		}
-
-		const userId = await this.tokenService.validateTokenWithSelector(
-			oldRefreshToken,
-			TokenType.REFRESH,
-		);
-
-		if (!userId) {
-			throw new UnauthorizedException('Invalid or expired refresh token');
-		}
-
-		const user = await this.userService.findById(userId);
-		if (!user) throw new ForbiddenException('Access Denied');
-
-		await this.tokenService.removeTokenWithSelector(
-			user.id,
-			oldRefreshToken,
-			TokenType.REFRESH,
-		);
-
-		const { accessToken, refreshToken } = await this.generateTokens(user);
-		this.setRefreshTokenCookie(res, refreshToken, this.getRefreshExpiresAt());
-
-		return {
-			accessToken,
-			user,
-		};
-	}
-
-	private setRefreshTokenCookie(
-		res: Response,
-		refreshToken: string,
-		expiresAt: number,
-	) {
-		res.cookie(
-			'refreshToken',
-			refreshToken,
-			getCookieConfig(this.configService, expiresAt),
-		);
-	}
-
-	private async validateUser(dto: LoginDto) {
-		const user = await this.userService.findByEmail(dto.email, true);
-
-		if (!user || !user.password) {
-			throw new UnauthorizedException('Invalid credentials');
-		}
-
-		const isPasswordValid = await comparePassword(dto.password, user.password);
-
-		if (!isPasswordValid) {
-			throw new UnauthorizedException('Invalid credentials');
-		}
-
-		return user;
-	}
-
-	private getRefreshExpiresAt() {
-		const expiresAt = ms(
-			this.configService.getOrThrow<StringValue>('JWT_REFRESH_TTL'),
-		);
-
-		return expiresAt;
-	}
-
-	private async generateTokens(user: User) {
-		const accessToken = await this.generateAccessToken(user);
-		const expiresAt = this.getRefreshExpiresAt();
-
-		const refreshToken = await this.tokenService.createToken({
-			userId: user.id,
-			type: TokenType.REFRESH,
-			expiresAt: new Date(Date.now() + expiresAt),
-			isSelector: true,
-		});
-
-		return {
-			...accessToken,
-			refreshToken,
-		};
-	}
-
-	private async generateAccessToken(user: User) {
-		const payload = { sub: user.id, email: user.email, role: user.role };
-
-		const accessToken = await this.jwtService.signAsync(payload, {
-			secret: this.configService.getOrThrow<string>('JWT_SECRET'),
-			expiresIn: this.configService.getOrThrow<StringValue>('JWT_ACCESS_TTL'),
-		});
-
-		return {
-			accessToken,
 		};
 	}
 }

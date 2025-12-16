@@ -18,7 +18,7 @@ type UserStore = UserState & UserActions;
 
 export const useUserStore = create<UserStore>((set) => ({
 	user: null,
-	isLoading: true,
+	isLoading: false,
 	isAuthenticated: false,
 	setIsLoading: (isLoading) => set({ isLoading }),
 	setIsAuthenticated: (isAuthenticated) => set({ isAuthenticated }),

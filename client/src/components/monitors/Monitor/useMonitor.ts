@@ -7,19 +7,19 @@ import { useEffect, useState } from 'react';
 
 interface UseMonitorProps {
 	id: string;
-	initialData?: IMonitorWithPingResults;
+	initialData?: IMonitorWithPingResults | null;
 }
 
 export const useMonitor = ({ id, initialData }: UseMonitorProps) => {
 	const [monitor, setMonitor] = useState<IMonitorWithPingResults>();
 	const [selectedRange, setSelectedRange] = useState<TMonitorRange>('24h');
 
-	const { token, isAuthenticated } = useAuth();
+	const { isAuthenticated } = useAuth();
 
-	const { data, isLoading } = useQuery({
+	const { data, isLoading, isFetching } = useQuery({
 		queryKey: QUERY_KEYS.monitors.byId(id),
-		queryFn: () => getMonitorById(token!, id),
-		enabled: !!token && isAuthenticated,
+		queryFn: () => getMonitorById(id),
+		enabled: isAuthenticated,
 		retry: false,
 		initialData,
 	});
@@ -57,6 +57,7 @@ export const useMonitor = ({ id, initialData }: UseMonitorProps) => {
 
 	return {
 		isLoading,
+		isFetching,
 		data,
 		monitor,
 		selectedRange,

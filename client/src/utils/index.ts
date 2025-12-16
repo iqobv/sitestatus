@@ -6,3 +6,4 @@ export * from './getP95.util';
 export * from './heatmap/buildHeatmap24h.util';
 export * from './heatmap/buildHeatmapCells.util';
 export * from './heatmap/buildHeatmapRange.util';
+export * from './serverFetcher.util';

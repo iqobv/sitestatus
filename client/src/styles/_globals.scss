@@ -82,6 +82,8 @@ select:-webkit-autofill:focus {
 
 .page {
 	min-height: 100vh;
+	padding-top: 80px;
+	padding-bottom: 90px;
 }
 
 .card {
@@ -91,15 +93,18 @@ select:-webkit-autofill:focus {
 	padding: 16px;
 }
 
-.fade-in {
-	opacity: 0;
-	transform: translateY(20px);
-	animation: fadeIn 0.8s ease-out forwards;
+@keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
 }
 
-@keyframes fadeIn {
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
+.fade {
+	animation-name: fadeIn;
+	animation-duration: 500ms;
+	animation-timing-function: ease-in;
+	animation-fill-mode: forwards;
 }

@@ -1,5 +1,3 @@
-'use client';
-
 import Skeleton, { SkeletonProps } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
@@ -9,6 +7,6 @@ export default function SkeletonLoader({
 	...rest
 }: SkeletonProps) {
 	return (
-		<Skeleton baseColor={baseColor} highlightColor={highlightColor}  {...rest} />
+		<Skeleton baseColor={baseColor} highlightColor={highlightColor} {...rest} />
 	);
 }

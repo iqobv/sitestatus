@@ -4,7 +4,7 @@ export const QUERY_KEYS = {
 		register: ['register'] as const,
 		refresh: ['refreshAuthToken'] as const,
 		logout: ['logout'] as const,
-		profile: (token: string) => ['profile', token] as const,
+		profile: (userId: string) => ['profile', userId] as const,
 		verifyEmail: (userId: string, token: string) =>
 			['verifyEmail', userId, token] as const,
 		resendVerificationEmail: (email: string) =>

@@ -1,51 +1,28 @@
 'use client';
 
-interface FetcherOptions extends RequestInit {
-	token?: string;
-}
-
 export const fetcher = async <T>(
 	url: string,
-	options: FetcherOptions = {}
+	options: RequestInit = {}
 ): Promise<T> => {
-	const { token, headers, ...restOptions } = options;
+	const { headers, ...restOptions } = options;
 
-	const getHeaders = (accessToken?: string) => {
+	const getHeaders = () => {
 		const isFormData = restOptions.body instanceof FormData;
 		return {
 			...(isFormData ? {} : { 'Content-Type': 'application/json' }),
-			...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
 			...headers,
 		};
 	};
 
-	const performRequest = async (accessToken?: string) => {
+	const performRequest = async () => {
 		return fetch(url, {
 			...restOptions,
 			credentials: 'include',
-			headers: getHeaders(accessToken),
+			headers: getHeaders(),
 		});
 	};
 
-	let res = await performRequest(token);
-
-	if (res.status === 401 && token) {
-		try {
-			const refreshRes = await fetch('/api/v1/auth/refresh', {
-				method: 'POST',
-				credentials: 'include',
-			});
-
-			if (refreshRes.ok) {
-				const refreshData = await refreshRes.json();
-				const newAccessToken = refreshData.accessToken;
-
-				res = await performRequest(newAccessToken);
-			}
-		} catch (error) {
-			console.error('Auto-refresh failed', error);
-		}
-	}
+	const res = await performRequest();
 
 	if (!res.ok) {
 		let errorMessage = 'Something went wrong';

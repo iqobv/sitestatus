@@ -11,13 +11,14 @@ import {
 } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { Request, Response } from 'express';
+import { User } from 'generated/prisma/client';
 import { Auth, Authorized } from 'src/libs/decorators';
 import { CreateUserDto, UserWithoutPasswordDto } from '../user/dto';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
+import { LocalAuth } from './decorators';
 import {
 	AccessTokenWithUserDto,
-	LoginDto,
 	RegisterMessageDto,
 	ResendVerificationEmailDto,
 	ResendVerificationEmailMessageDto,
@@ -45,9 +46,9 @@ export class AuthController {
 	async verifyEmail(
 		@Query('userId') userId: string,
 		@Query('token') token: string,
-		@Res({ passthrough: true }) res: Response,
+		@Req() req: Request,
 	) {
-		return await this.authService.verifyEmail(userId, token, res);
+		return await this.authService.verifyEmail(userId, token, req);
 	}
 
 	@ApiOperation({ summary: 'Resend verification email to user' })
@@ -62,11 +63,10 @@ export class AuthController {
 	@Post('login')
 	@ApiOkResponse({ type: AccessTokenWithUserDto })
 	@HttpCode(HttpStatus.OK)
-	async login(
-		@Body() dto: LoginDto,
-		@Res({ passthrough: true }) res: Response,
-	) {
-		return await this.authService.login(dto, res);
+	@LocalAuth()
+	async login(@Req() req: Request) {
+		const user = req.user as User;
+		return await this.authService.login(user, req);
 	}
 
 	@ApiOperation({ summary: 'Log out the current user' })
@@ -76,17 +76,6 @@ export class AuthController {
 	@HttpCode(HttpStatus.OK)
 	async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
 		return await this.authService.logout(req, res);
-	}
-
-	@ApiOperation({ summary: 'Refresh access and refresh tokens' })
-	@Post('refresh')
-	@ApiOkResponse({ type: AccessTokenWithUserDto })
-	@HttpCode(HttpStatus.OK)
-	async refreshTokens(
-		@Req() req: Request,
-		@Res({ passthrough: true }) res: Response,
-	) {
-		return await this.authService.refreshTokens(req, res);
 	}
 
 	@ApiOperation({ summary: 'Get current user profile' })

@@ -1,5 +1,3 @@
-'use client';
-
 import { SectionHeader, SkeletonLoader } from '@/components/ui';
 import styles from './MonitorHeader.module.scss';
 

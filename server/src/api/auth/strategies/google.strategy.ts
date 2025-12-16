@@ -1,14 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
-import { Profile, Strategy } from 'passport-google-oauth20';
-import { AuthService } from '../auth.service';
+import { Profile, Strategy, VerifyCallback } from 'passport-google-oauth20';
 import { OauthService } from '../oauth/oauth.service';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
 	constructor(
-		private readonly authService: AuthService,
 		private readonly configService: ConfigService,
 		private readonly oauthService: OauthService,
 	) {
@@ -20,15 +18,20 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
 		});
 	}
 
-	async validate(accessToken: string, refreshToken: string, profile: Profile) {
+	async validate(
+		accessToken: string,
+		refreshToken: string,
+		profile: Profile,
+		done: VerifyCallback,
+	) {
 		const { id, emails } = profile;
 
-		if (!emails || !emails.length) {
-			throw new Error('No email found in Google profile');
-		}
+		const user = await this.oauthService.validateOAuthLogin({
+			provider: 'google',
+			providerId: id,
+			email: emails?.[0]?.value as string,
+		});
 
-		const user = await this.oauthService.validateOAuthUser(emails[0].value, id);
-
-		return user;
+		done(null, user);
 	}
 }

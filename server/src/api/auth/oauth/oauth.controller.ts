@@ -1,37 +1,30 @@
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Controller, Get, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { User } from 'generated/prisma/client';
-import { OauthService } from './oauth.service';
+import { AuthService } from '../auth.service';
+import { GoogleAuth } from '../decorators';
 
 @Controller('oauth')
 export class OauthController {
-	constructor(private readonly oauthService: OauthService) {}
+	constructor(private readonly authService: AuthService) {}
 
+	@GoogleAuth()
 	@Get('google')
-	@UseGuards(AuthGuard('google'))
 	async googleAuth() {}
 
 	@Get('google/callback')
-	@UseGuards(AuthGuard('google'))
+	@GoogleAuth()
 	async googleAuthCallback(
 		@Req() req: Request,
 		@Res({ passthrough: true }) res: Response,
 	) {
 		const user = req.user as User;
-		const session = await this.oauthService.login(user, res);
+		await this.authService.login(user, req);
 
 		res.send(`
 			<script>
-				window.opener.postMessage(
-					{
-						accessToken: '${session.accessToken}',
-						user: ${JSON.stringify(session.user)}
-					},
-					'${process.env.GOOGLE_REDIRECT_ORIGIN}'
-				);
+				window.opener.postMessage({ success: true }, '${process.env.GOOGLE_REDIRECT_ORIGIN}');
 				window.close();
-			</script>
-		`);
+			</script>`);
 	}
 }

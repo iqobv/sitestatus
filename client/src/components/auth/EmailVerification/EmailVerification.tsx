@@ -31,10 +31,10 @@ const EmailVerification = ({ userId, token }: EmailVerificationProps) => {
 
 	useEffect(() => {
 		if (isSuccess && data && !loginCompleted) {
-			const { accessToken, user, message } = data;
+			const { user, message } = data;
 
-			if (message === 'Email verified successfully' && accessToken && user) {
-				login(user, accessToken);
+			if (message === 'Email verified successfully' && user) {
+				login(user);
 				// eslint-disable-next-line react-hooks/set-state-in-effect
 				setLoginCompleted(true);
 				router.push(PAGES.DASHBOARD);

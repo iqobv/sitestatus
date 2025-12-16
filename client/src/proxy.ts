@@ -1,70 +1,22 @@
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import { PAGES } from './config';
-import { IUser } from './types';
 
 export async function proxy(request: NextRequest) {
 	const cookiesStore = await cookies();
-	const hasSession = cookiesStore.has('refreshToken');
-	const allCookies = cookiesStore.toString();
+	const hasSession = cookiesStore.has('sid');
 
 	let isAuthenticated = false;
-	let user: IUser | null = null;
 	let response: NextResponse;
 
-	const setCookieHeaders: string[] = [];
-
 	if (hasSession) {
-		const res = await fetch(`${process.env.API_URL}/v1/auth/refresh`, {
-			method: 'POST',
-			headers: {
-				cookie: allCookies,
-				'Content-Type': 'application/json',
-			},
-		});
-		const data = (await res.json()) as { accessToken: string };
-
-		const newCookies = res.headers.getSetCookie();
-		if (newCookies.length > 0) {
-			setCookieHeaders.push(...newCookies);
-		}
-
-		if (res.ok && data && data.accessToken) {
-			const profileRes = await fetch(`${process.env.API_URL}/v1/auth/me`, {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${data.accessToken}`,
-					cookie: allCookies,
-				},
-			});
-
-			const profileCookies = profileRes.headers.getSetCookie();
-			if (profileCookies.length > 0) {
-				setCookieHeaders.push(...profileCookies);
-			}
-
-			const userData = (await profileRes.json()) as IUser;
-
-			if (profileRes.ok && (userData as IUser)?.id) {
-				user = userData as IUser;
-				isAuthenticated = true;
-			}
-		} else {
-			isAuthenticated = false;
-		}
+		isAuthenticated = true;
 	}
 
 	const path = request.nextUrl.pathname;
 
 	if (!isAuthenticated && path.startsWith(PAGES.DASHBOARD)) {
 		response = NextResponse.redirect(new URL(PAGES.LOGIN, request.url));
-	} else if (
-		isAuthenticated &&
-		user?.emailVerified &&
-		path.startsWith(PAGES.VERIFY_EMAIL)
-	) {
-		response = NextResponse.redirect(new URL(PAGES.DASHBOARD, request.url));
 	} else if (
 		isAuthenticated &&
 		(path.startsWith(PAGES.LOGIN) ||
@@ -74,14 +26,6 @@ export async function proxy(request: NextRequest) {
 		response = NextResponse.redirect(new URL(PAGES.DASHBOARD, request.url));
 	} else {
 		response = NextResponse.next();
-	}
-
-	setCookieHeaders.forEach((cookie) => {
-		response.headers.append('set-cookie', cookie);
-	});
-
-	if (hasSession && !isAuthenticated) {
-		response.cookies.set('refreshToken', '', { maxAge: -1 });
 	}
 
 	return response;

@@ -4,25 +4,29 @@ import { getMonitors } from '@/api';
 import { Button } from '@/components/ui';
 import { PAGES, QUERY_KEYS } from '@/config';
 import { useAuth } from '@/hooks';
+import { IMonitorWithPingResults } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import MonitorRefresh from './MonitorRefresh/MonitorRefresh';
 import styles from './Monitors.module.scss';
-import MonitorsLoader from './MonitorsLoader';
 import MonitorsTable from './MonitorsTable/MonitorsTable';
 
-const Monitors = () => {
-	const { isAuthenticated, token, user } = useAuth();
+interface MonitorsProps {
+	initialData?: IMonitorWithPingResults[] | null;
+}
+
+const Monitors = ({ initialData }: MonitorsProps) => {
+	const { isAuthenticated, user } = useAuth();
 
 	const { data, isLoading } = useQuery({
-		queryFn: () => getMonitors(token!),
+		queryFn: getMonitors,
 		queryKey: QUERY_KEYS.monitors.list(user ? user.id : ''),
-		enabled: isAuthenticated && !!user && !!token,
+		enabled: isAuthenticated && !!user,
+		initialData,
 	});
 
 	return (
-		<div className={`${styles['monitors']} container`}>
+		<>
 			<MonitorRefresh />
-			{isLoading && <MonitorsLoader />}
 			{!isLoading && data && data.length > 0 && (
 				<>
 					<MonitorsTable monitors={data} />
@@ -34,7 +38,7 @@ const Monitors = () => {
 					<Button href={PAGES.CREATE_MONITOR}>Add Monitor</Button>
 				</div>
 			)}
-		</div>
+		</>
 	);
 };
 

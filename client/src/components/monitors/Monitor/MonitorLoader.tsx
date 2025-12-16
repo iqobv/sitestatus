@@ -1,5 +1,3 @@
-'use client';
-
 import styles from './Monitor.module.scss';
 import MonitorCardsLoader from './MonitorCards/MonitorCardsLoader';
 import MonitorDataDisplayControlsLoader from './MonitorDataDisplayControls/MonitorDataDisplayControlsLoader';

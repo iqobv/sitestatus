@@ -1,5 +1,3 @@
-'use client';
-
 import MonitorsTableLoader from './MonitorsTable/MonitorsTableLoader';
 
 const MonitorsLoader = () => {

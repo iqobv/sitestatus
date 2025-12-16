@@ -19,7 +19,7 @@ const MonitorForm = <T extends FieldValues, R extends { id: string }>({
 	buttonLabel = 'Create Monitor',
 	defaultValues,
 }: MonitorFormProps<T, R>) => {
-	const { user, token } = useAuth();
+	const { user } = useAuth();
 
 	const queryClient = useQueryClient();
 
@@ -41,7 +41,7 @@ const MonitorForm = <T extends FieldValues, R extends { id: string }>({
 	}, [defaultValues, reset]);
 
 	const { mutate, isPending } = useMutation({
-		mutationFn: (data: T) => mutationFn(token!, data),
+		mutationFn: (data: T) => mutationFn(data),
 		gcTime: 0,
 		onSuccess(data) {
 			reset();

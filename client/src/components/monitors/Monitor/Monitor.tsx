@@ -12,18 +12,24 @@ import { useMonitor } from './useMonitor';
 
 interface MonitorProps {
 	id: string;
-	initialData?: IMonitorWithPingResults;
+	initialData?: IMonitorWithPingResults | null;
 }
 
 const Monitor = ({ id, initialData }: MonitorProps) => {
-	const { isLoading, data, monitor, selectedRange, setSelectedRange } =
-		useMonitor({ id, initialData });
+	const {
+		isLoading,
+		isFetching,
+		data,
+		monitor,
+		selectedRange,
+		setSelectedRange,
+	} = useMonitor({ id, initialData });
 
 	return (
 		<div className={styles['monitor']}>
-			{isLoading && <MonitorLoader />}
+			{isFetching && <MonitorLoader />}
 			{!isLoading && data && monitor && (
-				<div className={styles['monitor__content']}>
+				<div className={`${styles['monitor__content']} fade`}>
 					<MonitorHeader monitor={monitor} />
 					<MonitorDataDisplayControls
 						selectedRange={selectedRange}

@@ -1,9 +1,8 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import type { Response } from 'express';
-import { User } from 'generated/prisma/client';
 import { UserProviderService } from 'src/api/user-provider/user-provider.service';
 import { UserService } from 'src/api/user/user.service';
 import { AuthService } from '../auth.service';
+import { OAuthDto } from './dto';
 
 @Injectable()
 export class OauthService {
@@ -14,33 +13,34 @@ export class OauthService {
 		private readonly userProviderService: UserProviderService,
 	) {}
 
-	async login(user: User, res: Response) {
-		await this.validateOAuthUser(user.email, user.id);
+	// async login(user: User, res: Response) {
+	// 	await this.validateOAuthUser(user.email, user.id);
 
-		return await this.authService.createSession(user, res);
-	}
+	// 	return await this.authService.createSession(user, res);
+	// }
 
-	async validateOAuthUser(email: string, providerId: string) {
-		const userProvider =
+	async validateOAuthLogin(dto: OAuthDto) {
+		const { provider, providerId, email } = dto;
+
+		const providerUser =
 			await this.userProviderService.findByProviderAndProviderId(
-				'google',
+				provider,
 				providerId,
 			);
 
-		if (userProvider) {
-			return userProvider.user;
-		}
+		if (providerUser) return providerUser.user;
 
-		let user = await this.userService.findByEmail(email);
-
+		let user = await this.userService.findByEmail(email, true);
 		if (!user) {
-			user = await this.userService.createOauthUser(email);
+			user = await this.userService.create({
+				email,
+			});
 		}
 
 		await this.userProviderService.create({
-			userId: user.id,
-			provider: 'google',
+			provider,
 			providerId,
+			userId: user.id,
 		});
 
 		return user;

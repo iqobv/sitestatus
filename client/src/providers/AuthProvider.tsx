@@ -1,15 +1,20 @@
 'use client';
 
 import { useAuth } from '@/hooks';
-import { PropsWithChildren, useEffect } from 'react';
+import { IUser } from '@/types';
+import { useEffect } from 'react';
 
-export default function AuthProvider({ children }: PropsWithChildren<unknown>) {
-	const { refresh } = useAuth();
+interface AuthProviderProps {
+	children: React.ReactNode;
+	user: IUser | null;
+}
+
+export default function AuthProvider({ children, user }: AuthProviderProps) {
+	const { login } = useAuth();
 
 	useEffect(() => {
-		refresh();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+		if (user) login(user);
+	}, [login, user]);
 
 	return <>{children}</>;
 }

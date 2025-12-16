@@ -26,9 +26,9 @@ const Login = () => {
 					password: '',
 				}}
 				onSuccess={(data) => {
-					const { accessToken, user } = data;
-					if (accessToken && user) {
-						login(user, accessToken);
+					const { user } = data;
+					if (user) {
+						login(user);
 						router.refresh();
 					}
 				}}

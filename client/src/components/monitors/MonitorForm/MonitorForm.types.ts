@@ -7,7 +7,7 @@ export interface MonitorFormProps<
 	R extends { id: string }
 > {
 	fields: IField<T>[];
-	mutationFn: (token: string, data: T) => Promise<R>;
+	mutationFn: (data: T) => Promise<R>;
 	onSuccess?: (data: R) => void;
 	onCancel?: () => void;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any

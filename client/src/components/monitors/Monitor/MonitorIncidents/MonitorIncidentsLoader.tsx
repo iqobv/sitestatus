@@ -1,5 +1,3 @@
-'use client';
-
 import { SkeletonLoader } from '@/components/ui';
 
 const MonitorIncidentsLoader = () => {

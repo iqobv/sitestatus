@@ -8,7 +8,6 @@ WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-COPY prisma ./prisma
 
 ARG DATABASE_URL
 ENV DATABASE_URL=$DATABASE_URL
@@ -25,7 +24,8 @@ RUN npm install --only=production --frozen-lockfile
 
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/generated ./generated
+
+RUN npx prisma generate
 
 EXPOSE 8080
 

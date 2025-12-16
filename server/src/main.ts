@@ -34,7 +34,7 @@ async function bootstrap() {
 
 	setupSwagger(app);
 
-	await app.listen(process.env.PORT ?? 5000);
+	await app.listen(process.env.PORT ?? 5000, '0.0.0.0');
 }
 bootstrap().catch((err) => {
 	console.error('Failed to bootstrap the application:', err);

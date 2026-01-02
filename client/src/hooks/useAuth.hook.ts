@@ -67,6 +67,7 @@ export const useAuth = () => {
 		user,
 		isLoading,
 		isAuthenticated,
+		setIsLoading,
 		login,
 		getProfile,
 		logout,

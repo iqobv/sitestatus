@@ -1,15 +1,41 @@
 :root {
 	/* General Colors */
-	--bg-body: #f7f7f7;
+	--bg-body: #ffffff;
 	--bg-header: #ffffff;
+	--bg-header-rgb: 255, 255, 255;
 	--header-border-color: #e5e8eb;
 	--color-main-text: #0d141c;
 	--secondary-color: #727c86;
 	--header-height: 70px;
+	--secondary-bg: #f7f7f7;
+	--border-color: #e5e7eb;
+	--primary-color: #171717;
+	--secondary-color: #595c5e;
+	--accent-color: #299f4e;
+	--logo: url('/logo-black.svg');
+	--logo-color: #171717;
+
+	/* Hero */
+	--hero-highlight-color: #0f172a;
 
 	/* Section Header */
 	--section-title-color: #0d141c;
 	--section-description-color: #1d1d1e;
+
+	/* Footer */
+	--bg-footer: #fbfbfb;
+	--footer-text-color: #313131;
+	--footer-title-color: #0d141c;
+	--footer-link-color: #595c5e;
+	--footer-link-color-hover: #0d141c;
+
+	/* Sepator */
+	--sepator-color: #e5e8eb;
+
+	/* Errors */
+	--error-bg: #f8d7da;
+	--error-text: #721c24;
+	--error-border: #e7000b;
 
 	/* Cards */
 	--card-bg: #ffffff;
@@ -62,11 +88,6 @@
 	--heatmap-fast: #2ecc71;
 	--heatmap-medium: #f1c40f;
 	--heatmap-slow: #e67e22;
-
-	// --heatmap-fast: #27ae60; // глибокий зелений
-	// --heatmap-medium: #f39c12; // теплий amber
-	// --heatmap-slow: #d35400; // темніший помаранчевий
-	// --status-down: #c0392b;
 
 	/* Table */
 	--border-color: #e5e8eb;

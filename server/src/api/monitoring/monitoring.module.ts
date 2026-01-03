@@ -17,10 +17,30 @@ import { MonitoringScheduler } from './monitoring.scheduler';
 		}),
 		BullModule.registerQueue({
 			name: MONITORING_QUEUE,
+			defaultJobOptions: {
+				attempts: 3,
+				backoff: {
+					type: 'exponential',
+					delay: 1000,
+				},
+				removeOnComplete: { count: 100 },
+				removeOnFail: { count: 500 },
+			},
 		}),
 		PingResultModule,
 		MonitorModule,
 	],
-	providers: [MonitoringScheduler, MonitoringProcessor],
+	providers: [
+		MonitoringScheduler,
+		MonitoringProcessor,
+		{
+			provide: 'BULLMQ_WORKER_OPTIONS',
+			useValue: {
+				concurrency: 5,
+				lockDuration: 60000,
+				stalledCheckInterval: 300000,
+			},
+		},
+	],
 })
 export class MonitoringModule {}

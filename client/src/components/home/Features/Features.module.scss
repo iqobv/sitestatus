@@ -1,0 +1,26 @@
+@use '../../../styles/mixins' as *;
+
+.features {
+	padding: 30px 20px 60px 20px;
+
+	&__header {
+		text-align: start;
+
+		@include response('md') {
+			text-align: center;
+		}
+	}
+
+	&__list {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 40px;
+		max-width: 300px;
+		margin: 40px auto 0 auto;
+
+		@include response('md') {
+			grid-template-columns: repeat(3, 1fr);
+			max-width: unset;
+		}
+	}
+}

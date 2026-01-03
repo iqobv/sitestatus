@@ -7,6 +7,7 @@ import { useMutation } from '@tanstack/react-query';
 import { DefaultValues, FieldValues, Path, useForm } from 'react-hook-form';
 import { ZodType } from 'zod';
 import styles from './AuthForm.module.scss';
+import AuthFormGlobalError from './AuthFormGlobalError/AuthFormGlobalError';
 
 interface AuthFormProps<T extends FieldValues, R> {
 	fields: IField<T>[];
@@ -58,7 +59,9 @@ const AuthForm = <T extends FieldValues, R>({
 
 	return (
 		<form className={styles['auth-form']} onSubmit={handleSubmit(onSubmit)}>
-			{errors.root?.message && <p>{errors.root.message}</p>}
+			{errors.root?.message && (
+				<AuthFormGlobalError message={errors.root.message} />
+			)}
 			{fields.map(
 				({ label, placeholder, type, name, autocomplete, iconLeft }) => {
 					return (

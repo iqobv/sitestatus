@@ -13,12 +13,6 @@ export class OauthService {
 		private readonly userProviderService: UserProviderService,
 	) {}
 
-	// async login(user: User, res: Response) {
-	// 	await this.validateOAuthUser(user.email, user.id);
-
-	// 	return await this.authService.createSession(user, res);
-	// }
-
 	async validateOAuthLogin(dto: OAuthDto) {
 		const { provider, providerId, email } = dto;
 

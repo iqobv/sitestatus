@@ -16,18 +16,12 @@ interface MonitorProps {
 }
 
 const Monitor = ({ id, initialData }: MonitorProps) => {
-	const {
-		isLoading,
-		isFetching,
-		data,
-		monitor,
-		selectedRange,
-		setSelectedRange,
-	} = useMonitor({ id, initialData });
+	const { isLoading, data, monitor, selectedRange, setSelectedRange } =
+		useMonitor({ id, initialData });
 
 	return (
 		<div className={styles['monitor']}>
-			{isFetching && <MonitorLoader />}
+			{isLoading && <MonitorLoader />}
 			{!isLoading && data && monitor && (
 				<div className={`${styles['monitor__content']} fade`}>
 					<MonitorHeader monitor={monitor} />

@@ -16,7 +16,7 @@ export const useMonitor = ({ id, initialData }: UseMonitorProps) => {
 
 	const { isAuthenticated } = useAuth();
 
-	const { data, isLoading, isFetching } = useQuery({
+	const { data, isLoading } = useQuery({
 		queryKey: QUERY_KEYS.monitors.byId(id),
 		queryFn: () => getMonitorById(id),
 		enabled: isAuthenticated,
@@ -57,7 +57,6 @@ export const useMonitor = ({ id, initialData }: UseMonitorProps) => {
 
 	return {
 		isLoading,
-		isFetching,
 		data,
 		monitor,
 		selectedRange,

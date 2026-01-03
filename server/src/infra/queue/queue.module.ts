@@ -1,6 +1,7 @@
 import { BullModule } from '@nestjs/bullmq';
 import { Global, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { IS_DEV_ENV } from 'src/libs/utils';
 
 @Global()
 @Module({
@@ -12,7 +13,11 @@ import { ConfigService } from '@nestjs/config';
 					port: configService.get<number>('REDIS_PORT'),
 					username: configService.get<string>('REDIS_USER'),
 					password: configService.get<string>('REDIS_PASSWORD'),
-					tls: {},
+					...(IS_DEV_ENV
+						? {}
+						: {
+								tls: {},
+							}),
 					family: 4,
 					commandTimeout: 30000,
 					maxRetriesPerRequest: null,

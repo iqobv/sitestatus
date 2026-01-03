@@ -10,11 +10,16 @@ interface AuthProviderProps {
 }
 
 export default function AuthProvider({ children, user }: AuthProviderProps) {
-	const { login } = useAuth();
+	const { login, setIsLoading } = useAuth();
 
 	useEffect(() => {
-		if (user) login(user);
-	}, [login, user]);
+		setIsLoading(true);
+		if (user) {
+			login(user);
+		} else {
+			setIsLoading(false);
+		}
+	}, [login, user, setIsLoading]);
 
 	return <>{children}</>;
 }

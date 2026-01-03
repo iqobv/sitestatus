@@ -1,0 +1,10 @@
+.sepator {
+	--sepator-margin: 8px;
+	--sepator-width: 100%;
+	--sepator-height: 1px;
+
+	width: var(--sepator-width);
+	height: var(--sepator-height);
+	margin: var(--sepator-margin) 0;
+	background-color: var(--sepator-color);
+}

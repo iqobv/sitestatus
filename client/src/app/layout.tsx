@@ -27,6 +27,17 @@ export default async function RootLayout({
 
 	return (
 		<html lang="en" suppressHydrationWarning>
+			<head>
+				<script
+					dangerouslySetInnerHTML={{
+						__html: `
+							const update = () => document.documentElement.dataset.scrolled = window.scrollY > 150;
+							window.addEventListener('scroll', update);
+							update();
+						`,
+					}}
+				/>
+			</head>
 			<body className={`${roboto.variable}`}>
 				<MainProvider user={user}>{children}</MainProvider>
 			</body>

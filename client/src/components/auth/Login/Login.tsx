@@ -5,7 +5,7 @@ import { SectionHeader } from '@/components/ui';
 import { PAGES } from '@/config';
 import { LoginDto } from '@/dto';
 import { useAuth } from '@/hooks';
-import { LoginSchema } from '@/schemas';
+import { loginSchema } from '@/schemas';
 import { IUser } from '@/types';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -32,7 +32,7 @@ const Login = () => {
 					}
 				}}
 				mutationFn={apiLogin}
-				schema={LoginSchema}
+				schema={loginSchema}
 				buttonLabel="Log in"
 				bottomText={
 					<>

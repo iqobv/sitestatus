@@ -4,7 +4,7 @@ import { cookies } from 'next/headers';
 
 export const serverFetcher = async <T>(
 	url: string,
-	options?: RequestInit
+	options?: RequestInit,
 ): Promise<T> => {
 	const cookiesStore = await cookies();
 	const hasSession = cookiesStore.has('sid');
@@ -14,7 +14,7 @@ export const serverFetcher = async <T>(
 		...options,
 		headers: {
 			...options?.headers,
-			cookie: hasSession ? allCookies : '',
+			Cookie: hasSession ? allCookies : '',
 			'Content-Type': 'application/json',
 		},
 		credentials: 'include',

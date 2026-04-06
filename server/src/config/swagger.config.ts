@@ -2,13 +2,13 @@ import { DocumentBuilder } from '@nestjs/swagger';
 
 export const getSwaggerConfig = () => {
 	return new DocumentBuilder()
-		.setTitle('Uptime monitror API')
-		.setDescription('Uptime monitor API documentation')
+		.setTitle('SiteStatus API')
+		.setDescription('SiteStatus API documentation.')
 		.setVersion('1.0.0')
-		.addBearerAuth({
+		.addCookieAuth('sid', {
 			type: 'http',
-			scheme: 'bearer',
-			bearerFormat: 'JWT',
+			in: 'Header',
+			scheme: 'Bearer',
 		})
 		.build();
 };

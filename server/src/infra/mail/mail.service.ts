@@ -20,7 +20,7 @@ export class MailService {
 			VerificationEmailTemplate({ domain, userId, token }),
 		);
 
-		return this.sendMail({
+		return await this.sendMail({
 			recipients: [email],
 			subject: 'Please verify your email address',
 			html,

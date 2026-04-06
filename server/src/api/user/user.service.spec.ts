@@ -168,8 +168,9 @@ describe('UserService', () => {
 
 			const findByIdSpy = jest
 				.spyOn(service, 'findById')
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-				.mockResolvedValue(user as any);
+				.mockResolvedValue(
+					user as unknown as Awaited<ReturnType<UserService['findById']>>,
+				);
 			prisma.user.findUnique.mockResolvedValue(null);
 			prisma.user.update.mockResolvedValue(updatedUser);
 
@@ -199,8 +200,9 @@ describe('UserService', () => {
 
 			const findByIdSpy = jest
 				.spyOn(service, 'findById')
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-				.mockResolvedValue(user as any);
+				.mockResolvedValue(
+					user as unknown as Awaited<ReturnType<UserService['findById']>>,
+				);
 			prisma.user.findUnique.mockResolvedValue(existingUser);
 
 			const dto = { email: 'existing@example.com' };

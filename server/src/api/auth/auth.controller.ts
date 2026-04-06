@@ -9,10 +9,17 @@ import {
 	Req,
 	Res,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
-import { Request, Response } from 'express';
+import {
+	ApiBadRequestResponse,
+	ApiConflictResponse,
+	ApiOkResponse,
+	ApiOperation,
+} from '@nestjs/swagger';
+import type { Request, Response } from 'express';
 import { User } from 'generated/prisma/client';
+import { ERROR_MESSAGES } from 'src/libs/constants';
 import { Auth, Authorized } from 'src/libs/decorators';
+import { createCustomMessageDto } from 'src/libs/utils';
 import { CreateUserDto, UserWithoutPasswordDto } from '../user/dto';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
@@ -34,6 +41,9 @@ export class AuthController {
 
 	@ApiOperation({ summary: 'Register a new user' })
 	@ApiOkResponse({ type: RegisterMessageDto })
+	@ApiConflictResponse({
+		type: createCustomMessageDto(ERROR_MESSAGES.USER.USER_ALREADY_EXISTS),
+	})
 	@Post('register')
 	@HttpCode(HttpStatus.CREATED)
 	async register(@Body() dto: CreateUserDto) {
@@ -42,6 +52,9 @@ export class AuthController {
 
 	@ApiOperation({ summary: 'Verify user email address' })
 	@ApiOkResponse({ type: VerifyEmailDto })
+	@ApiBadRequestResponse({
+		type: createCustomMessageDto(ERROR_MESSAGES.AUTH.INVALID_OR_EXPIRED_TOKEN),
+	})
 	@Get('verify-email')
 	async verifyEmail(
 		@Query('userId') userId: string,

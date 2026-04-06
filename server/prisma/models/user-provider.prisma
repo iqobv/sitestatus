@@ -1,5 +1,5 @@
 model UserProvider {
-  userId     String @map("user_id")
+  userId     String @map("user_id") @db.Uuid
   provider   String @map("provider_name")
   providerId String @map("provider_id")
 

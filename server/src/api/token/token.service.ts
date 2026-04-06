@@ -1,37 +1,41 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import * as crypto from 'crypto';
+import { Prisma } from 'generated/prisma/client';
 import { TokenType } from 'generated/prisma/enums';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
-import { comparePassword, hashPassword } from 'src/libs/utils';
+import { ERROR_MESSAGES } from 'src/libs/constants';
+import { compareValidators, hashValidator } from 'src/libs/utils';
 import { CreateTokenDto } from './dto';
 
 @Injectable()
 export class TokenService {
 	constructor(private readonly prismaService: PrismaService) {}
 
-	async createToken(dto: CreateTokenDto) {
+	async createToken(
+		dto: CreateTokenDto,
+		tx?: Prisma.TransactionClient,
+	): Promise<string> {
 		const { userId, type, expiresAt, isSelector } = dto;
+		const prisma = tx ?? this.prismaService;
 
 		let selector: string | null = null;
-
 		const validator = crypto.randomBytes(32).toString('hex');
-		const hashedValidator = await hashPassword(validator);
+		const hashedValidator = hashValidator(validator);
 
-		if (type === TokenType.EMAIL_VERIFICATION) {
-			await this.prismaService.token.deleteMany({
-				where: { userId, type: TokenType.EMAIL_VERIFICATION },
+		if (
+			type === TokenType.EMAIL_VERIFICATION ||
+			type === TokenType.RESET_PASSWORD
+		) {
+			await prisma.token.deleteMany({
+				where: { userId, type },
 			});
 		}
 
-		if (type === TokenType.RESET_PASSWORD) {
-			await this.prismaService.token.deleteMany({
-				where: { userId, type: TokenType.RESET_PASSWORD },
-			});
+		if (isSelector) {
+			selector = crypto.randomBytes(16).toString('hex');
 		}
 
-		if (isSelector) selector = crypto.randomBytes(16).toString('hex');
-
-		await this.prismaService.token.create({
+		await prisma.token.create({
 			data: {
 				user: { connect: { id: userId } },
 				type,
@@ -44,16 +48,25 @@ export class TokenService {
 		return isSelector ? `${selector}:${validator}` : validator;
 	}
 
-	async validateTokenForUser(userId: string, token: string, type: TokenType) {
-		const tokens = await this.prismaService.token.findMany({
+	async validateTokenForUser(
+		userId: string,
+		token: string,
+		type: TokenType,
+		tx?: Prisma.TransactionClient,
+	): Promise<boolean> {
+		const prisma = tx ?? this.prismaService;
+		const tokens = await prisma.token.findMany({
 			where: { userId, type, expiresAt: { gt: new Date() } },
 		});
 
-		if (!tokens.length) return false;
+		if (tokens.length === 0) {
+			return false;
+		}
 
 		for (const dbToken of tokens) {
-			const isValid = await comparePassword(token, dbToken.hashedValidator);
-			if (isValid) return true;
+			if (compareValidators(token, dbToken.hashedValidator)) {
+				return true;
+			}
 		}
 
 		return false;
@@ -63,24 +76,39 @@ export class TokenService {
 		fullToken: string,
 		type: TokenType,
 		deleteToken: boolean = false,
-	): Promise<string | null> {
+		tx?: Prisma.TransactionClient,
+	): Promise<string> {
+		const prisma = tx ?? this.prismaService;
 		const [selector, validator] = fullToken.split(':');
-		if (!selector || !validator) return null;
 
-		const dbToken = await this.prismaService.token.findUnique({
+		if (!selector || !validator) {
+			throw new BadRequestException(ERROR_MESSAGES.TOKEN.TOKEN_INVALID);
+		}
+
+		const dbToken = await prisma.token.findUnique({
 			where: {
 				selector_type: { selector, type },
-				expiresAt: { gt: new Date() },
 			},
 		});
 
-		if (!dbToken || dbToken.expiresAt < new Date()) return null;
+		if (!dbToken) {
+			throw new BadRequestException(ERROR_MESSAGES.TOKEN.TOKEN_NOT_FOUND);
+		}
 
-		const isValid = await comparePassword(validator, dbToken.hashedValidator);
-		if (!isValid) return null;
+		if (dbToken.expiresAt < new Date()) {
+			if (deleteToken) {
+				await prisma.token.delete({ where: { id: dbToken.id } });
+			}
+			throw new BadRequestException(ERROR_MESSAGES.TOKEN.TOKEN_EXPIRED);
+		}
+
+		const isValid = compareValidators(validator, dbToken.hashedValidator);
+		if (!isValid) {
+			throw new BadRequestException(ERROR_MESSAGES.TOKEN.TOKEN_INVALID);
+		}
 
 		if (deleteToken) {
-			await this.prismaService.token.delete({ where: { id: dbToken.id } });
+			await prisma.token.delete({ where: { id: dbToken.id } });
 		}
 
 		return dbToken.userId;
@@ -90,40 +118,55 @@ export class TokenService {
 		userId: string,
 		fullToken: string,
 		type: TokenType,
+		tx?: Prisma.TransactionClient,
 	): Promise<void> {
+		const prisma = tx ?? this.prismaService;
 		const [selector, validator] = fullToken.split(':');
-		if (!selector || !validator) return;
 
-		const dbToken = await this.prismaService.token.findUnique({
+		if (!selector || !validator) {
+			return;
+		}
+
+		const dbToken = await prisma.token.findUnique({
 			where: {
 				userId,
 				selector_type: { selector, type },
 			},
 		});
 
-		if (!dbToken) return;
+		if (!dbToken) {
+			return;
+		}
 
-		await this.prismaService.token.delete({ where: { id: dbToken.id } });
+		const isValid = compareValidators(validator, dbToken.hashedValidator);
+
+		if (!isValid) {
+			return;
+		}
+
+		await prisma.token.delete({
+			where: { id: dbToken.id },
+		});
 	}
 
 	async removeToken(
 		userId: string,
 		token: string,
 		type: TokenType,
+		tx?: Prisma.TransactionClient,
 	): Promise<void> {
-		const userTokens = await this.prismaService.token.findMany({
-			where: {
-				userId,
-				type,
-			},
+		const prisma = tx ?? this.prismaService;
+		const userTokens = await prisma.token.findMany({
+			where: { userId, type },
 		});
 
-		if (!userTokens.length) return;
+		if (userTokens.length === 0) {
+			return;
+		}
 
 		for (const dbToken of userTokens) {
-			const isValid = await comparePassword(token, dbToken.hashedValidator);
-			if (isValid) {
-				await this.prismaService.token.delete({
+			if (compareValidators(token, dbToken.hashedValidator)) {
+				await prisma.token.delete({
 					where: { id: dbToken.id },
 				});
 				break;
@@ -131,8 +174,13 @@ export class TokenService {
 		}
 	}
 
-	async removeAllForUser(userId: string, type: TokenType) {
-		return this.prismaService.token.deleteMany({
+	async removeAllForUser(
+		userId: string,
+		type: TokenType,
+		tx?: Prisma.TransactionClient,
+	): Promise<void> {
+		const prisma = tx ?? this.prismaService;
+		await prisma.token.deleteMany({
 			where: { userId, type },
 		});
 	}

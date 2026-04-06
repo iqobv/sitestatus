@@ -8,6 +8,7 @@ import { TokenModule } from './token/token.module';
 import { UserProviderModule } from './user-provider/user-provider.module';
 import { UserModule } from './user/user.module';
 import { InfraModule } from 'src/infra/infra.module';
+import { ProjectModule } from './project/project.module';
 
 @Module({
 	imports: [
@@ -20,6 +21,7 @@ import { InfraModule } from 'src/infra/infra.module';
 		PingResultModule,
 		MonitorModule,
 		MonitoringModule,
+		ProjectModule,
 	],
 })
 export class ApiModule {}

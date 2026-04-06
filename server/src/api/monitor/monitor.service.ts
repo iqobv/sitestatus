@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
+import { ERROR_MESSAGES } from 'src/libs/constants';
 import { CreateMonitorDto, UpdateMonitorDto } from './dto';
 
 @Injectable()
@@ -14,6 +15,7 @@ export class MonitorService {
 			lastCheckedAt,
 			lastStatus,
 			isActive,
+			projectId,
 		} = dto;
 
 		const monitor = await this.prismaService.monitor.create({
@@ -24,7 +26,8 @@ export class MonitorService {
 				lastCheckedAt,
 				lastStatus,
 				isActive,
-				user: { connect: { id: userId } },
+				projectId: projectId || null,
+				userId,
 			},
 		});
 
@@ -60,7 +63,8 @@ export class MonitorService {
 			},
 		});
 
-		if (!monitor) throw new NotFoundException('Monitor not found');
+		if (!monitor)
+			throw new NotFoundException(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND);
 
 		return monitor;
 	}
@@ -74,6 +78,7 @@ export class MonitorService {
 			nextCheckAt,
 			lastCheckedAt,
 			lastStatus,
+			projectId,
 		} = dto;
 
 		const monitor = await this.ownerCheck(id, userId);
@@ -88,6 +93,7 @@ export class MonitorService {
 				nextCheckAt,
 				lastCheckedAt,
 				lastStatus,
+				projectId,
 			},
 		});
 
@@ -109,7 +115,8 @@ export class MonitorService {
 			where: { id, userId },
 		});
 
-		if (!monitor) throw new NotFoundException('Monitor not found');
+		if (!monitor)
+			throw new NotFoundException(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND);
 
 		return monitor;
 	}

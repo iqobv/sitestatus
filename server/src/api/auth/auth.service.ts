@@ -4,6 +4,8 @@ import { Request, Response } from 'express';
 import { TokenType, User } from 'generated/prisma/client';
 import { getCookieConfig } from 'src/config';
 import { MailService } from 'src/infra/mail/mail.service';
+import { PrismaService } from 'src/infra/prisma/prisma.service';
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from 'src/libs/constants';
 import { comparePassword } from 'src/libs/utils';
 import { TokenService } from '../token/token.service';
 import { CreateUserDto } from '../user/dto';
@@ -16,26 +18,32 @@ export class AuthService {
 		private readonly tokenService: TokenService,
 		private readonly configService: ConfigService,
 		private readonly mailService: MailService,
+		private readonly prismaService: PrismaService,
 	) {}
 
 	async register(dto: CreateUserDto) {
-		const user = await this.userService.create(dto);
+		return await this.prismaService.$transaction(async (tx) => {
+			const user = await this.userService.create(dto, tx);
 
-		const expiresAt = new Date();
-		expiresAt.setHours(expiresAt.getHours() + 1);
+			const expiresAt = new Date();
+			expiresAt.setHours(expiresAt.getHours() + 1);
 
-		const token = await this.tokenService.createToken({
-			userId: user.id,
-			type: TokenType.EMAIL_VERIFICATION,
-			expiresAt,
+			const token = await this.tokenService.createToken(
+				{
+					userId: user.id,
+					type: TokenType.EMAIL_VERIFICATION,
+					expiresAt,
+				},
+				tx,
+			);
+
+			await this.mailService.sendVerificationEmail(user.email, user.id, token);
+
+			return {
+				...SUCCESS_MESSAGES.AUTH.REGISTER_SUCCESS,
+				email: user.email,
+			};
 		});
-
-		await this.mailService.sendVerificationEmail(user.email, user.id, token);
-
-		return {
-			message: 'Registration successful. Please check your email.',
-			email: user.email,
-		};
 	}
 
 	async login(user: User, req: Request) {
@@ -79,40 +87,52 @@ export class AuthService {
 	}
 
 	async verifyEmail(userId: string, token: string, req: Request) {
-		const isValid = await this.tokenService.validateTokenForUser(
-			userId,
-			token,
-			TokenType.EMAIL_VERIFICATION,
-		);
+		return await this.prismaService.$transaction(async (tx) => {
+			const isValid = await this.tokenService.validateTokenForUser(
+				userId,
+				token,
+				TokenType.EMAIL_VERIFICATION,
+				tx,
+			);
 
-		if (!isValid) {
-			throw new BadRequestException('Invalid or expired token');
-		}
+			if (!isValid) {
+				throw new BadRequestException(
+					ERROR_MESSAGES.AUTH.INVALID_OR_EXPIRED_TOKEN,
+				);
+			}
 
-		await this.userService.update(userId, { emailVerified: true });
+			await this.userService.update(userId, { emailVerified: true });
 
-		const user = await this.userService.findById(userId);
+			const user = await this.userService.findById(userId, false, tx);
 
-		await this.login(user, req);
+			await this.login(user, req);
 
-		return { message: 'Email verified successfully', user };
+			return { ...SUCCESS_MESSAGES.AUTH.EMAIL_VERIFIED, user };
+		});
 	}
 
 	async resendVerificationEmail(email: string) {
-		const user = await this.userService.findByEmail(email);
+		return await this.prismaService.$transaction(async (tx) => {
+			const user = await this.userService.findByEmail(email, false, tx);
 
-		if (user && !user.emailVerified) {
-			const token = await this.tokenService.createToken({
-				userId: user.id,
-				type: TokenType.EMAIL_VERIFICATION,
-				expiresAt: new Date(Date.now() + 3600 * 1000),
-			});
+			if (user && !user.emailVerified) {
+				const token = await this.tokenService.createToken(
+					{
+						userId: user.id,
+						type: TokenType.EMAIL_VERIFICATION,
+						expiresAt: new Date(Date.now() + 3600 * 1000),
+					},
+					tx,
+				);
 
-			await this.mailService.sendVerificationEmail(user.email, user.id, token);
-		}
+				await this.mailService.sendVerificationEmail(
+					user.email,
+					user.id,
+					token,
+				);
+			}
 
-		return {
-			message: 'Verification email has sent.',
-		};
+			return SUCCESS_MESSAGES.AUTH.RESEND_VERIFICATION_EMAIL;
+		});
 	}
 }

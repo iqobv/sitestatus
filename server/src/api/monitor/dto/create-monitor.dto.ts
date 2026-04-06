@@ -7,6 +7,7 @@ import {
 	IsOptional,
 	IsString,
 	IsUrl,
+	IsUUID,
 	Min,
 } from 'class-validator';
 import { SiteStatus } from 'generated/prisma/enums';
@@ -43,4 +44,9 @@ export class CreateMonitorDto {
 	@IsBoolean()
 	@IsOptional()
 	isActive?: boolean;
+
+	@ApiProperty({ example: 'f77d8a89-3af8-43d3-91d2-47348ec2ac45' })
+	@IsOptional()
+	@IsUUID('4')
+	projectId?: string;
 }

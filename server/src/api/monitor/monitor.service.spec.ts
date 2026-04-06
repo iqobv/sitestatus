@@ -22,11 +22,13 @@ describe('MonitorService', () => {
 		id: 'monitorId',
 		name: 'Test Monitor',
 		url: 'https://example.com',
+		projectId: null,
 		checkIntervalSeconds: 60,
 		lastCheckedAt: new Date(),
 		lastStatus: SiteStatus.UP,
 		isActive: true,
 		userId: 'userId',
+		nextCheckAt: new Date(),
 		createdAt: new Date(),
 		updatedAt: new Date(),
 	};

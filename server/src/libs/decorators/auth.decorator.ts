@@ -1,8 +1,8 @@
 import { applyDecorators, UseGuards } from '@nestjs/common';
 import { ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { UserRole } from 'generated/prisma/enums';
-import { Roles } from 'src/api/auth/decorators';
-import { AuthenticatedGuard, RolesGuard } from 'src/api/auth/guards';
+import { Roles } from 'src/api/public/auth/decorators';
+import { AuthenticatedGuard, RolesGuard } from 'src/api/public/auth/guards';
 
 export function Auth(...roles: UserRole[]) {
 	if (roles.length > 0) {

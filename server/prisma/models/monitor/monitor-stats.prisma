@@ -1,0 +1,20 @@
+model MonitorStats {
+  id String @id @default(uuid()) @db.Uuid
+
+  monitorId String @map("monitor_id") @db.Uuid
+  regionId  String @map("region_id") @db.Uuid
+
+  avgResponseMs Int      @map("avg_response_ms")
+  uptimePercent Float    @map("uptime_percent")
+  timestamp     DateTime
+
+  period StatPeriod
+
+  monitor Monitor @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+  region  Region  @relation(fields: [regionId], references: [id], onDelete: Cascade)
+
+  regionConfig MonitorRegion @relation(fields: [monitorId, regionId], references: [monitorId, regionId], onDelete: Cascade)
+
+  @@index([monitorId, timestamp])
+  @@map("monitor_stats")
+}

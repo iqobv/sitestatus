@@ -4,6 +4,8 @@ model MonitorStats {
   monitorId String @map("monitor_id") @db.Uuid
   regionId  String @map("region_id") @db.Uuid
 
+  status SiteStatus @default(UNKNOWN)
+
   avgResponseMs Int      @map("avg_response_ms")
   uptimePercent Float    @map("uptime_percent")
   timestamp     DateTime

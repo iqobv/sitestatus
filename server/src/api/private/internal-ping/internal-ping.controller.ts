@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { WorkerAuthGuard } from 'src/libs/guards';
 import { PingResultDto } from './dto';
 import { InternalPingService } from './internal-ping.service';
@@ -9,13 +9,16 @@ export class InternalPingController {
 
 	@UseGuards(WorkerAuthGuard)
 	@Get('tasks')
-	async getTasks(@Param('region') region: string) {
+	async getTasks(@Query('region') region: string) {
 		return await this.internalPingService.getTasks(region);
 	}
 
 	@UseGuards(WorkerAuthGuard)
 	@Post('results')
-	async saveResults(@Body() results: PingResultDto[]) {
-		return await this.internalPingService.saveResults(results);
+	async saveResults(
+		@Body() results: PingResultDto[],
+		@Query('region') region: string,
+	) {
+		return await this.internalPingService.saveResults(results, region);
 	}
 }

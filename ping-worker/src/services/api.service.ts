@@ -3,11 +3,11 @@ import { MonitorTask } from '../types/monitor-task.types.js';
 import { PingResultPayload } from '../types/ping-result-payload.types.js';
 
 export class ApiService {
-	constructor(private config: Config) {}
+	constructor(private readonly config: Config) {}
 
 	async fetchTasks(): Promise<MonitorTask[]> {
 		const response = await fetch(
-			`${this.config.apiUrl}/v1/internal/ping/tasks`,
+			`${this.config.apiUrl}/v1/internal/ping/tasks?region=${this.config.region}`,
 			{
 				method: 'GET',
 				headers: {
@@ -26,7 +26,7 @@ export class ApiService {
 
 	async submitResults(results: PingResultPayload[]): Promise<void> {
 		const response = await fetch(
-			`${this.config.apiUrl}/v1/internal/ping/results`,
+			`${this.config.apiUrl}/v1/internal/ping/results?region=${this.config.region}`,
 			{
 				method: 'POST',
 				headers: {

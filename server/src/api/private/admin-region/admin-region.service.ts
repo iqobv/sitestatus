@@ -31,12 +31,12 @@ export class AdminRegionService {
 		}
 	}
 
-	async getRegionByKey(key: string, throwIfNotFound = true) {
+	async getRegionByKey(key: string) {
 		const region = await this.prismaService.region.findUnique({
 			where: { key },
 		});
 
-		if (!region && throwIfNotFound) {
+		if (!region) {
 			throw new NotFoundException(ERROR_MESSAGES.REGION.REGION_NOT_FOUND);
 		}
 

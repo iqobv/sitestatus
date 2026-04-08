@@ -14,10 +14,7 @@ export async function pingWorkerHandler(
 
 		const tasks = await apiService.fetchTasks();
 
-		if (tasks.length === 0) {
-			context.log('No tasks to process.');
-			return;
-		}
+		if (tasks.length === 0) return;
 
 		const results: PingResultPayload[] = await Promise.all(
 			tasks.map(async (task) => {
@@ -25,16 +22,12 @@ export async function pingWorkerHandler(
 
 				return {
 					monitorId: task.id,
-					region: config.region,
 					...pingResult,
 				};
 			}),
 		);
 
 		await apiService.submitResults(results);
-		context.log(
-			`Successfully processed ${results.length} monitors in ${config.region}`,
-		);
 	} catch (error: unknown) {
 		context.error(
 			`Worker execution failed: ${error instanceof Error ? error.message : String(error)}`,

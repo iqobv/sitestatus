@@ -110,17 +110,9 @@ describe('AdminRegionService', () => {
 		it('should throw an error if region with specified key does not exist', async () => {
 			prisma.region.findUnique.mockResolvedValue(null);
 
-			await expect(
-				service.getRegionByKey('non_existent_key', true),
-			).rejects.toThrow(NotFoundException);
-		});
-
-		it('should return null if region with specified key does not exist', async () => {
-			prisma.region.findUnique.mockResolvedValue(null);
-
-			const result = await service.getRegionByKey('non_existent_key', false);
-
-			expect(result).toBeNull();
+			await expect(service.getRegionByKey('non_existent_key')).rejects.toThrow(
+				NotFoundException,
+			);
 		});
 	});
 

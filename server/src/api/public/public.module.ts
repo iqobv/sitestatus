@@ -6,6 +6,7 @@ import { TokenModule } from './token/token.module';
 import { UserProviderModule } from './user-provider/user-provider.module';
 import { UserModule } from './user/user.module';
 import { RegionModule } from './region/region.module';
+import { AnalyticsModule } from './analytics/analytics.module';
 
 @Module({
 	imports: [
@@ -16,6 +17,7 @@ import { RegionModule } from './region/region.module';
 		MonitorModule,
 		ProjectModule,
 		RegionModule,
+		AnalyticsModule,
 	],
 })
 export class PublicModule {}

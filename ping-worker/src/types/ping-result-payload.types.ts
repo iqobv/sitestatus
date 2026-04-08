@@ -6,5 +6,4 @@ export interface PingResultPayload {
 	statusCode: number | null;
 	responseTimeMs: number;
 	errorMessage: string | null;
-	region: string;
 }

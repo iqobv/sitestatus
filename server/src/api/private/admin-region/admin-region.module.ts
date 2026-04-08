@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AdminRegionService } from './admin-region.service';
 import { AdminRegionController } from './admin-region.controller';
+import { AdminRegionService } from './admin-region.service';
 
 @Module({
 	controllers: [AdminRegionController],
 	providers: [AdminRegionService],
+	exports: [AdminRegionService],
 })
 export class AdminRegionModule {}

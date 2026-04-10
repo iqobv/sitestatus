@@ -1,15 +1,15 @@
 'use client';
 
-import { IMonitorWithPingResults } from '@/types';
+import { MonitorWithPingResults } from '@/types';
 import { useEffect, useState } from 'react';
 
-interface IMonitorStatusBreakdownCode {
+interface MonitorStatusBreakdownCode {
 	code: string;
 	percentage: number;
 }
 
-export const useMonitorStatusBreakdown = (monitor: IMonitorWithPingResults) => {
-	const [codes, setCodes] = useState<IMonitorStatusBreakdownCode[]>([]);
+export const useMonitorStatusBreakdown = (monitor: MonitorWithPingResults) => {
+	const [codes, setCodes] = useState<MonitorStatusBreakdownCode[]>([]);
 
 	useEffect(() => {
 		if (!monitor.pingResults) return;

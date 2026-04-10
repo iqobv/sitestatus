@@ -7,9 +7,14 @@ model MonitorRegion {
   lastStatus    SiteStatus @default(UNKNOWN) @map("last_status")
 
   isActive Boolean @default(true) @map("is_active")
+  isQueued Boolean @default(false) @map("is_queued")
 
-  logs  MonitorLog[]
-  stats MonitorStats[]
+  logs      MonitorLog[]
+  stats     MonitorStats[]
+  accidents MonitorAccident[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   monitor Monitor @relation(fields: [monitorId], references: [id], onDelete: Cascade)
   region  Region  @relation(fields: [regionId], references: [id], onDelete: Cascade)

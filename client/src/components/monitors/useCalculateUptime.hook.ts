@@ -1,8 +1,8 @@
 import { MONITOR_STATUSES } from '@/constants';
-import { IPingResult } from '@/types';
+import { PingResult } from '@/types';
 import { useEffect, useState } from 'react';
 
-export const useCalculateUptime = (pingResults: IPingResult[]) => {
+export const useCalculateUptime = (pingResults: PingResult[]) => {
 	const [uptime, setUptime] = useState<string>('N/A');
 
 	useEffect(() => {
@@ -14,7 +14,7 @@ export const useCalculateUptime = (pingResults: IPingResult[]) => {
 		}
 
 		const successfulPings = pingResults.filter(
-			(ping) => ping.status === MONITOR_STATUSES.UP
+			(ping) => ping.status === MONITOR_STATUSES.UP,
 		).length;
 		const calculatedUptime = (successfulPings / totalPings) * 100;
 		setUptime(calculatedUptime.toFixed(2) + '%');

@@ -1,0 +1,30 @@
+.monitor-overall-uptime-bar {
+	display: flex;
+	flex-direction: row;
+	gap: 1px;
+	height: 30px;
+
+	&__item {
+		--bar-color: var(--status-unknown);
+		--bar-color-hover: var(--status-unknown-hover);
+
+		height: 100%;
+		width: 8px;
+		background-color: var(--bar-color);
+
+		&-tooltip {
+			display: flex;
+			flex-direction: column;
+			gap: 3px;
+			align-items: center;
+
+			&-status {
+				text-transform: capitalize;
+			}
+		}
+
+		&:hover {
+			background-color: var(--bar-color-hover);
+		}
+	}
+}

@@ -1,5 +1,5 @@
-import { IUser } from '../user/user.types';
+import { User } from '../user/user.types';
 
-export interface ILoginResponse {
-	user: IUser;
+export interface LoginResponse {
+	user: User;
 }

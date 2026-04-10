@@ -1,8 +1,8 @@
-import { TMonitorStatus } from '../monitors/monitorStatus.types';
+import { MonitorStatus } from '../monitors/monitorStatus.types';
 
-export interface IHeatmapCell {
+export interface HeatmapCell {
 	from: Date;
 	to: Date;
-	status: TMonitorStatus | null;
+	status: MonitorStatus | null;
 	avgResponse: number | null;
 }

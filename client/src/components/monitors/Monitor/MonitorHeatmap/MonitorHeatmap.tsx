@@ -1,6 +1,6 @@
 'use client';
 
-import { IMonitorWithPingResults, TMonitorRange } from '@/types';
+import { MonitorRange, MonitorWithPingResults } from '@/types';
 import { buildHeatmapCells } from '@/utils';
 import { useMemo } from 'react';
 import MonitorCard from '../MonitorCard/MonitorCard';
@@ -8,8 +8,8 @@ import styles from './MonitorHeatmap.module.scss';
 import MonitorHeatmapCell from './MonitorHeatmapCell/MonitorHeatmapCell';
 
 interface MonitorHeatmapProps {
-	monitor: IMonitorWithPingResults;
-	selectedRange: TMonitorRange;
+	monitor: MonitorWithPingResults;
+	selectedRange: MonitorRange;
 }
 
 const MonitorHeatmap = ({ monitor, selectedRange }: MonitorHeatmapProps) => {
@@ -18,9 +18,9 @@ const MonitorHeatmap = ({ monitor, selectedRange }: MonitorHeatmapProps) => {
 			buildHeatmapCells(
 				monitor.pingResults,
 				selectedRange,
-				monitor.checkIntervalSeconds
+				monitor.checkIntervalSeconds,
 			),
-		[monitor, selectedRange]
+		[monitor, selectedRange],
 	);
 
 	return (

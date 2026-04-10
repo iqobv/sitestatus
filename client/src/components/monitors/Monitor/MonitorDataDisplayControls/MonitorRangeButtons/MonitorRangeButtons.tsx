@@ -1,31 +1,36 @@
 'use client';
 
-import { Button } from '@/components/ui';
-import { TMonitorRange } from '@/types';
+import { Button, ButtonGroup } from '@/components/ui';
+import { URL_TO_RANGE_MAP } from '@/constants';
+import { monitorRangeParser } from '@/parsers';
+import { RangeNumericValue } from '@/types';
+import { useQueryState } from 'nuqs';
 import styles from './MonitorRangeButtons.module.scss';
 import { MONITOR_RANGE_BUTTONS_ITEMS } from './monitorRangeButtonsItems';
 
-interface MonitorRangeButtonsProps {
-	selectedRange: TMonitorRange;
-	onRangeChange: (range: TMonitorRange) => void;
-}
+const MonitorRangeButtons = () => {
+	const [range, setRange] = useQueryState(
+		'range',
+		monitorRangeParser.withDefault(1),
+	);
 
-const MonitorRangeButtons = ({
-	selectedRange,
-	onRangeChange,
-}: MonitorRangeButtonsProps) => {
+	const handleRangeChange = (newRange: RangeNumericValue) => {
+		setRange(newRange).catch(console.error);
+	};
+
 	return (
-		<div className={styles['monitor-range-buttons']}>
+		<ButtonGroup padding={0}>
 			{MONITOR_RANGE_BUTTONS_ITEMS.map((item) => (
 				<Button
 					key={item.name}
-					onClick={() => onRangeChange(item.name)}
-					variant={selectedRange === item.name ? 'contained' : 'outlined'}
+					onClick={() => handleRangeChange(item.value)}
+					variant={range === URL_TO_RANGE_MAP[item.name] ? 'contained' : 'text'}
+					className={styles['monitor-range-button']}
 				>
 					{item.label}
 				</Button>
 			))}
-		</div>
+		</ButtonGroup>
 	);
 };
 

@@ -1,11 +1,11 @@
 'use client';
 
-import { IMonitorWithPingResults } from '@/types';
+import { MonitorWithMonitorStats } from '@/types';
 import styles from './MonitorStatusBreakdown.module.scss';
 import { useMonitorStatusBreakdown } from './useMonitorStatusBreakdown.hook';
 
 interface MonitorStatusBreakdownProps {
-	monitor: IMonitorWithPingResults;
+	monitor: MonitorWithMonitorStats;
 }
 
 const MonitorStatusBreakdown = ({ monitor }: MonitorStatusBreakdownProps) => {

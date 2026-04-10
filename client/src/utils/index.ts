@@ -1,4 +1,5 @@
 export * from './addInterval.util';
+export * from './calculateErrorRate.util';
 export * from './calculateUptime.util';
 export * from './capitalize.util';
 export * from './fetcher.util';

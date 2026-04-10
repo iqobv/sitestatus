@@ -1,41 +1,59 @@
 'use client';
 
-import { IMonitorWithPingResults } from '@/types';
+import { getMonitorAnalytics, getMonitorById } from '@/api';
+import { QUERY_KEYS } from '@/config';
+import { monitorRangeParser } from '@/parsers';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { parseAsString, useQueryStates } from 'nuqs';
 import styles from './Monitor.module.scss';
-import MonitorCards from './MonitorCards/MonitorCards';
-import MonitorDataDisplayControls from './MonitorDataDisplayControls/MonitorDataDisplayControls';
+import MonitorRangeControl from './MonitorDataDisplayControls/MonitorRangeControl';
 import MonitorHeader from './MonitorHeader/MonitorHeader';
-import MonitorHeatmap from './MonitorHeatmap/MonitorHeatmap';
-import MonitorIncidentList from './MonitorIncidents/MonitorIncidents';
 import MonitorLoader from './MonitorLoader';
-import { useMonitor } from './useMonitor';
+import MonitorOverall from './MonitorOverall/MonitorOverall';
+import MonitorRegionControl from './MonitorRegionControl/MonitorRegionControl';
+import MonitorRegionStats from './MonitorRegionStats/MonitorRegionStats';
 
 interface MonitorProps {
 	id: string;
-	initialData?: IMonitorWithPingResults | null;
 }
 
-const Monitor = ({ id, initialData }: MonitorProps) => {
-	const { isLoading, data, monitor, selectedRange, setSelectedRange } =
-		useMonitor({ id, initialData });
+const Monitor = ({ id }: MonitorProps) => {
+	const [{ range, region }] = useQueryStates({
+		range: monitorRangeParser.withDefault(1),
+		region: parseAsString.withDefault('global'),
+	});
+
+	const { data: monitor, isLoading } = useQuery({
+		queryKey: QUERY_KEYS.monitors.byId(id),
+		queryFn: () => getMonitorById(id),
+		placeholderData: keepPreviousData,
+	});
+
+	const { data: monitorAnalytics, isLoading: isMonitorAnalyticsLoading } =
+		useQuery({
+			queryKey: QUERY_KEYS.monitors.analtics(id, range, region),
+			queryFn: () => getMonitorAnalytics(id, range, region),
+			placeholderData: keepPreviousData,
+		});
 
 	return (
 		<div className={styles['monitor']}>
 			{isLoading && <MonitorLoader />}
-			{!isLoading && data && monitor && (
+			{!isLoading && monitor && (
 				<div className={`${styles['monitor__content']} fade`}>
 					<MonitorHeader monitor={monitor} />
-					<MonitorDataDisplayControls
-						selectedRange={selectedRange}
-						monitorId={monitor.id}
-						onRangeChange={setSelectedRange}
-					/>
-					<MonitorCards monitor={monitor} />
-					<MonitorHeatmap monitor={monitor} selectedRange={selectedRange} />
-					<MonitorIncidentList
+					<MonitorRangeControl monitorId={monitor.id} />
+					<MonitorOverall monitor={monitor} />
+					<MonitorRegionControl regions={monitor.regions} />
+					{isMonitorAnalyticsLoading && <div>Loadiong..</div>}
+					{!isMonitorAnalyticsLoading && monitorAnalytics && (
+						<MonitorRegionStats data={monitorAnalytics} />
+					)}
+					{/* <MonitorHeatmap monitor={monitor} selectedRange={selectedRange} /> */}
+					{/* <MonitorIncidentList
 						monitor={monitor}
 						selectedRange={selectedRange}
-					/>
+					/> */}
 				</div>
 			)}
 		</div>

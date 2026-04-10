@@ -16,7 +16,12 @@ import {
 import { ERROR_MESSAGES } from 'src/libs/constants';
 import { Auth, Authorized } from 'src/libs/decorators';
 import { createCustomMessageDto } from 'src/libs/utils';
-import { CreateMonitorDto, MonitorDto, UpdateMonitorDto } from './dto';
+import {
+	CreateMonitorDto,
+	MonitorDto,
+	MonitorMainInfoDto,
+	UpdateMonitorDto,
+} from './dto';
 import { MonitorFullDto } from './dto/monitor-full.dto';
 import { MonitorService } from './monitor.service';
 
@@ -45,7 +50,7 @@ export class MonitorController {
 
 	@Auth()
 	@ApiOperation({ summary: 'Get monitor by ID' })
-	@ApiOkResponse({ type: MonitorFullDto })
+	@ApiOkResponse({ type: MonitorMainInfoDto })
 	@ApiNotFoundResponse({
 		type: createCustomMessageDto(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND),
 	})

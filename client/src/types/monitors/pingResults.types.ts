@@ -1,9 +1,9 @@
-import { TMonitorStatus } from './monitorStatus.types';
+import { MonitorStatus } from './monitorStatus.types';
 
-export interface IPingResult {
+export interface PingResult {
 	id: string;
 	monitorId: string;
-	status: TMonitorStatus;
+	status: MonitorStatus;
 	statusCode: number | null;
 	responseTimeMs: number | null;
 	errorMessage: string | null;

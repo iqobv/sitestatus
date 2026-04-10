@@ -1,13 +1,11 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, IntersectionType } from '@nestjs/swagger';
 import { DefaultFieldsDto } from 'src/libs/dto';
+import { BaseRegionDto } from './base-region.dto';
 
-export class RegionDto extends DefaultFieldsDto {
-	@ApiProperty({ example: 'us-east' })
-	key: string;
-
-	@ApiProperty({ example: 'United States' })
-	name: string;
-
+export class RegionDto extends IntersectionType(
+	DefaultFieldsDto,
+	BaseRegionDto,
+) {
 	@ApiProperty({ example: 'North America' })
 	continent: string;
 

@@ -1,11 +1,11 @@
 'use client';
 
-import { IMonitorWithPingResults } from '@/types';
+import { MonitorWithPingResults } from '@/types';
 import { useEffect, useState } from 'react';
 import { Incident } from './MonitorIncidents.types';
 
 interface UseMonitorIncidentListProps {
-	monitor: IMonitorWithPingResults;
+	monitor: MonitorWithPingResults;
 }
 
 export const useMonitorIncidentList = ({
@@ -17,7 +17,7 @@ export const useMonitorIncidentList = ({
 		if (monitor && monitor.pingResults.length > 0) {
 			const sorted = [...monitor.pingResults].sort(
 				(a, b) =>
-					new Date(a.checkedAt).getTime() - new Date(b.checkedAt).getTime()
+					new Date(a.checkedAt).getTime() - new Date(b.checkedAt).getTime(),
 			);
 
 			const incidents: Incident[] = [];

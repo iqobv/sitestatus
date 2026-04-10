@@ -18,7 +18,7 @@ export class AdminRegionService {
 		try {
 			return await this.prismaService.region.create({
 				data: {
-					key,
+					key: key.toLowerCase(),
 					name,
 					continent,
 					isActive,
@@ -64,7 +64,7 @@ export class AdminRegionService {
 			return await this.prismaService.region.update({
 				where: { id: region.id },
 				data: {
-					key,
+					...(key && { key: key.toLowerCase() }),
 					name,
 					continent,
 					isActive,

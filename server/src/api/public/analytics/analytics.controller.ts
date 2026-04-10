@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { AnalyticsService } from './analytics.service';
-import { AnalyticsDto } from './dto';
+import { AnalyticsDto, AnalyticsQueryDto } from './dto';
 
 @Controller('analytics')
 export class AnalyticsController {
@@ -12,8 +12,8 @@ export class AnalyticsController {
 	@Get(':monitorId')
 	async getAnalyticsByMonitorId(
 		@Param('monitorId') monitorId: string,
-		@Query('daysRange') daysRange: number,
+		@Query() query: AnalyticsQueryDto,
 	) {
-		return this.analyticsService.getAnalyticsByMonitorId(monitorId, daysRange);
+		return this.analyticsService.getAnalyticsByMonitorId(monitorId, query);
 	}
 }

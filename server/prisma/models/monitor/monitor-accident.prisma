@@ -1,0 +1,26 @@
+model MonitorAccident {
+  id String @id @default(uuid()) @db.Uuid
+
+  monitorId String @map("monitor_id") @db.Uuid
+  regionId  String @map("region_id") @db.Uuid
+
+  triggerLogId BigInt? @map("trigger_log_id")
+
+  errorMessage String? @map("error_message")
+  statusCode   Int?    @map("status_code")
+
+  resolved   Boolean   @default(false) @map("resolved")
+  resolvedAt DateTime? @map("resolved_at")
+
+  alertsTriggered Boolean   @default(false) @map("alerts_triggered")
+  alertSentAt     DateTime? @map("alert_sent_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  triggerLog    MonitorLog?   @relation(fields: [triggerLogId], references: [id], onDelete: SetNull)
+  monitorRegion MonitorRegion @relation(fields: [monitorId, regionId], references: [monitorId, regionId], onDelete: Cascade)
+
+  @@index([monitorId])
+  @@map("monitor_accidents")
+}

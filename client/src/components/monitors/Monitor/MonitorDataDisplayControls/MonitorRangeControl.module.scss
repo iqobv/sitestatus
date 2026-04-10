@@ -1,0 +1,14 @@
+@use '../../../../styles/mixins' as *;
+
+.range-control {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	align-items: start;
+	justify-content: space-between;
+
+	@include respond-to('md') {
+		flex-direction: row;
+		align-items: center;
+	}
+}

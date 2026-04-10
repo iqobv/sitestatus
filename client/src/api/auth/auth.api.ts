@@ -1,23 +1,20 @@
 import { LoginDto, RegisterDto } from '@/dto';
-import { IUser } from '@/types';
-import { fetcher } from '@/utils';
+import { User } from '@/types';
+import { apiClient } from '../axios';
 
 export const login = async (dto: LoginDto) =>
-	await fetcher<IUser>('/api/v1/auth/login', {
-		method: 'POST',
-		body: JSON.stringify(dto),
-	});
+	(await apiClient.post<User>(`/v1/auth/login`, dto)).data;
 
 export const register = async (dto: RegisterDto) =>
-	await fetcher<{ message: string; email: string }>('/api/v1/auth/register', {
-		method: 'POST',
-		body: JSON.stringify(dto),
-	});
+	(
+		await apiClient.post<{ message: string; email: string }>(
+			`/v1/auth/register`,
+			dto,
+		)
+	).data;
 
 export const getProfile = async () =>
-	await fetcher<IUser>('/api/v1/auth/me', {
-		method: 'GET',
-	});
+	(await apiClient.get<User>(`/v1/auth/me`)).data;
 
 export const logout = async () =>
-	await fetcher('/api/v1/auth/logout', { method: 'POST' });
+	(await apiClient.post(`/v1/auth/logout`)).data;

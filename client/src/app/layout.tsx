@@ -1,5 +1,5 @@
 import MainProvider from '@/providers/MainProvider';
-import { IUser } from '@/types';
+import { User } from '@/types';
 import { serverFetcher } from '@/utils';
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
@@ -23,7 +23,7 @@ export default async function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
-	const user = await serverFetcher<IUser>('/v1/auth/me').catch(() => null);
+	const user = await serverFetcher<User>('/v1/auth/me').catch(() => null);
 
 	return (
 		<html lang="en" suppressHydrationWarning>

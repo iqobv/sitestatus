@@ -1,12 +1,12 @@
 'use client';
 
-import { IMonitorWithPingResults } from '@/types';
+import { MonitorAnalytics } from '@/types';
 import MonitorCard from '../MonitorCard/MonitorCard';
 import styles from './MonitorCards.module.scss';
 import { MONITORS_CARDS_ITEMS } from './monitorCardsItems';
 
 interface MonitorCardsProps {
-	monitor: IMonitorWithPingResults;
+	monitor: MonitorAnalytics;
 }
 
 const MonitorCards = ({ monitor }: MonitorCardsProps) => {

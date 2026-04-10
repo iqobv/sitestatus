@@ -11,7 +11,9 @@ export const QUERY_KEYS = {
 			['resendVerificationEmail', email] as const,
 	},
 	monitors: {
-		list: (userId: string) => ['monitors-list', userId] as const,
+		list: (userId: string) => ['monitorsList', userId] as const,
 		byId: (monitorId: string) => ['monitor', monitorId] as const,
+		analtics: (monitorId: string, range: number, region: string) =>
+			['monitorAnalytics', monitorId, range, region] as const,
 	},
 } as const;

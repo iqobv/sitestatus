@@ -1,13 +1,13 @@
 'use client';
 
-import { IMonitorWithPingResults, TMonitorRange } from '@/types';
+import { MonitorRange, MonitorWithPingResults } from '@/types';
 import MonitorCard from '../MonitorCard/MonitorCard';
 import MonitorIncidentTable from './MonitorIncidentTable/MonitorIncidentTable';
 import { useMonitorIncidentList } from './useMonitorIncidents.hook';
 
 interface MonitorIncidentsProps {
-	monitor: IMonitorWithPingResults;
-	selectedRange: TMonitorRange;
+	monitor: MonitorWithPingResults;
+	selectedRange: MonitorRange;
 }
 
 const MonitorIncidents = ({

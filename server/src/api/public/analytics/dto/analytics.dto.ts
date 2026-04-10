@@ -1,7 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { StatPeriod } from 'generated/prisma/enums';
-import { AnalyticsRowDataDto } from './analytics-raw-log.dto';
+import { AnalyticsAccidentDto } from './analytics-accident.dto';
+import { AnalyticsRawDataDto } from './analytics-raw-log.dto';
 import { AnalyticsStatLogDto } from './analytics-stat-log.dto';
+import { AnalyticsStatisticsDto } from './analytics-statistics.dto';
 
 const PeriodEnum = {
 	...StatPeriod,
@@ -14,6 +16,12 @@ export class AnalyticsDto {
 	@ApiProperty({ example: StatPeriod.HOURLY, enum: PeriodEnum })
 	period: Period;
 
+	@ApiProperty({ type: AnalyticsStatisticsDto })
+	statistics: AnalyticsStatisticsDto;
+
+	@ApiProperty({ type: [AnalyticsAccidentDto] })
+	accidents: AnalyticsAccidentDto[];
+
 	@ApiProperty({ type: AnalyticsStatLogDto })
-	data: AnalyticsRowDataDto | AnalyticsStatLogDto;
+	data: AnalyticsRawDataDto | AnalyticsStatLogDto;
 }

@@ -1,7 +1,7 @@
 import { CreateMonitorDto } from '@/dto';
-import { IField } from '@/types';
+import { Field } from '@/types';
 
-export const CREATE_MONITOR_FIELDS: IField<CreateMonitorDto>[] = [
+export const CREATE_MONITOR_FIELDS: Field<CreateMonitorDto>[] = [
 	{
 		name: 'name',
 		label: 'Monitor Name',

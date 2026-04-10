@@ -1,0 +1,11 @@
+@use '../../../../../styles/mixins' as *;
+
+.monitor-region-stats-cards {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: var(--gap);
+
+	@include respond-to(md) {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}

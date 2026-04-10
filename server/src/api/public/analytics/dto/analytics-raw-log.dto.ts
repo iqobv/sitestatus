@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { SiteStatus } from 'generated/prisma/enums';
 
-export class AnalyticsRowDataDto {
+export class AnalyticsRawDataDto {
 	@ApiProperty({ example: SiteStatus.UP, enum: SiteStatus })
 	status: SiteStatus;
 

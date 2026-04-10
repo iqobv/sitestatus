@@ -1,4 +1,4 @@
-import { IHeatmapCell, IPingResult } from '@/types';
+import { HeatmapCell, PingResult } from '@/types';
 import dayjs from 'dayjs';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 
@@ -9,9 +9,9 @@ const MS_IN_HOUR = 60 * MS_IN_MINUTE;
 const MS_IN_SECOND = 1000;
 
 export const buildHeatmap24h = (
-	pings: IPingResult[],
+	pings: PingResult[],
 	checkIntervalSeconds: number,
-	now: Date
+	now: Date,
 ) => {
 	if (!checkIntervalSeconds) return [];
 
@@ -19,7 +19,7 @@ export const buildHeatmap24h = (
 	const fromTime = now.getTime() - 24 * MS_IN_HOUR;
 	const slotCount = Math.ceil((24 * MS_IN_HOUR) / intervalMs);
 
-	const buckets: IPingResult[][] = Array.from({ length: slotCount }, () => []);
+	const buckets: PingResult[][] = Array.from({ length: slotCount }, () => []);
 
 	for (const p of pings) {
 		const t = new Date(p.checkedAt).getTime();
@@ -32,7 +32,7 @@ export const buildHeatmap24h = (
 		buckets[index].push(p);
 	}
 
-	const cells: IHeatmapCell[] = [];
+	const cells: HeatmapCell[] = [];
 
 	for (let i = 0; i < slotCount; i++) {
 		const slotStartTime = fromTime + i * intervalMs;

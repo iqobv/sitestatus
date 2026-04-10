@@ -1,13 +1,13 @@
-import { IHeatmapCell, IPingResult, TMonitorRange } from '@/types';
+import { HeatmapCell, MonitorRange, PingResult } from '@/types';
 
 const MS_IN_MINUTE = 60 * 1000;
 const MS_IN_HOUR = 60 * MS_IN_MINUTE;
 const MS_IN_DAY = 24 * MS_IN_HOUR;
 
 export const buildHeatmapRange = (
-	pings: IPingResult[],
-	range: TMonitorRange,
-	now: Date
+	pings: PingResult[],
+	range: MonitorRange,
+	now: Date,
 ) => {
 	const numDays = range === '7d' ? 7 : 30;
 	const fromTime =
@@ -19,7 +19,7 @@ export const buildHeatmapRange = (
 	const slotsPerRow = 24;
 	const totalSlots = totalRows * slotsPerRow;
 
-	const buckets: IPingResult[][] = Array.from({ length: totalSlots }, () => []);
+	const buckets: PingResult[][] = Array.from({ length: totalSlots }, () => []);
 
 	for (const p of pings) {
 		const t = new Date(p.checkedAt).getTime();
@@ -38,7 +38,7 @@ export const buildHeatmapRange = (
 		buckets[slotIndex].push(p);
 	}
 
-	const cells: IHeatmapCell[] = [];
+	const cells: HeatmapCell[] = [];
 
 	for (let row = 0; row < totalRows; row++) {
 		for (let hour = 0; hour < 24; hour++) {

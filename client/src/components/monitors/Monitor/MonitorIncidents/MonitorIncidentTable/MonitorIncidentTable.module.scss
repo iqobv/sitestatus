@@ -34,7 +34,7 @@
 	&__status {
 		display: none;
 
-		@include response('md') {
+		@include respond-to('md') {
 			display: table-cell;
 		}
 	}

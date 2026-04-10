@@ -4,14 +4,14 @@ import { getMonitors } from '@/api';
 import { Button } from '@/components/ui';
 import { PAGES, QUERY_KEYS } from '@/config';
 import { useAuth } from '@/hooks';
-import { IMonitorWithPingResults } from '@/types';
+import { MonitorWithMonitorStats } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import MonitorRefresh from './MonitorRefresh/MonitorRefresh';
 import styles from './Monitors.module.scss';
 import MonitorsTable from './MonitorsTable/MonitorsTable';
 
 interface MonitorsProps {
-	initialData?: IMonitorWithPingResults[] | null;
+	initialData?: MonitorWithMonitorStats[] | null;
 }
 
 const Monitors = ({ initialData }: MonitorsProps) => {

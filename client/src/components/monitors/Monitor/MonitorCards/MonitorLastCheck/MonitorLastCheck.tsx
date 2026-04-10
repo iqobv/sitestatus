@@ -1,7 +1,7 @@
 'use client';
 
 import { UptimeStatus } from '@/components/ui';
-import { IMonitorWithPingResults } from '@/types';
+import { MonitorWithPingResults } from '@/types';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import styles from './MonitorLastCheck.module.scss';
@@ -9,7 +9,7 @@ import styles from './MonitorLastCheck.module.scss';
 dayjs.extend(relativeTime);
 
 interface MonitorLastCheckProps {
-	monitor: IMonitorWithPingResults;
+	monitor: MonitorWithPingResults;
 }
 
 const MonitorLastCheck = ({ monitor }: MonitorLastCheckProps) => {

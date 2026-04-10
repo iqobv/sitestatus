@@ -1,3 +1,4 @@
 import { MONITOR_STATUSES } from '@/constants';
 
-export type TMonitorStatus = keyof typeof MONITOR_STATUSES;
+export type MonitorStatus =
+	(typeof MONITOR_STATUSES)[keyof typeof MONITOR_STATUSES];

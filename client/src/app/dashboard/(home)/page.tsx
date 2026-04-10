@@ -1,5 +1,5 @@
 import { Monitors } from '@/components/monitors';
-import { IMonitorWithPingResults } from '@/types';
+import { MonitorWithPingResults } from '@/types';
 import { serverFetcher } from '@/utils';
 import { Metadata } from 'next';
 import styles from './home.module.scss';
@@ -10,12 +10,12 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardPage() {
-	const initialData = await serverFetcher<IMonitorWithPingResults[]>(
+	const initialData = await serverFetcher<MonitorWithPingResults[]>(
 		'/v1/monitors/me',
 		{
 			method: 'GET',
 			cache: 'no-store',
-		}
+		},
 	).catch(() => null);
 
 	return (

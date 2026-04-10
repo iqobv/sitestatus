@@ -1,12 +1,12 @@
 'use client';
 
 import { Tooltip, UptimeStatus } from '@/components/ui';
-import { IHeatmapCell } from '@/types';
+import { HeatmapCell } from '@/types';
 import { useRef, useState } from 'react';
 import styles from './MonitorHeatmapCell.module.scss';
 
 interface MonitorHeatmapCellProps {
-	cell: IHeatmapCell;
+	cell: HeatmapCell;
 }
 
 const MonitorHeatmapCell = ({ cell }: MonitorHeatmapCellProps) => {
@@ -34,12 +34,12 @@ const MonitorHeatmapCell = ({ cell }: MonitorHeatmapCellProps) => {
 						cell.status === 'DOWN'
 							? 'var(--status-down)'
 							: cell.avgResponse === null
-							? 'var(--skeleton-color)'
-							: cell.avgResponse < 300
-							? 'var(--heatmap-fast)'
-							: cell.avgResponse < 1000
-							? 'var(--heatmap-medium)'
-							: 'var(--heatmap-slow)',
+								? 'var(--skeleton-color)'
+								: cell.avgResponse < 300
+									? 'var(--heatmap-fast)'
+									: cell.avgResponse < 1000
+										? 'var(--heatmap-medium)'
+										: 'var(--heatmap-slow)',
 				}}
 				onMouseEnter={handleMouseEnter}
 				onMouseLeave={handleMouseLeave}

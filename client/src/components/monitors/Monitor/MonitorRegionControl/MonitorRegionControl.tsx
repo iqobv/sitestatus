@@ -7,6 +7,7 @@ import styles from './MonitorRegionControl.module.scss';
 
 interface MonitorRegionControlProps {
 	regions: BaseRegion[];
+	isLoading: boolean;
 }
 
 interface IndicatorStyles {
@@ -14,7 +15,10 @@ interface IndicatorStyles {
 	width: string;
 }
 
-const MonitorRegionControl = ({ regions }: MonitorRegionControlProps) => {
+const MonitorRegionControl = ({
+	regions,
+	isLoading,
+}: MonitorRegionControlProps) => {
 	const [indicatorStyles, setIndicatorStyles] = useState<IndicatorStyles>({
 		transform: 'translateX(0px)',
 		width: '0px',
@@ -54,6 +58,7 @@ const MonitorRegionControl = ({ regions }: MonitorRegionControlProps) => {
 	}, [finalRegions, selectedRegion]);
 
 	const handleRegionChange = (key: string) => {
+		if (isLoading) return;
 		setSelectedRegion(key).catch(console.error);
 	};
 
@@ -69,6 +74,7 @@ const MonitorRegionControl = ({ regions }: MonitorRegionControlProps) => {
 							}}
 							onClick={() => handleRegionChange(region.key)}
 							className={`${styles['region-control__button']} ${selectedRegion === region.key ? styles['region-control__button--active'] : ''}`}
+							disabled={isLoading}
 						>
 							{region.name}
 						</button>

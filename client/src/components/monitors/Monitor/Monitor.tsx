@@ -6,12 +6,16 @@ import { monitorRangeParser } from '@/parsers';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { parseAsString, useQueryStates } from 'nuqs';
 import styles from './Monitor.module.scss';
+import MonitorAnalyticsLoader from './MonitorAnalyticsLoader';
 import MonitorRangeControl from './MonitorDataDisplayControls/MonitorRangeControl';
 import MonitorHeader from './MonitorHeader/MonitorHeader';
+import MonitorAccidents from './MonitorIncidents/MonitorIncidents';
 import MonitorLoader from './MonitorLoader';
 import MonitorOverall from './MonitorOverall/MonitorOverall';
 import MonitorRegionControl from './MonitorRegionControl/MonitorRegionControl';
 import MonitorRegionStats from './MonitorRegionStats/MonitorRegionStats';
+import MonitorResponseCards from './MonitorResponseCards/MonitorResponseCards';
+import MonitorResponseChart from './MonitorResponseChart/MonitorResponseChart';
 
 interface MonitorProps {
 	id: string;
@@ -44,16 +48,21 @@ const Monitor = ({ id }: MonitorProps) => {
 					<MonitorHeader monitor={monitor} />
 					<MonitorRangeControl monitorId={monitor.id} />
 					<MonitorOverall monitor={monitor} />
-					<MonitorRegionControl regions={monitor.regions} />
-					{isMonitorAnalyticsLoading && <div>Loadiong..</div>}
+					<MonitorRegionControl
+						regions={monitor.regions}
+						isLoading={isMonitorAnalyticsLoading}
+					/>
+					{isMonitorAnalyticsLoading && <MonitorAnalyticsLoader />}
 					{!isMonitorAnalyticsLoading && monitorAnalytics && (
-						<MonitorRegionStats data={monitorAnalytics} />
+						<>
+							<MonitorRegionStats data={monitorAnalytics} />
+							<MonitorResponseChart monitor={monitorAnalytics} />
+							<MonitorResponseCards
+								responseStatistics={monitorAnalytics.statistics.responseTime}
+							/>
+							<MonitorAccidents incidents={monitorAnalytics.incidents} />
+						</>
 					)}
-					{/* <MonitorHeatmap monitor={monitor} selectedRange={selectedRange} /> */}
-					{/* <MonitorIncidentList
-						monitor={monitor}
-						selectedRange={selectedRange}
-					/> */}
 				</div>
 			)}
 		</div>

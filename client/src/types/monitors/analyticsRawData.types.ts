@@ -1,3 +1,4 @@
+import { BaseRegion } from '../region';
 import { MonitorStatus } from './monitorStatus.types';
 
 export interface AnalyticsRawData {
@@ -5,5 +6,5 @@ export interface AnalyticsRawData {
 	responseTimeMs: number;
 	errorMessage: string | null;
 	createdAt: Date;
-	regionId: string;
+	region: BaseRegion;
 }

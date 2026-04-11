@@ -2,7 +2,6 @@
 
 import { Button, TextField } from '@/components/ui';
 import { QUERY_KEYS } from '@/config';
-import { useAuth } from '@/hooks';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
@@ -19,8 +18,6 @@ const MonitorForm = <T extends FieldValues, R extends { id: string }>({
 	buttonLabel = 'Create Monitor',
 	defaultValues,
 }: MonitorFormProps<T, R>) => {
-	const { user } = useAuth();
-
 	const queryClient = useQueryClient();
 
 	const resolver = !!schema ? zodResolver(schema) : undefined;
@@ -46,8 +43,9 @@ const MonitorForm = <T extends FieldValues, R extends { id: string }>({
 		onSuccess(data) {
 			reset();
 			queryClient.invalidateQueries({
-				queryKey: QUERY_KEYS.monitors.list(user?.id || ''),
+				queryKey: QUERY_KEYS.monitors.list,
 			});
+			reset(data);
 			onSuccess?.(data);
 		},
 		onError(error) {

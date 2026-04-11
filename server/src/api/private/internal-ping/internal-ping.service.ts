@@ -51,7 +51,7 @@ export class InternalPingService {
 				select: { id: true, checkIntervalSeconds: true },
 			});
 
-			const activeAccidents = await tx.monitorAccident.findMany({
+			const activeIncidents = await tx.monitorIncident.findMany({
 				where: {
 					regionId: region.id,
 					monitorId: { in: monitorIds },
@@ -61,15 +61,15 @@ export class InternalPingService {
 			});
 
 			const monitorMap = new Map(monitors.map((m) => [m.id, m]));
-			const activeAccidentMap = new Map(
-				activeAccidents.map((a) => [a.monitorId, a]),
+			const activeIncidentMap = new Map(
+				activeIncidents.map((a) => [a.monitorId, a]),
 			);
 
 			const logsData = results.map((r) => ({
 				monitorId: r.monitorId,
 				regionId: region.id,
-				status: SiteStatus.DOWN,
-				statusCode: 404,
+				status: r.status,
+				statusCode: r.statusCode,
 				responseTimeMs: r.responseTimeMs,
 				errorMessage: r.errorMessage,
 			}));
@@ -81,7 +81,7 @@ export class InternalPingService {
 
 			const logMap = new Map(monitorLogs.map((log) => [log.monitorId, log.id]));
 
-			const accidentsToCreate: {
+			const incidentsToCreate: {
 				monitorId: string;
 				regionId: string;
 				errorMessage: string | null;
@@ -89,7 +89,7 @@ export class InternalPingService {
 				triggerLogId: bigint | null;
 			}[] = [];
 
-			const accidentsToResolveIds: string[] = [];
+			const incidentsToResolveIds: string[] = [];
 			const monitorRegionUpserts: Promise<unknown>[] = [];
 
 			const statusGroups: Record<SiteStatus, string[]> = {
@@ -117,7 +117,6 @@ export class InternalPingService {
 				const nextCheckAt = new Date(checkedAt.getTime() + nextInterval * 1000);
 
 				const monitorRangeData = {
-					// lastStatus: status,
 					lastStatus: status,
 					lastCheckedAt: checkedAt,
 					nextCheckAt,
@@ -141,36 +140,33 @@ export class InternalPingService {
 					}),
 				);
 
-				const activeAccidentId = activeAccidentMap.get(monitor.id)?.id;
+				const activeIncidentId = activeIncidentMap.get(monitor.id)?.id;
 
-				if (isDown && !activeAccidentId) {
-					accidentsToCreate.push({
+				if (isDown && !activeIncidentId) {
+					incidentsToCreate.push({
 						monitorId: result.monitorId,
 						regionId: region.id,
 						errorMessage: result.errorMessage || null,
 						statusCode: result.statusCode || null,
 						triggerLogId: logMap.get(result.monitorId) || null,
 					});
-				} else if (
-					(status as unknown as SiteStatus) === SiteStatus.UP &&
-					activeAccidentId
-				) {
-					accidentsToResolveIds.push(activeAccidentId);
+				} else if (status === SiteStatus.UP && activeIncidentId) {
+					incidentsToResolveIds.push(activeIncidentId);
 				}
 			}
 
 			const updatePromises: Promise<unknown>[] = [...monitorRegionUpserts];
 
-			if (accidentsToCreate.length > 0) {
+			if (incidentsToCreate.length > 0) {
 				updatePromises.push(
-					tx.monitorAccident.createMany({ data: accidentsToCreate }),
+					tx.monitorIncident.createMany({ data: incidentsToCreate }),
 				);
 			}
 
-			if (accidentsToResolveIds.length > 0) {
+			if (incidentsToResolveIds.length > 0) {
 				updatePromises.push(
-					tx.monitorAccident.updateMany({
-						where: { id: { in: accidentsToResolveIds } },
+					tx.monitorIncident.updateMany({
+						where: { id: { in: incidentsToResolveIds } },
 						data: { resolved: true, resolvedAt: checkedAt },
 					}),
 				);

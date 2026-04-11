@@ -16,8 +16,8 @@ export const CREATE_MONITOR_FIELDS: Field<CreateMonitorDto>[] = [
 	},
 	{
 		name: 'checkIntervalSeconds',
-		label: 'Check Interval (minutes)',
-		placeholder: 'Enter check interval in minutes',
+		label: 'Check Interval (seconds)',
+		placeholder: 'Enter check interval in seconds',
 		type: 'number',
 	},
 ];

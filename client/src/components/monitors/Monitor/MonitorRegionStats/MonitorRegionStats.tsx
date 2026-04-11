@@ -1,8 +1,9 @@
 'use client';
 
 import { MonitorAnalytics } from '@/types';
+import MonitorCard from '../MonitorCard/MonitorCard';
 import styles from './MonitorRegionStats.module.scss';
-import MonitorRegionStatsCards from './MonitorRegionStatsCards/MonitorRegionStatsCards';
+import { MONITOR_REGIONS_STATS_CARDS } from './monitorRegionStatsCards';
 
 interface MonitorRegionStatsProps {
 	data: MonitorAnalytics;
@@ -10,8 +11,12 @@ interface MonitorRegionStatsProps {
 
 const MonitorRegionStats = ({ data }: MonitorRegionStatsProps) => {
 	return (
-		<div className={styles['region-stats']}>
-			<MonitorRegionStatsCards data={data} />
+		<div className={styles['monitor-region-stats-cards']}>
+			{MONITOR_REGIONS_STATS_CARDS.map(({ title, tooltip, render }, index) => (
+				<MonitorCard key={index} cardTitle={title} tooltip={tooltip}>
+					{render(data)}
+				</MonitorCard>
+			))}
 		</div>
 	);
 };

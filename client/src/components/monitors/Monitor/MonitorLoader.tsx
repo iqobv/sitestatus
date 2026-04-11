@@ -1,10 +1,9 @@
 import styles from './Monitor.module.scss';
-import MonitorCardsLoader from './MonitorCards/MonitorCardsLoader';
+import MonitorAnalyticsLoader from './MonitorAnalyticsLoader';
 import MonitorRangeControlLoader from './MonitorDataDisplayControls/MonitorRangeControlLoader';
 import MonitorHeaderLoader from './MonitorHeader/MonitorHeaderLoader';
-import MonitorHeatmapLoader from './MonitorHeatmap/MonitorHeatmapLoader';
-import MonitorIncidentsLoader from './MonitorIncidents/MonitorIncidentsLoader';
 import MonitorOverallLoader from './MonitorOverall/MonitorOverallLoader';
+import MonitorRegionControlLoader from './MonitorRegionControl/MonitorRegionControlLoader';
 
 const MonitorLoader = () => {
 	return (
@@ -12,9 +11,8 @@ const MonitorLoader = () => {
 			<MonitorHeaderLoader />
 			<MonitorRangeControlLoader />
 			<MonitorOverallLoader />
-			<MonitorCardsLoader />
-			<MonitorHeatmapLoader />
-			<MonitorIncidentsLoader />
+			<MonitorRegionControlLoader />
+			<MonitorAnalyticsLoader />
 		</div>
 	);
 };

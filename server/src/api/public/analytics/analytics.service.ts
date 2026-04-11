@@ -35,7 +35,7 @@ export class AnalyticsService {
 			regionId = foundRegion.id;
 		}
 
-		const accidents = await this.prismaService.monitorAccident.findMany({
+		const incidents = await this.prismaService.monitorIncident.findMany({
 			where: { monitorId, regionId },
 			orderBy: { createdAt: 'desc' },
 			select: {
@@ -48,7 +48,7 @@ export class AnalyticsService {
 				resolved: true,
 				resolvedAt: true,
 				alertSentAt: true,
-				alertsTriggered: true,
+				alertTriggered: true,
 			},
 		});
 
@@ -60,7 +60,9 @@ export class AnalyticsService {
 					responseTimeMs: true,
 					errorMessage: true,
 					createdAt: true,
-					regionId: true,
+					region: {
+						select: { key: true, name: true },
+					},
 				},
 			});
 
@@ -69,7 +71,7 @@ export class AnalyticsService {
 			return {
 				period: 'RAW',
 				statistics,
-				accidents,
+				incidents,
 				data: rawLogs,
 			};
 		}
@@ -88,8 +90,10 @@ export class AnalyticsService {
 				uptimePercent: true,
 				avgResponseMs: true,
 				timestamp: true,
-				regionId: true,
 				status: true,
+				region: {
+					select: { key: true, name: true },
+				},
 			},
 		});
 
@@ -98,7 +102,7 @@ export class AnalyticsService {
 		return {
 			period: periodToFetch,
 			statistics,
-			accidents,
+			incidents,
 			data: aggregatedStats,
 		};
 	}

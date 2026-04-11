@@ -1,17 +1,13 @@
-import { MonitorMainInfo } from '@/types';
+'use client';
+
+import { MonitorCard, MonitorMainInfo } from '@/types';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import MonitorOverallUptimeBar from './MonitorOverallUptimeBar/MonitorOverallUptimeBar';
 
 dayjs.extend(relativeTime);
 
-interface MonitorOverallCardsItem {
-	title: string;
-	tooltip?: string;
-	render: (monitor: MonitorMainInfo) => React.ReactNode;
-}
-
-export const OVERALL_MONITOR_CARDS_ITEMS: MonitorOverallCardsItem[] = [
+export const OVERALL_MONITOR_CARDS_ITEMS: MonitorCard<MonitorMainInfo>[] = [
 	{
 		title: 'Last Status',
 		render: (monitor) => <>{monitor.lastStatus}</>,

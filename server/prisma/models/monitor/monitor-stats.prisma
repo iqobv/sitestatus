@@ -9,7 +9,6 @@ model MonitorStats {
   avgResponseMs Int      @map("avg_response_ms")
   uptimePercent Float    @map("uptime_percent")
   timestamp     DateTime
-  p95ResponseMs Int      @default(0) @map("p95_response_ms")
 
   totalChecks      Int @default(0) @map("total_checks")
   successfulChecks Int @default(0) @map("successfull_checks")

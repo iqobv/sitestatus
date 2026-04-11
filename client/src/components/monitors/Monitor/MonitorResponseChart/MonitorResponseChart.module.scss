@@ -1,0 +1,21 @@
+@use '../../../../styles/mixins' as *;
+
+.monitor-response-chart {
+	&__container {
+		outline: none !important;
+	}
+
+	&__statistics {
+		display: flex;
+		flex-direction: row;
+		gap: var(--gap);
+		align-items: center;
+		text-align: center;
+	}
+
+	&__statistic {
+		&-label {
+			text-transform: capitalize;
+		}
+	}
+}

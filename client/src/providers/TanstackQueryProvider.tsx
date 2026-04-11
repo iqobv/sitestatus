@@ -18,39 +18,46 @@ export function TanstackQueryProvider({
 	const router = useRouter();
 
 	const [client] = useState(
-		new QueryClient({
-			queryCache: new QueryCache({
-				onError: (error: unknown) => {
-					if (error instanceof AxiosError && error.response?.status === 401) {
-						useUserStore.getState().removeUser();
-						router.push(PAGES.LOGIN);
-					}
-				},
-			}),
-			mutationCache: new MutationCache({
-				onError: (error: unknown) => {
-					if (error instanceof AxiosError && error.response?.status === 401) {
-						useUserStore.getState().removeUser();
-						router.push(PAGES.LOGIN);
-					}
-				},
-			}),
-			defaultOptions: {
-				queries: {
-					refetchOnWindowFocus: false,
-					refetchOnMount: true,
-					retry: (failureCount, error) => {
+		() =>
+			new QueryClient({
+				queryCache: new QueryCache({
+					onError: (error: unknown) => {
 						if (error instanceof AxiosError && error.response?.status === 401) {
-							return false;
+							useUserStore.getState().removeUser();
+							router.push(PAGES.LOGIN);
 						}
-						if (error instanceof AxiosError && error.response?.status === 404) {
-							return false;
+					},
+				}),
+				mutationCache: new MutationCache({
+					onError: (error: unknown) => {
+						if (error instanceof AxiosError && error.response?.status === 401) {
+							useUserStore.getState().removeUser();
+							router.push(PAGES.LOGIN);
 						}
-						return failureCount < 3;
+					},
+				}),
+				defaultOptions: {
+					queries: {
+						refetchOnWindowFocus: false,
+						refetchOnMount: true,
+						retry: (failureCount, error) => {
+							if (
+								error instanceof AxiosError &&
+								error.response?.status === 401
+							) {
+								return false;
+							}
+							if (
+								error instanceof AxiosError &&
+								error.response?.status === 404
+							) {
+								return false;
+							}
+							return failureCount < 3;
+						},
 					},
 				},
-			},
-		}),
+			}),
 	);
 
 	return <QueryClientProvider client={client}>{children}</QueryClientProvider>;

@@ -3,6 +3,7 @@ import { SiteStatus } from 'generated/prisma/enums';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 import { ERROR_MESSAGES } from 'src/libs/constants';
 import { calculateUptime } from 'src/libs/utils';
+import { formatResult } from 'src/libs/utils/calculates/format-result.util';
 import { CreateMonitorDto, MonitorTimelineDto, UpdateMonitorDto } from './dto';
 import { LogEntry } from './interfaces';
 
@@ -53,8 +54,12 @@ export class MonitorService {
 
 		const mappedMonitors = monitors.map((monitor) => {
 			const { monitorStats, ...rest } = monitor;
-			const uptime = calculateUptime(monitorStats);
-			return { ...rest, uptime };
+			const uptime =
+				monitorStats.length > 0
+					? monitorStats.reduce((sum, stat) => sum + stat.uptimePercent, 0) /
+						monitorStats.length
+					: 0;
+			return { ...rest, uptime: formatResult(uptime) };
 		});
 
 		return mappedMonitors;
@@ -90,11 +95,13 @@ export class MonitorService {
 					orderBy: { createdAt: 'asc' },
 					select: {
 						monitorId: true,
-						regionId: true,
 						status: true,
 						responseTimeMs: true,
 						createdAt: true,
 						errorMessage: true,
+						region: {
+							select: { key: true, name: true },
+						},
 					},
 				},
 			},

@@ -100,4 +100,28 @@ html.dark {
 	--dropdown-item-hover-bg: #262626;
 	--dropdown-item-hover-color: #e8edf2;
 	--dropdown-item-disabled-color: #8f9294;
+
+	/* Chart */
+	--chart-tooltip-bg: #1a1a1a;
+	--chart-tooltip-border: #333333;
+	--chart-axis-color: #8f9294;
+	--chart-line-color: #e5e5e5;
+	--chart-dot-color: #a9a9a9;
+	--chart-active-dot-color: #e5e5e5;
+
+	/* Table */
+	--table-border-color: #333;
+	--table-header-text-color: #bababa;
+
+	/* Scrollbar */
+	--scrollbar-bg: #333;
+	--scrollbar-thumb-bg: #666;
+	--scrollbar-thumb-hover-bg: #999;
+
+	/* Accident */
+	--accident-resolved: #4caf50;
+	--accident-open: #f44336;
+
+	/* Modal */
+	--modal-bg: #272727;
 }

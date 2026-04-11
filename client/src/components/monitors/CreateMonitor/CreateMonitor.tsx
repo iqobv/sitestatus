@@ -23,7 +23,7 @@ const CreateMonitor = () => {
 			buttonLabel="Create Monitor"
 			defaultValues={{
 				name: '',
-				checkIntervalSeconds: 5,
+				checkIntervalSeconds: 300,
 				url: '',
 			}}
 		/>

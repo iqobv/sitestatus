@@ -8,6 +8,9 @@ export const createMonitor = async (dto: CreateMonitorDto) =>
 export const getMonitors = async () =>
 	(await apiClient.get<MonitorWithMonitorStats[]>(`/v1/monitors/me`)).data;
 
+export const getServerMonitors = async () =>
+	(await apiServer.get<MonitorWithMonitorStats[]>(`/v1/monitors/me`)).data;
+
 export const getMonitorById = async (monitorId: string) =>
 	(await apiClient.get<MonitorMainInfo>(`/v1/monitors/id/${monitorId}`)).data;
 

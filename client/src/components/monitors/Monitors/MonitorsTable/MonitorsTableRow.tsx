@@ -1,6 +1,6 @@
 'use client';
 
-import { MonitorWithPingResults } from '@/types';
+import { MonitorWithMonitorStats } from '@/types';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import styles from './MonitorsTable.module.scss';
@@ -9,7 +9,7 @@ import { COLUMNS } from './monitorsTableColumns';
 dayjs.extend(relativeTime);
 
 interface MonitorsTableRowProps {
-	monitor: MonitorWithPingResults;
+	monitor: MonitorWithMonitorStats;
 }
 
 const MonitorsTableRow = ({ monitor }: MonitorsTableRowProps) => {

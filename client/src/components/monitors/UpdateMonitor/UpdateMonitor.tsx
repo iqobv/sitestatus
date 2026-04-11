@@ -35,7 +35,7 @@ const UpdateMonitor = ({ monitorId }: UpdateMonitorProps) => {
 					defaultValues={{
 						name: data.name,
 						url: data.url,
-						checkIntervalSeconds: data.checkIntervalSeconds / 60,
+						checkIntervalSeconds: data.checkIntervalSeconds,
 						isActive: data.isActive,
 					}}
 				/>

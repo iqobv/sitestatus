@@ -28,8 +28,8 @@ export const useAuth = () => {
 	};
 
 	const { mutate: getProfile } = useMutation({
-		mutationFn: () => apiGetProfile(),
-		mutationKey: QUERY_KEYS.auth.profile(user?.id || ''),
+		mutationFn: apiGetProfile,
+		mutationKey: QUERY_KEYS.auth.profile,
 		onMutate: () => {
 			setIsLoading(true);
 		},

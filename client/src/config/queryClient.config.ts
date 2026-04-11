@@ -4,14 +4,14 @@ export const QUERY_KEYS = {
 		register: ['register'] as const,
 		refresh: ['refreshAuthToken'] as const,
 		logout: ['logout'] as const,
-		profile: (userId: string) => ['profile', userId] as const,
+		profile: ['profile'] as const,
 		verifyEmail: (userId: string, token: string) =>
 			['verifyEmail', userId, token] as const,
 		resendVerificationEmail: (email: string) =>
 			['resendVerificationEmail', email] as const,
 	},
 	monitors: {
-		list: (userId: string) => ['monitorsList', userId] as const,
+		list: ['monitorsList'] as const,
 		byId: (monitorId: string) => ['monitor', monitorId] as const,
 		analtics: (monitorId: string, range: number, region: string) =>
 			['monitorAnalytics', monitorId, range, region] as const,

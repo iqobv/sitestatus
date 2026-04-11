@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import MonitorCard from '../MonitorCard/MonitorCard';
 import styles from './MonitorOverall.module.scss';
-import { OVERALL_MONITOR_CARDS_ITEMS } from './MonitorOverallCards';
+import { OVERALL_MONITOR_CARDS_ITEMS } from './monitorOverallCards';
 
 dayjs.extend(relativeTime);
 

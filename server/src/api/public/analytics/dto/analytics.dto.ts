@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { StatPeriod } from 'generated/prisma/enums';
-import { AnalyticsAccidentDto } from './analytics-accident.dto';
+import { AnalyticsIncidentDto } from './analytics-incident.dto';
 import { AnalyticsRawDataDto } from './analytics-raw-log.dto';
 import { AnalyticsStatLogDto } from './analytics-stat-log.dto';
 import { AnalyticsStatisticsDto } from './analytics-statistics.dto';
@@ -19,8 +19,8 @@ export class AnalyticsDto {
 	@ApiProperty({ type: AnalyticsStatisticsDto })
 	statistics: AnalyticsStatisticsDto;
 
-	@ApiProperty({ type: [AnalyticsAccidentDto] })
-	accidents: AnalyticsAccidentDto[];
+	@ApiProperty({ type: [AnalyticsIncidentDto] })
+	incidents: AnalyticsIncidentDto[];
 
 	@ApiProperty({ type: AnalyticsStatLogDto })
 	data: AnalyticsRawDataDto | AnalyticsStatLogDto;

@@ -21,15 +21,6 @@ const MonitorOverall = ({ monitor }: MonitorOverallProps) => {
 					{render(monitor)}
 				</MonitorCard>
 			))}
-			{/* <MonitorCard cardTitle="Last Status">
-				<div>{monitor.lastStatus}</div>
-			</MonitorCard>
-			<MonitorCard cardTitle="Last Checked">
-				<div>{dayjs(monitor.lastCheckedAt).fromNow()}</div>
-			</MonitorCard>
-			<MonitorCard cardTitle="Uptime Last 24H">
-				<MonitorOverallUptimeBar timeline={monitor.timeline} />
-			</MonitorCard> */}
 		</div>
 	);
 };

@@ -1,5 +1,3 @@
-'use client';
-
 import { MonitorCard, MonitorMainInfo } from '@/types';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';

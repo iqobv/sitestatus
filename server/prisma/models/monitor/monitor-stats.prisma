@@ -10,6 +10,9 @@ model MonitorStats {
   uptimePercent Float    @map("uptime_percent")
   timestamp     DateTime
 
+  totalChecks      Int @default(0) @map("total_checks")
+  successfulChecks Int @default(0) @map("successfull_checks")
+
   period StatPeriod
 
   monitor Monitor @relation(fields: [monitorId], references: [id], onDelete: Cascade)

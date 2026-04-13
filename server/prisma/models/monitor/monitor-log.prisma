@@ -12,6 +12,8 @@ model MonitorLog {
 
   createdAt DateTime @default(now()) @map("created_at")
 
+  monitorIncidents MonitorIncident[]
+
   monitor Monitor @relation(fields: [monitorId], references: [id], onDelete: Cascade)
   region  Region  @relation(fields: [regionId], references: [id], onDelete: Cascade)
 

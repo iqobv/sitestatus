@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, TextField } from '@/components/ui';
-import { IField } from '@/types';
+import { Field } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { DefaultValues, FieldValues, Path, useForm } from 'react-hook-form';
@@ -10,7 +10,7 @@ import styles from './AuthForm.module.scss';
 import AuthFormGlobalError from './AuthFormGlobalError/AuthFormGlobalError';
 
 interface AuthFormProps<T extends FieldValues, R> {
-	fields: IField<T>[];
+	fields: Field<T>[];
 	mutationFn: (data: T) => Promise<R>;
 	onSuccess?: (data: R) => void;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -76,7 +76,7 @@ const AuthForm = <T extends FieldValues, R>({
 							{...register(name)}
 						/>
 					);
-				}
+				},
 			)}
 			<Button loading={isPending} type="submit" fullWidth>
 				{buttonLabel}

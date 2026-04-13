@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { SiteStatus } from 'generated/prisma/enums';
+import { BaseRegionDto } from '../../region/dto';
 
-export class AnalyticsRowDataDto {
+export class AnalyticsRawDataDto {
 	@ApiProperty({ example: SiteStatus.UP, enum: SiteStatus })
 	status: SiteStatus;
 
@@ -14,6 +15,6 @@ export class AnalyticsRowDataDto {
 	@ApiProperty({ example: new Date() })
 	createdAt: Date;
 
-	@ApiProperty({ example: '1e06a622-a566-43b5-89ac-ab1d71696cd8' })
-	regionId: string;
+	@ApiProperty({ type: BaseRegionDto })
+	region: BaseRegionDto;
 }

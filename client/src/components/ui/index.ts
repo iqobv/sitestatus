@@ -2,12 +2,15 @@ export { default as Accordion } from './Accordion/Accordion';
 export type { AccordionItemProps } from './Accordion/Accordion.types';
 export { default as BackButton } from './BackButton/BackButton';
 export { default as Button } from './Button/Button';
+export { default as ButtonGroup } from './ButtonGroup/ButtonGroup';
+export { default as Dropdown } from './Dropdown/index';
 export { default as FormLabel } from './FormLabel/FormLabel';
 export { default as Loader } from './Loader/Loader';
+export { default as Modal } from './Modal/Modal';
 export { default as SectionHeader } from './SectionHeader/SectionHeader';
 export { default as Sepator } from './Sepator/Sepator';
 export { default as SkeletonLoader } from './SkeletonLoader/SkeletonLoader';
+export { default as Table } from './Table/Table';
 export { default as TextField } from './TextField/TextField';
-export { default as Tooltip } from './Tooltip/Tooltip';
+export { default as Tooltip } from './Tooltip/index';
 export { default as UptimeStatus } from './UptimeStatus/UptimeStatus';
-

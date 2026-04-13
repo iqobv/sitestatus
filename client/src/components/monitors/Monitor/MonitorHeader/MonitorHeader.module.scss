@@ -3,34 +3,18 @@
 .monitor-header {
 	display: flex;
 	justify-content: space-between;
-	align-items: start;
-	flex-direction: column;
+	align-items: center;
+	flex-direction: row;
 
-	@include response('md') {
-		flex-direction: row;
+	&__dropdown-item {
+		text-align: left;
+		justify-content: start;
+		display: flex;
 		align-items: center;
-	}
-}
+		gap: 8px;
 
-.monitor-header__actions {
-	display: flex;
-	gap: 12px;
-	flex-direction: column;
-	width: 100%;
-	align-items: stretch;
-
-	@include response('sm') {
-		flex-direction: row;
-		align-items: center;
-	}
-
-	@include response('md') {
-		width: auto;
-		flex-shrink: 0;
-		min-width: 300px;
-	}
-
-	&--loader {
-		flex: 1;
+		&--delete {
+			color: var(--error-border);
+		}
 	}
 }

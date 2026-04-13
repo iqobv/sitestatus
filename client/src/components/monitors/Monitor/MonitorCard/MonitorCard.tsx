@@ -1,7 +1,6 @@
 'use client';
 
 import { Tooltip } from '@/components/ui';
-import { useRef, useState } from 'react';
 import { MdInfoOutline } from 'react-icons/md';
 import styles from './MonitorCard.module.scss';
 
@@ -18,30 +17,17 @@ const MonitorCard = ({
 	className,
 	tooltip,
 }: MonitorCardProps) => {
-	const iconRef = useRef<HTMLDivElement>(null);
-	const [isTooltipVisible, setIsTooltipVisible] = useState(false);
-
-	const handleMouseEnter = () => setIsTooltipVisible(true);
-	const handleMouseLeave = () => setIsTooltipVisible(false);
-
 	return (
 		<div className={`card ${className || ''}`}>
 			<div className={styles['monitor-card__header']}>
 				<p className={`${styles['monitor-card__title']}`}>{cardTitle}</p>
 				{tooltip && (
-					<>
-						<div
-							ref={iconRef}
-							className={styles['monitor-card__info-icon']}
-							onMouseEnter={handleMouseEnter}
-							onMouseLeave={handleMouseLeave}
-						>
+					<Tooltip>
+						<Tooltip.Trigger>
 							<MdInfoOutline />
-						</div>
-						{isTooltipVisible && (
-							<Tooltip targetRef={iconRef}>{tooltip}</Tooltip>
-						)}
-					</>
+						</Tooltip.Trigger>
+						<Tooltip.Content>{tooltip}</Tooltip.Content>
+					</Tooltip>
 				)}
 			</div>
 			{children}

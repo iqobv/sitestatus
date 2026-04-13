@@ -5,7 +5,7 @@ import { QUERY_KEYS } from '@/config';
 import { UpdateMonitorDto } from '@/dto';
 import { useAuth } from '@/hooks';
 import { updateMonitorSchema } from '@/schemas';
-import { IMonitor } from '@/types';
+import { Monitor } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import MonitorForm from '../MonitorForm/MonitorForm';
 import { UPDATE_MONITOR_FIELDS } from './updateMonitorFields';
@@ -27,7 +27,7 @@ const UpdateMonitor = ({ monitorId }: UpdateMonitorProps) => {
 		<div>
 			{isLoading && <p>Loading monitor data...</p>}
 			{!isLoading && data && (
-				<MonitorForm<UpdateMonitorDto, IMonitor>
+				<MonitorForm<UpdateMonitorDto, Monitor>
 					fields={UPDATE_MONITOR_FIELDS}
 					mutationFn={(data) => updateMonitor(monitorId, data)}
 					buttonLabel="Update Monitor"
@@ -35,7 +35,7 @@ const UpdateMonitor = ({ monitorId }: UpdateMonitorProps) => {
 					defaultValues={{
 						name: data.name,
 						url: data.url,
-						checkIntervalSeconds: data.checkIntervalSeconds / 60,
+						checkIntervalSeconds: data.checkIntervalSeconds,
 						isActive: data.isActive,
 					}}
 				/>

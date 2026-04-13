@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { SiteStatus } from 'generated/prisma/enums';
 import { DefaultFieldsDto } from 'src/libs/dto';
+import { BaseRegionDto } from '../../region/dto';
+import { MonitorTimelineDto } from './monitor-timeline.dto';
 
 export class MonitorDto extends DefaultFieldsDto {
 	@ApiProperty({ example: 'My Website' })
@@ -24,9 +26,17 @@ export class MonitorDto extends DefaultFieldsDto {
 	@ApiProperty({ example: true })
 	isActive?: boolean;
 
-	@ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
-	userId: string;
-
 	@ApiProperty({ example: 'f77d8a89-3af8-43d3-91d2-47348ec2ac45' })
 	projectId: string | null;
+}
+
+export class MonitorMainInfoDto extends MonitorDto {
+	@ApiProperty({ type: [BaseRegionDto] })
+	regions: BaseRegionDto[];
+
+	@ApiProperty({ example: '99.999%' })
+	uptime: string;
+
+	@ApiProperty({ type: [MonitorTimelineDto] })
+	timeline: MonitorTimelineDto[];
 }

@@ -1,20 +1,28 @@
-import { TMonitorStatus } from './monitorStatus.types';
-import { IPingResult } from './pingResults.types';
+import { BaseRegion } from '../region';
+import { MonitorStat } from './monitorStat.types';
+import { MonitorStatus } from './monitorStatus.types';
+import { MonitorTimeline } from './monitoTimeline.types';
 
-export interface IMonitor {
+export interface Monitor {
 	id: string;
+	projectId: string | null;
 	name: string;
 	url: string;
 	checkIntervalSeconds: number;
-	nextCheckAt: Date;
 	lastCheckedAt: Date;
-	lastStatus: TMonitorStatus;
+	lastStatus: MonitorStatus;
 	isActive: boolean;
-	userId: string;
 	createdAt: Date;
 	updatedAt: Date;
 }
 
-export interface IMonitorWithPingResults extends IMonitor {
-	pingResults: IPingResult[];
+export interface MonitorMainInfo extends Monitor {
+	regions: BaseRegion[];
+	uptime: string;
+	timeline: MonitorTimeline[];
+}
+
+export interface MonitorWithMonitorStats extends Monitor {
+	uptime: string;
+	monitorStats: MonitorStat[];
 }

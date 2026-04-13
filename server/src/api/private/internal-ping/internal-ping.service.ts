@@ -15,11 +15,14 @@ export class InternalPingService {
 	async getTasks(regionKey: string): Promise<MonitorTask[]> {
 		const region = await this.regionService.getRegionByKey(regionKey);
 
+		const nextCheckTime = new Date();
+		nextCheckTime.setUTCSeconds(nextCheckTime.getUTCSeconds() + 15);
+
 		const monitors = await this.prismaService.monitor.findMany({
 			where: {
 				isActive: true,
 				regionConfigs: {
-					some: { regionId: region.id, nextCheckAt: { lte: new Date() } },
+					some: { regionId: region.id, nextCheckAt: { lte: nextCheckTime } },
 				},
 			},
 		});
@@ -30,67 +33,160 @@ export class InternalPingService {
 		}));
 	}
 
-	async saveResults(results: PingResultDto[], regionKey: string) {
-		if (results.length === 0) return;
+	async saveResults(
+		results: PingResultDto[],
+		regionKey: string,
+	): Promise<void> {
+		if (results.length === 0) {
+			return;
+		}
 
 		const region = await this.regionService.getRegionByKey(regionKey);
+		const monitorIds = results.map((r) => r.monitorId);
+		const checkedAt = new Date();
 
 		await this.prismaService.$transaction(async (tx) => {
-			await tx.monitorLog.createMany({
-				data: results.map((r) => ({
-					monitorId: r.monitorId,
+			const monitors = await tx.monitor.findMany({
+				where: { id: { in: monitorIds } },
+				select: { id: true, checkIntervalSeconds: true },
+			});
+
+			const activeIncidents = await tx.monitorIncident.findMany({
+				where: {
 					regionId: region.id,
-					status: r.status,
-					statusCode: r.statusCode,
-					responseTimeMs: r.responseTimeMs,
-					errorMessage: r.errorMessage,
-				})),
+					monitorId: { in: monitorIds },
+					resolved: false,
+				},
+				select: { id: true, monitorId: true },
+			});
+
+			const monitorMap = new Map(monitors.map((m) => [m.id, m]));
+			const activeIncidentMap = new Map(
+				activeIncidents.map((a) => [a.monitorId, a]),
+			);
+
+			const logsData = results.map((r) => ({
+				monitorId: r.monitorId,
+				regionId: region.id,
+				status: r.status,
+				statusCode: r.statusCode,
+				responseTimeMs: r.responseTimeMs,
+				errorMessage: r.errorMessage,
+			}));
+
+			const monitorLogs = await tx.monitorLog.createManyAndReturn({
+				data: logsData,
 				skipDuplicates: true,
 			});
 
+			const logMap = new Map(monitorLogs.map((log) => [log.monitorId, log.id]));
+
+			const incidentsToCreate: {
+				monitorId: string;
+				regionId: string;
+				errorMessage: string | null;
+				statusCode: number | null;
+				triggerLogId: bigint | null;
+			}[] = [];
+
+			const incidentsToResolveIds: string[] = [];
+			const monitorRegionUpserts: Promise<unknown>[] = [];
+
+			const statusGroups: Record<SiteStatus, string[]> = {
+				[SiteStatus.UP]: [],
+				[SiteStatus.DOWN]: [],
+				[SiteStatus.UNKNOWN]: [],
+			};
+
 			for (const result of results) {
-				const monitor = await tx.monitor.findUnique({
-					where: { id: result.monitorId },
-					select: { id: true, checkIntervalSeconds: true },
-				});
+				const { status } = result;
 
-				if (!monitor) continue;
+				const monitor = monitorMap.get(result.monitorId);
+				if (!monitor) {
+					continue;
+				}
 
-				const { checkIntervalSeconds } = monitor;
+				statusGroups[status].push(monitor.id);
 
-				const nextInterval =
-					result.status === SiteStatus.DOWN ||
-					result.status === SiteStatus.UNKNOWN
-						? Math.min(60, checkIntervalSeconds)
-						: checkIntervalSeconds;
+				const isDown =
+					status === SiteStatus.DOWN || status === SiteStatus.UNKNOWN;
+				const nextInterval = isDown
+					? Math.min(60, monitor.checkIntervalSeconds)
+					: monitor.checkIntervalSeconds;
 
-				const nextCheckAt = new Date();
-				nextCheckAt.setSeconds(nextCheckAt.getSeconds() + nextInterval);
+				const nextCheckAt = new Date(checkedAt.getTime() + nextInterval * 1000);
 
 				const monitorRangeData = {
-					lastStatus: result.status,
-					lastCheckedAt: new Date(),
+					lastStatus: status,
+					lastCheckedAt: checkedAt,
 					nextCheckAt,
 				};
 
-				await tx.monitorRegion.upsert({
-					where: {
-						monitorId_regionId: { monitorId: monitor.id, regionId: region.id },
-					},
-					create: {
-						monitorId: monitor.id,
-						regionId: region.id,
-						isActive: true,
-						...monitorRangeData,
-					},
-					update: monitorRangeData,
-				});
+				monitorRegionUpserts.push(
+					tx.monitorRegion.upsert({
+						where: {
+							monitorId_regionId: {
+								monitorId: monitor.id,
+								regionId: region.id,
+							},
+						},
+						create: {
+							monitorId: monitor.id,
+							regionId: region.id,
+							isActive: true,
+							...monitorRangeData,
+						},
+						update: monitorRangeData,
+					}),
+				);
 
-				await tx.monitor.update({
-					where: { id: monitor.id },
-					data: { lastStatus: result.status, lastCheckedAt: new Date() },
-				});
+				const activeIncidentId = activeIncidentMap.get(monitor.id)?.id;
+
+				if (isDown && !activeIncidentId) {
+					incidentsToCreate.push({
+						monitorId: result.monitorId,
+						regionId: region.id,
+						errorMessage: result.errorMessage || null,
+						statusCode: result.statusCode || null,
+						triggerLogId: logMap.get(result.monitorId) || null,
+					});
+				} else if (status === SiteStatus.UP && activeIncidentId) {
+					incidentsToResolveIds.push(activeIncidentId);
+				}
 			}
+
+			const updatePromises: Promise<unknown>[] = [...monitorRegionUpserts];
+
+			if (incidentsToCreate.length > 0) {
+				updatePromises.push(
+					tx.monitorIncident.createMany({ data: incidentsToCreate }),
+				);
+			}
+
+			if (incidentsToResolveIds.length > 0) {
+				updatePromises.push(
+					tx.monitorIncident.updateMany({
+						where: { id: { in: incidentsToResolveIds } },
+						data: { resolved: true, resolvedAt: checkedAt },
+					}),
+				);
+			}
+
+			const statusUpdates = Object.entries(statusGroups)
+				.filter(([, ids]) => ids.length > 0)
+				.map(([status, ids]) =>
+					tx.monitor.updateMany({
+						where: { id: { in: ids } },
+						data: {
+							lastStatus: status as SiteStatus,
+							lastCheckedAt: checkedAt,
+						},
+					}),
+				);
+
+			updatePromises.push(...statusUpdates);
+
+			await Promise.all(updatePromises);
 		});
 	}
 }

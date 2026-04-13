@@ -1,6 +1,4 @@
-import { fetcher } from '@/utils';
+import { apiClient } from '../axios';
 
 export const googleAuth = async () =>
-	await fetcher('/api/v1/oauth/google', {
-		method: 'GET',
-	});
+	(await apiClient.get(`/v1/oauth/google`)).data;

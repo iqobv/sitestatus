@@ -1,7 +1,7 @@
 import { Path } from 'react-hook-form';
 import { IconType } from 'react-icons';
 
-export interface IField<T> {
+export interface Field<T> {
 	name: Path<T>;
 	label: string;
 	placeholder: string;

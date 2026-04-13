@@ -1,12 +1,12 @@
-import { IField } from '@/types';
+import { Field } from '@/types';
 import { DefaultValues, FieldValues } from 'react-hook-form';
 import { ZodType } from 'zod';
 
 export interface MonitorFormProps<
 	T extends FieldValues,
-	R extends { id: string }
+	R extends { id: string },
 > {
-	fields: IField<T>[];
+	fields: Field<T>[];
 	mutationFn: (data: T) => Promise<R>;
 	onSuccess?: (data: R) => void;
 	onCancel?: () => void;

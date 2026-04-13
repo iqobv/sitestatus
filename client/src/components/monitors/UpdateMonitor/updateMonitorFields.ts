@@ -1,7 +1,7 @@
 import { UpdateMonitorDto } from '@/dto';
-import { IField } from '@/types';
+import { Field } from '@/types';
 
-export const UPDATE_MONITOR_FIELDS: IField<UpdateMonitorDto>[] = [
+export const UPDATE_MONITOR_FIELDS: Field<UpdateMonitorDto>[] = [
 	{
 		name: 'name',
 		label: 'Monitor Name',

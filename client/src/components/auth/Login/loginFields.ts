@@ -1,8 +1,8 @@
 import { LoginDto } from '@/dto';
-import { IField } from '@/types';
+import { Field } from '@/types';
 import { MdOutlineEmail, MdOutlineKey } from 'react-icons/md';
 
-export const LOGIN_FIELDS: IField<LoginDto>[] = [
+export const LOGIN_FIELDS: Field<LoginDto>[] = [
 	{
 		name: 'email',
 		label: 'Enter your email',

@@ -1,18 +1,18 @@
 import styles from './Monitor.module.scss';
-import MonitorCardsLoader from './MonitorCards/MonitorCardsLoader';
-import MonitorDataDisplayControlsLoader from './MonitorDataDisplayControls/MonitorDataDisplayControlsLoader';
+import MonitorAnalyticsLoader from './MonitorAnalyticsLoader';
+import MonitorRangeControlLoader from './MonitorDataDisplayControls/MonitorRangeControlLoader';
 import MonitorHeaderLoader from './MonitorHeader/MonitorHeaderLoader';
-import MonitorHeatmapLoader from './MonitorHeatmap/MonitorHeatmapLoader';
-import MonitorIncidentsLoader from './MonitorIncidents/MonitorIncidentsLoader';
+import MonitorOverallLoader from './MonitorOverall/MonitorOverallLoader';
+import MonitorRegionControlLoader from './MonitorRegionControl/MonitorRegionControlLoader';
 
 const MonitorLoader = () => {
 	return (
 		<div className={styles['monitor__content']}>
 			<MonitorHeaderLoader />
-			<MonitorDataDisplayControlsLoader />
-			<MonitorCardsLoader />
-			<MonitorHeatmapLoader />
-			<MonitorIncidentsLoader />
+			<MonitorRangeControlLoader />
+			<MonitorOverallLoader />
+			<MonitorRegionControlLoader />
+			<MonitorAnalyticsLoader />
 		</div>
 	);
 };

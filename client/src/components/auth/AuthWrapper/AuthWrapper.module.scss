@@ -3,7 +3,7 @@
 .auth-wrapper {
 	max-width: 90%;
 
-	@include response('md') {
+	@include respond-to('md') {
 		max-width: 550px;
 	}
 }

@@ -20,6 +20,8 @@ export default function Button({
 	fullWidth = false,
 	isIcon = false,
 	rounded = false,
+	contentClassName = '',
+	isActive,
 	...rest
 }: ButtonProps) {
 	const isLink = !!href && !disabled && !loading;
@@ -33,6 +35,11 @@ export default function Button({
 		rounded,
 	});
 
+	const buttonContentProps = {
+		loading,
+		className: contentClassName,
+	};
+
 	return (
 		<>
 			{isLink ? (
@@ -44,7 +51,7 @@ export default function Button({
 					onClick={onClick}
 					{...(rest as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
 				>
-					<ButtonContent loading={loading}>{children}</ButtonContent>
+					<ButtonContent {...buttonContentProps}>{children}</ButtonContent>
 				</Link>
 			) : (
 				<button
@@ -56,7 +63,7 @@ export default function Button({
 					id={id}
 					{...(rest as React.ButtonHTMLAttributes<HTMLButtonElement>)}
 				>
-					<ButtonContent loading={loading}>{children}</ButtonContent>
+					<ButtonContent {...buttonContentProps}>{children}</ButtonContent>
 				</button>
 			)}
 		</>

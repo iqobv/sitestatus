@@ -1,7 +1,7 @@
 import { CreateMonitorDto } from '@/dto';
-import { IField } from '@/types';
+import { Field } from '@/types';
 
-export const CREATE_MONITOR_FIELDS: IField<CreateMonitorDto>[] = [
+export const CREATE_MONITOR_FIELDS: Field<CreateMonitorDto>[] = [
 	{
 		name: 'name',
 		label: 'Monitor Name',
@@ -16,8 +16,8 @@ export const CREATE_MONITOR_FIELDS: IField<CreateMonitorDto>[] = [
 	},
 	{
 		name: 'checkIntervalSeconds',
-		label: 'Check Interval (minutes)',
-		placeholder: 'Enter check interval in minutes',
+		label: 'Check Interval (seconds)',
+		placeholder: 'Enter check interval in seconds',
 		type: 'number',
 	},
 ];

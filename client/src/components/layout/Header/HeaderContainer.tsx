@@ -1,5 +1,3 @@
-'use client';
-
 import styles from './HeaderContainer.module.scss';
 
 interface HeaderContainerProps {

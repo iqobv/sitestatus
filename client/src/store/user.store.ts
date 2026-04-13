@@ -1,8 +1,8 @@
-import { IUser } from '@/types';
+import { User } from '@/types';
 import { create } from 'zustand';
 
 interface UserState {
-	user: IUser | null;
+	user: User | null;
 	isLoading: boolean;
 	isAuthenticated: boolean;
 }
@@ -10,7 +10,7 @@ interface UserState {
 interface UserActions {
 	setIsLoading: (isLoading: boolean) => void;
 	setIsAuthenticated: (isAuthenticated: boolean) => void;
-	setUser: (user: IUser | null) => void;
+	setUser: (user: User | null) => void;
 	removeUser: () => void;
 }
 
@@ -23,5 +23,6 @@ export const useUserStore = create<UserStore>((set) => ({
 	setIsLoading: (isLoading) => set({ isLoading }),
 	setIsAuthenticated: (isAuthenticated) => set({ isAuthenticated }),
 	setUser: (user) => set({ user }),
-	removeUser: () => set({ user: null }),
+	removeUser: () =>
+		set({ user: null, isAuthenticated: false, isLoading: false }),
 }));

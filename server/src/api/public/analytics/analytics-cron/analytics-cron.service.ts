@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { Prisma } from 'generated/prisma/client';
 import { SiteStatus, StatPeriod } from 'generated/prisma/enums';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 
@@ -51,24 +52,28 @@ export class AnalyticsCronService {
 			upCountMap.set(`${stat.monitorId}_${stat.regionId}`, stat._count.status);
 		}
 
-		const statsToInsert = totalStats.map((stat) => {
-			const key = `${stat.monitorId}_${stat.regionId}`;
-			const upCount = upCountMap.get(key) || 0;
-			const uptimePercent =
-				stat._count.status > 0 ? (upCount / stat._count.status) * 100 : 0;
-			const status: SiteStatus =
-				uptimePercent < 80 ? SiteStatus.DOWN : SiteStatus.UP;
+		const statsToInsert: Prisma.MonitorStatsCreateManyInput[] = totalStats.map(
+			(stat) => {
+				const key = `${stat.monitorId}_${stat.regionId}`;
+				const upCount = upCountMap.get(key) || 0;
+				const uptimePercent =
+					stat._count.status > 0 ? (upCount / stat._count.status) * 100 : 0;
+				const status: SiteStatus =
+					uptimePercent < 80 ? SiteStatus.DOWN : SiteStatus.UP;
 
-			return {
-				monitorId: stat.monitorId,
-				regionId: stat.regionId,
-				avgResponseMs: Math.round(stat._avg.responseTimeMs || 0),
-				uptimePercent,
-				timestamp: start,
-				period: period,
-				status,
-			};
-		});
+				return {
+					monitorId: stat.monitorId,
+					regionId: stat.regionId,
+					avgResponseMs: Math.round(stat._avg.responseTimeMs || 0),
+					uptimePercent,
+					timestamp: start,
+					period: period,
+					status,
+					totalChecks: stat._count.status,
+					successfulChecks: upCount,
+				};
+			},
+		);
 
 		await this.prismaService.monitorStats.createMany({
 			data: statsToInsert,

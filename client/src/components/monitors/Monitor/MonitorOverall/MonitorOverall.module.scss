@@ -1,0 +1,27 @@
+@use '../../../../styles/mixins' as *;
+
+.monitor-overall {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 16px;
+
+	& * {
+		&:last-child {
+			grid-column: 1 / -1;
+		}
+	}
+
+	@include respond-to('md') {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	@include respond-to('lg') {
+		grid-template-columns: repeat(3, 1fr);
+
+		& * {
+			&:last-child {
+				grid-column: unset;
+			}
+		}
+	}
+}

@@ -1,31 +1,18 @@
 'use client';
 
-import { IMonitorWithPingResults, TMonitorRange } from '@/types';
+import type { MonitorIncident as MonitorIncidentType } from '@/types';
 import MonitorCard from '../MonitorCard/MonitorCard';
-import MonitorIncidentTable from './MonitorIncidentTable/MonitorIncidentTable';
-import { useMonitorIncidentList } from './useMonitorIncidents.hook';
+import MonitorIncidentsTable from './MonitorIncidentsTable/MonitorIncidentsTable';
 
 interface MonitorIncidentsProps {
-	monitor: IMonitorWithPingResults;
-	selectedRange: TMonitorRange;
+	incidents: MonitorIncidentType[];
 }
 
-const MonitorIncidents = ({
-	monitor,
-	selectedRange,
-}: MonitorIncidentsProps) => {
-	const { incidents } = useMonitorIncidentList({ monitor });
-
+const MonitorIncidents = ({ incidents }: MonitorIncidentsProps) => {
 	return (
-		<MonitorCard
-			cardTitle={`Monitor Incidents (${incidents.length})`}
-			tooltip="This table lists all incidents (downtime events) for the selected monitor within the specified range. An incident is recorded when the monitor experiences downtime."
-		>
-			{incidents.length === 0 ? (
-				<p>No incidents found for the selected range ({selectedRange}).</p>
-			) : (
-				<MonitorIncidentTable incidents={incidents} />
-			)}
+		<MonitorCard cardTitle="Accidents">
+			{incidents.length === 0 && <p>No incidents to display.</p>}
+			{incidents.length > 0 && <MonitorIncidentsTable incidents={incidents} />}
 		</MonitorCard>
 	);
 };

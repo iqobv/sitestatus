@@ -8,6 +8,7 @@ import styles from './MonitorRefresh.module.scss';
 const MonitorRefresh = () => {
 	const { handleRefresh, timer } = useUpdateTimer({
 		queryKey: QUERY_KEYS.monitors.list,
+		isActive: true,
 	});
 
 	return (

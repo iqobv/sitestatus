@@ -19,6 +19,7 @@ const CreateMonitor = () => {
 			onSuccess={(data) => {
 				router.push(PAGES.MONITOR(data.id));
 			}}
+			onCancel={() => router.back()}
 			schema={createMonitorSchema}
 			buttonLabel="Create Monitor"
 			defaultValues={{

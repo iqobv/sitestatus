@@ -1,6 +1,6 @@
 'use client';
 
-import { MonitorMainInfo } from '@/types';
+import { MonitorFull } from '@/types';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import MonitorCard from '../MonitorCard/MonitorCard';
@@ -10,7 +10,7 @@ import { OVERALL_MONITOR_CARDS_ITEMS } from './monitorOverallCards';
 dayjs.extend(relativeTime);
 
 interface MonitorOverallProps {
-	monitor: MonitorMainInfo;
+	monitor: MonitorFull;
 }
 
 const MonitorOverall = ({ monitor }: MonitorOverallProps) => {

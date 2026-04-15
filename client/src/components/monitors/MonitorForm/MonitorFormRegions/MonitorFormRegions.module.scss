@@ -1,0 +1,29 @@
+@use '../../../../styles/mixins' as *;
+
+.monitor-form-regions {
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap);
+	padding-top: 20px;
+
+	&__list {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: var(--gap);
+	}
+
+	&__label {
+		display: inline-flex;
+		align-items: center;
+		width: 100%;
+		gap: 6px;
+		padding: 10px;
+	}
+
+	&__checkbox {
+		width: 16px;
+		height: 16px;
+		border-radius: var(--border-radius);
+		background-color: red;
+	}
+}

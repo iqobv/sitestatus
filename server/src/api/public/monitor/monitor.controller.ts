@@ -13,13 +13,13 @@ import {
 	ApiOkResponse,
 	ApiOperation,
 } from '@nestjs/swagger';
-import { ERROR_MESSAGES } from 'src/libs/constants';
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from 'src/libs/constants';
 import { Auth, Authorized } from 'src/libs/decorators';
 import { createCustomMessageDto } from 'src/libs/utils';
 import {
 	CreateMonitorDto,
 	MonitorDto,
-	MonitorMainInfoDto,
+	MonitorWithRegionsDto,
 	UpdateMonitorDto,
 } from './dto';
 import { MonitorFullDto } from './dto/monitor-full.dto';
@@ -49,8 +49,22 @@ export class MonitorController {
 	}
 
 	@Auth()
-	@ApiOperation({ summary: 'Get monitor by ID' })
-	@ApiOkResponse({ type: MonitorMainInfoDto })
+	@ApiOperation({ summary: 'Get full details of a monitor by ID' })
+	@ApiOkResponse({ type: MonitorFullDto })
+	@ApiNotFoundResponse({
+		type: createCustomMessageDto(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND),
+	})
+	@Get('id/:id/full')
+	async findByIdFull(
+		@Authorized('id') userId: string,
+		@Param('id') id: string,
+	) {
+		return await this.monitorService.findByIdFull(userId, id);
+	}
+
+	@Auth()
+	@ApiOperation({ summary: 'Get a monitor by ID' })
+	@ApiOkResponse({ type: MonitorWithRegionsDto })
 	@ApiNotFoundResponse({
 		type: createCustomMessageDto(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND),
 	})
@@ -75,8 +89,24 @@ export class MonitorController {
 	}
 
 	@Auth()
+	@ApiOperation({ summary: 'Update monitor active status by ID' })
+	@ApiOkResponse({ type: MonitorDto })
+	@ApiNotFoundResponse({
+		type: createCustomMessageDto(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND),
+	})
+	@Patch(':id/active-status')
+	async updateActiveStatus(
+		@Param('id') id: string,
+		@Authorized('id') userId: string,
+	) {
+		return await this.monitorService.updateActiveStatus(id, userId);
+	}
+
+	@Auth()
 	@ApiOperation({ summary: 'Remove monitor by ID' })
-	@ApiOkResponse({ type: Boolean })
+	@ApiOkResponse({
+		type: createCustomMessageDto(SUCCESS_MESSAGES.MONITOR.MONITOR_DELETED),
+	})
 	@ApiNotFoundResponse({
 		type: createCustomMessageDto(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND),
 	})

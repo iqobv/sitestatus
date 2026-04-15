@@ -1,4 +1,4 @@
-import { getServerMonitorById } from '@/api';
+import { getServerMonitorByIdFull } from '@/api';
 import { Monitor } from '@/components/monitors';
 import { QUERY_KEYS } from '@/config';
 import {
@@ -17,8 +17,8 @@ export default async function MonitorPage({ params }: MonitorPageProps) {
 	const queryClient = new QueryClient();
 
 	await queryClient.prefetchQuery({
-		queryKey: QUERY_KEYS.monitors.byId(id),
-		queryFn: () => getServerMonitorById(id),
+		queryKey: QUERY_KEYS.monitors.byIdFull(id),
+		queryFn: () => getServerMonitorByIdFull(id),
 	});
 
 	return (

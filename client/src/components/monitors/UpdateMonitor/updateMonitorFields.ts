@@ -20,10 +20,4 @@ export const UPDATE_MONITOR_FIELDS: Field<UpdateMonitorDto>[] = [
 		placeholder: 'Enter check interval in seconds',
 		type: 'number',
 	},
-	{
-		name: 'isActive',
-		label: 'Active',
-		placeholder: '',
-		type: 'checkbox',
-	},
 ];

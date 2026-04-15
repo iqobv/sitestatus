@@ -1,5 +1,5 @@
 import { Button, SectionHeader } from '@/components/ui';
-import { PAGES } from '@/config';
+import { AUTH_PAGES } from '@/config';
 import styles from './Action.module.scss';
 
 const Action = () => {
@@ -12,7 +12,7 @@ const Action = () => {
 					titleComponent="h3"
 					containerClassName={styles['action__header']}
 				/>
-				<Button href={PAGES.SIGN_UP}>Get Started</Button>
+				<Button href={AUTH_PAGES.SIGN_UP}>Get Started</Button>
 			</div>
 		</div>
 	);

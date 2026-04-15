@@ -1,4 +1,5 @@
-import { DashboardHeader } from '@/components/layout';
+import { DashboardHeader, Sidebar } from '@/components/layout';
+import styles from './dashboardLayout.module.scss';
 
 export default function DashboardLayout({
 	children,
@@ -8,10 +9,13 @@ export default function DashboardLayout({
 	modal: React.ReactNode;
 }) {
 	return (
-		<>
-			<DashboardHeader />
-			<main>{children}</main>
+		<div className={styles['dashboard-layout']}>
+			<Sidebar />
+			<div className={styles['main-content']}>
+				<DashboardHeader />
+				<main className={styles['main']}>{children}</main>
+			</div>
 			{modal}
-		</>
+		</div>
 	);
 }

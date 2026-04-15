@@ -24,7 +24,7 @@ export default async function DashboardPage() {
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
-			<div className={`${styles['home']} page container fade`}>
+			<div className={`${styles['home']} fade`}>
 				<Monitors />
 			</div>
 		</HydrationBoundary>

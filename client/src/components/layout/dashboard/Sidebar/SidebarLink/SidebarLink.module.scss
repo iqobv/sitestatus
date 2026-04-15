@@ -1,0 +1,20 @@
+.sidebar-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	width: 100%;
+	padding: 8px 18px;
+	border: none;
+	border-radius: var(--border-radius);
+	transition: all 0.2s ease;
+	font-size: 1.1rem;
+	font-weight: 500;
+
+	&:hover {
+		background-color: var(--dashboard-sidebar-link-active-bg);
+	}
+
+	&--active {
+		background-color: var(--dashboard-sidebar-link-active-bg);
+	}
+}

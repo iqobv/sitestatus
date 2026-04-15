@@ -23,7 +23,7 @@ export default async function MonitorPage({ params }: MonitorPageProps) {
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
-			<div className="page container fade">
+			<div className="fade">
 				<Monitor id={id} />
 			</div>
 		</HydrationBoundary>

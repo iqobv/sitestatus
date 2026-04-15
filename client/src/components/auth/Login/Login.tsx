@@ -2,7 +2,7 @@
 
 import { login as apiLogin } from '@/api';
 import { SectionHeader } from '@/components/ui';
-import { PAGES } from '@/config';
+import { AUTH_PAGES } from '@/config';
 import { LoginDto } from '@/dto';
 import { useAuth } from '@/hooks';
 import { loginSchema } from '@/schemas';
@@ -37,7 +37,7 @@ const Login = () => {
 				bottomText={
 					<>
 						Don&apos;t have an account?{' '}
-						<Link style={{ fontWeight: 600 }} href={PAGES.SIGN_UP}>
+						<Link style={{ fontWeight: 600 }} href={AUTH_PAGES.SIGN_UP}>
 							Sign Up
 						</Link>
 					</>

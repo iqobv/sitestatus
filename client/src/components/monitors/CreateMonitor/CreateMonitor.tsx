@@ -1,7 +1,7 @@
 'use client';
 
 import { createMonitor } from '@/api';
-import { PAGES } from '@/config';
+import { PRIVATE_PAGES } from '@/config';
 import { CreateMonitorDto } from '@/dto';
 import { createMonitorSchema } from '@/schemas';
 import { Monitor } from '@/types';
@@ -17,7 +17,7 @@ const CreateMonitor = () => {
 			fields={CREATE_MONITOR_FIELDS}
 			mutationFn={createMonitor}
 			onSuccess={(data) => {
-				router.push(PAGES.MONITOR(data.id));
+				router.push(PRIVATE_PAGES.MONITOR(data.id));
 			}}
 			onCancel={() => router.back()}
 			schema={createMonitorSchema}

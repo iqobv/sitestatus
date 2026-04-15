@@ -1,6 +1,11 @@
+import { getServerMonitorByIdFull } from '@/api';
 import { Monitor } from '@/components/monitors';
-import { IMonitorWithPingResults } from '@/types';
-import { serverFetcher } from '@/utils';
+import { QUERY_KEYS } from '@/config';
+import {
+	dehydrate,
+	HydrationBoundary,
+	QueryClient,
+} from '@tanstack/react-query';
 
 interface MonitorPageProps {
 	params: Promise<{ id: string }>;
@@ -9,17 +14,18 @@ interface MonitorPageProps {
 export default async function MonitorPage({ params }: MonitorPageProps) {
 	const { id } = await params;
 
-	const initialMonitor = await serverFetcher<IMonitorWithPingResults>(
-		`/v1/monitors/id/${id}`,
-		{
-			method: 'GET',
-			cache: 'no-store',
-		}
-	).catch(() => null);
+	const queryClient = new QueryClient();
+
+	await queryClient.prefetchQuery({
+		queryKey: QUERY_KEYS.monitors.byIdFull(id),
+		queryFn: () => getServerMonitorByIdFull(id),
+	});
 
 	return (
-		<div className="page container fade">
-			<Monitor id={id} initialData={initialMonitor} />
-		</div>
+		<HydrationBoundary state={dehydrate(queryClient)}>
+			<div className="page container fade">
+				<Monitor id={id} />
+			</div>
+		</HydrationBoundary>
 	);
 }

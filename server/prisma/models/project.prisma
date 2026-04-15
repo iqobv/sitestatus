@@ -1,0 +1,19 @@
+model Project {
+  id String @id @default(uuid()) @db.Uuid
+
+  ownerId String @map("owner_id") @db.Uuid
+
+  slug String @unique
+
+  name        String
+  description String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  monitors Monitor[]
+
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@map("projects")
+}

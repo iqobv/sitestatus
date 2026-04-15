@@ -1,7 +1,7 @@
-import { TMonitorStatus } from '@/types';
+import { MonitorStatus } from '@/types';
 
 export interface UptimeStatusProps {
-	status: TMonitorStatus | 'N/A' | 'PAUSED';
+	status: MonitorStatus | 'N/A' | 'PAUSED';
 	showText?: boolean;
 	textClassName?: string;
 }

@@ -1,6 +1,6 @@
 import z from 'zod';
-import { BaseAuthSchema } from './baseAuth.schema';
+import { baseAuthSchema } from './baseAuth.schema';
 
-export const LoginSchema = BaseAuthSchema.extend({
+export const loginSchema = baseAuthSchema.extend({
 	password: z.string().nonempty({ error: 'Password is required' }),
 });

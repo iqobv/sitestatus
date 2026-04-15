@@ -5,8 +5,8 @@ import { SectionHeader } from '@/components/ui';
 import { PAGES } from '@/config';
 import { LoginDto } from '@/dto';
 import { useAuth } from '@/hooks';
-import { LoginSchema } from '@/schemas';
-import { IUser } from '@/types';
+import { loginSchema } from '@/schemas';
+import { User } from '@/types';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import AuthForm from '../AuthForm/AuthForm';
@@ -19,7 +19,7 @@ const Login = () => {
 
 	return (
 		<AuthWrapper header={<SectionHeader title="Log in to your account" />}>
-			<AuthForm<LoginDto, IUser>
+			<AuthForm<LoginDto, User>
 				fields={LOGIN_FIELDS}
 				defaultValues={{
 					email: '',
@@ -32,7 +32,7 @@ const Login = () => {
 					}
 				}}
 				mutationFn={apiLogin}
-				schema={LoginSchema}
+				schema={loginSchema}
 				buttonLabel="Log in"
 				bottomText={
 					<>

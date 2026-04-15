@@ -1,0 +1,6 @@
+enum StatPeriod {
+  HOURLY
+  DAILY
+  WEEKLY
+  MONTHLY
+}

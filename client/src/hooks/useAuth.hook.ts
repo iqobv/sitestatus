@@ -3,7 +3,7 @@
 import { getProfile as apiGetProfile, logout as apiLogout } from '@/api';
 import { QUERY_KEYS } from '@/config';
 import { useUserStore } from '@/store';
-import { IUser } from '@/types';
+import { User } from '@/types';
 import { useMutation } from '@tanstack/react-query';
 
 export const useAuth = () => {
@@ -16,7 +16,7 @@ export const useAuth = () => {
 	const setIsLoading = useUserStore((state) => state.setIsLoading);
 	const setIsAuthenticated = useUserStore((state) => state.setIsAuthenticated);
 
-	const login = (userData: IUser) => {
+	const login = (userData: User) => {
 		setUser(userData);
 		setIsAuthenticated(true);
 		setIsLoading(false);
@@ -28,8 +28,8 @@ export const useAuth = () => {
 	};
 
 	const { mutate: getProfile } = useMutation({
-		mutationFn: () => apiGetProfile(),
-		mutationKey: QUERY_KEYS.auth.profile(user?.id || ''),
+		mutationFn: apiGetProfile,
+		mutationKey: QUERY_KEYS.auth.profile,
 		onMutate: () => {
 			setIsLoading(true);
 		},

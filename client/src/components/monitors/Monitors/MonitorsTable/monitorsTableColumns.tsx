@@ -1,7 +1,6 @@
 import { Button, UptimeStatus } from '@/components/ui';
 import { PAGES } from '@/config';
-import { IMonitor, IMonitorWithPingResults } from '@/types';
-import { calculateUptime } from '@/utils';
+import { Monitor, MonitorWithMonitorStats } from '@/types';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
@@ -9,8 +8,8 @@ dayjs.extend(relativeTime);
 
 interface Column {
 	header: string;
-	accessor: keyof IMonitor | 'details' | 'uptime';
-	render: (monitor: IMonitorWithPingResults) => React.ReactNode;
+	accessor: keyof Monitor | 'details' | 'uptime';
+	render: (monitor: MonitorWithMonitorStats) => React.ReactNode;
 }
 
 export const COLUMNS: Column[] = [
@@ -22,12 +21,14 @@ export const COLUMNS: Column[] = [
 	{
 		header: 'Status',
 		accessor: 'lastStatus',
-		render: (monitor) => <UptimeStatus status={monitor.lastStatus} />,
+		render: (monitor) => (
+			<UptimeStatus status={monitor.isActive ? monitor.lastStatus : 'PAUSED'} />
+		),
 	},
 	{
 		header: 'Uptime',
 		accessor: 'uptime',
-		render: (monitor) => <>{calculateUptime(monitor.pingResults)}</>,
+		render: (monitor) => <>{monitor.uptime}</>,
 	},
 	{
 		header: 'Last Checked',

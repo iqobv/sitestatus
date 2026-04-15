@@ -1,14 +1,14 @@
-import z from 'zod';
-import { BaseAuthSchema } from './baseAuth.schema';
+import { z } from 'zod';
+import { baseAuthSchema } from './baseAuth.schema';
 
-export const RegisterSchema = BaseAuthSchema.extend({
-	passwordConfirm: z
-		.string()
-		.nonempty({ error: 'Password confirmation is required' }),
-})
+export const registerSchema = baseAuthSchema
+	.extend({
+		passwordConfirm: z
+			.string()
+			.min(1, { message: 'Password confirmation is required' }),
+	})
 	.refine((data) => data.password === data.passwordConfirm, {
 		message: 'Passwords do not match',
+		path: ['passwordConfirm'],
 	})
-	.omit({
-		passwordConfirm: true,
-	});
+	.transform(({ passwordConfirm, ...data }) => data);

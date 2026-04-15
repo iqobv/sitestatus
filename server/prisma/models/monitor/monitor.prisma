@@ -1,0 +1,28 @@
+model Monitor {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId    String  @map("user_id") @db.Uuid
+  projectId String? @map("project_id") @db.Uuid
+
+  name String
+  url  String
+
+  checkIntervalSeconds Int @default(300) @map("check_interval_seconds")
+
+  lastCheckedAt DateTime?  @map("last_checked_at")
+  lastStatus    SiteStatus @default(UNKNOWN) @map("last_status")
+
+  isActive Boolean @default(true) @map("is_active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  monitorLogs   MonitorLog[]
+  monitorStats  MonitorStats[]
+  regionConfigs MonitorRegion[]
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("monitors")
+}

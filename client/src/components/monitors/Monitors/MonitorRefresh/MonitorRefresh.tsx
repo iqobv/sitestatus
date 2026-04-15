@@ -2,14 +2,13 @@
 
 import { Button } from '@/components/ui';
 import { QUERY_KEYS } from '@/config';
-import { useAuth, useUpdateTimer } from '@/hooks';
+import { useUpdateTimer } from '@/hooks';
 import styles from './MonitorRefresh.module.scss';
 
 const MonitorRefresh = () => {
-	const { user } = useAuth();
-
 	const { handleRefresh, timer } = useUpdateTimer({
-		queryKey: QUERY_KEYS.monitors.list((user && user.id) || ''),
+		queryKey: QUERY_KEYS.monitors.list,
+		isActive: true,
 	});
 
 	return (

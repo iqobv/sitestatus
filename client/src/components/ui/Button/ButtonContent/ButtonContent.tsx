@@ -6,15 +6,25 @@ import styles from './ButtonContent.module.scss';
 interface ButtonContentProps {
 	children: React.ReactNode;
 	loading: boolean;
+	className?: string;
 }
 
-const ButtonContent = ({ children, loading }: ButtonContentProps) => {
+const ButtonContent = ({
+	children,
+	loading,
+	className,
+}: ButtonContentProps) => {
+	const classNames = [
+		styles['button__inner'],
+		loading && styles['button__inner--loading'],
+		className,
+	]
+		.filter(Boolean)
+		.join(' ')
+		.trim();
+
 	return (
-		<div
-			className={`${styles['button__inner']} ${
-				loading ? styles['button__inner--loading'] : ''
-			}`}
-		>
+		<div className={classNames}>
 			<div className={styles['button__content']}>{children}</div>
 			{loading && (
 				<Loader

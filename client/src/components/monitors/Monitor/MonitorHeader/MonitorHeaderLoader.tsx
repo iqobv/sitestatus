@@ -5,23 +5,10 @@ const MonitorHeaderLoader = () => {
 	return (
 		<div className={styles['monitor-header']}>
 			<SectionHeader
-				title={<SkeletonLoader width={250} borderRadius={10} />}
-				description={<SkeletonLoader width={250} borderRadius={10} />}
+				title={<SkeletonLoader width={250} />}
+				description={<SkeletonLoader width={250} />}
 			/>
-			<div className={styles['monitor-header__actions']}>
-				<SkeletonLoader
-					borderRadius={10}
-					height={44}
-					width="100%"
-					containerClassName={styles['monitor-header__actions--loader']}
-				/>
-				<SkeletonLoader
-					borderRadius={10}
-					height={44}
-					width="100%"
-					containerClassName={styles['monitor-header__actions--loader']}
-				/>
-			</div>
+			<SkeletonLoader height={46} width={46} />
 		</div>
 	);
 };

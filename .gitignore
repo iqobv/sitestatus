@@ -27,3 +27,9 @@ dist-ssr
 .env
 .env.production
 *.ipynb
+
+local.settings.json
+__*__
+__*__.*
+AzuriteConfig
+ping-worker copy

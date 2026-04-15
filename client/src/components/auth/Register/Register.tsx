@@ -4,7 +4,7 @@ import { register } from '@/api';
 import { SectionHeader } from '@/components/ui';
 import { PAGES } from '@/config';
 import { RegisterFormDto } from '@/dto';
-import { RegisterSchema } from '@/schemas';
+import { registerSchema } from '@/schemas';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import AuthForm from '../AuthForm/AuthForm';
@@ -40,7 +40,7 @@ const Register = () => {
 					}
 				}}
 				mutationFn={register}
-				schema={RegisterSchema}
+				schema={registerSchema}
 				buttonLabel="Sign Up"
 			/>
 		</AuthWrapper>

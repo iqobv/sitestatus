@@ -1,8 +1,8 @@
 import { RegisterFormDto } from '@/dto';
-import { IField } from '@/types';
+import { Field } from '@/types';
 import { MdOutlineEmail, MdOutlineKey } from 'react-icons/md';
 
-export const REGISTER_FIELDS: IField<RegisterFormDto>[] = [
+export const REGISTER_FIELDS: Field<RegisterFormDto>[] = [
 	{
 		name: 'email',
 		label: 'Enter your email',

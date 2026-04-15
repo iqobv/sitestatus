@@ -39,13 +39,17 @@ export class MonitorService {
 	}
 
 	async findAll(userId: string) {
+		const targetHours = 24;
+
 		const monitors = await this.prismaService.monitor.findMany({
 			where: { userId },
 			include: {
 				monitorStats: {
 					where: {
 						period: 'HOURLY',
-						timestamp: { gt: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+						timestamp: {
+							gt: new Date(Date.now() - targetHours * 60 * 60 * 1000),
+						},
 					},
 					orderBy: { timestamp: 'desc' },
 				},
@@ -54,20 +58,47 @@ export class MonitorService {
 
 		const mappedMonitors = monitors.map((monitor) => {
 			const { monitorStats, ...rest } = monitor;
-			const uptime =
-				monitorStats.length > 0
-					? monitorStats.reduce((sum, stat) => sum + stat.uptimePercent, 0) /
-						monitorStats.length
-					: 0;
-			return { ...rest, uptime: formatResult(uptime) };
+
+			const statsCount = monitorStats.length;
+
+			let calculatedUptime: number;
+
+			if (statsCount === 0) {
+				calculatedUptime = 100;
+			} else {
+				const currentSum = monitorStats.reduce(
+					(sum, stat) => sum + stat.uptimePercent,
+					0,
+				);
+
+				if (statsCount < targetHours) {
+					const missingCount = targetHours - statsCount;
+					const oldestStat = monitorStats[statsCount - 1];
+					const fallbackUptime = oldestStat.uptimePercent;
+
+					const totalSum = currentSum + missingCount * fallbackUptime;
+					calculatedUptime = totalSum / targetHours;
+				} else {
+					calculatedUptime = currentSum / statsCount;
+				}
+			}
+
+			return {
+				...rest,
+				uptime: formatResult(calculatedUptime),
+			};
 		});
 
 		return mappedMonitors;
 	}
 
 	async findById(userId: string, id: string) {
+		const targetHours = 24;
+
 		const endDate = new Date();
-		const startDate = new Date(endDate.getTime() - 24 * 60 * 60 * 1000);
+		const startDate = new Date(
+			endDate.getTime() - targetHours * 60 * 60 * 1000,
+		);
 
 		const monitor = await this.prismaService.monitor.findUnique({
 			where: { id, userId },
@@ -118,7 +149,22 @@ export class MonitorService {
 			createdAt: log.createdAt,
 		}));
 
-		const timeline = this.buildRollingTimeline(timelineLogs, endDate, 24);
+		const allUnknownOrEmpty =
+			timelineLogs.length === 0 ||
+			timelineLogs.every((log) => log.status === SiteStatus.UNKNOWN);
+
+		let timeline: MonitorTimelineDto[];
+
+		if (allUnknownOrEmpty) {
+			timeline = Array.from({ length: targetHours }, (_, index) => ({
+				timestamp: new Date(
+					endDate.getTime() - (targetHours - 1 - index) * 60 * 60 * 1000,
+				),
+				status: SiteStatus.UNKNOWN,
+			}));
+		} else {
+			timeline = this.buildRollingTimeline(timelineLogs, endDate, targetHours);
+		}
 
 		const mappedRegions = regionConfigs.map((config) => ({
 			...config.region,
@@ -195,35 +241,46 @@ export class MonitorService {
 
 		for (const log of logs) {
 			const diffMs = endTime.getTime() - log.createdAt.getTime();
-			const bucketIndex = Math.floor(diffMs / (60 * 60 * 1000));
+			const hoursAgo = Math.floor(diffMs / (60 * 60 * 1000));
+			const bucketIndex = hours - 1 - hoursAgo;
 
 			if (bucketIndex >= 0 && bucketIndex < hours) {
 				buckets[bucketIndex].statuses.push(log.status);
 			}
 		}
 
-		return buckets
-			.map((bucket) => {
-				const isUp =
-					bucket.statuses.length > 0
-						? bucket.statuses.every(
-								(status) =>
-									status === SiteStatus.UP || status !== SiteStatus.UNKNOWN,
-							)
-						: false;
+		const oldestKnownStatus =
+			logs.find((log) => log.status !== SiteStatus.UNKNOWN)?.status ??
+			SiteStatus.UNKNOWN;
 
-				const status =
-					bucket.statuses.length === 0
-						? SiteStatus.UNKNOWN
-						: isUp
-							? SiteStatus.UP
-							: SiteStatus.DOWN;
+		let previousStatus = oldestKnownStatus;
 
-				return {
-					timestamp: bucket.timestamp,
-					status,
-				};
-			})
-			.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+		return buckets.map((bucket) => {
+			const isUp =
+				bucket.statuses.length > 0
+					? bucket.statuses.every(
+							(status) =>
+								status === SiteStatus.UP || status !== SiteStatus.UNKNOWN,
+						)
+					: false;
+
+			let currentStatus =
+				bucket.statuses.length === 0
+					? SiteStatus.UNKNOWN
+					: isUp
+						? SiteStatus.UP
+						: SiteStatus.DOWN;
+
+			if (currentStatus === SiteStatus.UNKNOWN) {
+				currentStatus = previousStatus;
+			} else {
+				previousStatus = currentStatus;
+			}
+
+			return {
+				timestamp: bucket.timestamp,
+				status: currentStatus,
+			};
+		});
 	}
 }

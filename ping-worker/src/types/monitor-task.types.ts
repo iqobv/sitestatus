@@ -1,4 +1,5 @@
 export interface MonitorTask {
-	id: string;
+	monitorId: string;
 	url: string;
+	method: string;
 }

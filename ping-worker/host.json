@@ -1,6 +1,13 @@
 {
 	"version": "2.0",
 	"logging": {
+		"logLevel": {
+			"default": "Error",
+			"Function": "Error",
+			"Host": "Error",
+			"Host.Results": "Error",
+			"Host.Aggregator": "Error"
+		},
 		"applicationInsights": {
 			"samplingSettings": {
 				"isEnabled": true,

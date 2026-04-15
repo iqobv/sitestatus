@@ -1,0 +1,23 @@
+{
+	"UserConfig": {
+		"Namespaces": [
+			{
+				"Name": "sbemulatorns",
+				"Queues": [
+					{
+						"Name": "tasks-local-dev"
+					},
+					{
+						"Name": "tasks-local-dev-2"
+					},
+					{
+						"Name": "monitor-results"
+					}
+				]
+			}
+		],
+		"Logging": {
+			"Type": "Console"
+		}
+	}
+}

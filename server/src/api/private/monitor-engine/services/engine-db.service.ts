@@ -1,51 +1,33 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from 'generated/prisma/client';
 import { SiteStatus } from 'generated/prisma/enums';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
-import { AdminRegionService } from '../admin-region/admin-region.service';
-import { PingResultDto } from './dto';
-import { MonitorTask } from './interface';
+import { PingResultDto } from '../dto';
 
 @Injectable()
-export class InternalPingService {
-	constructor(
-		private readonly prismaService: PrismaService,
-		private readonly regionService: AdminRegionService,
-	) {}
+export class EngineDbService {
+	constructor(private readonly prismaService: PrismaService) {}
 
-	async getTasks(regionKey: string): Promise<MonitorTask[]> {
-		const region = await this.regionService.getRegionByKey(regionKey);
-
-		const nextCheckTime = new Date();
-		nextCheckTime.setUTCSeconds(nextCheckTime.getUTCSeconds() + 15);
-
-		const monitors = await this.prismaService.monitor.findMany({
-			where: {
-				isActive: true,
-				regionConfigs: {
-					some: { regionId: region.id, nextCheckAt: { lte: nextCheckTime } },
-				},
-			},
-		});
-
-		return monitors.map((task) => ({
-			id: task.id,
-			url: task.url,
-		}));
-	}
-
-	async saveResults(
-		results: PingResultDto[],
-		regionKey: string,
-	): Promise<void> {
+	public async saveBatchResults(results: PingResultDto[]): Promise<void> {
 		if (results.length === 0) {
 			return;
 		}
 
-		const region = await this.regionService.getRegionByKey(regionKey);
-		const monitorIds = results.map((r) => r.monitorId);
+		const monitorIds = [...new Set(results.map((r) => r.monitorId))];
 		const checkedAt = new Date();
 
 		await this.prismaService.$transaction(async (tx) => {
+			const regions = await tx.region.findMany({
+				where: { isActive: true },
+				select: { id: true, key: true },
+			});
+
+			const mappedRegions = new Map<string, string>();
+
+			for (const region of regions) {
+				mappedRegions.set(region.key, region.id);
+			}
+
 			const monitors = await tx.monitor.findMany({
 				where: { id: { in: monitorIds } },
 				select: { id: true, checkIntervalSeconds: true },
@@ -53,25 +35,24 @@ export class InternalPingService {
 
 			const activeIncidents = await tx.monitorIncident.findMany({
 				where: {
-					regionId: region.id,
 					monitorId: { in: monitorIds },
 					resolved: false,
 				},
-				select: { id: true, monitorId: true },
+				select: { id: true, monitorId: true, regionId: true },
 			});
 
 			const monitorMap = new Map(monitors.map((m) => [m.id, m]));
 			const activeIncidentMap = new Map(
-				activeIncidents.map((a) => [a.monitorId, a]),
+				activeIncidents.map((a) => [`${a.monitorId}-${a.regionId}`, a.id]),
 			);
 
 			const logsData = results.map((r) => ({
 				monitorId: r.monitorId,
-				regionId: region.id,
+				regionId: mappedRegions.get(r.region)!,
 				status: r.status,
-				statusCode: r.statusCode,
+				statusCode: r.statusCode || null,
 				responseTimeMs: r.responseTimeMs,
-				errorMessage: r.errorMessage,
+				errorMessage: r.errorMessage || null,
 			}));
 
 			const monitorLogs = await tx.monitorLog.createManyAndReturn({
@@ -79,7 +60,9 @@ export class InternalPingService {
 				skipDuplicates: true,
 			});
 
-			const logMap = new Map(monitorLogs.map((log) => [log.monitorId, log.id]));
+			const logMap = new Map(
+				monitorLogs.map((log) => [`${log.monitorId}-${log.regionId}`, log.id]),
+			);
 
 			const incidentsToCreate: {
 				monitorId: string;
@@ -99,40 +82,44 @@ export class InternalPingService {
 			};
 
 			for (const result of results) {
-				const { status } = result;
+				const { status, region } = result;
+				const siteStatus = status;
+				const regionId = mappedRegions.get(region)!;
 
 				const monitor = monitorMap.get(result.monitorId);
 				if (!monitor) {
 					continue;
 				}
 
-				statusGroups[status].push(monitor.id);
+				statusGroups[siteStatus].push(monitor.id);
 
 				const isDown =
-					status === SiteStatus.DOWN || status === SiteStatus.UNKNOWN;
+					siteStatus === SiteStatus.DOWN || siteStatus === SiteStatus.UNKNOWN;
+				const randomTimeout = Math.floor(Math.random() * 30);
 				const nextInterval = isDown
 					? Math.min(60, monitor.checkIntervalSeconds)
-					: monitor.checkIntervalSeconds;
+					: monitor.checkIntervalSeconds + randomTimeout;
 
 				const nextCheckAt = new Date(checkedAt.getTime() + nextInterval * 1000);
 
 				const monitorRangeData = {
-					lastStatus: status,
+					lastStatus: siteStatus,
 					lastCheckedAt: checkedAt,
 					nextCheckAt,
-				};
+					isQueued: false,
+				} satisfies Prisma.MonitorRegionUpdateInput;
 
 				monitorRegionUpserts.push(
 					tx.monitorRegion.upsert({
 						where: {
 							monitorId_regionId: {
 								monitorId: monitor.id,
-								regionId: region.id,
+								regionId,
 							},
 						},
 						create: {
 							monitorId: monitor.id,
-							regionId: region.id,
+							regionId,
 							isActive: true,
 							...monitorRangeData,
 						},
@@ -140,17 +127,18 @@ export class InternalPingService {
 					}),
 				);
 
-				const activeIncidentId = activeIncidentMap.get(monitor.id)?.id;
+				const incidentKey = `${monitor.id}-${regionId}`;
+				const activeIncidentId = activeIncidentMap.get(incidentKey);
 
 				if (isDown && !activeIncidentId) {
 					incidentsToCreate.push({
 						monitorId: result.monitorId,
-						regionId: region.id,
+						regionId,
 						errorMessage: result.errorMessage || null,
 						statusCode: result.statusCode || null,
-						triggerLogId: logMap.get(result.monitorId) || null,
+						triggerLogId: logMap.get(incidentKey) || null,
 					});
-				} else if (status === SiteStatus.UP && activeIncidentId) {
+				} else if (siteStatus === SiteStatus.UP && activeIncidentId) {
 					incidentsToResolveIds.push(activeIncidentId);
 				}
 			}
@@ -174,15 +162,16 @@ export class InternalPingService {
 
 			const statusUpdates = Object.entries(statusGroups)
 				.filter(([, ids]) => ids.length > 0)
-				.map(([status, ids]) =>
-					tx.monitor.updateMany({
-						where: { id: { in: ids } },
+				.map(([status, ids]) => {
+					const uniqueIds = [...new Set(ids)];
+					return tx.monitor.updateMany({
+						where: { id: { in: uniqueIds } },
 						data: {
 							lastStatus: status as SiteStatus,
 							lastCheckedAt: checkedAt,
 						},
-					}),
-				);
+					});
+				});
 
 			updatePromises.push(...statusUpdates);
 

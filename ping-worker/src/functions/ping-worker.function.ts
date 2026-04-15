@@ -1,41 +1,65 @@
-import { app, InvocationContext, Timer } from '@azure/functions';
+import { app, InvocationContext } from '@azure/functions';
+import { ServiceBusClient, ServiceBusSender } from '@azure/service-bus';
 import { getConfig } from '../config/env.js';
-import { ApiService } from '../services/api.service.js';
-import { performPing } from '../services/pinger.service.js';
+import { MonitorTask } from '../types/monitor-task.types.js';
 import { PingResultPayload } from '../types/ping-result-payload.types.js';
 
-export async function pingWorkerHandler(
-	myTimer: Timer,
+const config = getConfig();
+
+const sbClient = new ServiceBusClient(config.serviceBusConnectionString);
+const resultSender: ServiceBusSender = sbClient.createSender('monitor-results');
+
+export async function processPingTask(
+	message: unknown,
 	context: InvocationContext,
 ): Promise<void> {
+	const payload = message as MonitorTask;
+	const { region } = config;
+	const startTime = Date.now();
+
 	try {
-		const config = getConfig();
-		const apiService = new ApiService(config);
+		const response = await fetch(payload.url, { method: payload.method });
+		const duration = Date.now() - startTime;
 
-		const tasks = await apiService.fetchTasks();
+		const result: PingResultPayload = {
+			monitorId: payload.monitorId,
+			status: response.ok ? 'UP' : 'DOWN',
+			errorMessage: response.statusText === 'OK' ? null : response.statusText,
+			responseTimeMs: duration,
+			statusCode: response.status,
+			region,
+		};
 
-		if (tasks.length === 0) return;
-
-		const results: PingResultPayload[] = await Promise.all(
-			tasks.map(async (task) => {
-				const pingResult = await performPing(task.url);
-
-				return {
-					monitorId: task.id,
-					...pingResult,
-				};
-			}),
-		);
-
-		await apiService.submitResults(results);
+		await resultSender.sendMessages({
+			body: result,
+			contentType: 'application/json',
+		});
 	} catch (error: unknown) {
-		context.error(
-			`Worker execution failed: ${error instanceof Error ? error.message : String(error)}`,
-		);
+		const duration = Date.now() - startTime;
+		let errorMessage = 'Unknown error';
+
+		if (error instanceof Error) {
+			errorMessage = error.message;
+		}
+
+		const result: PingResultPayload = {
+			monitorId: payload.monitorId,
+			status: 'DOWN',
+			responseTimeMs: duration,
+			errorMessage,
+			statusCode: 0,
+			region,
+		};
+
+		await resultSender.sendMessages({
+			body: result,
+			contentType: 'application/json',
+		});
 	}
 }
 
-app.timer('pingWorkerTimer', {
-	schedule: '0 * * * * *',
-	handler: pingWorkerHandler,
+app.serviceBusQueue('pingWorkerTrigger', {
+	connection: 'SERVICE_BUS_CONNECTION_STRING',
+	queueName: config.queueName,
+	handler: processPingTask,
 });

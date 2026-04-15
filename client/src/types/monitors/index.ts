@@ -9,5 +9,4 @@ export * from './monitorStat.types';
 export * from './monitorStatistics.types';
 export * from './monitorStatus.types';
 export * from './monitoTimeline.types';
-export * from './pingResults.types';
 export * from './statPeriod.types';

@@ -4,7 +4,7 @@ import { getMonitors } from '@/api';
 import { Button } from '@/components/ui';
 import { PAGES, QUERY_KEYS } from '@/config';
 import { useAuth } from '@/hooks';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import MonitorRefresh from './MonitorRefresh/MonitorRefresh';
 import styles from './Monitors.module.scss';
 import MonitorsTable from './MonitorsTable/MonitorsTable';
@@ -16,6 +16,7 @@ const Monitors = () => {
 		queryFn: getMonitors,
 		queryKey: QUERY_KEYS.monitors.list,
 		enabled: isAuthenticated && !!user,
+		placeholderData: keepPreviousData,
 	});
 
 	return (

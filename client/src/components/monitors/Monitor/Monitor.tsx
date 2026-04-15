@@ -1,6 +1,6 @@
 'use client';
 
-import { getMonitorAnalytics, getMonitorById } from '@/api';
+import { getMonitorAnalytics, getMonitorByIdFull } from '@/api';
 import { QUERY_KEYS } from '@/config';
 import { monitorRangeParser } from '@/parsers';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
@@ -28,8 +28,8 @@ const Monitor = ({ id }: MonitorProps) => {
 	});
 
 	const { data: monitor, isLoading } = useQuery({
-		queryKey: QUERY_KEYS.monitors.byId(id),
-		queryFn: () => getMonitorById(id),
+		queryKey: QUERY_KEYS.monitors.byIdFull(id),
+		queryFn: () => getMonitorByIdFull(id),
 		placeholderData: keepPreviousData,
 	});
 
@@ -46,7 +46,7 @@ const Monitor = ({ id }: MonitorProps) => {
 			{!isLoading && monitor && (
 				<div className={`${styles['monitor__content']} fade`}>
 					<MonitorHeader monitor={monitor} />
-					<MonitorRangeControl monitorId={monitor.id} />
+					<MonitorRangeControl monitor={monitor} />
 					<MonitorOverall monitor={monitor} />
 					<MonitorRegionControl
 						regions={monitor.regions}

@@ -49,7 +49,7 @@ export class TaskDispatcherService implements OnModuleDestroy {
 			where: { isActive: true },
 			include: {
 				regionConfigs: {
-					where: { nextCheckAt: { lte: now }, isQueued: false },
+					where: { nextCheckAt: { lte: now }, isQueued: false, isActive: true },
 					include: { region: true },
 				},
 			},

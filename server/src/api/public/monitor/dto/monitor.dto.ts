@@ -30,7 +30,7 @@ export class MonitorDto extends DefaultFieldsDto {
 	projectId: string | null;
 }
 
-export class MonitorMainInfoDto extends MonitorDto {
+export class MonitorFullDto extends MonitorDto {
 	@ApiProperty({ type: [BaseRegionDto] })
 	regions: BaseRegionDto[];
 
@@ -39,4 +39,14 @@ export class MonitorMainInfoDto extends MonitorDto {
 
 	@ApiProperty({ type: [MonitorTimelineDto] })
 	timeline: MonitorTimelineDto[];
+}
+
+export class MonitorWithRegionsDto extends MonitorDto {
+	@ApiProperty({
+		example: [
+			'f77d8a89-3af8-43d3-91d2-47348ec2ac45',
+			'f77d8a89-3af8-43d3-91d2-47348ec2ac46',
+		],
+	})
+	regions: string[];
 }

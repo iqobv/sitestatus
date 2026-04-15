@@ -18,4 +18,7 @@ export class PingResultDto {
 	@IsEmpty()
 	@IsString()
 	errorMessage: string | null;
+
+	@IsString()
+	region: string;
 }

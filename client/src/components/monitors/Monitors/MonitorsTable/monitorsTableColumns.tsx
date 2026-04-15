@@ -1,5 +1,5 @@
 import { Button, UptimeStatus } from '@/components/ui';
-import { PAGES } from '@/config';
+import { PRIVATE_PAGES } from '@/config';
 import { Monitor, MonitorWithMonitorStats } from '@/types';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -39,7 +39,7 @@ export const COLUMNS: Column[] = [
 		header: '',
 		accessor: 'details',
 		render: (monitor) => (
-			<Button variant="link" size="sm" href={PAGES.MONITOR(monitor.id)}>
+			<Button variant="link" size="sm" href={PRIVATE_PAGES.MONITOR(monitor.id)}>
 				View Details
 			</Button>
 		),

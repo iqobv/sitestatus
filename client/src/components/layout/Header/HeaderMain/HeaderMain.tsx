@@ -2,7 +2,7 @@
 
 import { Logo } from '@/components/icons';
 import { Button, Loader } from '@/components/ui';
-import { PAGES } from '@/config';
+import { AUTH_PAGES, PRIVATE_PAGES, PUBLIC_PAGES } from '@/config';
 import { useAuth } from '@/hooks';
 import Link from 'next/link';
 import { MdLogout } from 'react-icons/md';
@@ -17,7 +17,7 @@ const HeaderMain = () => {
 			headerClassName={styles['header']}
 			containerClassName={styles['header__container']}
 		>
-			<Link href={PAGES.HOME} className={styles['header__logo']}>
+			<Link href={PUBLIC_PAGES.HOME} className={styles['header__logo']}>
 				<Logo width={32} height={32} />
 				<span className={styles['header__logo-text']}>
 					<span className={styles['header__logo-text--highlight']}>Site</span>
@@ -31,15 +31,15 @@ const HeaderMain = () => {
 			)}
 			{!isLoading && !isAuthenticated && (
 				<div className={styles['header__buttons']}>
-					<Button variant="link" href={PAGES.LOGIN} size="sm">
+					<Button variant="link" href={AUTH_PAGES.LOGIN} size="sm">
 						Log in
 					</Button>
-					<Button href={PAGES.SIGN_UP}>Sign Up</Button>
+					<Button href={AUTH_PAGES.SIGN_UP}>Sign Up</Button>
 				</div>
 			)}
 			{!isLoading && isAuthenticated && (
 				<div className={styles['header__buttons']}>
-					<Button href={PAGES.DASHBOARD} variant="secondary">
+					<Button href={PRIVATE_PAGES.DASHBOARD} variant="secondary">
 						Dashboard
 					</Button>
 					<Button onClick={() => logout()} isIcon>

@@ -7,6 +7,7 @@ export { default as Checkbox } from './Checkbox/Checkbox';
 export { default as Dropdown } from './Dropdown/index';
 export { default as FormLabel } from './FormLabel/FormLabel';
 export { default as Loader } from './Loader/Loader';
+export { default as LogoLink } from './LogoLink/LogoLink';
 export { default as Modal } from './Modal/Modal';
 export { default as SectionHeader } from './SectionHeader/SectionHeader';
 export { default as Sepator } from './Sepator/Sepator';

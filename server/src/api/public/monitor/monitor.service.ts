@@ -232,7 +232,7 @@ export class MonitorService {
 		const monitor = await this.ownerCheck(id, userId);
 
 		return await this.prismaService.$transaction(async (tx) => {
-			const updatedMonitor = await this.prismaService.monitor.update({
+			const updatedMonitor = await tx.monitor.update({
 				where: { id: monitor.id, userId },
 				data: {
 					name,
@@ -244,56 +244,30 @@ export class MonitorService {
 					lastStatus,
 					projectId,
 				},
-				include: {
-					regionConfigs: {
-						select: {
-							regionId: true,
-							isActive: true,
-							region: { select: { id: true, name: true, key: true } },
-						},
-					},
-				},
 			});
 
 			if (regions) {
-				const regionsToCreate = regions.filter(
-					(region) =>
-						!updatedMonitor.regionConfigs.some(
-							(config) => config.regionId === region,
-						),
-				);
-				const regionsToDisable = regions.filter((region) =>
-					updatedMonitor.regionConfigs.some(
-						(config) => config.regionId === region,
-					),
-				);
-
 				await Promise.all([
+					tx.monitorRegion.updateMany({
+						where: { monitorId: monitor.id, regionId: { notIn: regions } },
+						data: { isActive: false },
+					}),
 					tx.monitorRegion.createMany({
-						data: regionsToCreate.map((region) => ({
-							monitorId: updatedMonitor.id,
-							regionId: region,
+						data: regions.map((regionId) => ({
+							monitorId: monitor.id,
+							regionId,
+							isActive: true,
 						})),
 						skipDuplicates: true,
 					}),
 					tx.monitorRegion.updateMany({
-						where: {
-							monitorId: updatedMonitor.id,
-							regionId: { in: regionsToDisable },
-						},
-						data: { isActive: false },
+						where: { monitorId: monitor.id, regionId: { in: regions } },
+						data: { isActive: true },
 					}),
 				]);
 			}
 
-			const { regionConfigs, ...rest } = updatedMonitor;
-
-			const mappedMonitor = {
-				...rest,
-				regions: regionConfigs.map((config) => config.regionId),
-			};
-
-			return mappedMonitor;
+			return { regions, ...updatedMonitor };
 		});
 	}
 

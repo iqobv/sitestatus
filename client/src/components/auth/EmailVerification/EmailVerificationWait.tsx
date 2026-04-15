@@ -2,7 +2,7 @@
 
 import { resendVerificationEmail } from '@/api';
 import { Button, SectionHeader } from '@/components/ui';
-import { PAGES, QUERY_KEYS } from '@/config';
+import { AUTH_PAGES, QUERY_KEYS } from '@/config';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { FaExternalLinkAlt } from 'react-icons/fa';
@@ -12,7 +12,7 @@ import EmailVerificationWrapper from './EmailVerificationWrapper';
 
 const EmailVerificationWait = () => {
 	const [email, setEmail] = useState<string | null>(
-		localStorage.getItem('registrationEmail') || ''
+		localStorage.getItem('registrationEmail') || '',
 	);
 	const [timer, setTimer] = useState(0);
 
@@ -65,7 +65,7 @@ const EmailVerificationWait = () => {
 						? `Resend Verification Email (${timer})`
 						: 'Resend Verification Email'}
 				</Button>
-				<Button onClick={handleChangeEmail} href={PAGES.SIGN_UP}>
+				<Button onClick={handleChangeEmail} href={AUTH_PAGES.SIGN_UP}>
 					Change Email
 				</Button>
 			</div>

@@ -1,0 +1,16 @@
+.logo {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+
+	&__text {
+		font-size: 1.4rem;
+		color: var(--text-primary);
+		font-weight: 600;
+
+		&--highlight {
+			font-weight: 700;
+			color: var(--accent-color);
+		}
+	}
+}

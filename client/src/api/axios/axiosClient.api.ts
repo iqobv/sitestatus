@@ -1,6 +1,6 @@
 'use client';
 
-import { PAGES } from '@/config';
+import { AUTH_PAGES } from '@/config';
 import { useUserStore } from '@/store';
 import { ApiErrorResponse } from '@/types';
 import axios, { AxiosError } from 'axios';
@@ -19,7 +19,7 @@ apiClient.interceptors.response.use(
 		if (error.response?.status === 401) {
 			useUserStore.getState().removeUser();
 			if (typeof window !== undefined) {
-				window.location.href = PAGES.LOGIN;
+				window.location.href = AUTH_PAGES.LOGIN;
 			}
 		}
 

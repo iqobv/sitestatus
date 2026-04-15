@@ -1,7 +1,7 @@
 'use client';
 
 import { verifyEmail } from '@/api';
-import { PAGES, QUERY_KEYS } from '@/config';
+import { AUTH_PAGES, PRIVATE_PAGES, QUERY_KEYS } from '@/config';
 import { useAuth } from '@/hooks';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -37,7 +37,7 @@ const EmailVerification = ({ userId, token }: EmailVerificationProps) => {
 				login(user);
 				// eslint-disable-next-line react-hooks/set-state-in-effect
 				setLoginCompleted(true);
-				router.push(PAGES.DASHBOARD);
+				router.push(PRIVATE_PAGES.DASHBOARD);
 			}
 		}
 	}, [isSuccess, data, login, router, loginCompleted]);
@@ -45,7 +45,7 @@ const EmailVerification = ({ userId, token }: EmailVerificationProps) => {
 	useEffect(() => {
 		if (error) {
 			toast.error(error.message);
-			router.push(PAGES.VERIFY_EMAIL);
+			router.push(AUTH_PAGES.VERIFY_EMAIL);
 		}
 	}, [error, router]);
 

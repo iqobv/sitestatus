@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui';
-import { PAGES } from '@/config';
+import { AUTH_PAGES } from '@/config';
 import styles from './Hero.module.scss';
 
 const Hero = () => {
@@ -16,7 +16,7 @@ const Hero = () => {
 						maintenance. Our service ensures you&apos;re always in the loop,
 						minimizing disruptions to your workflow.
 					</p>
-					<Button href={PAGES.SIGN_UP}>Get Started</Button>
+					<Button href={AUTH_PAGES.SIGN_UP}>Get Started</Button>
 				</div>
 				<div className={styles['hero__image']}>
 					<picture>

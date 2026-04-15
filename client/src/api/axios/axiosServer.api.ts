@@ -1,6 +1,6 @@
 'use server';
 
-import { PAGES } from '@/config';
+import { AUTH_PAGES } from '@/config';
 import { ApiErrorResponse } from '@/types';
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { cookies } from 'next/headers';
@@ -31,7 +31,7 @@ apiServer.interceptors.response.use(
 	(response) => response,
 	(error: AxiosError<ApiErrorResponse>) => {
 		if (error.response?.status === 401) {
-			redirect(PAGES.LOGIN);
+			redirect(AUTH_PAGES.LOGIN);
 		}
 	},
 );

@@ -21,7 +21,9 @@ export const COLUMNS: Column[] = [
 	{
 		header: 'Status',
 		accessor: 'lastStatus',
-		render: (monitor) => <UptimeStatus status={monitor.lastStatus} />,
+		render: (monitor) => (
+			<UptimeStatus status={monitor.isActive ? monitor.lastStatus : 'PAUSED'} />
+		),
 	},
 	{
 		header: 'Uptime',

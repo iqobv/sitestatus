@@ -5,11 +5,13 @@ import { useCallback, useEffect, useState } from 'react';
 
 interface UseUpdateTimerProps {
 	queryKey: readonly (string | number)[];
+	isActive: boolean;
 	initialTime?: number;
 }
 
 export const useUpdateTimer = ({
 	queryKey,
+	isActive,
 	initialTime = 60,
 }: UseUpdateTimerProps) => {
 	const queryClient = useQueryClient();
@@ -24,6 +26,8 @@ export const useUpdateTimer = ({
 	}, [queryClient, queryKey, initialTime]);
 
 	useEffect(() => {
+		if (!isActive) return;
+
 		let timeout: NodeJS.Timeout;
 
 		if (timer > 0) {

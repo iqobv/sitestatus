@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+	ArrayNotEmpty,
+	IsArray,
 	IsBoolean,
 	IsDate,
 	IsEnum,
@@ -49,4 +51,15 @@ export class CreateMonitorDto {
 	@IsOptional()
 	@IsUUID('4')
 	projectId?: string;
+
+	@ApiProperty({
+		example: [
+			'f77d8a89-3af8-43d3-91d2-47348ec2ac45',
+			'b88e9b90-4bg9-54e4-02e3-58459fd3bd56',
+		],
+	})
+	@IsArray()
+	@ArrayNotEmpty()
+	@IsUUID('4', { each: true })
+	regions: string[];
 }

@@ -1,18 +1,19 @@
 'use client';
 
+import { MonitorFull } from '@/types';
 import MonitorRangeButtons from './MonitorRangeButtons/MonitorRangeButtons';
 import styles from './MonitorRangeControl.module.scss';
 import MonitorRefreshTimer from './MonitorRefreshTimer/MonitorRefreshTimer';
 
 interface MonitorRangeControlProps {
-	monitorId: string;
+	monitor: MonitorFull;
 }
 
-const MonitorRangeControl = ({ monitorId }: MonitorRangeControlProps) => {
+const MonitorRangeControl = ({ monitor }: MonitorRangeControlProps) => {
 	return (
 		<div className={styles['range-control']}>
 			<MonitorRangeButtons />
-			<MonitorRefreshTimer monitorId={monitorId} />
+			<MonitorRefreshTimer monitor={monitor} />
 		</div>
 	);
 };

@@ -1,10 +1,10 @@
 'use client';
 
-import { useQueryClient } from '@tanstack/react-query';
+import { QueryKey, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useState } from 'react';
 
 interface UseUpdateTimerProps {
-	queryKey: readonly (string | number)[];
+	queryKey: QueryKey;
 	isActive: boolean;
 	initialTime?: number;
 }

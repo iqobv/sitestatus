@@ -17,7 +17,7 @@ const CreateMonitor = () => {
 			fields={CREATE_MONITOR_FIELDS}
 			mutationFn={createMonitor}
 			onSuccess={(data) => {
-				router.push(PRIVATE_PAGES.MONITOR(data.id));
+				router.push(PRIVATE_PAGES.MONITORS.ONE(data.id));
 			}}
 			onCancel={() => router.back()}
 			schema={createMonitorSchema}
@@ -26,6 +26,8 @@ const CreateMonitor = () => {
 				name: '',
 				checkIntervalSeconds: 300,
 				url: '',
+				projectId: '',
+				regions: [],
 			}}
 		/>
 	);

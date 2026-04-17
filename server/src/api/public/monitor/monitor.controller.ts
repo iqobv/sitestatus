@@ -43,9 +43,20 @@ export class MonitorController {
 	@Auth()
 	@ApiOperation({ summary: 'Get all monitors for the authenticated user' })
 	@ApiOkResponse({ type: [MonitorFullDto] })
-	@Get('me')
+	@Get('')
 	async findAll(@Authorized('id') userId: string) {
 		return await this.monitorService.findAll(userId);
+	}
+
+	@Auth()
+	@ApiOperation({ summary: 'Get all monitors for the authenticated user' })
+	@ApiOkResponse({ type: [MonitorFullDto] })
+	@Get('projects/:projectId')
+	async findAllMonitorsByProjectId(
+		@Authorized('id') userId: string,
+		@Param('projectId') projectId: string,
+	) {
+		return await this.monitorService.findAll(userId, projectId);
 	}
 
 	@Auth()

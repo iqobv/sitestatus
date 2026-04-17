@@ -10,6 +10,7 @@ export { default as Loader } from './Loader/Loader';
 export { default as LogoLink } from './LogoLink/LogoLink';
 export { default as Modal } from './Modal/Modal';
 export { default as SectionHeader } from './SectionHeader/SectionHeader';
+export { default as Select } from './Select/Select';
 export { default as Sepator } from './Sepator/Sepator';
 export { default as SkeletonLoader } from './SkeletonLoader/SkeletonLoader';
 export { default as Table } from './Table/Table';

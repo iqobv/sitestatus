@@ -12,16 +12,8 @@ export class MonitorService {
 	constructor(private readonly prismaService: PrismaService) {}
 
 	async create(userId: string, dto: CreateMonitorDto) {
-		const {
-			name,
-			url,
-			checkIntervalSeconds,
-			lastCheckedAt,
-			lastStatus,
-			isActive,
-			projectId,
-			regions,
-		} = dto;
+		const { name, url, checkIntervalSeconds, isActive, projectId, regions } =
+			dto;
 
 		return await this.prismaService.$transaction(async (tx) => {
 			const monitor = await tx.monitor.create({
@@ -29,8 +21,6 @@ export class MonitorService {
 					name,
 					url,
 					checkIntervalSeconds,
-					lastCheckedAt,
-					lastStatus,
 					isActive,
 					projectId: projectId || null,
 					userId,
@@ -50,11 +40,11 @@ export class MonitorService {
 		});
 	}
 
-	async findAll(userId: string) {
+	async findAll(userId: string, projectId?: string) {
 		const targetHours = 24;
 
 		const monitors = await this.prismaService.monitor.findMany({
-			where: { userId },
+			where: { userId, projectId: projectId || null },
 			orderBy: { createdAt: 'desc' },
 			include: {
 				monitorStats: {
@@ -223,8 +213,6 @@ export class MonitorService {
 			checkIntervalSeconds,
 			isActive,
 			nextCheckAt,
-			lastCheckedAt,
-			lastStatus,
 			projectId,
 			regions,
 		} = dto;
@@ -240,8 +228,6 @@ export class MonitorService {
 					checkIntervalSeconds,
 					isActive,
 					nextCheckAt,
-					lastCheckedAt,
-					lastStatus,
 					projectId,
 				},
 			});

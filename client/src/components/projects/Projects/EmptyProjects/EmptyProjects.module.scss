@@ -1,0 +1,12 @@
+.empty {
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap);
+	align-items: center;
+	justify-content: center;
+}
+
+.message {
+	font-size: 1.3rem;
+	font-weight: 600;
+}

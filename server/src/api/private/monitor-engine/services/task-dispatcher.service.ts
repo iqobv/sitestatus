@@ -86,7 +86,10 @@ export class TaskDispatcherService implements OnModuleDestroy {
 		if (monitorRegionsToUpdate.length > 0) {
 			await this.prismaService.monitorRegion.updateMany({
 				where: {
-					id: { in: monitorRegionsToUpdate.map((m) => m.regionId) },
+					OR: monitorRegionsToUpdate.map((m) => ({
+						monitorId: m.monitorId,
+						regionId: m.regionId,
+					})),
 					nextCheckAt: { lte: now },
 					isQueued: false,
 				},

@@ -1,4 +1,5 @@
 import z from 'zod';
+import { baseProjectMonitorSchema } from './monitorProject.schema';
 import { baseRegionsMonitorSchema } from './regionsMonitor.schema';
 
 export const createMonitorSchema = z
@@ -17,4 +18,5 @@ export const createMonitorSchema = z
 				.max(86400, 'Check interval cannot exceed 1440 minutes (24 hours)'),
 		),
 	})
-	.extend(baseRegionsMonitorSchema.shape);
+	.extend(baseRegionsMonitorSchema.shape)
+	.extend(baseProjectMonitorSchema.shape);

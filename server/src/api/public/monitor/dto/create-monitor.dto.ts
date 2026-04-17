@@ -3,8 +3,6 @@ import {
 	ArrayNotEmpty,
 	IsArray,
 	IsBoolean,
-	IsDate,
-	IsEnum,
 	IsNumber,
 	IsOptional,
 	IsString,
@@ -12,7 +10,6 @@ import {
 	IsUUID,
 	Min,
 } from 'class-validator';
-import { SiteStatus } from 'generated/prisma/enums';
 
 export class CreateMonitorDto {
 	@ApiProperty({ example: 'My Website' })
@@ -31,16 +28,6 @@ export class CreateMonitorDto {
 	})
 	@Min(300)
 	checkIntervalSeconds: number;
-
-	@ApiProperty({ example: new Date().toISOString() })
-	@IsDate()
-	@IsOptional()
-	lastCheckedAt?: Date;
-
-	@ApiProperty({ example: SiteStatus.UP, enum: SiteStatus })
-	@IsEnum(SiteStatus)
-	@IsOptional()
-	lastStatus?: SiteStatus;
 
 	@ApiProperty({ example: true })
 	@IsBoolean()

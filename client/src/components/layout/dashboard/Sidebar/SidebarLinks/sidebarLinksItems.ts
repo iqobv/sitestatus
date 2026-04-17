@@ -19,12 +19,12 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
 		icon: MdOutlineDashboard,
 	},
 	{
-		href: PRIVATE_PAGES.MONITORS,
+		href: PRIVATE_PAGES.MONITORS.ALL,
 		label: 'Monitors',
 		icon: MdOutlineMonitorHeart,
 	},
 	{
-		href: PRIVATE_PAGES.PROJECTS,
+		href: PRIVATE_PAGES.PROJECTS.ALL,
 		label: 'Projects',
 		icon: MdOutlineWorkspaces,
 	},

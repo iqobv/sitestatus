@@ -6,6 +6,7 @@ import {
 import { Prisma } from 'generated/prisma/client';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from 'src/libs/constants';
+import { projectSelect } from 'src/libs/prisma';
 import { CreateProjectDto, UpdateProjectDto } from './dto';
 
 @Injectable()
@@ -23,6 +24,7 @@ export class ProjectService {
 					description,
 					owner: { connect: { id: userId } },
 				},
+				select: projectSelect,
 			});
 		} catch (error) {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -39,6 +41,7 @@ export class ProjectService {
 	async getProjectBySlug(slug: string, throwError: boolean = true) {
 		const project = await this.prismaService.project.findUnique({
 			where: { slug },
+			select: projectSelect,
 		});
 
 		if (!project && throwError) {
@@ -51,6 +54,7 @@ export class ProjectService {
 	async getProjectById(id: string, userId: string) {
 		const project = await this.prismaService.project.findUnique({
 			where: { id, ownerId: userId },
+			select: projectSelect,
 		});
 
 		if (!project)
@@ -62,6 +66,7 @@ export class ProjectService {
 	async getAllProjects(userId: string) {
 		return await this.prismaService.project.findMany({
 			where: { ownerId: userId },
+			select: projectSelect,
 		});
 	}
 
@@ -78,6 +83,7 @@ export class ProjectService {
 					name,
 					slug,
 				},
+				select: projectSelect,
 			});
 		} catch (error) {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {

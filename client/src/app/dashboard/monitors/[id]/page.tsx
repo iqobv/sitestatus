@@ -6,9 +6,32 @@ import {
 	HydrationBoundary,
 	QueryClient,
 } from '@tanstack/react-query';
+import { Metadata } from 'next';
+import { cache } from 'react';
 
 interface MonitorPageProps {
 	params: Promise<{ id: string }>;
+}
+
+const getCachedMonitor = cache(async (id: string) => {
+	return await getServerMonitorByIdFull(id);
+});
+
+export async function generateMetadata({
+	params,
+}: MonitorPageProps): Promise<Metadata> {
+	const { id } = await params;
+
+	try {
+		const monitor = await getCachedMonitor(id);
+		return {
+			title: monitor?.name || 'Monitor',
+		};
+	} catch {
+		return {
+			title: 'Monitor',
+		};
+	}
 }
 
 export default async function MonitorPage({ params }: MonitorPageProps) {
@@ -18,7 +41,7 @@ export default async function MonitorPage({ params }: MonitorPageProps) {
 
 	await queryClient.prefetchQuery({
 		queryKey: QUERY_KEYS.monitors.byIdFull(id),
-		queryFn: () => getServerMonitorByIdFull(id),
+		queryFn: () => getCachedMonitor(id),
 	});
 
 	return (

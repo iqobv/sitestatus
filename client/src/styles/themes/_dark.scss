@@ -5,7 +5,7 @@ html.dark {
 	--bg-header-rgb: 10, 10, 10;
 	--header-border-color: #7a7a7a30;
 	--color-main-text: #ffffff;
-	--secondary-color: #b9bec3;
+	--color-secondary-text: #a1a1a1;
 	--header-height: 70px;
 	--secondary-bg: #1a1a1a;
 	--border-color: #474747;
@@ -33,7 +33,7 @@ html.dark {
 
 	/* Errors */
 	--error-bg: #ffa4ab;
-	--error-text: #2c080c;
+	--error-text: #c21327;
 	--error-border: #eb2630;
 
 	/* Cards */
@@ -141,4 +141,8 @@ html.dark {
 	--dashboard-sidebar-bg: #1a1a1a;
 	--dashboard-sidebar-border: #7a7a7a30;
 	--dashboard-sidebar-link-active-bg: #262626;
+
+	/* Project */
+	--project-card-bg: #1a1a1a;
+	--project-card-border: #333333;
 }

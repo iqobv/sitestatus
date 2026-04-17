@@ -1,4 +1,4 @@
-import { FloatingContext } from '@floating-ui/react';
+import { ExtendedRefs, FloatingContext } from '@floating-ui/react';
 import { ReferenceType } from '@floating-ui/react-dom';
 import { Dispatch, HTMLProps, RefObject, SetStateAction } from 'react';
 
@@ -21,4 +21,5 @@ export interface DropdownContextType {
 	setFloating: (node: HTMLElement | null) => void;
 	context: FloatingContext;
 	close: () => void;
+	refs: ExtendedRefs<ReferenceType>;
 }

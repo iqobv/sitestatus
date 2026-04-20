@@ -1,3 +1,5 @@
+import { EditProject } from '@/components/projects';
+import { BackButton, SectionHeader } from '@/components/ui';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -5,5 +7,11 @@ export const metadata: Metadata = {
 };
 
 export default function EditProjectPage() {
-	return <div></div>;
+	return (
+		<div>
+			<BackButton />
+			<SectionHeader title="Edit Project" />
+			<EditProject />
+		</div>
+	);
 }

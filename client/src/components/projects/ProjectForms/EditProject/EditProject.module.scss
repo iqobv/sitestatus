@@ -1,0 +1,12 @@
+.editProjectLoader {
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap);
+}
+
+.formActions {
+	width: 100%;
+	display: inline-flex;
+	justify-content: flex-end;
+	gap: var(--gap);
+}

@@ -3,10 +3,12 @@ import {
 	Injectable,
 	NotFoundException,
 } from '@nestjs/common';
+import { isUUID } from 'class-validator';
 import { Prisma } from 'generated/prisma/client';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from 'src/libs/constants';
 import { projectSelect } from 'src/libs/prisma';
+import { withField } from 'src/libs/utils';
 import { CreateProjectDto, UpdateProjectDto } from './dto';
 
 @Injectable()
@@ -30,7 +32,7 @@ export class ProjectService {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				if (error.code === 'P2002') {
 					throw new ConflictException(
-						ERROR_MESSAGES.PROJECT.PROJECT_SLUG_EXISTS,
+						withField(ERROR_MESSAGES.PROJECT.PROJECT_SLUG_EXISTS, 'slug'),
 					);
 				}
 			}
@@ -52,6 +54,10 @@ export class ProjectService {
 	}
 
 	async getProjectById(id: string, userId: string) {
+		if (!isUUID(id)) {
+			throw new NotFoundException(ERROR_MESSAGES.PROJECT.PROJECT_NOT_FOUND);
+		}
+
 		const project = await this.prismaService.project.findUnique({
 			where: { id, ownerId: userId },
 			select: projectSelect,
@@ -89,7 +95,7 @@ export class ProjectService {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				if (error.code === 'P2002') {
 					throw new ConflictException(
-						ERROR_MESSAGES.PROJECT.PROJECT_SLUG_EXISTS,
+						withField(ERROR_MESSAGES.PROJECT.PROJECT_SLUG_EXISTS, 'slug'),
 					);
 				}
 			}

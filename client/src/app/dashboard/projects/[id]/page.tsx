@@ -40,7 +40,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
 	const queryClient = new QueryClient();
 
-	const projectData = await queryClient.fetchQuery({
+	await queryClient.prefetchQuery({
 		queryKey: QUERY_KEYS.project.byId(id),
 		queryFn: () => getCachedProject(id),
 	});
@@ -52,7 +52,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
-			<ProjectHeader projectData={projectData} />
+			<ProjectHeader />
 			<Project />
 		</HydrationBoundary>
 	);

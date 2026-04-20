@@ -2,8 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { SiteStatus } from 'generated/prisma/enums';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from 'src/libs/constants';
-import { calculateUptime } from 'src/libs/utils';
-import { formatResult } from 'src/libs/utils/calculates/format-result.util';
+import { calculateUptime, formatResult } from 'src/libs/utils';
 import { CreateMonitorDto, MonitorTimelineDto, UpdateMonitorDto } from './dto';
 import { LogEntry } from './interfaces';
 

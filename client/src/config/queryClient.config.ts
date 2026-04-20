@@ -36,5 +36,7 @@ export const QUERY_KEYS = {
 	project: {
 		all: ['projectsList'],
 		byId: (projectId: string) => ['project', projectId],
-	},
+		create: ['projectCreate'],
+		update: (projectId: string) => ['projectUpdate', projectId],
+	} as const,
 } as const;

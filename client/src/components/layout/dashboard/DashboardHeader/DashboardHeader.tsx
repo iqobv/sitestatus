@@ -16,7 +16,7 @@ const DashboardHeader = () => {
 				<div className={styles['dashboard-header__buttons']}>
 					<Button
 						className={styles['dashboard-header__add-button']}
-						href={PRIVATE_PAGES.CREATE_MONITOR}
+						href={PRIVATE_PAGES.MONITORS.NEW}
 					>
 						<FiPlus size={20} />
 						<p className={styles['dashboard-header__button-text']}>

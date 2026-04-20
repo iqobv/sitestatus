@@ -39,6 +39,7 @@ const UpdateMonitor = ({ monitorId }: UpdateMonitorProps) => {
 						url: data.url,
 						checkIntervalSeconds: data.checkIntervalSeconds,
 						regions: data.regions || [],
+						projectId: data.projectId || '',
 					}}
 				/>
 			)}

@@ -1,13 +1,17 @@
 'use client';
 
 import { Button } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
 import { useUpdateTimer } from '@/hooks';
+import { QueryKey } from '@tanstack/react-query';
 import styles from './MonitorRefresh.module.scss';
 
-const MonitorRefresh = () => {
+interface MonitorRefreshProps {
+	queryKey: QueryKey;
+}
+
+const MonitorRefresh = ({ queryKey }: MonitorRefreshProps) => {
 	const { handleRefresh, timer } = useUpdateTimer({
-		queryKey: QUERY_KEYS.monitors.list,
+		queryKey,
 		isActive: true,
 	});
 

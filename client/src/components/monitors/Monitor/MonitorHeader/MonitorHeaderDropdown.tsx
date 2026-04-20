@@ -23,7 +23,7 @@ const MonitorHeaderDropdown = ({ monitor }: MonitorHeaderDropdownProps) => {
 			<Dropdown.Menu>
 				<Dropdown.Item asChild>
 					<Link
-						href={PRIVATE_PAGES.MONITOR_EDIT(monitor.id)}
+						href={PRIVATE_PAGES.MONITORS.ONE(monitor.id)}
 						className={styles['monitor-header__dropdown-item']}
 					>
 						<MdOutlineEdit size={20} />

@@ -2,8 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { SiteStatus } from 'generated/prisma/enums';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from 'src/libs/constants';
-import { calculateUptime } from 'src/libs/utils';
-import { formatResult } from 'src/libs/utils/calculates/format-result.util';
+import { calculateUptime, formatResult } from 'src/libs/utils';
 import { CreateMonitorDto, MonitorTimelineDto, UpdateMonitorDto } from './dto';
 import { LogEntry } from './interfaces';
 
@@ -12,16 +11,8 @@ export class MonitorService {
 	constructor(private readonly prismaService: PrismaService) {}
 
 	async create(userId: string, dto: CreateMonitorDto) {
-		const {
-			name,
-			url,
-			checkIntervalSeconds,
-			lastCheckedAt,
-			lastStatus,
-			isActive,
-			projectId,
-			regions,
-		} = dto;
+		const { name, url, checkIntervalSeconds, isActive, projectId, regions } =
+			dto;
 
 		return await this.prismaService.$transaction(async (tx) => {
 			const monitor = await tx.monitor.create({
@@ -29,8 +20,6 @@ export class MonitorService {
 					name,
 					url,
 					checkIntervalSeconds,
-					lastCheckedAt,
-					lastStatus,
 					isActive,
 					projectId: projectId || null,
 					userId,
@@ -50,11 +39,11 @@ export class MonitorService {
 		});
 	}
 
-	async findAll(userId: string) {
+	async findAll(userId: string, projectId?: string) {
 		const targetHours = 24;
 
 		const monitors = await this.prismaService.monitor.findMany({
-			where: { userId },
+			where: { userId, projectId: projectId || null },
 			orderBy: { createdAt: 'desc' },
 			include: {
 				monitorStats: {
@@ -223,8 +212,6 @@ export class MonitorService {
 			checkIntervalSeconds,
 			isActive,
 			nextCheckAt,
-			lastCheckedAt,
-			lastStatus,
 			projectId,
 			regions,
 		} = dto;
@@ -240,8 +227,6 @@ export class MonitorService {
 					checkIntervalSeconds,
 					isActive,
 					nextCheckAt,
-					lastCheckedAt,
-					lastStatus,
 					projectId,
 				},
 			});

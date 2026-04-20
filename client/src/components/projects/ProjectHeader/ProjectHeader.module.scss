@@ -1,0 +1,47 @@
+@use '../../../styles/mixins' as *;
+
+.header {
+	display: inline-flex;
+	gap: var(--gap);
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+}
+
+.headerActions {
+	display: inline-flex;
+	gap: var(--gap);
+	align-items: center;
+}
+
+.mobileButton {
+	@include respond-to('md') {
+		display: none;
+	}
+}
+
+.desktopButton {
+	display: none;
+	@include respond-to('md') {
+		display: block;
+	}
+}
+
+.headerButton {
+	padding: 12px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+
+	@include respond-to('md') {
+		padding: 12px 20px;
+	}
+
+	&Text {
+		display: none;
+
+		@include respond-to('md') {
+			display: inline;
+		}
+	}
+}

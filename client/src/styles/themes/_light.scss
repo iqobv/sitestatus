@@ -5,7 +5,7 @@
 	--bg-header-rgb: 255, 255, 255;
 	--header-border-color: #e5e8eb;
 	--color-main-text: #0d141c;
-	--secondary-color: #727c86;
+	--color-secondary-text: #aeaeae;
 	--header-height: 70px;
 	--secondary-bg: #f7f7f7;
 	--border-color: #e5e7eb;
@@ -78,6 +78,7 @@
 	--input-border-focus: #a1a1a1;
 	--input-border-error: #e7000b;
 	--input-color-error: #ff0000;
+	--input-required-color: #e7000b;
 
 	/* Status Indicators */
 	--status-up: #4caf50;
@@ -139,4 +140,8 @@
 	--dashboard-header-border: #e5e8eb;
 	--dashboard-sidebar-bg: #f7f7f7;
 	--dashboard-sidebar-border: #e5e8eb;
+
+	/* Project */
+	--project-card-bg: #ffffff;
+	--project-card-border: #e5e8eb;
 }

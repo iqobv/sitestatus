@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { AnalyticsService } from './analytics.service';
 import { AnalyticsDto, AnalyticsQueryDto } from './dto';
@@ -11,7 +11,7 @@ export class AnalyticsController {
 	@ApiOkResponse({ type: AnalyticsDto })
 	@Get(':monitorId')
 	async getAnalyticsByMonitorId(
-		@Param('monitorId') monitorId: string,
+		@Param('monitorId', ParseUUIDPipe) monitorId: string,
 		@Query() query: AnalyticsQueryDto,
 	) {
 		return this.analyticsService.getAnalyticsByMonitorId(monitorId, query);

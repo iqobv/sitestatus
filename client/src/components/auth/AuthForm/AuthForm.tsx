@@ -5,10 +5,12 @@ import { ApiErrorResponse, Field } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
+import { useState } from 'react';
 import { DefaultValues, FieldValues, Path, useForm } from 'react-hook-form';
 import { ZodType } from 'zod';
 import styles from './AuthForm.module.scss';
 import AuthFormGlobalError from './AuthFormGlobalError/AuthFormGlobalError';
+import VerifyEmailButton from './VerifyEmailButton/VerifyEmailButton';
 
 interface AuthFormProps<T extends FieldValues, R> {
 	fields: Field<T>[];
@@ -30,6 +32,8 @@ const AuthForm = <T extends FieldValues, R>({
 	bottomText,
 	defaultValues,
 }: AuthFormProps<T, R>) => {
+	const [isUnverified, setIsUnverified] = useState(false);
+
 	const resolver = !!schema ? zodResolver(schema) : undefined;
 
 	const {
@@ -39,6 +43,7 @@ const AuthForm = <T extends FieldValues, R>({
 		setError,
 		resetField,
 		formState: { errors },
+		watch,
 	} = useForm<T>({
 		resolver,
 		defaultValues,
@@ -60,6 +65,10 @@ const AuthForm = <T extends FieldValues, R>({
 						message: apiData.message,
 					});
 				} else {
+					if (apiData.code === 'EMAIL_NOT_VERIFIED') {
+						setIsUnverified(true);
+					}
+
 					setError('root', { message: apiData.message, type: 'server' });
 					resetField('password' as Path<T>);
 				}
@@ -69,10 +78,15 @@ const AuthForm = <T extends FieldValues, R>({
 
 	const onSubmit = (data: T) => mutate(data);
 
+	const email = watch('email' as Path<T>);
+
 	return (
 		<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
 			{errors.root?.message && (
-				<AuthFormGlobalError message={errors.root.message} />
+				<>
+					<AuthFormGlobalError message={errors.root.message} />
+					{isUnverified && <VerifyEmailButton email={email} />}
+				</>
 			)}
 			{fields.map(
 				({ label, placeholder, type, name, autocomplete, iconLeft }) => {

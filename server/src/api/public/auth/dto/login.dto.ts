@@ -3,10 +3,7 @@ import { IsEmail, MinLength } from 'class-validator';
 
 export class LoginDto {
 	@ApiProperty({ example: 'user@example.com' })
-	@IsEmail(
-		{ host_whitelist: ['gmail.com'] },
-		{ message: 'Invalid email format. Only gmail.com is allowed.' },
-	)
+	@IsEmail()
 	email: string;
 
 	@ApiProperty({ example: 'strongPassword123' })

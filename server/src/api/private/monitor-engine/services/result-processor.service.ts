@@ -62,8 +62,19 @@ export class ResultProcessorService implements OnModuleInit, OnModuleDestroy {
 			} catch (error: unknown) {
 				if (error instanceof Error) {
 					this.logger.error(`Failed to process batch: ${error.message}`);
+				} else {
+					this.logger.error(
+						'Failed to process batch with unknown error',
+						error,
+					);
 				}
+
+				await this.delay(5000);
 			}
 		}
+	}
+
+	private delay(ms: number): Promise<void> {
+		return new Promise((resolve) => setTimeout(resolve, ms));
 	}
 }

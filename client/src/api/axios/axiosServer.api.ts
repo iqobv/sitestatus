@@ -23,7 +23,7 @@ apiServer.interceptors.request.use(
 		return config;
 	},
 	(error: AxiosError<ApiErrorResponse>) => {
-		Promise.reject(error);
+		return Promise.reject(error);
 	},
 );
 
@@ -39,6 +39,8 @@ apiServer.interceptors.response.use(
 		if (error.response?.status === 401 && !isAuthEndpoint) {
 			redirect(AUTH_PAGES.LOGIN);
 		}
+
+		return Promise.reject(error);
 	},
 );
 

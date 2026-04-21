@@ -4,7 +4,7 @@ import { render } from '@react-email/components';
 import Mail from 'nodemailer/lib/mailer';
 import { getMailerConfig } from 'src/config';
 import { SendEmailDto } from './dto';
-import { VerificationEmailTemplate } from './templates';
+import { ResetPasswordTemplate, VerificationEmailTemplate } from './templates';
 
 @Injectable()
 export class MailService {
@@ -14,15 +14,26 @@ export class MailService {
 		this.transport = getMailerConfig(configService);
 	}
 
-	async sendVerificationEmail(email: string, userId: string, token: string) {
+	async sendVerificationEmail(email: string, token: string) {
 		const domain = this.configService.getOrThrow<string>('MAIL_TO_URL');
-		const html = await render(
-			VerificationEmailTemplate({ domain, userId, token }),
-		);
+		const url = `${domain}/email-verify?token=${token}`;
+		const html = await render(VerificationEmailTemplate({ url }));
 
 		return await this.sendMail({
 			recipients: [email],
 			subject: 'Please verify your email address',
+			html,
+		});
+	}
+
+	async sendPasswordResetEmail(email: string, token: string) {
+		const domain = this.configService.getOrThrow<string>('MAIL_TO_URL');
+		const url = `${domain}/reset-password?token=${token}`;
+		const html = await render(ResetPasswordTemplate({ url }));
+
+		return await this.sendMail({
+			recipients: [email],
+			subject: 'Reset your password',
 			html,
 		});
 	}

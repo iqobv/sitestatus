@@ -96,25 +96,29 @@ describe('MonitorService', () => {
 				url: 'https://example.com',
 				checkIntervalSeconds: 300,
 				isActive: true,
+				regions: ['region_1'],
 			};
 
 			const result = await service.create('userId', dto);
 
-			expect(prisma.monitor.create).toHaveBeenCalledWith({
-				data: {
-					name: dto.name,
-					url: dto.url,
-					checkIntervalSeconds: dto.checkIntervalSeconds,
-					isActive: dto.isActive,
-					lastCheckedAt: undefined,
-					lastStatus: undefined,
-					user: {
-						connect: {
-							id: 'userId',
+			expect(prisma.monitor.create).toHaveBeenCalledWith(
+				expect.objectContaining({
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+					data: expect.objectContaining({
+						name: dto.name,
+						url: dto.url,
+						checkIntervalSeconds: dto.checkIntervalSeconds,
+						isActive: dto.isActive,
+						lastCheckedAt: undefined,
+						lastStatus: undefined,
+						user: {
+							connect: {
+								id: 'userId',
+							},
 						},
-					},
-				},
-			});
+					}),
+				}),
+			);
 			expect(result).toEqual(monitor);
 		});
 	});

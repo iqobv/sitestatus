@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
 	ArrayNotEmpty,
 	IsArray,
@@ -37,6 +38,7 @@ export class CreateMonitorDto {
 	@ApiProperty({ example: 'f77d8a89-3af8-43d3-91d2-47348ec2ac45' })
 	@IsOptional()
 	@IsUUID('4')
+	@Transform(({ value }) => (value === '' ? undefined : String(value)))
 	projectId?: string;
 
 	@ApiProperty({

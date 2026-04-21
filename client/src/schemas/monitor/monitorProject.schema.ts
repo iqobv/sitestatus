@@ -1,5 +1,8 @@
 import z from 'zod';
 
 export const baseProjectMonitorSchema = z.object({
-	projectId: z.uuidv4().or(z.literal('')),
+	projectId: z.preprocess(
+		(val) => (val === '' ? undefined : val),
+		z.string().uuid().optional(),
+	),
 });

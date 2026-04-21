@@ -4,6 +4,7 @@ import { verifyEmail } from '@/api';
 import { AUTH_PAGES, PRIVATE_PAGES, QUERY_KEYS } from '@/config';
 import { useAuth } from '@/hooks';
 import { useQuery } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -11,11 +12,10 @@ import EmailVerificationWait from './EmailVerificationWait';
 import EmailVerificationWrapper from './EmailVerificationWrapper';
 
 interface EmailVerificationProps {
-	userId?: string;
 	token?: string;
 }
 
-const EmailVerification = ({ userId, token }: EmailVerificationProps) => {
+const EmailVerification = ({ token }: EmailVerificationProps) => {
 	const [loginCompleted, setLoginCompleted] = useState(false);
 
 	const { login } = useAuth();
@@ -23,9 +23,9 @@ const EmailVerification = ({ userId, token }: EmailVerificationProps) => {
 	const router = useRouter();
 
 	const { data, isLoading, isSuccess, error } = useQuery({
-		queryKey: QUERY_KEYS.auth.verifyEmail(userId!, token!),
-		queryFn: () => verifyEmail(userId!, token!),
-		enabled: !!userId && !!token && !loginCompleted,
+		queryKey: QUERY_KEYS.auth.verifyEmail(token!),
+		queryFn: () => verifyEmail(token!),
+		enabled: !!token && !loginCompleted,
 		retry: false,
 	});
 
@@ -44,12 +44,14 @@ const EmailVerification = ({ userId, token }: EmailVerificationProps) => {
 
 	useEffect(() => {
 		if (error) {
-			toast.error(error.message);
+			if (isAxiosError(error) && error.response) {
+				toast.error(error.response.data.message);
+			}
 			router.push(AUTH_PAGES.VERIFY_EMAIL);
 		}
 	}, [error, router]);
 
-	if (!userId && !token) return <EmailVerificationWait />;
+	if (!token) return <EmailVerificationWait />;
 
 	return (
 		<EmailVerificationWrapper>

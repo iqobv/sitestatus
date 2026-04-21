@@ -16,8 +16,8 @@ export const useLoginWindow = (url: string) => {
 		const width = 600;
 		const height = 800;
 
-		const left = (screen.width - width) / 2;
-		const top = (screen.height - height) / 2 - 50;
+		const left = (window.screen.width - width) / 2;
+		const top = (window.screen.height - height) / 2 - 50;
 
 		const loginWindow = window.open(
 			`${apiUrl}${url}`,
@@ -26,15 +26,14 @@ export const useLoginWindow = (url: string) => {
 		);
 
 		const messageListener = (event: MessageEvent) => {
-			if (
-				event.origin !== apiOrigin &&
-				event.origin !== window.location.origin
-			) {
+			if (event.origin !== apiOrigin) {
 				return;
 			}
+
 			if (event.data?.success) {
-				router.refresh();
 				window.removeEventListener('message', messageListener);
+				router.push('/dashboard');
+				router.refresh();
 			}
 		};
 

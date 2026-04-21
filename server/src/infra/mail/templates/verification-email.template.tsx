@@ -11,30 +11,24 @@ import {
 import React from 'react';
 
 interface VerificationEmailTemplateProps {
-	domain: string;
-	userId: string;
-	token: string;
+	url: string;
 }
 
 export default function VerificationEmailTemplate({
-	domain,
-	userId,
-	token,
+	url,
 }: VerificationEmailTemplateProps) {
-	const url = `${domain}/email-verify?userId=${userId}&token=${token}`;
-
 	return (
 		<Html>
 			<Head />
-			<Preview>Confirm your email for SiteStatus</Preview>
+			<Preview>Verify your email address</Preview>
 			<Tailwind>
 				<Body className="text-black text-center">
 					<Heading className="text-center text-3xl">
 						Welcome to SiteStatus
 					</Heading>
 					<Text className="text-center">
-						Please confirm your email address to activate your account and start
-						using our service. This helps us ensure the security of your data.
+						Thank you for registering! Please click the button below to verify
+						your email address and complete your registration.
 					</Text>
 					<Link
 						href={url}
@@ -55,8 +49,8 @@ export default function VerificationEmailTemplate({
 						Confirm Email
 					</Link>
 					<Text>
-						This link will expire in 1 hour. If you did not request this email
-						you can safely ignore it.
+						If you did not request this email, you can safely ignore it. This
+						link will expire in 24 hours.
 					</Text>
 					<Text>Thanks, for using our service!</Text>
 				</Body>

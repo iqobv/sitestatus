@@ -53,6 +53,12 @@ export function TanstackQueryProvider({
 							) {
 								return false;
 							}
+							if (
+								error instanceof AxiosError &&
+								error.response?.status === 429
+							) {
+								return false;
+							}
 							return failureCount < 3;
 						},
 					},

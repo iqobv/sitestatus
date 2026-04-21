@@ -8,27 +8,35 @@ import {
 	Query,
 	Req,
 	Res,
+	UnauthorizedException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import {
 	ApiBadRequestResponse,
 	ApiConflictResponse,
 	ApiOkResponse,
 	ApiOperation,
 } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import type { Request, Response } from 'express';
-import { User } from 'generated/prisma/client';
-import { ERROR_MESSAGES } from 'src/libs/constants';
-import { Auth, Authorized } from 'src/libs/decorators';
-import { createCustomMessageDto } from 'src/libs/utils';
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from 'src/libs/constants';
+import { Auth, Authorized, Cookie } from 'src/libs/decorators';
+import {
+	clearAuthCookies,
+	createCustomMessageDto,
+	extractClientInfo,
+	setAuthCookies,
+} from 'src/libs/utils';
 import { CreateUserDto, UserWithoutPasswordDto } from '../user/dto';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
-import { LocalAuth } from './decorators';
 import {
-	AccessTokenWithUserDto,
+	ChangePasswordDto,
+	ForgotPasswordDto,
+	LoginDto,
 	RegisterMessageDto,
 	ResendVerificationEmailDto,
-	ResendVerificationEmailMessageDto,
+	ResetPasswordDto,
 	VerifyEmailDto,
 } from './dto';
 
@@ -37,8 +45,10 @@ export class AuthController {
 	constructor(
 		private readonly authService: AuthService,
 		private readonly userService: UserService,
+		private readonly configService: ConfigService,
 	) {}
 
+	@Throttle({ strict: { limit: 5, ttl: 60000 } })
 	@ApiOperation({ summary: 'Register a new user' })
 	@ApiOkResponse({ type: RegisterMessageDto })
 	@ApiConflictResponse({
@@ -50,36 +60,27 @@ export class AuthController {
 		return await this.authService.register(dto);
 	}
 
-	@ApiOperation({ summary: 'Verify user email address' })
-	@ApiOkResponse({ type: VerifyEmailDto })
-	@ApiBadRequestResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.AUTH.INVALID_OR_EXPIRED_TOKEN),
-	})
-	@Get('verify-email')
-	async verifyEmail(
-		@Query('userId') userId: string,
-		@Query('token') token: string,
-		@Req() req: Request,
-	) {
-		return await this.authService.verifyEmail(userId, token, req);
-	}
-
-	@ApiOperation({ summary: 'Resend verification email to user' })
-	@ApiOkResponse({ type: ResendVerificationEmailMessageDto })
-	@Post('resend-verification-email')
-	@HttpCode(HttpStatus.OK)
-	async resendVerificationEmail(@Body() dto: ResendVerificationEmailDto) {
-		return await this.authService.resendVerificationEmail(dto.email);
-	}
-
+	@Throttle({ strict: { limit: 5, ttl: 60000 } })
 	@ApiOperation({ summary: 'Log in a user and create a session' })
 	@Post('login')
-	@ApiOkResponse({ type: AccessTokenWithUserDto })
+	@ApiOkResponse({
+		type: createCustomMessageDto(SUCCESS_MESSAGES.AUTH.LOGIN_SUCCESS),
+	})
 	@HttpCode(HttpStatus.OK)
-	@LocalAuth()
-	async login(@Req() req: Request) {
-		const user = req.user as User;
-		return await this.authService.login(user, req);
+	async login(
+		@Body() dto: LoginDto,
+		@Req() req: Request,
+		@Res({ passthrough: true }) res: Response,
+	) {
+		const clientInfo = extractClientInfo(req);
+		const tokens = await this.authService.login(dto, clientInfo);
+		setAuthCookies(
+			res,
+			tokens.accessToken,
+			tokens.refreshToken,
+			this.configService,
+		);
+		return SUCCESS_MESSAGES.AUTH.LOGIN_SUCCESS;
 	}
 
 	@ApiOperation({ summary: 'Log out the current user' })
@@ -87,8 +88,78 @@ export class AuthController {
 	@Auth()
 	@Post('logout')
 	@HttpCode(HttpStatus.OK)
-	async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-		return await this.authService.logout(req, res);
+	async logout(
+		@Authorized('id') userId: string,
+		@Cookie('refreshToken') rt: string | undefined,
+		@Res({ passthrough: true }) res: Response,
+	) {
+		if (rt) await this.authService.logout(rt, userId);
+
+		clearAuthCookies(res, this.configService);
+		return true;
+	}
+
+	@ApiOperation({ summary: 'Verify user email address' })
+	@ApiOkResponse({ type: VerifyEmailDto })
+	@ApiBadRequestResponse({
+		type: createCustomMessageDto(ERROR_MESSAGES.AUTH.INVALID_OR_EXPIRED_TOKEN),
+	})
+	@Get('verify-email')
+	async verifyEmail(
+		@Query('token') token: string,
+		@Req() req: Request,
+		@Res({ passthrough: true }) res: Response,
+	) {
+		const info = extractClientInfo(req);
+		const result = await this.authService.verifyEmail(token, info);
+
+		const { tokens, ...rest } = result;
+
+		setAuthCookies(
+			res,
+			tokens.accessToken,
+			tokens.refreshToken,
+			this.configService,
+		);
+
+		return { ...rest };
+	}
+
+	@Throttle({ strict: { limit: 10, ttl: 60000 } })
+	@Post('refresh')
+	@ApiOperation({ summary: 'Refresh authentication tokens' })
+	@ApiOkResponse({
+		type: createCustomMessageDto(SUCCESS_MESSAGES.AUTH.REFRESH_TOKENS),
+	})
+	@HttpCode(HttpStatus.OK)
+	async refresh(
+		@Req() req: Request,
+		@Cookie('refreshToken') rt: string,
+		@Res({ passthrough: true }) res: Response,
+	) {
+		if (!rt) throw new UnauthorizedException('Refresh token missing');
+		const info = extractClientInfo(req);
+		const tokens = await this.authService.refreshTokens(rt, info);
+		setAuthCookies(
+			res,
+			tokens.accessToken,
+			tokens.refreshToken,
+			this.configService,
+		);
+		return SUCCESS_MESSAGES.AUTH.REFRESH_TOKENS;
+	}
+
+	@Throttle({ strict: { limit: 3, ttl: 60000 } })
+	@ApiOperation({ summary: 'Resend verification email to user' })
+	@ApiOkResponse({
+		type: createCustomMessageDto(
+			SUCCESS_MESSAGES.AUTH.RESEND_VERIFICATION_EMAIL,
+		),
+	})
+	@Post('resend-verification-email')
+	@HttpCode(HttpStatus.OK)
+	async resendVerificationEmail(@Body() dto: ResendVerificationEmailDto) {
+		return await this.authService.resendVerification(dto.email);
 	}
 
 	@ApiOperation({ summary: 'Get current user profile' })
@@ -97,5 +168,43 @@ export class AuthController {
 	@Get('me')
 	async getProfile(@Authorized('id') userId: string) {
 		return await this.userService.findById(userId);
+	}
+
+	@Throttle({ strict: { limit: 3, ttl: 60000 } })
+	@ApiOperation({ summary: 'Request a password reset link' })
+	@ApiOkResponse({
+		type: createCustomMessageDto(SUCCESS_MESSAGES.AUTH.FORGOT_PASSWORD),
+	})
+	@Post('forgot-password')
+	async forgotPassword(@Body() dto: ForgotPasswordDto) {
+		await this.authService.forgotPassword(dto.email);
+		return SUCCESS_MESSAGES.AUTH.FORGOT_PASSWORD;
+	}
+
+	@Post('reset-password')
+	@ApiOperation({ summary: 'Reset user password' })
+	@ApiOkResponse({
+		type: createCustomMessageDto(SUCCESS_MESSAGES.AUTH.RESET_PASSWORD),
+	})
+	async resetPassword(@Body() dto: ResetPasswordDto) {
+		await this.authService.resetPassword(dto);
+		return SUCCESS_MESSAGES.AUTH.RESET_PASSWORD;
+	}
+
+	@Auth()
+	@ApiOperation({ summary: 'Change user password' })
+	@ApiOkResponse({
+		type: createCustomMessageDto(SUCCESS_MESSAGES.AUTH.CHANGE_PASSWORD),
+	})
+	@ApiBadRequestResponse({
+		type: createCustomMessageDto(ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS),
+	})
+	@Post('change-password')
+	async changePassword(
+		@Authorized('id') userId: string,
+		@Body() dto: ChangePasswordDto,
+	) {
+		await this.authService.changePassword(userId, dto);
+		return SUCCESS_MESSAGES.AUTH.CHANGE_PASSWORD;
 	}
 }

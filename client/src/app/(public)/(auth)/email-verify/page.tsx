@@ -3,9 +3,9 @@ import { EmailVerification } from '@/components/auth';
 export default async function VerifyEmail({
 	searchParams,
 }: {
-	searchParams: Promise<{ userId?: string; token?: string }>;
+	searchParams: Promise<{ token?: string }>;
 }) {
-	const { token, userId } = await searchParams;
+	const { token } = await searchParams;
 
-	return <EmailVerification userId={userId} token={token} />;
+	return <EmailVerification token={token} />;
 }

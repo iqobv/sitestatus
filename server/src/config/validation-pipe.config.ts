@@ -1,4 +1,8 @@
 import { ValidationPipe } from '@nestjs/common';
 
 export const getValidationPipeConfig = () =>
-	new ValidationPipe({ transform: true });
+	new ValidationPipe({
+		whitelist: true,
+		forbidNonWhitelisted: true,
+		transform: true,
+	});

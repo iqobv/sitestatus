@@ -5,11 +5,7 @@ export const QUERY_KEYS = {
 		refresh: ['refreshAuthToken'],
 		logout: ['logout'],
 		profile: ['profile'],
-		verifyEmail: (userId: string, token: string) => [
-			'verifyEmail',
-			userId,
-			token,
-		],
+		verifyEmail: (token: string) => ['verifyEmail', token],
 		resendVerificationEmail: (email: string) => [
 			'resendVerificationEmail',
 			email,

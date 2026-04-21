@@ -6,7 +6,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import crypto from 'crypto';
-import { TokenType } from 'generated/prisma/client';
+import { TokenType, User } from 'generated/prisma/client';
 import { MailService } from 'src/infra/mail/mail.service';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from 'src/libs/constants';
@@ -73,7 +73,7 @@ export class AuthService {
 		if (!user.emailVerified)
 			throw new UnauthorizedException(ERROR_MESSAGES.AUTH.EMAIL_NOT_VERIFIED);
 
-		return await this.generateAndSaveTokens(user.id, user.email, clientInfo);
+		return await this.generateAndSaveTokens(user, clientInfo);
 	}
 
 	async logout(rawRefreshToken: string, userId: string) {
@@ -117,11 +117,7 @@ export class AuthService {
 			select: userSelect,
 		});
 
-		const tokens = await this.generateAndSaveTokens(
-			user.id,
-			user.email,
-			clientInfo,
-		);
+		const tokens = await this.generateAndSaveTokens(user, clientInfo);
 		return { ...SUCCESS_MESSAGES.AUTH.EMAIL_VERIFIED, user, tokens };
 	}
 
@@ -226,7 +222,7 @@ export class AuthService {
 		if (!user || !user.emailVerified) throw new UnauthorizedException();
 
 		await this.sessionService.deleteSession(session.id, session.userId);
-		return this.generateAndSaveTokens(user.id, user.email, clientInfo);
+		return this.generateAndSaveTokens(user, clientInfo);
 	}
 
 	async validateOAuthLogin(dto: OAuthDto, clientInfo: ClientInfo) {
@@ -239,11 +235,7 @@ export class AuthService {
 			);
 
 		if (providerUser)
-			return await this.generateAndSaveTokens(
-				providerUser.user.id,
-				providerUser.user.email,
-				clientInfo,
-			);
+			return await this.generateAndSaveTokens(providerUser.user, clientInfo);
 
 		let user = await this.userService.findByEmail(email, true);
 		if (!user) {
@@ -256,16 +248,12 @@ export class AuthService {
 			userId: user.id,
 		});
 
-		return await this.generateAndSaveTokens(user.id, user.email, clientInfo);
+		return await this.generateAndSaveTokens(user, clientInfo);
 	}
 
-	private async generateAndSaveTokens(
-		userId: string,
-		email: string,
-		clientInfo: ClientInfo,
-	) {
+	private async generateAndSaveTokens(user: User, clientInfo: ClientInfo) {
 		const accessToken = this.jwtService.sign(
-			{ id: userId, email },
+			{ id: user.id, email: user.email, role: user.role },
 			{ secret: process.env.JWT_ACCESS_SECRET, expiresIn: '15m' },
 		);
 
@@ -279,7 +267,7 @@ export class AuthService {
 		const expiresAt = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
 
 		await this.sessionService.createSession({
-			userId,
+			userId: user.id,
 			refreshTokenHash,
 			clientInfo,
 			expiresAt,

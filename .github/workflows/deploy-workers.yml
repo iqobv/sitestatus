@@ -72,6 +72,11 @@ jobs:
               }
             ]
 
+      - name: List files in deployment folder
+        run: |
+          echo "--- Content of ./ping-worker ---"
+          ls -R ./ping-worker
+
       - name: Deploy to Azure Functions
         uses: Azure/functions-action@v1
         with:

@@ -30,7 +30,13 @@ apiServer.interceptors.request.use(
 apiServer.interceptors.response.use(
 	(response) => response,
 	(error: AxiosError<ApiErrorResponse>) => {
-		if (error.response?.status === 401) {
+		const requestUrl = error.config?.url || '';
+
+		const isAuthEndpoint = Object.values(AUTH_PAGES).some((path) =>
+			requestUrl.includes(path),
+		);
+
+		if (error.response?.status === 401 && !isAuthEndpoint) {
 			redirect(AUTH_PAGES.LOGIN);
 		}
 	},

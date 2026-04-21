@@ -11,14 +11,19 @@ import styles from './EmailVerification.module.scss';
 import EmailVerificationWrapper from './EmailVerificationWrapper';
 
 const EmailVerificationWait = () => {
-	const [email, setEmail] = useState<string | null>(
-		localStorage.getItem('registrationEmail') || '',
-	);
+	const [email, setEmail] = useState<string | null>(null);
 	const [timer, setTimer] = useState(0);
+
+	useEffect(() => {
+		const savedEmail = localStorage.getItem('registrationEmail');
+		if (savedEmail) {
+			setEmail(savedEmail);
+		}
+	}, []);
 
 	const { mutate } = useMutation({
 		mutationFn: () => resendVerificationEmail(email!),
-		mutationKey: QUERY_KEYS.auth.resendVerificationEmail(email!),
+		mutationKey: QUERY_KEYS.auth.resendVerificationEmail(email || 'unknown'),
 		onSuccess: (data) => {
 			toast.info(data.message);
 		},
@@ -31,7 +36,9 @@ const EmailVerificationWait = () => {
 			interval = setInterval(() => setTimer((prev) => prev - 1), 1000);
 		}
 
-		return () => clearInterval(interval);
+		return () => {
+			if (interval) clearInterval(interval);
+		};
 	}, [timer]);
 
 	const handleChangeEmail = () => {
@@ -40,8 +47,10 @@ const EmailVerificationWait = () => {
 	};
 
 	const handleResendEmail = () => {
-		if (email) mutate();
-		setTimer(30);
+		if (email) {
+			mutate();
+			setTimer(30);
+		}
 	};
 
 	return (
@@ -60,7 +69,7 @@ const EmailVerificationWait = () => {
 				>
 					Gmail <FaExternalLinkAlt size={15} />
 				</Button>
-				<Button onClick={handleResendEmail} disabled={timer > 0}>
+				<Button onClick={handleResendEmail} disabled={timer > 0 || !email}>
 					{timer > 0
 						? `Resend Verification Email (${timer})`
 						: 'Resend Verification Email'}

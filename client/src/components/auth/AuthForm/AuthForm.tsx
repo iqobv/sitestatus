@@ -1,9 +1,10 @@
 'use client';
 
 import { Button, TextField } from '@/components/ui';
-import { Field } from '@/types';
+import { ApiErrorResponse, Field } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { DefaultValues, FieldValues, Path, useForm } from 'react-hook-form';
 import { ZodType } from 'zod';
 import styles from './AuthForm.module.scss';
@@ -50,15 +51,26 @@ const AuthForm = <T extends FieldValues, R>({
 			onSuccess?.(data);
 		},
 		onError(error) {
-			setError('root', { message: error.message });
-			resetField('password' as Path<T>);
+			if (isAxiosError(error) && error.response) {
+				const apiData = error.response.data as ApiErrorResponse;
+
+				if (apiData.field) {
+					setError(apiData.field as Path<T>, {
+						type: 'server',
+						message: apiData.message,
+					});
+				} else {
+					setError('root', { message: apiData.message, type: 'server' });
+					resetField('password' as Path<T>);
+				}
+			}
 		},
 	});
 
 	const onSubmit = (data: T) => mutate(data);
 
 	return (
-		<form className={styles['auth-form']} onSubmit={handleSubmit(onSubmit)}>
+		<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
 			{errors.root?.message && (
 				<AuthFormGlobalError message={errors.root.message} />
 			)}
@@ -81,7 +93,7 @@ const AuthForm = <T extends FieldValues, R>({
 			<Button loading={isPending} type="submit" fullWidth>
 				{buttonLabel}
 			</Button>
-			{bottomText && <div className={styles['bottom-text']}>{bottomText}</div>}
+			{bottomText && <div className={styles.bottom}>{bottomText}</div>}
 		</form>
 	);
 };

@@ -6,12 +6,14 @@
 			"Function": "Error",
 			"Host": "Error",
 			"Host.Results": "Error",
-			"Host.Aggregator": "Error"
+			"Host.Aggregator": "Error",
+			"Azure.Core": "Error",
+			"Azure.Storage.Blobs": "Error",
+			"Microsoft.Azure.WebJobs.Script": "Error"
 		},
 		"applicationInsights": {
 			"samplingSettings": {
-				"isEnabled": true,
-				"excludedTypes": "Request"
+				"isEnabled": true
 			}
 		}
 	},

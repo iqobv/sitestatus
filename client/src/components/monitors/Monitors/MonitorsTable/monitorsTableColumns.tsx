@@ -1,45 +1,53 @@
 import { Button, UptimeStatus } from '@/components/ui';
-import { PAGES } from '@/config';
-import { Monitor, MonitorWithMonitorStats } from '@/types';
+import { PRIVATE_PAGES } from '@/config';
+import { MonitorWithMonitorStats } from '@/types';
+import { ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
 dayjs.extend(relativeTime);
 
-interface Column {
-	header: string;
-	accessor: keyof Monitor | 'details' | 'uptime';
-	render: (monitor: MonitorWithMonitorStats) => React.ReactNode;
-}
-
-export const COLUMNS: Column[] = [
+export const COLUMNS: ColumnDef<MonitorWithMonitorStats>[] = [
 	{
 		header: 'Name',
-		accessor: 'name',
-		render: (monitor) => <>{monitor.name}</>,
+		accessorKey: 'name',
+		enableSorting: false,
+		cell: (props) => <>{props.getValue()}</>,
 	},
 	{
 		header: 'Status',
-		accessor: 'lastStatus',
-		render: (monitor) => (
-			<UptimeStatus status={monitor.isActive ? monitor.lastStatus : 'PAUSED'} />
+		accessorKey: 'lastStatus',
+		enableSorting: false,
+		cell: (props) => (
+			<UptimeStatus
+				status={
+					props.row.original.isActive ? props.row.original.lastStatus : 'PAUSED'
+				}
+			/>
 		),
 	},
 	{
 		header: 'Uptime',
-		accessor: 'uptime',
-		render: (monitor) => <>{monitor.uptime}</>,
+		accessorKey: 'uptime',
+		enableSorting: false,
+		cell: (props) => <>{props.getValue()}</>,
 	},
 	{
 		header: 'Last Checked',
-		accessor: 'lastCheckedAt',
-		render: (monitor) => <>{dayjs(monitor.lastCheckedAt).fromNow()}</>,
+		accessorKey: 'lastCheckedAt',
+		enableSorting: false,
+		cell: (props) => <>{dayjs(props.row.original.lastCheckedAt).fromNow()}</>,
 	},
 	{
 		header: '',
-		accessor: 'details',
-		render: (monitor) => (
-			<Button variant="link" size="sm" href={PAGES.MONITOR(monitor.id)}>
+		accessorKey: 'details',
+		enableSorting: false,
+		cell: (props) => (
+			<Button
+				variant="link"
+				size="sm"
+				href={PRIVATE_PAGES.MONITORS.ONE(props.row.original.id)}
+			>
 				View Details
 			</Button>
 		),

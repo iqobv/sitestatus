@@ -15,6 +15,7 @@ model User {
   tokens    Token[]
   monitors  Monitor[]
   projects  Project[]
+  sessions  Session[]
 
   @@map("users")
 }

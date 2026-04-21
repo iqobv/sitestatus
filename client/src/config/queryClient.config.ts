@@ -5,11 +5,7 @@ export const QUERY_KEYS = {
 		refresh: ['refreshAuthToken'],
 		logout: ['logout'],
 		profile: ['profile'],
-		verifyEmail: (userId: string, token: string) => [
-			'verifyEmail',
-			userId,
-			token,
-		],
+		verifyEmail: (token: string) => ['verifyEmail', token],
 		resendVerificationEmail: (email: string) => [
 			'resendVerificationEmail',
 			email,
@@ -17,6 +13,10 @@ export const QUERY_KEYS = {
 	} as const,
 	monitors: {
 		list: ['monitorsList'],
+		allByProjectId: (projectId: string) => [
+			'monitorsAllByProjectId',
+			projectId,
+		],
 		byId: (monitorId: string) => ['monitor', monitorId],
 		byIdFull: (monitorId: string) => ['monitorFull', monitorId],
 		analtics: (monitorId: string, range: number, region: string) => [
@@ -28,5 +28,11 @@ export const QUERY_KEYS = {
 	},
 	region: {
 		list: ['regionsList'],
+	} as const,
+	project: {
+		all: ['projectsList'],
+		byId: (projectId: string) => ['project', projectId],
+		create: ['projectCreate'],
+		update: (projectId: string) => ['projectUpdate', projectId],
 	} as const,
 } as const;

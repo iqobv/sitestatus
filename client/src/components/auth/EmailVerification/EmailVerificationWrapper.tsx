@@ -10,7 +10,7 @@ const EmailVerificationWrapper = ({
 	children,
 }: EmailVerificationWrapperProps) => {
 	return (
-		<div className={`${styles['email-verification__wrapper']} container page`}>
+		<div className={`${styles['email-verification__wrapper']} container`}>
 			{children}
 		</div>
 	);

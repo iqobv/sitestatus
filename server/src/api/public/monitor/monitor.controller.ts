@@ -4,6 +4,7 @@ import {
 	Delete,
 	Get,
 	Param,
+	ParseUUIDPipe,
 	Patch,
 	Post,
 } from '@nestjs/common';
@@ -43,9 +44,20 @@ export class MonitorController {
 	@Auth()
 	@ApiOperation({ summary: 'Get all monitors for the authenticated user' })
 	@ApiOkResponse({ type: [MonitorFullDto] })
-	@Get('me')
+	@Get('')
 	async findAll(@Authorized('id') userId: string) {
 		return await this.monitorService.findAll(userId);
+	}
+
+	@Auth()
+	@ApiOperation({ summary: 'Get all monitors for the authenticated user' })
+	@ApiOkResponse({ type: [MonitorFullDto] })
+	@Get('projects/:projectId')
+	async findAllMonitorsByProjectId(
+		@Authorized('id') userId: string,
+		@Param('projectId', ParseUUIDPipe) projectId: string,
+	) {
+		return await this.monitorService.findAll(userId, projectId);
 	}
 
 	@Auth()
@@ -57,7 +69,7 @@ export class MonitorController {
 	@Get('id/:id/full')
 	async findByIdFull(
 		@Authorized('id') userId: string,
-		@Param('id') id: string,
+		@Param('id', ParseUUIDPipe) id: string,
 	) {
 		return await this.monitorService.findByIdFull(userId, id);
 	}
@@ -69,7 +81,10 @@ export class MonitorController {
 		type: createCustomMessageDto(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND),
 	})
 	@Get('id/:id')
-	async findById(@Authorized('id') userId: string, @Param('id') id: string) {
+	async findById(
+		@Authorized('id') userId: string,
+		@Param('id', ParseUUIDPipe) id: string,
+	) {
 		return await this.monitorService.findById(userId, id);
 	}
 
@@ -81,7 +96,7 @@ export class MonitorController {
 	})
 	@Patch(':id')
 	async update(
-		@Param('id') id: string,
+		@Param('id', ParseUUIDPipe) id: string,
 		@Authorized('id') userId: string,
 		@Body() dto: UpdateMonitorDto,
 	) {
@@ -96,7 +111,7 @@ export class MonitorController {
 	})
 	@Patch(':id/active-status')
 	async updateActiveStatus(
-		@Param('id') id: string,
+		@Param('id', ParseUUIDPipe) id: string,
 		@Authorized('id') userId: string,
 	) {
 		return await this.monitorService.updateActiveStatus(id, userId);
@@ -111,7 +126,10 @@ export class MonitorController {
 		type: createCustomMessageDto(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND),
 	})
 	@Delete(':id')
-	async remove(@Param('id') id: string, @Authorized('id') userId: string) {
+	async remove(
+		@Param('id', ParseUUIDPipe) id: string,
+		@Authorized('id') userId: string,
+	) {
 		return await this.monitorService.remove(id, userId);
 	}
 }

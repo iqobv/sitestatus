@@ -1,6 +1,6 @@
 'use client';
 
-import { PAGES } from '@/config';
+import { AUTH_PAGES } from '@/config';
 import { useUserStore } from '@/store';
 import {
 	MutationCache,
@@ -24,7 +24,7 @@ export function TanstackQueryProvider({
 					onError: (error: unknown) => {
 						if (error instanceof AxiosError && error.response?.status === 401) {
 							useUserStore.getState().removeUser();
-							router.push(PAGES.LOGIN);
+							router.push(AUTH_PAGES.LOGIN);
 						}
 					},
 				}),
@@ -32,7 +32,7 @@ export function TanstackQueryProvider({
 					onError: (error: unknown) => {
 						if (error instanceof AxiosError && error.response?.status === 401) {
 							useUserStore.getState().removeUser();
-							router.push(PAGES.LOGIN);
+							router.push(AUTH_PAGES.LOGIN);
 						}
 					},
 				}),
@@ -50,6 +50,12 @@ export function TanstackQueryProvider({
 							if (
 								error instanceof AxiosError &&
 								error.response?.status === 404
+							) {
+								return false;
+							}
+							if (
+								error instanceof AxiosError &&
+								error.response?.status === 429
 							) {
 								return false;
 							}

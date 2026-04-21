@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import styles from './MonitorForm.module.scss';
 import { MonitorFormProps } from './MonitorForm.types';
+import MonitorFormProject from './MonitorFormProject/MonitorFormProject';
 import MonitorFormRegions from './MonitorFormRegions/MonitorFormRegions';
 
 const MonitorForm = <T extends FieldValues, R extends { id: string }>({
@@ -95,6 +96,7 @@ const MonitorForm = <T extends FieldValues, R extends { id: string }>({
 					</div>
 				))}
 				<MonitorFormRegions />
+				<MonitorFormProject />
 				{errors.root && <p className="error-message">{errors.root.message}</p>}
 				<div className={styles['form-actions']}>
 					<Button

@@ -1,0 +1,13 @@
+.label {
+	display: inline-flex;
+	width: 100%;
+	padding: 6px;
+	font-size: 1rem;
+	align-items: center;
+	gap: 4px;
+}
+
+.required {
+	user-select: none;
+	color: var(--input-required-color);
+}

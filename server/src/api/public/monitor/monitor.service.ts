@@ -2,8 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { SiteStatus } from 'generated/prisma/enums';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from 'src/libs/constants';
-import { calculateUptime } from 'src/libs/utils';
-import { formatResult } from 'src/libs/utils/calculates/format-result.util';
+import { calculateUptime, formatResult } from 'src/libs/utils';
 import { CreateMonitorDto, MonitorTimelineDto, UpdateMonitorDto } from './dto';
 import { LogEntry } from './interfaces';
 
@@ -12,16 +11,8 @@ export class MonitorService {
 	constructor(private readonly prismaService: PrismaService) {}
 
 	async create(userId: string, dto: CreateMonitorDto) {
-		const {
-			name,
-			url,
-			checkIntervalSeconds,
-			lastCheckedAt,
-			lastStatus,
-			isActive,
-			projectId,
-			regions,
-		} = dto;
+		const { name, url, checkIntervalSeconds, isActive, projectId, regions } =
+			dto;
 
 		return await this.prismaService.$transaction(async (tx) => {
 			const monitor = await tx.monitor.create({
@@ -29,8 +20,6 @@ export class MonitorService {
 					name,
 					url,
 					checkIntervalSeconds,
-					lastCheckedAt,
-					lastStatus,
 					isActive,
 					projectId: projectId || null,
 					userId,
@@ -50,11 +39,11 @@ export class MonitorService {
 		});
 	}
 
-	async findAll(userId: string) {
+	async findAll(userId: string, projectId?: string) {
 		const targetHours = 24;
 
 		const monitors = await this.prismaService.monitor.findMany({
-			where: { userId },
+			where: { userId, projectId: projectId || null },
 			orderBy: { createdAt: 'desc' },
 			include: {
 				monitorStats: {
@@ -223,8 +212,6 @@ export class MonitorService {
 			checkIntervalSeconds,
 			isActive,
 			nextCheckAt,
-			lastCheckedAt,
-			lastStatus,
 			projectId,
 			regions,
 		} = dto;
@@ -232,7 +219,7 @@ export class MonitorService {
 		const monitor = await this.ownerCheck(id, userId);
 
 		return await this.prismaService.$transaction(async (tx) => {
-			const updatedMonitor = await this.prismaService.monitor.update({
+			const updatedMonitor = await tx.monitor.update({
 				where: { id: monitor.id, userId },
 				data: {
 					name,
@@ -240,60 +227,32 @@ export class MonitorService {
 					checkIntervalSeconds,
 					isActive,
 					nextCheckAt,
-					lastCheckedAt,
-					lastStatus,
 					projectId,
-				},
-				include: {
-					regionConfigs: {
-						select: {
-							regionId: true,
-							isActive: true,
-							region: { select: { id: true, name: true, key: true } },
-						},
-					},
 				},
 			});
 
 			if (regions) {
-				const regionsToCreate = regions.filter(
-					(region) =>
-						!updatedMonitor.regionConfigs.some(
-							(config) => config.regionId === region,
-						),
-				);
-				const regionsToDisable = regions.filter((region) =>
-					updatedMonitor.regionConfigs.some(
-						(config) => config.regionId === region,
-					),
-				);
-
 				await Promise.all([
+					tx.monitorRegion.updateMany({
+						where: { monitorId: monitor.id, regionId: { notIn: regions } },
+						data: { isActive: false },
+					}),
 					tx.monitorRegion.createMany({
-						data: regionsToCreate.map((region) => ({
-							monitorId: updatedMonitor.id,
-							regionId: region,
+						data: regions.map((regionId) => ({
+							monitorId: monitor.id,
+							regionId,
+							isActive: true,
 						})),
 						skipDuplicates: true,
 					}),
 					tx.monitorRegion.updateMany({
-						where: {
-							monitorId: updatedMonitor.id,
-							regionId: { in: regionsToDisable },
-						},
-						data: { isActive: false },
+						where: { monitorId: monitor.id, regionId: { in: regions } },
+						data: { isActive: true },
 					}),
 				]);
 			}
 
-			const { regionConfigs, ...rest } = updatedMonitor;
-
-			const mappedMonitor = {
-				...rest,
-				regions: regionConfigs.map((config) => config.regionId),
-			};
-
-			return mappedMonitor;
+			return { regions, ...updatedMonitor };
 		});
 	}
 

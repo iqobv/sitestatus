@@ -15,6 +15,7 @@ interface DropdownItemProps {
 	onClick?: () => void;
 	disabled?: boolean;
 	asChild?: boolean;
+	className?: string;
 }
 
 const DropdownItem = ({
@@ -22,6 +23,7 @@ const DropdownItem = ({
 	onClick,
 	disabled = false,
 	asChild = false,
+	className = '',
 }: DropdownItemProps) => {
 	const { getItemProps, close, activeIndex } = useDropdown();
 	const { ref: listItemRef, index } = useListItem();
@@ -41,7 +43,7 @@ const DropdownItem = ({
 
 	const baseProps = getItemProps({
 		className:
-			`${styles['dropdown-item']} ${isActive ? styles['active'] : ''}`.trim(),
+			`${styles['dropdown-item']} ${className} ${isActive ? styles['active'] : ''}`.trim(),
 		role: 'menuitem',
 		tabIndex: isActive ? 0 : -1,
 		'aria-disabled': disabled,
@@ -56,7 +58,7 @@ const DropdownItem = ({
 		return cloneElement(child, {
 			...baseProps,
 			ref: mergedRef,
-			className: [baseProps.className, child.props.className]
+			className: [baseProps.className, child.props.className, className]
 				.filter(Boolean)
 				.join(' '),
 			onClick: (e: React.MouseEvent<HTMLElement>) => {

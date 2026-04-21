@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, Dropdown } from '@/components/ui';
-import { PAGES } from '@/config';
+import { PRIVATE_PAGES } from '@/config';
 import { MonitorFull } from '@/types';
 import Link from 'next/link';
 import { MdMoreVert, MdOutlineDelete, MdOutlineEdit } from 'react-icons/md';
@@ -23,7 +23,7 @@ const MonitorHeaderDropdown = ({ monitor }: MonitorHeaderDropdownProps) => {
 			<Dropdown.Menu>
 				<Dropdown.Item asChild>
 					<Link
-						href={PAGES.MONITOR_EDIT(monitor.id)}
+						href={PRIVATE_PAGES.MONITORS.ONE(monitor.id)}
 						className={styles['monitor-header__dropdown-item']}
 					>
 						<MdOutlineEdit size={20} />

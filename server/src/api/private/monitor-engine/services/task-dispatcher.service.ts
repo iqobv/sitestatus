@@ -57,6 +57,9 @@ export class TaskDispatcherService implements OnModuleDestroy {
 
 		const dispatchPromises: Promise<void>[] = [];
 
+		const monitorRegionsToUpdate: { monitorId: string; regionId: string }[] =
+			[];
+
 		for (const monitor of monitors) {
 			for (const config of monitor.regionConfigs) {
 				const sender = this.getSender(config.region.key);
@@ -71,14 +74,28 @@ export class TaskDispatcherService implements OnModuleDestroy {
 					contentType: 'application/json',
 				};
 
+				monitorRegionsToUpdate.push({
+					monitorId: monitor.id,
+					regionId: config.regionId,
+				});
+
 				dispatchPromises.push(sender.sendMessages(message));
 			}
 		}
 
-		await this.prismaService.monitorRegion.updateMany({
-			where: { nextCheckAt: { lte: now }, isQueued: false },
-			data: { isQueued: true },
-		});
+		if (monitorRegionsToUpdate.length > 0) {
+			await this.prismaService.monitorRegion.updateMany({
+				where: {
+					OR: monitorRegionsToUpdate.map((m) => ({
+						monitorId: m.monitorId,
+						regionId: m.regionId,
+					})),
+					nextCheckAt: { lte: now },
+					isQueued: false,
+				},
+				data: { isQueued: true },
+			});
+		}
 
 		await Promise.all(dispatchPromises);
 	}

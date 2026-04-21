@@ -1,6 +1,6 @@
 'use server';
 
-import { PAGES } from '@/config';
+import { AUTH_PAGES } from '@/config';
 import { ApiErrorResponse } from '@/types';
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { cookies } from 'next/headers';
@@ -23,16 +23,24 @@ apiServer.interceptors.request.use(
 		return config;
 	},
 	(error: AxiosError<ApiErrorResponse>) => {
-		Promise.reject(error);
+		return Promise.reject(error);
 	},
 );
 
 apiServer.interceptors.response.use(
 	(response) => response,
 	(error: AxiosError<ApiErrorResponse>) => {
-		if (error.response?.status === 401) {
-			redirect(PAGES.LOGIN);
+		const requestUrl = error.config?.url || '';
+
+		const isAuthEndpoint = Object.values(AUTH_PAGES).some((path) =>
+			requestUrl.includes(path),
+		);
+
+		if (error.response?.status === 401 && !isAuthEndpoint) {
+			redirect(AUTH_PAGES.LOGIN);
 		}
+
+		return Promise.reject(error);
 	},
 );
 

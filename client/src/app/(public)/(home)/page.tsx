@@ -1,13 +1,13 @@
-import { Action, Faq, Features, Hero } from '@/components/home';
+import { Action, Features, Hero, Values } from '@/components/home';
 import { Footer } from '@/components/layout';
 
 export default function HomePage() {
 	return (
 		<>
 			<Hero />
+			<Values />
 			<Features />
 			<Action />
-			<Faq />
 			<Footer />
 		</>
 	);

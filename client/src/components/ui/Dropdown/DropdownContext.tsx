@@ -14,7 +14,7 @@ import {
 	useRole,
 } from '@floating-ui/react';
 import React, { createContext, ReactNode, useContext, useState } from 'react';
-import { DropdownContextType } from './DropdownContenxt.types';
+import { DropdownContextType } from './DropdownContext.types';
 
 const DropdownContext = createContext<DropdownContextType | undefined>(
 	undefined,
@@ -73,6 +73,8 @@ const DropdownProvider = ({
 		}
 	}, [refs.domReference]);
 
+	refs.reference;
+
 	return (
 		<DropdownContext.Provider
 			value={{
@@ -88,6 +90,7 @@ const DropdownProvider = ({
 				floatingStyles,
 				setReference: refs.setReference,
 				setFloating: refs.setFloating,
+				refs,
 				context,
 				close,
 			}}

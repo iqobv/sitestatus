@@ -1,26 +1,29 @@
 @use '../../../styles/mixins' as *;
 
-.features {
+.wrapper {
 	padding: 30px 20px 60px 20px;
+	background-color: var(--features-bg);
+}
 
-	&__header {
-		text-align: start;
+.list {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: var(--gap);
+	max-width: 300px;
+	margin: 40px auto 0 auto;
 
-		@include respond-to('md') {
-			text-align: center;
-		}
+	@include respond-to(sm) {
+		grid-template-columns: repeat(2, 1fr);
+		max-width: unset;
 	}
 
-	&__list {
-		display: grid;
-		grid-template-columns: 1fr;
-		gap: 40px;
-		max-width: 300px;
-		margin: 40px auto 0 auto;
+	@include respond-to(xl) {
+		grid-template-columns: repeat(4, 1fr);
+	}
+}
 
-		@include respond-to('md') {
-			grid-template-columns: repeat(3, 1fr);
-			max-width: unset;
-		}
+.title {
+	& span {
+		display: block;
 	}
 }

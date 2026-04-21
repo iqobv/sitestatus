@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 		default: 'SiteStatus',
 		template: '%s - SiteStatus',
 	},
-	description: 'Monitor the uptime of your services easily.',
+	description: 'SiteStatus - Monitor the uptime of your services easily.',
 };
 
 export default async function RootLayout({

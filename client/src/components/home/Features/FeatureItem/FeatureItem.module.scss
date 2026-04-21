@@ -1,6 +1,24 @@
-.feature-item {
-	background-color: var(--secondary-bg);
-	border: 1px solid var(--border-color);
-	border-radius: 8px;
+.feature {
+	border: 1px solid var(--features-card-border);
+	border-radius: 4px;
 	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap);
+}
+
+.content {
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--gap) * 0.5);
+}
+
+.title {
+	color: var(--primary-color);
+	font-size: 1.15rem;
+}
+
+.description {
+	color: var(--secondary-color);
+	font-size: 0.9rem;
 }

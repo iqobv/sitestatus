@@ -18,26 +18,14 @@ export const FOOTER_ITEMS: FooterItem[] = [
 				label: 'Features',
 				href: `${PUBLIC_PAGES.HOME}#features`,
 			},
-			{
-				label: 'Changelog',
-				href: PUBLIC_PAGES.HOME,
-			},
 		],
 	},
 	{
 		title: 'Resources',
 		links: [
 			{
-				label: 'Blog',
-				href: PUBLIC_PAGES.HOME,
-			},
-			{
-				label: 'Help Center',
-				href: PUBLIC_PAGES.HOME,
-			},
-			{
 				label: 'API Documentation',
-				href: PUBLIC_PAGES.HOME,
+				href: `${process.env.NEXT_PUBLIC_API_URL}/docs`,
 			},
 		],
 	},
@@ -54,6 +42,10 @@ export const FOOTER_ITEMS: FooterItem[] = [
 			},
 			{
 				label: 'Terms of Service',
+				href: PUBLIC_PAGES.HOME,
+			},
+			{
+				label: 'Cookie Policy',
 				href: PUBLIC_PAGES.HOME,
 			},
 		],

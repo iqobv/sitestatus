@@ -51,6 +51,11 @@ jobs:
           app-settings-json: |
             [
               {
+                "name": "AzureFunctionsJobHost__logging__logLevel__default",
+                "value": "Error",
+                "slotSetting": false
+              },
+              {
                 "name": "SERVICE_BUS_CONNECTION_STRING",
                 "value": "${{ secrets.SERVICE_BUS_CONNECTION_STRING }}",
                 "slotSetting": false

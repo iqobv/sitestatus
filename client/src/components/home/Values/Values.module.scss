@@ -1,0 +1,11 @@
+@use '../../../styles/mixins' as *;
+
+.values {
+	display: grid;
+	grid-template-columns: 1fr;
+	padding: 20px 0 80px 0;
+
+	@include respond-to(lg) {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}

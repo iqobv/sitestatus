@@ -10,7 +10,7 @@
 	--secondary-bg: #f7f7f7;
 	--border-color: #e5e7eb;
 	--primary-color: #171717;
-	--secondary-color: #595c5e;
+	--secondary-color: #424242;
 	--accent-color: #299f4e;
 	--logo: url('/logo-black.svg');
 	--logo-color: #171717;
@@ -18,7 +18,16 @@
 	--gap: 16px;
 
 	/* Hero */
-	--hero-highlight-color: #0f172a;
+	--hero-grid-color: #f4f4f48d;
+
+	/* Values */
+	--value-card-bg: #f4f4f4;
+	--value-card-border: #ccc;
+
+	/* Features */
+	--features-bg: #f7f7f7;
+	--features-card-border: #ccc;
+	--features-card-icon-color: #8bd79b;
 
 	/* Section Header */
 	--section-title-color: #0d141c;

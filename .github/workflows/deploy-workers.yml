@@ -69,11 +69,6 @@ jobs:
                 "name": "WORKER_REGION",
                 "value": "${{ matrix.region }}",
                 "slotSetting": false
-              },
-              {
-                "name": "WEBSITE_RUN_FROM_PACKAGE",
-                "value": "1",
-                "slotSetting": false
               }
             ]
 

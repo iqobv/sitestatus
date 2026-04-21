@@ -17,7 +17,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - region: 'tasks-eu-west'
+          - region: 'eu-west'
             app_name: 'sitestatus-ping-worker-ge-west'
 
     steps:
@@ -50,16 +50,6 @@ jobs:
           app-name: ${{ matrix.app_name }}
           app-settings-json: |
             [
-              {
-                "name": "FUNCTIONS_WORKER_RUNTIME",
-                "value": "node",
-                "slotSetting": false
-              },
-              {
-                "name": "FUNCTIONS_EXTENSION_VERSION",
-                "value": "~4",
-                "slotSetting": false
-              },
               {
                 "name": "SERVICE_BUS_CONNECTION_STRING",
                 "value": "${{ secrets.SERVICE_BUS_CONNECTION_STRING }}",

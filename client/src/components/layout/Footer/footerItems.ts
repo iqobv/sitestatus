@@ -1,4 +1,4 @@
-import { PAGES } from '@/config';
+import { PUBLIC_PAGES } from '@/config';
 
 interface LinkItem {
 	label: string;
@@ -16,11 +16,7 @@ export const FOOTER_ITEMS: FooterItem[] = [
 		links: [
 			{
 				label: 'Features',
-				href: `${PAGES.HOME}#features`,
-			},
-			{
-				label: 'Changelog',
-				href: PAGES.HOME,
+				href: `${PUBLIC_PAGES.HOME}#features`,
 			},
 		],
 	},
@@ -28,16 +24,8 @@ export const FOOTER_ITEMS: FooterItem[] = [
 		title: 'Resources',
 		links: [
 			{
-				label: 'Blog',
-				href: PAGES.HOME,
-			},
-			{
-				label: 'Help Center',
-				href: PAGES.HOME,
-			},
-			{
 				label: 'API Documentation',
-				href: PAGES.HOME,
+				href: `${process.env.NEXT_PUBLIC_API_URL}/docs`,
 			},
 		],
 	},
@@ -46,15 +34,19 @@ export const FOOTER_ITEMS: FooterItem[] = [
 		links: [
 			{
 				label: 'About Us',
-				href: PAGES.HOME,
+				href: PUBLIC_PAGES.HOME,
 			},
 			{
 				label: 'Privacy Policy',
-				href: PAGES.HOME,
+				href: PUBLIC_PAGES.HOME,
 			},
 			{
 				label: 'Terms of Service',
-				href: PAGES.HOME,
+				href: PUBLIC_PAGES.HOME,
+			},
+			{
+				label: 'Cookie Policy',
+				href: PUBLIC_PAGES.HOME,
 			},
 		],
 	},

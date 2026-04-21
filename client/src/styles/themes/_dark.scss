@@ -1,21 +1,30 @@
 html.dark {
 	/* General Colors */
-	--bg-body: #0e0e0e;
+	--bg-body: #0a0a0a;
 	--bg-header: #0e0e0e;
 	--bg-header-rgb: 10, 10, 10;
 	--header-border-color: #7a7a7a30;
 	--color-main-text: #ffffff;
-	--secondary-color: #b9bec3;
+	--color-secondary-text: #a1a1a1;
 	--header-height: 70px;
 	--secondary-bg: #1a1a1a;
 	--border-color: #474747;
-	--primary-color: #e5e5e5;
-	--secondary-color: #8f9294;
+	--primary-color: #ffffff;
+	--secondary-color: #c6c6c6;
 	--logo: url('/logo-white.svg');
 	--logo-color: #ffffff;
 
 	/* Hero */
-	--hero-highlight-color: #ffffff;
+	--hero-grid-color: #1313138d;
+
+	/* Values */
+	--value-card-bg: #0e0e0e;
+	--value-card-border: #474747;
+
+	/* Features */
+	--features-bg: #1c1b1b;
+	--features-card-border: #474747;
+	--features-card-icon-color: #8bd79b;
 
 	/* Section Header */
 	--section-title-color: #e8edf2;
@@ -32,8 +41,8 @@ html.dark {
 	--sepator-color: #333333;
 
 	/* Errors */
-	--error-bg: #ffa4ab;
-	--error-text: #2c080c;
+	--error-bg: #ab424b57;
+	--error-text: #da132b;
 	--error-border: #eb2630;
 
 	/* Cards */
@@ -76,6 +85,7 @@ html.dark {
 	--input-border-focus: #737373;
 	--input-border-error: #e7000b;
 	--input-color-error: #f55d5d;
+	--input-required-color: #e7000b;
 
 	/* Status Indicators */
 	--status-up: #4caf50;
@@ -134,4 +144,15 @@ html.dark {
 	--checkbox-border-active: #ffffff;
 	--checkbox-input-active-bg: #ffffff;
 	--checkbox-checkmark-color: #000;
+
+	/* Dashboard Layout */
+	--dashboard-header-bg: #0e0e0e;
+	--dashboard-header-border: #7a7a7a30;
+	--dashboard-sidebar-bg: #1a1a1a;
+	--dashboard-sidebar-border: #7a7a7a30;
+	--dashboard-sidebar-link-active-bg: #262626;
+
+	/* Project */
+	--project-card-bg: #1a1a1a;
+	--project-card-border: #333333;
 }

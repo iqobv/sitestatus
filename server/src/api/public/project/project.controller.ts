@@ -4,6 +4,7 @@ import {
 	Delete,
 	Get,
 	Param,
+	ParseUUIDPipe,
 	Patch,
 	Post,
 } from '@nestjs/common';
@@ -30,7 +31,10 @@ export class ProjectController {
 	})
 	@ApiOkResponse({ type: ProjectDto })
 	@ApiConflictResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.PROJECT.PROJECT_SLUG_EXISTS),
+		type: createCustomMessageDto(
+			ERROR_MESSAGES.PROJECT.PROJECT_SLUG_EXISTS,
+			'slug',
+		),
 	})
 	@Post()
 	async createProject(
@@ -51,7 +55,7 @@ export class ProjectController {
 	@ApiOkResponse({ type: ProjectDto })
 	@Get(':id')
 	async getProjectById(
-		@Param('id') id: string,
+		@Param('id', ParseUUIDPipe) id: string,
 		@Authorized('id') userId: string,
 	) {
 		return await this.projectService.getProjectById(id, userId);
@@ -76,10 +80,16 @@ export class ProjectController {
 	@ApiNotFoundResponse({
 		type: createCustomMessageDto(ERROR_MESSAGES.PROJECT.PROJECT_NOT_FOUND),
 	})
+	@ApiConflictResponse({
+		type: createCustomMessageDto(
+			ERROR_MESSAGES.PROJECT.PROJECT_SLUG_EXISTS,
+			'slug',
+		),
+	})
 	@ApiOkResponse({ type: ProjectDto })
 	@Patch(':id')
 	async updateProject(
-		@Param('id') id: string,
+		@Param('id', ParseUUIDPipe) id: string,
 		@Authorized('id') userId: string,
 		@Body() dto: UpdateProjectDto,
 	) {
@@ -99,7 +109,7 @@ export class ProjectController {
 	})
 	@Delete(':id')
 	async deleteProject(
-		@Param('id') id: string,
+		@Param('id', ParseUUIDPipe) id: string,
 		@Authorized('id') userId: string,
 	) {
 		return await this.projectService.deleteProject(id, userId);

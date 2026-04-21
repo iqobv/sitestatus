@@ -4,6 +4,7 @@ import {
 	Delete,
 	Get,
 	Param,
+	ParseUUIDPipe,
 	Patch,
 	Post,
 } from '@nestjs/common';
@@ -64,7 +65,7 @@ export class AdminRegionController {
 		type: createCustomMessageDto(ERROR_MESSAGES.REGION.REGION_NOT_FOUND),
 	})
 	@Get('id/:id')
-	async getRegionById(@Param('id') id: string) {
+	async getRegionById(@Param('id', ParseUUIDPipe) id: string) {
 		return await this.adminRegionService.getRegionById(id);
 	}
 
@@ -81,7 +82,10 @@ export class AdminRegionController {
 		type: createCustomMessageDto(ERROR_MESSAGES.REGION.REGION_ALREADY_EXISTS),
 	})
 	@Patch(':id')
-	async updateRegion(@Param('id') id: string, @Body() dto: UpdateRegionDto) {
+	async updateRegion(
+		@Param('id', ParseUUIDPipe) id: string,
+		@Body() dto: UpdateRegionDto,
+	) {
 		return await this.adminRegionService.updateRegion(id, dto);
 	}
 
@@ -97,7 +101,7 @@ export class AdminRegionController {
 		type: createCustomMessageDto(ERROR_MESSAGES.REGION.REGION_NOT_FOUND),
 	})
 	@Delete(':id')
-	async deleteRegion(@Param('id') id: string) {
+	async deleteRegion(@Param('id', ParseUUIDPipe) id: string) {
 		return await this.adminRegionService.deleteRegion(id);
 	}
 }

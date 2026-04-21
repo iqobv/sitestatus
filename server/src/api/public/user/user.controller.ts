@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Patch } from '@nestjs/common';
+import { Body, Controller, Param, ParseUUIDPipe, Patch } from '@nestjs/common';
 import {
 	ApiConflictResponse,
 	ApiOkResponse,
@@ -22,7 +22,10 @@ export class UserController {
 		type: createCustomMessageDto(ERROR_MESSAGES.USER.USER_ALREADY_EXISTS),
 	})
 	@Patch(':id')
-	async update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
+	async update(
+		@Param('id', ParseUUIDPipe) id: string,
+		@Body() dto: UpdateUserDto,
+	) {
 		return await this.userService.update(id, dto);
 	}
 }

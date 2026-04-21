@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class MessageResponseDto {
 	@ApiProperty({ example: 'Operation message' })
@@ -6,4 +6,7 @@ export class MessageResponseDto {
 
 	@ApiProperty({ example: 'CODE' })
 	code: string;
+
+	@ApiPropertyOptional({ example: 'fieldName' })
+	field?: string;
 }

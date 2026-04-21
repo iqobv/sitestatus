@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
-import { PAGES } from './config';
+import { AUTH_PAGES, PRIVATE_PAGES } from './config';
 
 export async function proxy(request: NextRequest) {
 	const cookiesStore = await cookies();
@@ -15,15 +15,17 @@ export async function proxy(request: NextRequest) {
 
 	const path = request.nextUrl.pathname;
 
-	if (!isAuthenticated && path.startsWith(PAGES.DASHBOARD)) {
-		response = NextResponse.redirect(new URL(PAGES.LOGIN, request.url));
+	if (!isAuthenticated && path.startsWith(PRIVATE_PAGES.DASHBOARD)) {
+		response = NextResponse.redirect(new URL(AUTH_PAGES.LOGIN, request.url));
 	} else if (
 		isAuthenticated &&
-		(path.startsWith(PAGES.LOGIN) ||
-			path.startsWith(PAGES.SIGN_UP) ||
-			path.startsWith(PAGES.VERIFY_EMAIL))
+		(path.startsWith(AUTH_PAGES.LOGIN) ||
+			path.startsWith(AUTH_PAGES.SIGN_UP) ||
+			path.startsWith(AUTH_PAGES.VERIFY_EMAIL))
 	) {
-		response = NextResponse.redirect(new URL(PAGES.DASHBOARD, request.url));
+		response = NextResponse.redirect(
+			new URL(PRIVATE_PAGES.DASHBOARD, request.url),
+		);
 	} else {
 		response = NextResponse.next();
 	}

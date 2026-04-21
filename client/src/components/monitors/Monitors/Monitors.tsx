@@ -1,27 +1,38 @@
 'use client';
 
-import { getMonitors } from '@/api';
 import { Button } from '@/components/ui';
-import { PAGES, QUERY_KEYS } from '@/config';
-import { useAuth } from '@/hooks';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { PRIVATE_PAGES } from '@/config';
+import { MonitorWithMonitorStats } from '@/types';
+import {
+	keepPreviousData,
+	useQuery,
+	UseQueryOptions,
+} from '@tanstack/react-query';
 import MonitorRefresh from './MonitorRefresh/MonitorRefresh';
 import styles from './Monitors.module.scss';
 import MonitorsTable from './MonitorsTable/MonitorsTable';
 
-const Monitors = () => {
-	const { isAuthenticated, user } = useAuth();
+interface MonitorsProps extends UseQueryOptions<MonitorWithMonitorStats[]> {
+	createHref?: string;
+}
 
+const Monitors = ({
+	queryKey,
+	queryFn,
+	placeholderData,
+	createHref = PRIVATE_PAGES.MONITORS.NEW,
+	...rest
+}: MonitorsProps) => {
 	const { data, isLoading } = useQuery({
-		queryFn: getMonitors,
-		queryKey: QUERY_KEYS.monitors.list,
-		enabled: isAuthenticated && !!user,
-		placeholderData: keepPreviousData,
+		queryFn,
+		queryKey,
+		placeholderData: placeholderData ?? keepPreviousData,
+		...rest,
 	});
 
 	return (
 		<>
-			<MonitorRefresh />
+			<MonitorRefresh queryKey={queryKey} />
 			{!isLoading && data && data.length > 0 && (
 				<>
 					<MonitorsTable monitors={data} />
@@ -30,7 +41,7 @@ const Monitors = () => {
 			{!isLoading && data && data.length === 0 && (
 				<div className={styles['monitors__empty']}>
 					<p>No monitors found. Please add a monitor to get started.</p>
-					<Button href={PAGES.CREATE_MONITOR}>Add Monitor</Button>
+					<Button href={createHref}>Add Monitor</Button>
 				</div>
 			)}
 		</>

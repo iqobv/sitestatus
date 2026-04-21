@@ -1,6 +1,6 @@
 'use client';
 
-import { PAGES } from '@/config';
+import { AUTH_PAGES } from '@/config';
 import { useUserStore } from '@/store';
 import { ApiErrorResponse } from '@/types';
 import axios, { AxiosError } from 'axios';
@@ -16,10 +16,16 @@ const apiClient = axios.create({
 apiClient.interceptors.response.use(
 	(response) => response,
 	(error: AxiosError<ApiErrorResponse>) => {
-		if (error.response?.status === 401) {
+		const requestUrl = error.config?.url || '';
+
+		const isAuthEndpoint = Object.values(AUTH_PAGES).some((path) =>
+			requestUrl.includes(path),
+		);
+
+		if (error.response?.status === 401 && !isAuthEndpoint) {
 			useUserStore.getState().removeUser();
 			if (typeof window !== undefined) {
-				window.location.href = PAGES.LOGIN;
+				window.location.href = AUTH_PAGES.LOGIN;
 			}
 		}
 

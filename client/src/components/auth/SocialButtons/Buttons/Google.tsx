@@ -5,7 +5,7 @@ import ButtonWrapper from '../ButtonWrapper/ButtonWrapper';
 import { useLoginWindow } from '../useLoginWindow';
 
 const Google = () => {
-	const { handleOpen } = useLoginWindow('/api/v1/oauth/google');
+	const { handleOpen } = useLoginWindow('/v1/oauth/google');
 
 	return (
 		<ButtonWrapper onClick={handleOpen}>

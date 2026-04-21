@@ -17,6 +17,10 @@ export const QUERY_KEYS = {
 	} as const,
 	monitors: {
 		list: ['monitorsList'],
+		allByProjectId: (projectId: string) => [
+			'monitorsAllByProjectId',
+			projectId,
+		],
 		byId: (monitorId: string) => ['monitor', monitorId],
 		byIdFull: (monitorId: string) => ['monitorFull', monitorId],
 		analtics: (monitorId: string, range: number, region: string) => [
@@ -28,5 +32,11 @@ export const QUERY_KEYS = {
 	},
 	region: {
 		list: ['regionsList'],
+	} as const,
+	project: {
+		all: ['projectsList'],
+		byId: (projectId: string) => ['project', projectId],
+		create: ['projectCreate'],
+		update: (projectId: string) => ['projectUpdate', projectId],
 	} as const,
 } as const;

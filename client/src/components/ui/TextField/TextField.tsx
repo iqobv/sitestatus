@@ -6,7 +6,7 @@ import { textFieldVariants } from './textFieldStyles';
 
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa6';
 import Button from '../Button/Button';
-import FormLabel from '../FormLabel/FormLabel';
+import FormLabel from '../Form/parts/FormLabel/FormLabel';
 import cssStyles from './TextField.module.scss';
 import TextFieldIcon from './TextFieldIcon/TextFieldIcon';
 

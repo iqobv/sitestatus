@@ -1,37 +1,22 @@
 import { Button } from '@/components/ui';
-import { PAGES } from '@/config';
+import { AUTH_PAGES } from '@/config';
 import styles from './Hero.module.scss';
 
 const Hero = () => {
 	return (
-		<div className={styles['hero']}>
-			<div className={`${styles['hero__content']} container`}>
-				<div className={styles['hero__text']}>
-					<h1 className={styles['hero__title']}>
-						<span className={styles['hero__highlight']}>Downtime happens.</span>
-						<br /> Know about it first.
+		<div className={styles.hero}>
+			<div className={`${styles.content} container`}>
+				<div className={styles.text}>
+					<h1 className={styles.title}>
+						<span>Precision</span>
+						<span>Infrastructure</span>
+						<span>Monitoring</span>
 					</h1>
-					<p className={styles['hero__description']}>
-						Stay informed with real-time updates on service outages and
-						maintenance. Our service ensures you&apos;re always in the loop,
-						minimizing disruptions to your workflow.
+					<p className={styles.description}>
+						Global distributed checks, hybrid project grouping, and public
+						status pages. Forever free.
 					</p>
-					<Button href={PAGES.SIGN_UP}>Get Started</Button>
-				</div>
-				<div className={styles['hero__image']}>
-					<picture>
-						<source media="(min-width: 768px)" srcSet="/hero-image-light.jpg" />
-						<source
-							media="(min-width: 576px)"
-							srcSet="/hero-image-sm-light.jpg"
-						/>
-						<img
-							src="/hero-image-sm-light.jpg"
-							alt="Hero image"
-							loading="eager"
-							className={styles['hero__img']}
-						/>
-					</picture>
+					<Button href={AUTH_PAGES.SIGN_UP}>Start Monitoring Now</Button>
 				</div>
 			</div>
 		</div>

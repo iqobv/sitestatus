@@ -7,15 +7,11 @@ interface FeatureItemProps {
 
 const FeatureItem = ({ feature }: FeatureItemProps) => {
 	return (
-		<div key={feature.title} className={styles['feature-item']}>
-			<div className={styles['feature-item__icon']}>
-				<feature.icon size={48} />
-			</div>
-			<div className={styles['feature-item__content']}>
-				<h3 className={styles['feature-item__title']}>{feature.title}</h3>
-				<p className={styles['feature-item__description']}>
-					{feature.description}
-				</p>
+		<div key={feature.title} className={styles.feature}>
+			<feature.icon size={30} color="var(--features-card-icon-color)" />
+			<div className={styles.content}>
+				<h3 className={styles.title}>{feature.title}</h3>
+				<p className={styles.description}>{feature.description}</p>
 			</div>
 		</div>
 	);

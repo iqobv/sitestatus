@@ -1,5 +1,5 @@
-import { getServerMonitors } from '@/api';
-import { Monitors } from '@/components/monitors';
+import { getServerAllMonitors } from '@/api';
+import { MonitorsAll } from '@/components/monitors';
 import { QUERY_KEYS } from '@/config';
 import {
 	dehydrate,
@@ -19,13 +19,13 @@ export default async function DashboardPage() {
 
 	await queryClient.prefetchQuery({
 		queryKey: QUERY_KEYS.monitors.list,
-		queryFn: () => getServerMonitors(),
+		queryFn: () => getServerAllMonitors(),
 	});
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
-			<div className={`${styles['home']} page container fade`}>
-				<Monitors />
+			<div className={`${styles['home']} fade`}>
+				<MonitorsAll />
 			</div>
 		</HydrationBoundary>
 	);

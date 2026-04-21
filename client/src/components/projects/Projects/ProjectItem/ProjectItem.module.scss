@@ -1,0 +1,36 @@
+.item {
+	background-color: var(--project-card-bg);
+	border: 1px solid var(--project-card-border);
+	padding: 20px;
+	border-radius: var(--border-radius);
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	gap: var(--gap);
+	min-height: 250px;
+}
+
+.content {
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap);
+}
+
+.projectInfo {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.projectSlug {
+	color: var(--color-secondary-text);
+	font-size: 0.9rem;
+}
+
+.projectName {
+	color: var(--color-main-text);
+}
+
+.projectDescription {
+	color: var(--color-secondary-text);
+}

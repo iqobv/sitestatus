@@ -1,0 +1,48 @@
+@use '../../../../styles/mixins' as *;
+
+.valueCard {
+	border-bottom: 1px solid var(--value-card-border);
+	background-color: var(--value-card-bg);
+	padding: 30px 20px;
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--gap) * 2);
+
+	&:last-child {
+		border-bottom: none;
+	}
+
+	@include respond-to(lg) {
+		border-bottom: none;
+		border-right: 1px solid var(--value-card-border);
+
+		&:last-child {
+			border-right: none;
+		}
+	}
+}
+
+.iconWrapper {
+	border: 1px solid var(--value-card-border);
+	width: 54px;
+	height: 54px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.content {
+	gap: var(--gap);
+	display: flex;
+	flex-direction: column;
+}
+
+.title {
+	color: var(--primary-color);
+	font-size: 1.25rem;
+}
+
+.description {
+	color: var(--secondary-color);
+	font-size: 0.915rem;
+}

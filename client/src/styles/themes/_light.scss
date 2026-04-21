@@ -5,12 +5,12 @@
 	--bg-header-rgb: 255, 255, 255;
 	--header-border-color: #e5e8eb;
 	--color-main-text: #0d141c;
-	--secondary-color: #727c86;
+	--color-secondary-text: #aeaeae;
 	--header-height: 70px;
 	--secondary-bg: #f7f7f7;
 	--border-color: #e5e7eb;
 	--primary-color: #171717;
-	--secondary-color: #595c5e;
+	--secondary-color: #424242;
 	--accent-color: #299f4e;
 	--logo: url('/logo-black.svg');
 	--logo-color: #171717;
@@ -18,7 +18,16 @@
 	--gap: 16px;
 
 	/* Hero */
-	--hero-highlight-color: #0f172a;
+	--hero-grid-color: #f4f4f48d;
+
+	/* Values */
+	--value-card-bg: #f4f4f4;
+	--value-card-border: #ccc;
+
+	/* Features */
+	--features-bg: #f7f7f7;
+	--features-card-border: #ccc;
+	--features-card-icon-color: #8bd79b;
 
 	/* Section Header */
 	--section-title-color: #0d141c;
@@ -78,6 +87,7 @@
 	--input-border-focus: #a1a1a1;
 	--input-border-error: #e7000b;
 	--input-color-error: #ff0000;
+	--input-required-color: #e7000b;
 
 	/* Status Indicators */
 	--status-up: #4caf50;
@@ -87,17 +97,41 @@
 	--status-na: #b0b0b0;
 	--status-up-hover: #4caf4f93;
 	--status-down-hover: #c0392b;
-	--heatmap-fast: #2ecc71;
-	--heatmap-medium: #f1c40f;
-	--heatmap-slow: #e67e22;
+
+	/* Dropdown */
+	--dropdown-bg: #ffffff;
+	--dropdown-item-hover-bg: #f0f0f0;
+	--dropdown-item-hover-color: #0d141c;
+	--dropdown-item-disabled-color: #8f9294;
+
+	/* Chart */
+	--chart-tooltip-bg: #ffffff;
+	--chart-tooltip-border: #e5e8eb;
+	--chart-axis-color: #8f9294;
+	--chart-line-color: #171717;
+	--chart-dot-color: #171717;
+	--chart-active-dot-color: #171717;
 
 	/* Table */
-	--border-color: #e5e8eb;
+	--table-border-color: #e5e8eb;
+	--table-header-text-color: #0d141c;
 
 	/* Tooltips */
-	--tooltip-bg: #2d2d2d;
-	--tooltip-border: #1f1f1f;
-	--tooltip-color: #ffffff;
+	--tooltip-bg: #ffffff;
+	--tooltip-border: #e5e8eb;
+	--tooltip-color: #0d141c;
+
+	/* Scrollbar */
+	--scrollbar-bg: #f0f0f0;
+	--scrollbar-thumb-bg: #c1c1c1;
+	--scrollbar-thumb-hover-bg: #a1a1a1;
+
+	/* Accident */
+	--accident-resolved: #4caf50;
+	--accident-open: #f44336;
+
+	/* Modal */
+	--modal-bg: #eaeaea;
 
 	/* Checkbox */
 	--checkbox-bg-wrapper: #ffffff;
@@ -109,4 +143,14 @@
 	--checkbox-checkmark-color: #ffffff;
 	--checkbox-text: #000000;
 	--checkbox-transition: 0.2s ease-in-out;
+
+	/* Dashboard Layout */
+	--dashboard-header-bg: #ffffff;
+	--dashboard-header-border: #e5e8eb;
+	--dashboard-sidebar-bg: #f7f7f7;
+	--dashboard-sidebar-border: #e5e8eb;
+
+	/* Project */
+	--project-card-bg: #ffffff;
+	--project-card-border: #e5e8eb;
 }

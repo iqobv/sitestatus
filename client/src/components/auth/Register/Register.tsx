@@ -2,7 +2,7 @@
 
 import { register } from '@/api';
 import { SectionHeader } from '@/components/ui';
-import { PAGES } from '@/config';
+import { AUTH_PAGES } from '@/config';
 import { RegisterFormDto } from '@/dto';
 import { registerSchema } from '@/schemas';
 import Link from 'next/link';
@@ -21,7 +21,7 @@ const Register = () => {
 				bottomText={
 					<>
 						Already have an account?{' '}
-						<Link style={{ fontWeight: 600 }} href={PAGES.LOGIN}>
+						<Link style={{ fontWeight: 600 }} href={AUTH_PAGES.LOGIN}>
 							Log In
 						</Link>
 					</>
@@ -36,7 +36,7 @@ const Register = () => {
 						data.message === 'Registration successful. Please check your email.'
 					) {
 						localStorage.setItem('registrationEmail', data.email);
-						router.push(PAGES.VERIFY_EMAIL);
+						router.push(AUTH_PAGES.VERIFY_EMAIL);
 					}
 				}}
 				mutationFn={register}

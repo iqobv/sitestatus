@@ -18,7 +18,11 @@ jobs:
       matrix:
         include:
           - region: 'eu-west'
-            app_name: 'sitestatus-ping-worker-ge-west'
+            app_name: 'sitestatus-ping-eu-west'
+          - region: 'us-east'
+            app_name: 'sitestatus-ping-us-east'
+          - region: 'southeast-asia'
+            app_name: 'sitestatus-ping-southeast-asia'
 
     steps:
       - name: Checkout code
@@ -27,7 +31,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
           cache-dependency-path: 'ping-worker/package-lock.json'
 
@@ -51,18 +55,8 @@ jobs:
           app-settings-json: |
             [
               {
-                "name": "AzureFunctionsJobHost__logging__applicationInsights__logLevel__default",
-                "value": "Error",
-                "slotSetting": false
-              },
-              {
-                "name": "AzureFunctionsJobHost__logging__logLevel__Azure.Storage.Blobs",
-                "value": "Error",
-                "slotSetting": false
-              },
-              {
-                "name": "AzureFunctionsJobHost__logging__logLevel__Azure.Core",
-                "value": "Error",
+                "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+                "value": "${{ secrets.APPINSIGHTS_CONNECTION_STRING }}",
                 "slotSetting": false
               },
               {
@@ -84,13 +78,23 @@ jobs:
                 "name": "WORKER_REGION",
                 "value": "${{ matrix.region }}",
                 "slotSetting": false
+              },
+              {
+                "name": "AzureFunctionsJobHost__logging__logLevel__default",
+                "value": "Error",
+                "slotSetting": false
+              },
+              {
+                "name": "AzureFunctionsJobHost__logging__logLevel__Host.Results",
+                "value": "Error",
+                "slotSetting": false
+              },
+              {
+                "name": "AzureFunctionsJobHost__logging__logLevel__Host.Aggregator",
+                "value": "Error",
+                "slotSetting": false
               }
             ]
-
-      - name: List files in deployment folder
-        run: |
-          echo "--- Content of ./ping-worker ---"
-          ls -R ./ping-worker
 
       - name: Deploy to Azure Functions
         uses: Azure/functions-action@v1

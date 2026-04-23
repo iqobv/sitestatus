@@ -40,6 +40,10 @@ apiServer.interceptors.response.use(
 			redirect(AUTH_PAGES.LOGIN);
 		}
 
+		if (error.response?.data?.message) {
+			error.message = error.response.data.message;
+		}
+
 		return Promise.reject(error);
 	},
 );

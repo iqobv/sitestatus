@@ -1,3 +1,11 @@
+import { User } from '@generated/postgres/client';
+import { TokenType } from '@generated/postgres/enums';
+import { MailService } from '@infra/mail/mail.service';
+import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
+import { userSelect } from '@libs/prisma';
+import { ClientInfo } from '@libs/types';
+import { comparePassword, hashPassword } from '@libs/utils';
 import {
 	BadRequestException,
 	Injectable,
@@ -6,13 +14,6 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import crypto from 'crypto';
-import { TokenType, User } from 'generated/prisma/client';
-import { MailService } from 'src/infra/mail/mail.service';
-import { PrismaService } from 'src/infra/prisma/prisma.service';
-import { ERROR_MESSAGES, SUCCESS_MESSAGES } from 'src/libs/constants';
-import { userSelect } from 'src/libs/prisma';
-import { ClientInfo } from 'src/libs/types';
-import { comparePassword, hashPassword } from 'src/libs/utils';
 import { SessionService } from '../session/session.service';
 import { TokenService } from '../token/token.service';
 import { UserProviderService } from '../user-provider/user-provider.service';
@@ -27,7 +28,7 @@ export class AuthService {
 		private readonly tokenService: TokenService,
 		private readonly configService: ConfigService,
 		private readonly mailService: MailService,
-		private readonly prismaService: PrismaService,
+		private readonly prismaService: PgPrismaService,
 		private readonly jwtService: JwtService,
 		private readonly sessionService: SessionService,
 		private readonly userProviderService: UserProviderService,

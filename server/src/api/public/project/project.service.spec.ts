@@ -1,8 +1,8 @@
+import { Prisma, Project } from '@generated/postgres/client';
+import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
+import { SUCCESS_MESSAGES } from '@libs/constants';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Prisma, Project } from 'generated/prisma/client';
-import { PrismaService } from 'src/infra/prisma/prisma.service';
-import { SUCCESS_MESSAGES } from 'src/libs/constants';
 import { CreateProjectDto, UpdateProjectDto } from './dto';
 import { ProjectService } from './project.service';
 
@@ -52,7 +52,10 @@ describe('ProjectService', () => {
 		};
 
 		const module: TestingModule = await Test.createTestingModule({
-			providers: [ProjectService, { provide: PrismaService, useValue: prisma }],
+			providers: [
+				ProjectService,
+				{ provide: PgPrismaService, useValue: prisma },
+			],
 		}).compile();
 
 		service = module.get<ProjectService>(ProjectService);

@@ -1,5 +1,5 @@
+import { DefaultFieldsDto } from '@libs/dto';
 import { ApiProperty, IntersectionType } from '@nestjs/swagger';
-import { DefaultFieldsDto } from 'src/libs/dto';
 import { BaseRegionDto } from './base-region.dto';
 
 export class RegionDto extends IntersectionType(

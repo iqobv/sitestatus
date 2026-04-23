@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "monitors" ADD COLUMN     "next_check_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;

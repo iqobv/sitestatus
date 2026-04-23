@@ -1,11 +1,11 @@
+import { ERROR_MESSAGES } from '@libs/constants';
+import { createCustomMessageDto } from '@libs/utils';
 import { Body, Controller, Param, ParseUUIDPipe, Patch } from '@nestjs/common';
 import {
 	ApiConflictResponse,
 	ApiOkResponse,
 	ApiOperation,
 } from '@nestjs/swagger';
-import { ERROR_MESSAGES } from 'src/libs/constants';
-import { createCustomMessageDto } from 'src/libs/utils';
 import { UpdateUserDto, UserDto } from './dto';
 import { UserService } from './user.service';
 

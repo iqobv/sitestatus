@@ -1,3 +1,7 @@
+import { RegionDto } from '@api/public/region/dto';
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
+import { Auth } from '@libs/decorators';
+import { createCustomMessageDto } from '@libs/utils';
 import {
 	Body,
 	Controller,
@@ -15,10 +19,6 @@ import {
 	ApiOperation,
 	ApiTags,
 } from '@nestjs/swagger';
-import { RegionDto } from 'src/api/public/region/dto';
-import { ERROR_MESSAGES, SUCCESS_MESSAGES } from 'src/libs/constants';
-import { Auth } from 'src/libs/decorators';
-import { createCustomMessageDto } from 'src/libs/utils';
 import { AdminRegionService } from './admin-region.service';
 import { CreateRegionDto, UpdateRegionDto } from './dto';
 

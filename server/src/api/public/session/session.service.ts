@@ -1,16 +1,16 @@
+import { Prisma } from '@generated/postgres/client';
+import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
+import { ERROR_MESSAGES } from '@libs/constants';
 import {
 	ForbiddenException,
 	Injectable,
 	NotFoundException,
 } from '@nestjs/common';
-import { Prisma } from 'generated/prisma/client';
-import { PrismaService } from 'src/infra/prisma/prisma.service';
-import { ERROR_MESSAGES } from 'src/libs/constants';
 import { CreateSessionDto } from './dto';
 
 @Injectable()
 export class SessionService {
-	constructor(private readonly prismaService: PrismaService) {}
+	constructor(private readonly prismaService: PgPrismaService) {}
 
 	async createSession(dto: CreateSessionDto, tx?: Prisma.TransactionClient) {
 		const { clientInfo, expiresAt, refreshTokenHash, userId } = dto;

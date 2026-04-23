@@ -1,19 +1,19 @@
+import { Prisma } from '@generated/postgres/client';
+import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
+import { projectSelect } from '@libs/prisma';
+import { withField } from '@libs/utils';
 import {
 	ConflictException,
 	Injectable,
 	NotFoundException,
 } from '@nestjs/common';
 import { isUUID } from 'class-validator';
-import { Prisma } from 'generated/prisma/client';
-import { PrismaService } from 'src/infra/prisma/prisma.service';
-import { ERROR_MESSAGES, SUCCESS_MESSAGES } from 'src/libs/constants';
-import { projectSelect } from 'src/libs/prisma';
-import { withField } from 'src/libs/utils';
 import { CreateProjectDto, UpdateProjectDto } from './dto';
 
 @Injectable()
 export class ProjectService {
-	constructor(private readonly prismaService: PrismaService) {}
+	constructor(private readonly prismaService: PgPrismaService) {}
 
 	async createProject(dto: CreateProjectDto, userId: string) {
 		const { name, slug, description } = dto;

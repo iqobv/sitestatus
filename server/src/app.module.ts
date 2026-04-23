@@ -1,9 +1,10 @@
+import { ApiModule } from '@api/api.module';
+import { InfraModule } from '@infra/infra.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { ApiModule } from './api/api.module';
-import { InfraModule } from './infra/infra.module';
 
 @Module({
 	imports: [
@@ -13,6 +14,7 @@ import { InfraModule } from './infra/infra.module';
 			{ name: 'default', ttl: 60000, limit: 100 },
 			{ name: 'strict', ttl: 60000, limit: 5 },
 		]),
+		EventEmitterModule.forRoot(),
 		InfraModule,
 		ApiModule,
 	],

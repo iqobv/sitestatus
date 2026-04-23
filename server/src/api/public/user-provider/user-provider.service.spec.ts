@@ -1,5 +1,5 @@
+import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from 'src/infra/prisma/prisma.service';
 import { UserProviderService } from './user-provider.service';
 
 type PrismaMock = {
@@ -31,7 +31,7 @@ describe('UserProviderService', () => {
 			providers: [
 				UserProviderService,
 				{
-					provide: PrismaService,
+					provide: PgPrismaService,
 					useValue: prisma,
 				},
 			],

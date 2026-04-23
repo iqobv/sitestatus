@@ -1,8 +1,8 @@
+import { Prisma, Region } from '@generated/postgres/client';
+import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
+import { SUCCESS_MESSAGES } from '@libs/constants';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Prisma, Region } from 'generated/prisma/client';
-import { PrismaService } from 'src/infra/prisma/prisma.service';
-import { SUCCESS_MESSAGES } from 'src/libs/constants';
 import { AdminRegionService } from './admin-region.service';
 import { CreateRegionDto, UpdateRegionDto } from './dto';
 
@@ -54,7 +54,7 @@ describe('AdminRegionService', () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
 				AdminRegionService,
-				{ provide: PrismaService, useValue: prisma },
+				{ provide: PgPrismaService, useValue: prisma },
 			],
 		}).compile();
 

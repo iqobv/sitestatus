@@ -1,5 +1,6 @@
-import { StatPeriod } from 'generated/prisma/enums';
-import { PrismaService } from 'src/infra/prisma/prisma.service';
+import { StatPeriod } from '@generated/turso/enums';
+import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
+import { Test, TestingModule } from '@nestjs/testing';
 import { AnalyticsService } from './analytics.service';
 
 type PrismaMock = {
@@ -17,7 +18,7 @@ describe('AnalyticsService', () => {
 
 	const mockDate = new Date('2026-04-08T12:00:00.000Z');
 
-	beforeEach(() => {
+	beforeEach(async () => {
 		jest.useFakeTimers();
 		jest.setSystemTime(mockDate.getTime());
 
@@ -30,7 +31,14 @@ describe('AnalyticsService', () => {
 			},
 		};
 
-		service = new AnalyticsService(prisma as unknown as PrismaService);
+		const module: TestingModule = await Test.createTestingModule({
+			providers: [
+				AnalyticsService,
+				{ provide: TursoPrismaService, useValue: prisma },
+			],
+		}).compile();
+
+		service = module.get<AnalyticsService>(AnalyticsService);
 	});
 
 	afterEach(() => {
@@ -59,7 +67,10 @@ describe('AnalyticsService', () => {
 
 			prisma.monitorLog.findMany.mockResolvedValue(rawLogsMock);
 
-			const result = await service.getAnalyticsByMonitorId(monitorId, 1);
+			const result = await service.getAnalyticsByMonitorId(monitorId, {
+				region: 'global',
+				daysRange: 1,
+			});
 
 			expect(prisma.monitorLog.findMany).toHaveBeenCalledWith({
 				where: { monitorId, createdAt: { gte: expectedStartDate } },
@@ -93,7 +104,10 @@ describe('AnalyticsService', () => {
 
 			prisma.monitorStats.findMany.mockResolvedValue(statsMock);
 
-			const result = await service.getAnalyticsByMonitorId(monitorId, 7);
+			const result = await service.getAnalyticsByMonitorId(monitorId, {
+				region: 'global',
+				daysRange: 7,
+			});
 
 			expect(prisma.monitorStats.findMany).toHaveBeenCalledWith({
 				where: {
@@ -132,7 +146,10 @@ describe('AnalyticsService', () => {
 
 			prisma.monitorStats.findMany.mockResolvedValue(statsMock);
 
-			const result = await service.getAnalyticsByMonitorId(monitorId, 30);
+			const result = await service.getAnalyticsByMonitorId(monitorId, {
+				region: 'global',
+				daysRange: 30,
+			});
 
 			expect(prisma.monitorStats.findMany).toHaveBeenCalledWith({
 				where: {

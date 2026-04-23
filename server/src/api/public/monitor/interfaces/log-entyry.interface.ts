@@ -1,4 +1,4 @@
-import { SiteStatus } from 'generated/prisma/enums';
+import { SiteStatus } from '@generated/turso/enums';
 
 export interface LogEntry {
 	status: SiteStatus;

@@ -1,5 +1,5 @@
+import { StatPeriod } from '@generated/turso/enums';
 import { ApiProperty } from '@nestjs/swagger';
-import { StatPeriod } from 'generated/prisma/enums';
 import { AnalyticsIncidentDto } from './analytics-incident.dto';
 import { AnalyticsRawDataDto } from './analytics-raw-log.dto';
 import { AnalyticsStatLogDto } from './analytics-stat-log.dto';

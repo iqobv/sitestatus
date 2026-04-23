@@ -1,0 +1,10 @@
+model WorkerStatus {
+  regionId String @id @map("region_id")
+
+  lastSeenAt DateTime @default(now()) @map("last_seen_at")
+
+  version     String
+  nodeVersion String? @map("node_version")
+
+  @@map("worker_statuses")
+}

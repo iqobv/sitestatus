@@ -1,5 +1,5 @@
+import { Auth, Authorized } from '@libs/decorators';
 import { Controller, Delete, Get, Param } from '@nestjs/common';
-import { Auth, Authorized } from 'src/libs/decorators';
 import { SessionService } from './session.service';
 
 @Auth()

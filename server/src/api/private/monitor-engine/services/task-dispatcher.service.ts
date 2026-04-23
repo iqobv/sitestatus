@@ -3,17 +3,20 @@ import {
 	ServiceBusMessage,
 	ServiceBusSender,
 } from '@azure/service-bus';
-import { Injectable, OnModuleDestroy } from '@nestjs/common';
+import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
+import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import { Interval } from '@nestjs/schedule';
-import { PrismaService } from 'src/infra/prisma/prisma.service';
+import { MonitorCacheService } from './monitor-cache.service';
 
 @Injectable()
 export class TaskDispatcherService implements OnModuleDestroy {
 	private readonly senders: Map<string, ServiceBusSender> = new Map();
+	private readonly logger: Logger;
 
 	constructor(
 		private readonly sbClient: ServiceBusClient,
-		private readonly prismaService: PrismaService,
+		private readonly prismaService: TursoPrismaService,
+		private readonly monitorCache: MonitorCacheService,
 	) {}
 
 	public async onModuleDestroy(): Promise<void> {
@@ -45,59 +48,71 @@ export class TaskDispatcherService implements OnModuleDestroy {
 	private async dispatchTasks() {
 		const now = new Date();
 
-		const monitors = await this.prismaService.monitor.findMany({
-			where: { isActive: true },
-			include: {
-				regionConfigs: {
-					where: { nextCheckAt: { lte: now }, isQueued: false, isActive: true },
-					include: { region: true },
-				},
-			},
-		});
+		const monitors = this.monitorCache.getMonitors();
 
 		const dispatchPromises: Promise<void>[] = [];
 
-		const monitorRegionsToUpdate: { monitorId: string; regionId: string }[] =
-			[];
+		const monitorStatesToUpdate: {
+			monitorId: string;
+			nextCheckAt: number;
+		}[] = [];
 
 		for (const monitor of monitors) {
-			for (const config of monitor.regionConfigs) {
-				const sender = this.getSender(config.region.key);
+			if (now.getTime() >= monitor.nextCheckAt) {
+				const nextRun = now.getTime() + monitor.checkIntervalSeconds * 1000;
+				this.monitorCache.updateMonitorNextCheck(monitor.id, nextRun);
 
-				const payload = {
+				for (const regionId of monitor.regionIds) {
+					const region = this.monitorCache.getRegionById(regionId);
+
+					if (!region) continue;
+
+					const sender = this.getSender(region.key);
+
+					const payload = {
+						monitorId: monitor.id,
+						url: monitor.url,
+					};
+
+					const message: ServiceBusMessage = {
+						body: payload,
+						contentType: 'application/json',
+					};
+
+					dispatchPromises.push(sender.sendMessages(message));
+				}
+
+				monitorStatesToUpdate.push({
 					monitorId: monitor.id,
-					url: monitor.url,
-				};
-
-				const message: ServiceBusMessage = {
-					body: payload,
-					contentType: 'application/json',
-				};
-
-				monitorRegionsToUpdate.push({
-					monitorId: monitor.id,
-					regionId: config.regionId,
+					nextCheckAt: nextRun,
 				});
-
-				dispatchPromises.push(sender.sendMessages(message));
 			}
 		}
 
-		if (monitorRegionsToUpdate.length > 0) {
-			await this.prismaService.monitorRegion.updateMany({
-				where: {
-					OR: monitorRegionsToUpdate.map((m) => ({
-						monitorId: m.monitorId,
-						regionId: m.regionId,
-					})),
-					nextCheckAt: { lte: now },
-					isQueued: false,
-				},
-				data: { isQueued: true },
-			});
+		if (monitorStatesToUpdate.length > 0) {
+			this.persistMonitorStates(monitorStatesToUpdate);
 		}
 
 		await Promise.all(dispatchPromises);
+	}
+
+	private persistMonitorStates(
+		updates: { monitorId: string; nextCheckAt: number }[],
+	): void {
+		const transactions = updates.map((update) =>
+			this.prismaService.monitorState.upsert({
+				where: { monitorId: update.monitorId },
+				update: { nextCheckAt: new Date(update.nextCheckAt) },
+				create: {
+					monitorId: update.monitorId,
+					nextCheckAt: new Date(update.nextCheckAt),
+				},
+			}),
+		);
+
+		this.prismaService.$transaction(transactions).catch((error: Error) => {
+			this.logger.error(`Failed to persist monitor states: ${error.message}`);
+		});
 	}
 
 	@Interval(10000)

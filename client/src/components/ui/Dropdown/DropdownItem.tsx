@@ -16,6 +16,7 @@ interface DropdownItemProps {
 	disabled?: boolean;
 	asChild?: boolean;
 	className?: string;
+	closeOnClick?: boolean;
 }
 
 const DropdownItem = ({
@@ -24,6 +25,7 @@ const DropdownItem = ({
 	disabled = false,
 	asChild = false,
 	className = '',
+	closeOnClick = true,
 }: DropdownItemProps) => {
 	const { getItemProps, close, activeIndex } = useDropdown();
 	const { ref: listItemRef, index } = useListItem();
@@ -38,7 +40,9 @@ const DropdownItem = ({
 		if (onClick) {
 			onClick();
 		}
-		close();
+		if (closeOnClick) {
+			close();
+		}
 	};
 
 	const baseProps = getItemProps({

@@ -5,16 +5,23 @@
 	justify-content: space-between;
 	align-items: center;
 	flex-direction: row;
+}
 
-	&__dropdown-item {
-		text-align: left;
-		justify-content: start;
-		display: flex;
-		align-items: center;
-		gap: 8px;
+.dropdownItem {
+	text-align: left;
+	justify-content: start;
+	display: flex;
+	align-items: center;
+	gap: 8px;
 
-		&--delete {
-			color: var(--error-border);
-		}
+	&.delete {
+		color: var(--error-border);
 	}
+}
+
+.monitorDeleteFooter {
+	display: inline-flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: var(--gap);
 }

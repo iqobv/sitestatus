@@ -5,6 +5,17 @@ CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'USER');
 CREATE TYPE "TokenType" AS ENUM ('REFRESH', 'EMAIL_VERIFICATION', 'RESET_PASSWORD');
 
 -- CreateTable
+CREATE TABLE "monitor_region_configs" (
+    "monitor_id" UUID NOT NULL,
+    "region_id" UUID NOT NULL,
+    "is_active" BOOLEAN NOT NULL DEFAULT true,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "monitor_region_configs_pkey" PRIMARY KEY ("monitor_id","region_id")
+);
+
+-- CreateTable
 CREATE TABLE "monitors" (
     "id" UUID NOT NULL,
     "user_id" UUID NOT NULL,
@@ -126,6 +137,12 @@ CREATE UNIQUE INDEX "user_providers_provider_name_provider_id_key" ON "user_prov
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
+
+-- AddForeignKey
+ALTER TABLE "monitor_region_configs" ADD CONSTRAINT "monitor_region_configs_monitor_id_fkey" FOREIGN KEY ("monitor_id") REFERENCES "monitors"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "monitor_region_configs" ADD CONSTRAINT "monitor_region_configs_region_id_fkey" FOREIGN KEY ("region_id") REFERENCES "regions"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "monitors" ADD CONSTRAINT "monitors_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

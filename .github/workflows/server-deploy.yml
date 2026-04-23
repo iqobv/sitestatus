@@ -58,6 +58,7 @@ jobs:
             ${{ secrets.ENV_FILE }}
             POSTGRES_URI=${{ secrets.POSTGRES_URI }}
             DATABASE_URL=${{ secrets.POSTGRES_URI }}
+            TURSO_URI=${{ secrets.TURSO_URI }}
             EOF
 
             docker pull ghcr.io/${{ github.repository_owner }}/sitestatus-api:latest
@@ -66,8 +67,9 @@ jobs:
               --env-file .env \
               -e DATABASE_URL="${{ secrets.POSTGRES_URI }}" \
               -e POSTGRES_URI="${{ secrets.POSTGRES_URI }}" \
+              -e TURSO_URI="${{ secrets.TURSO_URI }}" \
               ghcr.io/${{ github.repository_owner }}/sitestatus-api:latest \
-              npx prisma migrate deploy
+              npm run prisma:migrate:deploy:pg
 
             docker stop nestjs-server || true
             docker rm nestjs-server || true

@@ -60,7 +60,7 @@ export class MonitorService {
 
 		const { regions: resultRegions, ...createdMonitor } = monitor;
 
-		this.emitUpdateEvent(createdMonitor, resultRegions);
+		this.emitUpdateEvent(createdMonitor, resultRegions, true);
 
 		return createdMonitor;
 	}
@@ -369,7 +369,11 @@ export class MonitorService {
 		return monitor;
 	}
 
-	private emitUpdateEvent(monitor: Monitor, regionIds: string[]) {
+	private emitUpdateEvent(
+		monitor: Monitor,
+		regionIds: string[],
+		isNew: boolean = false,
+	) {
 		const emitPayload: MonitorUpdatePayload = {
 			id: monitor.id,
 			checkIntervalSeconds: monitor.checkIntervalSeconds,
@@ -377,6 +381,7 @@ export class MonitorService {
 			method: monitor.method,
 			url: monitor.url,
 			regionIds: regionIds,
+			isNew,
 		};
 
 		this.eventEmitter.emit(CACHE_EMIT_EVENTS.MONITOR.UPDATED, emitPayload);

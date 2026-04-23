@@ -71,13 +71,20 @@ export class MonitorCacheService implements OnModuleInit {
 		return Array.from(this.monitors.values());
 	}
 
-	upsertMonitor(data: Omit<MonitorCache, 'nextCheckAt'>): void {
+	upsertMonitor(
+		data: Omit<MonitorCache, 'nextCheckAt'>,
+		isNew: boolean = false,
+	): void {
 		const existing = this.monitors.get(data.id);
+		const nextCheckAt = isNew
+			? new Date().getTime()
+			: existing
+				? existing.nextCheckAt
+				: Date.now() + data.checkIntervalSeconds * 1000;
+
 		this.monitors.set(data.id, {
 			...data,
-			nextCheckAt: existing
-				? existing.nextCheckAt
-				: Date.now() + data.checkIntervalSeconds * 1000,
+			nextCheckAt,
 		});
 	}
 

@@ -1,5 +1,5 @@
+import type { ClientInfo } from '@libs/types';
 import { IsDate, IsObject, IsString, IsUUID } from 'class-validator';
-import type { ClientInfo } from 'src/libs/types';
 
 export class CreateSessionDto {
 	@IsUUID('4')

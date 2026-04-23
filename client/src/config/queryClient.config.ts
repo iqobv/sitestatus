@@ -25,6 +25,7 @@ export const QUERY_KEYS = {
 			range,
 			region,
 		],
+		delete: (monitorId: string) => ['monitorDelete', monitorId],
 	},
 	region: {
 		list: ['regionsList'],

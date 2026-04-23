@@ -1,3 +1,11 @@
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
+import { Auth, Authorized, Cookie } from '@libs/decorators';
+import {
+	clearAuthCookies,
+	createCustomMessageDto,
+	extractClientInfo,
+	setAuthCookies,
+} from '@libs/utils';
 import {
 	Body,
 	Controller,
@@ -19,14 +27,6 @@ import {
 } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import type { Request, Response } from 'express';
-import { ERROR_MESSAGES, SUCCESS_MESSAGES } from 'src/libs/constants';
-import { Auth, Authorized, Cookie } from 'src/libs/decorators';
-import {
-	clearAuthCookies,
-	createCustomMessageDto,
-	extractClientInfo,
-	setAuthCookies,
-} from 'src/libs/utils';
 import { CreateUserDto, UserWithoutPasswordDto } from '../user/dto';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';

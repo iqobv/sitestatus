@@ -5,7 +5,7 @@ export interface TextFieldProps extends React.ComponentProps<'input'> {
 	disabled?: boolean;
 	fullWidth?: boolean;
 	register?: UseFormRegisterReturn;
-	label?: string;
+	label?: React.ReactNode;
 	error?: string;
 	leftIcon?: React.ReactNode;
 	rightIcon?: React.ReactNode;

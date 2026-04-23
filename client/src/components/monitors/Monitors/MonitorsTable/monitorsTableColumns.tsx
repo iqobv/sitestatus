@@ -36,7 +36,11 @@ export const COLUMNS: ColumnDef<MonitorWithMonitorStats>[] = [
 		header: 'Last Checked',
 		accessorKey: 'lastCheckedAt',
 		enableSorting: false,
-		cell: (props) => <>{dayjs(props.row.original.lastCheckedAt).fromNow()}</>,
+		cell: (props) => {
+			const lastCheckedAt = props.row.original.lastCheckedAt;
+
+			return <> {lastCheckedAt ? dayjs(lastCheckedAt).fromNow() : 'Never'}</>;
+		},
 	},
 	{
 		header: '',

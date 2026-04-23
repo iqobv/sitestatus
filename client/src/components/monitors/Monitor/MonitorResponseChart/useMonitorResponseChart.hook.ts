@@ -1,5 +1,10 @@
+'use client';
+
+import { getAllRegions } from '@/api';
+import { QUERY_KEYS } from '@/config';
 import { AnalyticsData } from '@/types';
 import { isRawData } from '@/utils';
+import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 
 interface ChartPoint {
@@ -10,6 +15,11 @@ interface ChartPoint {
 export const useMonitorResponseChart = (logs: AnalyticsData[]) => {
 	const [hiddenRegions, setHiddenRegions] = useState<string[]>([]);
 
+	const { data: regionData } = useQuery({
+		queryKey: QUERY_KEYS.region.list,
+		queryFn: getAllRegions,
+	});
+
 	const dtf = new Intl.DateTimeFormat(undefined, {
 		year: 'numeric',
 		month: '2-digit',
@@ -19,20 +29,15 @@ export const useMonitorResponseChart = (logs: AnalyticsData[]) => {
 	});
 
 	const { chartData, regions } = useMemo(() => {
-		if (!logs || logs.length === 0) {
+		if (!logs || logs.length === 0 || !regionData) {
 			return { chartData: [], regions: [] };
 		}
 
-		const regionsMap = new Map<string, string>();
+		const uniqueRegions = new Set<string>();
 		const groupedData = new Map<number, ChartPoint>();
 
 		logs.forEach((log) => {
-			const regionKey = log.region.key;
-			const regionName = log.region.name;
-
-			if (!regionsMap.has(regionKey)) {
-				regionsMap.set(regionKey, regionName);
-			}
+			uniqueRegions.add(log.regionId);
 
 			const dateString = isRawData(log) ? log.createdAt : log.timestamp;
 			const date = new Date(dateString);
@@ -47,22 +52,25 @@ export const useMonitorResponseChart = (logs: AnalyticsData[]) => {
 			}
 
 			const point = groupedData.get(bucketTimestamp)!;
-			point[regionKey] = value;
+			point[log.regionId] = value;
 		});
 
 		const formattedData = Array.from(groupedData.values()).sort(
 			(a, b) => a.timestamp - b.timestamp,
 		);
 
-		const uniqueRegions = Array.from(regionsMap.entries()).map(
-			([key, name]) => ({
-				key,
-				name,
-			}),
-		);
+		const mappedRegions = Array.from(uniqueRegions).map((id) => {
+			const region = regionData?.find((r) => r.id === id);
 
-		return { chartData: formattedData, regions: uniqueRegions };
-	}, [logs]);
+			return {
+				id: region?.id || id,
+				key: region?.key || id,
+				name: region?.name || id,
+			};
+		});
+
+		return { chartData: formattedData, regions: mappedRegions };
+	}, [logs, regionData]);
 
 	const toggleRegion = (regionKey: string) => {
 		if (regions.length <= 1) {

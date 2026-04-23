@@ -1,5 +1,5 @@
+import { UserRole } from '@generated/postgres/enums';
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserRole } from 'generated/prisma/enums';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 

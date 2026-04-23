@@ -1,6 +1,6 @@
+import { Region } from '@generated/postgres/client';
+import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Region } from 'generated/prisma/client';
-import { PrismaService } from 'src/infra/prisma/prisma.service';
 import { RegionService } from './region.service';
 
 type PrismaMock = {
@@ -31,7 +31,10 @@ describe('RegionService', () => {
 		};
 
 		const module: TestingModule = await Test.createTestingModule({
-			providers: [RegionService, { provide: PrismaService, useValue: prisma }],
+			providers: [
+				RegionService,
+				{ provide: PgPrismaService, useValue: prisma },
+			],
 		}).compile();
 
 		service = module.get<RegionService>(RegionService);

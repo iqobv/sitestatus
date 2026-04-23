@@ -1,3 +1,6 @@
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
+import { Auth, Authorized } from '@libs/decorators';
+import { createCustomMessageDto } from '@libs/utils';
 import {
 	Body,
 	Controller,
@@ -14,9 +17,6 @@ import {
 	ApiOkResponse,
 	ApiOperation,
 } from '@nestjs/swagger';
-import { ERROR_MESSAGES, SUCCESS_MESSAGES } from 'src/libs/constants';
-import { Auth, Authorized } from 'src/libs/decorators';
-import { createCustomMessageDto } from 'src/libs/utils';
 import {
 	CreateMonitorDto,
 	MonitorDto,

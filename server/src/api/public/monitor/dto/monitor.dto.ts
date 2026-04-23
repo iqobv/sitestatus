@@ -1,6 +1,6 @@
+import { SiteStatus } from '@generated/turso/enums';
+import { DefaultFieldsDto } from '@libs/dto';
 import { ApiProperty } from '@nestjs/swagger';
-import { SiteStatus } from 'generated/prisma/enums';
-import { DefaultFieldsDto } from 'src/libs/dto';
 import { BaseRegionDto } from '../../region/dto';
 import { MonitorTimelineDto } from './monitor-timeline.dto';
 

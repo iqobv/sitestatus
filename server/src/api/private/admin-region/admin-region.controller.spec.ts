@@ -1,7 +1,7 @@
+import { Region } from '@generated/postgres/client';
 import { ConflictException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Region } from 'generated/prisma/client';
 import { AdminRegionController } from './admin-region.controller';
 import { AdminRegionService } from './admin-region.service';
 import { CreateRegionDto, UpdateRegionDto } from './dto';

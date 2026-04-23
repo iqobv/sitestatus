@@ -1,0 +1,18 @@
+model MonitorRegion {
+  monitorId String @map("monitor_id")
+  regionId  String @map("region_id")
+
+  lastCheckedAt DateTime?  @map("last_checked_at")
+  lastStatus    SiteStatus @default(UNKNOWN) @map("last_status")
+
+  isQueued Boolean @default(false) @map("is_queued")
+
+  stats     MonitorStats[]
+  incidents MonitorIncident[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@id([monitorId, regionId])
+  @@map("monitor_regions")
+}

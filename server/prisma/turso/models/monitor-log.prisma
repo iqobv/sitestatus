@@ -1,0 +1,19 @@
+model MonitorLog {
+  id String @id @default(uuid())
+
+  monitorId String @map("monitor_id")
+  regionId  String @map("region_id")
+
+  status SiteStatus @default(UNKNOWN)
+
+  statusCode     Int?    @map("status_code")
+  responseTimeMs Int     @map("response_time_ms")
+  errorMessage   String? @map("error_message")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  monitorIncidents MonitorIncident[]
+
+  @@index([monitorId, createdAt])
+  @@map("monitor_logs")
+}

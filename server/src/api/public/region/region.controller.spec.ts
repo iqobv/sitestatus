@@ -1,5 +1,5 @@
+import { Region } from '@generated/postgres/client';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Region } from 'generated/prisma/client';
 import { RegionController } from './region.controller';
 import { RegionService } from './region.service';
 

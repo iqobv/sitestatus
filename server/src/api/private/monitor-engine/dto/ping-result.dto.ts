@@ -1,5 +1,5 @@
+import { SiteStatus } from '@generated/turso/enums';
 import { IsEmpty, IsEnum, IsNumber, IsString, IsUUID } from 'class-validator';
-import { SiteStatus } from 'generated/prisma/enums';
 
 export class PingResultDto {
 	@IsUUID('4')

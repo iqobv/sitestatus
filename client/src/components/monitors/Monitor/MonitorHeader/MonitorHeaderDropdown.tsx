@@ -4,7 +4,8 @@ import { Button, Dropdown } from '@/components/ui';
 import { PRIVATE_PAGES } from '@/config';
 import { MonitorFull } from '@/types';
 import Link from 'next/link';
-import { MdMoreVert, MdOutlineDelete, MdOutlineEdit } from 'react-icons/md';
+import { MdMoreVert, MdOutlineEdit } from 'react-icons/md';
+import MonitorDeleteModal from './MonitorDeleteModal';
 import MonitorDropdownUpdateActiveStatus from './MonitorDropdownUpdateActiveStatus';
 import styles from './MonitorHeader.module.scss';
 
@@ -23,22 +24,15 @@ const MonitorHeaderDropdown = ({ monitor }: MonitorHeaderDropdownProps) => {
 			<Dropdown.Menu>
 				<Dropdown.Item asChild>
 					<Link
-						href={PRIVATE_PAGES.MONITORS.ONE(monitor.id)}
-						className={styles['monitor-header__dropdown-item']}
+						href={PRIVATE_PAGES.MONITORS.EDIT(monitor.id)}
+						className={styles.dropdownItem}
 					>
 						<MdOutlineEdit size={20} />
 						Edit
 					</Link>
 				</Dropdown.Item>
 				<MonitorDropdownUpdateActiveStatus monitor={monitor} />
-				<Dropdown.Item asChild>
-					<button
-						className={`${styles['monitor-header__dropdown-item']} ${styles['monitor-header__dropdown-item--delete']}`}
-					>
-						<MdOutlineDelete size={20} />
-						Delete
-					</button>
-				</Dropdown.Item>
+				<MonitorDeleteModal id={monitor.id} />
 			</Dropdown.Menu>
 		</Dropdown>
 	);

@@ -1,8 +1,8 @@
+import { UserRole } from '@generated/postgres/enums';
+import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
+import { userSelect } from '@libs/prisma';
+import { hashPassword } from '@libs/utils';
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserRole } from 'generated/prisma/client';
-import { PrismaService } from 'src/infra/prisma/prisma.service';
-import { userSelect } from 'src/libs/prisma';
-import { hashPassword } from 'src/libs/utils';
 import { UserService } from './user.service';
 
 type PrismaMock = {
@@ -13,7 +13,7 @@ type PrismaMock = {
 	};
 };
 
-jest.mock('src/libs/utils', () => ({
+jest.mock('@libs/utils', () => ({
 	hashPassword: jest.fn(),
 }));
 
@@ -44,7 +44,7 @@ describe('UserService', () => {
 			providers: [
 				UserService,
 				{
-					provide: PrismaService,
+					provide: PgPrismaService,
 					useValue: prisma,
 				},
 			],

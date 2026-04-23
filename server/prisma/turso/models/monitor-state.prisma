@@ -1,0 +1,14 @@
+model MonitorState {
+  id String @id @default(uuid())
+
+  monitorId String @unique @map("monitor_id")
+
+  nextCheckAt   DateTime   @default(now()) @map("next_check_at")
+  lastCheckedAt DateTime?  @map("last_checked_at")
+  lastStatus    SiteStatus @default(UNKNOWN) @map("last_status")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("monitor_states")
+}

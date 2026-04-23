@@ -1,5 +1,5 @@
+import { ClientInfo } from '@libs/types';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { ClientInfo } from 'src/libs/types';
 import { AuthService } from '../../auth.service';
 import { GoogleUserDto } from './dto';
 

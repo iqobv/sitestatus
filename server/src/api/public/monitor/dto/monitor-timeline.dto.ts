@@ -1,5 +1,5 @@
+import { SiteStatus } from '@generated/turso/enums';
 import { ApiProperty } from '@nestjs/swagger';
-import { SiteStatus } from 'generated/prisma/enums';
 
 export class MonitorTimelineDto {
 	@ApiProperty({ example: new Date() })

@@ -1,11 +1,13 @@
+import { extractClientInfo, setAuthCookies } from '@libs/utils';
 import { Controller, Get, Req, Res } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { ApiExcludeController } from '@nestjs/swagger';
 import type { Request, Response } from 'express';
-import { extractClientInfo, setAuthCookies } from 'src/libs/utils';
 import { GoogleAuth } from '../../decorators';
 import { GoogleUserDto } from './dto';
 import { GoogleService } from './google.service';
 
+@ApiExcludeController()
 @Controller('oauth/google')
 export class GoogleController {
 	constructor(

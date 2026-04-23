@@ -74,13 +74,13 @@ const MonitorResponseChart = ({ monitor }: MonitorResponseChartProps) => {
 					<Line
 						key={region.key}
 						type="monotone"
-						dataKey={region.key}
+						dataKey={region.id}
 						name={region.name}
 						stroke={REGION_COLORS[index % REGION_COLORS.length]}
 						dot={false}
 						activeDot={{ r: 4 }}
 						connectNulls={true}
-						hide={hiddenRegions.includes(region.key)}
+						hide={hiddenRegions.includes(region.id)}
 					/>
 				))}
 			</LineChart>

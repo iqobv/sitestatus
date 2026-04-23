@@ -1,47 +1,41 @@
+import { Prisma } from '@generated/turso/client';
+import { SiteStatus } from '@generated/turso/enums';
+import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
 import { Injectable } from '@nestjs/common';
-import { Prisma } from 'generated/prisma/client';
-import { SiteStatus } from 'generated/prisma/enums';
-import { PrismaService } from 'src/infra/prisma/prisma.service';
 import { PingResultDto } from '../dto';
+import { MonitorCacheService } from './monitor-cache.service';
 
 @Injectable()
 export class EngineDbService {
-	constructor(private readonly prismaService: PrismaService) {}
+	constructor(
+		private readonly tursoPrismaService: TursoPrismaService,
+		private readonly cache: MonitorCacheService,
+	) {}
 
 	public async saveBatchResults(results: PingResultDto[]): Promise<void> {
-		if (results.length === 0) {
-			return;
-		}
+		if (results.length === 0) return;
 
 		const monitorIds = [...new Set(results.map((r) => r.monitorId))];
 		const checkedAt = new Date();
+		const checkedAtMs = checkedAt.getTime();
 
-		await this.prismaService.$transaction(async (tx) => {
-			const regions = await tx.region.findMany({
-				where: { isActive: true },
-				select: { id: true, key: true },
-			});
+		const regions = this.cache.getRegions();
+		const monitors = this.cache.getMonitors();
 
-			const mappedRegions = new Map<string, string>();
+		await this.tursoPrismaService.$transaction(async (tx) => {
+			const mappedRegions = new Map(regions.map((r) => [r.key, r.id]));
+			const monitorMap = new Map(monitors.map((m) => [m.id, m]));
 
-			for (const region of regions) {
-				mappedRegions.set(region.key, region.id);
-			}
-
-			const monitors = await tx.monitor.findMany({
-				where: { id: { in: monitorIds } },
-				select: { id: true, checkIntervalSeconds: true },
-			});
+			const monitorAggregates = new Map<
+				string,
+				{ status: SiteStatus; nextCheckAt: number }
+			>();
 
 			const activeIncidents = await tx.monitorIncident.findMany({
-				where: {
-					monitorId: { in: monitorIds },
-					resolved: false,
-				},
+				where: { monitorId: { in: monitorIds }, resolved: false },
 				select: { id: true, monitorId: true, regionId: true },
 			});
 
-			const monitorMap = new Map(monitors.map((m) => [m.id, m]));
 			const activeIncidentMap = new Map(
 				activeIncidents.map((a) => [`${a.monitorId}-${a.regionId}`, a.id]),
 			);
@@ -57,102 +51,101 @@ export class EngineDbService {
 
 			const monitorLogs = await tx.monitorLog.createManyAndReturn({
 				data: logsData,
-				skipDuplicates: true,
 			});
-
 			const logMap = new Map(
 				monitorLogs.map((log) => [`${log.monitorId}-${log.regionId}`, log.id]),
 			);
 
-			const incidentsToCreate: {
-				monitorId: string;
-				regionId: string;
-				errorMessage: string | null;
-				statusCode: number | null;
-				triggerLogId: bigint | null;
-			}[] = [];
-
+			const incidentsToCreate: Prisma.MonitorIncidentCreateManyInput[] = [];
 			const incidentsToResolveIds: string[] = [];
-			const monitorRegionUpserts: Promise<unknown>[] = [];
-
-			const statusGroups: Record<SiteStatus, string[]> = {
-				[SiteStatus.UP]: [],
-				[SiteStatus.DOWN]: [],
-				[SiteStatus.UNKNOWN]: [],
-			};
+			const monitorRegionUpdates: Promise<unknown>[] = [];
 
 			for (const result of results) {
-				const { status, region } = result;
-				const siteStatus = status;
-				const regionId = mappedRegions.get(region)!;
+				const { monitorId, status, region } = result;
+				const regionId = mappedRegions.get(region);
+				const monitor = monitorMap.get(monitorId);
 
-				const monitor = monitorMap.get(result.monitorId);
-				if (!monitor) {
-					continue;
-				}
-
-				statusGroups[siteStatus].push(monitor.id);
+				if (!regionId || !monitor) continue;
 
 				const isDown =
-					siteStatus === SiteStatus.DOWN || siteStatus === SiteStatus.UNKNOWN;
-				const randomTimeout = Math.floor(Math.random() * 30);
+					status === SiteStatus.DOWN || status === SiteStatus.UNKNOWN;
+
 				const nextInterval = isDown
 					? Math.min(60, monitor.checkIntervalSeconds)
-					: monitor.checkIntervalSeconds + randomTimeout;
+					: monitor.checkIntervalSeconds;
 
-				const nextCheckAt = new Date(checkedAt.getTime() + nextInterval * 1000);
+				const calculatedNextRun = checkedAtMs + nextInterval * 1000;
 
-				const monitorRangeData = {
-					lastStatus: siteStatus,
-					lastCheckedAt: checkedAt,
-					nextCheckAt,
-					isQueued: false,
-				} satisfies Prisma.MonitorRegionUpdateInput;
+				const currentAggregate = monitorAggregates.get(monitorId);
+				if (
+					!currentAggregate ||
+					(isDown && currentAggregate.status === SiteStatus.UP)
+				) {
+					monitorAggregates.set(monitorId, {
+						status,
+						nextCheckAt: calculatedNextRun,
+					});
+				}
 
-				monitorRegionUpserts.push(
+				monitorRegionUpdates.push(
 					tx.monitorRegion.upsert({
-						where: {
-							monitorId_regionId: {
-								monitorId: monitor.id,
-								regionId,
-							},
-						},
+						where: { monitorId_regionId: { monitorId, regionId } },
 						create: {
-							monitorId: monitor.id,
+							monitorId,
 							regionId,
-							isActive: true,
-							...monitorRangeData,
+							lastStatus: status,
+							lastCheckedAt: checkedAt,
+							isQueued: false,
 						},
-						update: monitorRangeData,
+						update: {
+							lastStatus: status,
+							lastCheckedAt: checkedAt,
+							isQueued: false,
+						},
 					}),
 				);
 
-				const incidentKey = `${monitor.id}-${regionId}`;
+				const incidentKey = `${monitorId}-${regionId}`;
 				const activeIncidentId = activeIncidentMap.get(incidentKey);
 
 				if (isDown && !activeIncidentId) {
 					incidentsToCreate.push({
-						monitorId: result.monitorId,
+						monitorId,
 						regionId,
 						errorMessage: result.errorMessage || null,
 						statusCode: result.statusCode || null,
 						triggerLogId: logMap.get(incidentKey) || null,
 					});
-				} else if (siteStatus === SiteStatus.UP && activeIncidentId) {
+				} else if (status === SiteStatus.UP && activeIncidentId) {
 					incidentsToResolveIds.push(activeIncidentId);
 				}
 			}
 
-			const updatePromises: Promise<unknown>[] = [...monitorRegionUpserts];
+			const stateUpdates: Promise<unknown>[] = [];
+
+			for (const [monitorId, agg] of monitorAggregates.entries()) {
+				this.cache.updateMonitorNextCheck(monitorId, agg.nextCheckAt);
+
+				stateUpdates.push(
+					tx.monitorState.update({
+						where: { monitorId },
+						data: {
+							lastStatus: agg.status,
+							lastCheckedAt: checkedAt,
+							nextCheckAt: new Date(agg.nextCheckAt),
+						},
+					}),
+				);
+			}
 
 			if (incidentsToCreate.length > 0) {
-				updatePromises.push(
+				stateUpdates.push(
 					tx.monitorIncident.createMany({ data: incidentsToCreate }),
 				);
 			}
 
 			if (incidentsToResolveIds.length > 0) {
-				updatePromises.push(
+				stateUpdates.push(
 					tx.monitorIncident.updateMany({
 						where: { id: { in: incidentsToResolveIds } },
 						data: { resolved: true, resolvedAt: checkedAt },
@@ -160,22 +153,7 @@ export class EngineDbService {
 				);
 			}
 
-			const statusUpdates = Object.entries(statusGroups)
-				.filter(([, ids]) => ids.length > 0)
-				.map(([status, ids]) => {
-					const uniqueIds = [...new Set(ids)];
-					return tx.monitor.updateMany({
-						where: { id: { in: uniqueIds } },
-						data: {
-							lastStatus: status as SiteStatus,
-							lastCheckedAt: checkedAt,
-						},
-					});
-				});
-
-			updatePromises.push(...statusUpdates);
-
-			await Promise.all(updatePromises);
+			await Promise.all([...monitorRegionUpdates, ...stateUpdates]);
 		});
 	}
 }

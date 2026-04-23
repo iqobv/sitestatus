@@ -2,7 +2,7 @@ import { ConfigService } from '@nestjs/config';
 import { CookieOptions } from 'express';
 import ms, { StringValue } from 'ms';
 
-import { isDev, parseBoolean } from 'src/libs/utils';
+import { isDev, parseBoolean } from '@libs/utils';
 
 export const getCookieConfig = (
 	config: ConfigService,

@@ -1,7 +1,7 @@
+import { Project } from '@generated/postgres/client';
+import { SUCCESS_MESSAGES } from '@libs/constants';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Project } from 'generated/prisma/client';
-import { SUCCESS_MESSAGES } from 'src/libs/constants';
 import { CreateProjectDto, UpdateProjectDto } from './dto';
 import { ProjectController } from './project.controller';
 import { ProjectService } from './project.service';

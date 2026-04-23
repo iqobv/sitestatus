@@ -1,6 +1,6 @@
+import { UserRole } from '@generated/postgres/enums';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsEmail, IsEnum, IsOptional } from 'class-validator';
-import { UserRole } from 'generated/prisma/enums';
 
 export class UpdateUserDto {
 	@ApiProperty({

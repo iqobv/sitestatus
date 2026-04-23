@@ -1,4 +1,3 @@
-import { BaseRegion } from '../region';
 import { MonitorStatus } from './monitorStatus.types';
 
 export interface AnalyticsStatData {
@@ -6,5 +5,5 @@ export interface AnalyticsStatData {
 	avgResponseMs: number;
 	timestamp: Date;
 	status: MonitorStatus;
-	region: BaseRegion;
+	regionId: string;
 }

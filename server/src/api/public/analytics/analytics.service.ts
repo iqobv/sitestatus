@@ -1,19 +1,23 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { StatPeriod } from 'generated/prisma/enums';
-import { PrismaService } from 'src/infra/prisma/prisma.service';
-import { ERROR_MESSAGES } from 'src/libs/constants';
-import { CalculateLogs } from 'src/libs/types';
+import { StatPeriod } from '@generated/turso/enums';
+import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
+import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
+import { ERROR_MESSAGES } from '@libs/constants';
+import { CalculateLogs } from '@libs/types';
 import {
 	calculateErrorRate,
 	calculateP95,
 	calculateResponseTime,
 	calculateUptime,
-} from 'src/libs/utils';
+} from '@libs/utils';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { AnalyticsQueryDto } from './dto';
 
 @Injectable()
 export class AnalyticsService {
-	constructor(private readonly prismaService: PrismaService) {}
+	constructor(
+		private readonly prismaService: PgPrismaService,
+		private readonly tursoPrismaService: TursoPrismaService,
+	) {}
 
 	async getAnalyticsByMonitorId(monitorId: string, query: AnalyticsQueryDto) {
 		const { daysRange = 1, region = 'global' } = query;
@@ -35,7 +39,7 @@ export class AnalyticsService {
 			regionId = foundRegion.id;
 		}
 
-		const incidents = await this.prismaService.monitorIncident.findMany({
+		const incidents = await this.tursoPrismaService.monitorIncident.findMany({
 			where: { monitorId, regionId },
 			orderBy: { createdAt: 'desc' },
 			select: {
@@ -53,16 +57,14 @@ export class AnalyticsService {
 		});
 
 		if (daysRange <= 1) {
-			const rawLogs = await this.prismaService.monitorLog.findMany({
+			const rawLogs = await this.tursoPrismaService.monitorLog.findMany({
 				where: { monitorId, createdAt: { gte: startDate }, regionId },
 				select: {
 					status: true,
 					responseTimeMs: true,
 					errorMessage: true,
 					createdAt: true,
-					region: {
-						select: { key: true, name: true },
-					},
+					regionId: true,
 				},
 			});
 
@@ -78,24 +80,24 @@ export class AnalyticsService {
 
 		const periodToFetch = daysRange <= 7 ? StatPeriod.HOURLY : StatPeriod.DAILY;
 
-		const aggregatedStats = await this.prismaService.monitorStats.findMany({
-			where: {
-				monitorId,
-				period: periodToFetch,
-				timestamp: { gte: startDate },
-				regionId,
-			},
-			orderBy: { timestamp: 'asc' },
-			select: {
-				uptimePercent: true,
-				avgResponseMs: true,
-				timestamp: true,
-				status: true,
-				region: {
-					select: { key: true, name: true },
+		const aggregatedStats = await this.tursoPrismaService.monitorStats.findMany(
+			{
+				where: {
+					monitorId,
+					period: periodToFetch,
+					timestamp: { gte: startDate },
+					regionId,
+				},
+				orderBy: { timestamp: 'asc' },
+				select: {
+					uptimePercent: true,
+					avgResponseMs: true,
+					timestamp: true,
+					status: true,
+					regionId: true,
 				},
 			},
-		});
+		);
 
 		const statistics = this.calculateStatistics(aggregatedStats);
 

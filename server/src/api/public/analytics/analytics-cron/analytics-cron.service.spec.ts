@@ -1,6 +1,6 @@
+import { SiteStatus, StatPeriod } from '@generated/turso/enums';
+import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
 import { Test, TestingModule } from '@nestjs/testing';
-import { SiteStatus, StatPeriod } from 'generated/prisma/enums';
-import { PrismaService } from 'src/infra/prisma/prisma.service';
 import { AnalyticsCronService } from './analytics-cron.service';
 
 type PrismaMock = {
@@ -38,7 +38,7 @@ describe('AnalyticsCronService', () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
 				AnalyticsCronService,
-				{ provide: PrismaService, useValue: prisma },
+				{ provide: TursoPrismaService, useValue: prisma },
 			],
 		}).compile();
 

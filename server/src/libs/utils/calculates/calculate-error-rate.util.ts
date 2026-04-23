@@ -1,5 +1,5 @@
-import { SiteStatus } from 'generated/prisma/enums';
-import { CalculateLogs } from 'src/libs/types';
+import { SiteStatus } from '@generated/turso/enums';
+import { CalculateLogs } from '@libs/types';
 import { formatResult } from './format-result.util';
 
 export const calculateErrorRate = (logs: CalculateLogs): string => {

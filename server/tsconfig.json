@@ -15,8 +15,12 @@
 		"outDir": "./dist",
 		"rootDir": "./",
 		"paths": {
-			"src/*": ["./src/*"],
-			"generated/*": ["./generated/*"]
+			"@generated/*": ["./generated/*"],
+			"@infra/*": ["./src/infra/*"],
+			"@api/*": ["./src/api/*"],
+			"@libs/*": ["./src/libs/*"],
+			"@config": ["./src/config/index"],
+			"@config/*": ["./src/config/*"]
 		},
 		"incremental": true,
 		"skipLibCheck": true,

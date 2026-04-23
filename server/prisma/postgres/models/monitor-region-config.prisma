@@ -1,0 +1,15 @@
+model MonitorRegionConfig {
+  monitorId String @map("monitor_id") @db.Uuid
+  regionId  String @map("region_id") @db.Uuid
+
+  isActive Boolean @default(true) @map("is_active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  monitor Monitor @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+  region  Region  @relation(fields: [regionId], references: [id], onDelete: Cascade)
+
+  @@id([monitorId, regionId])
+  @@map("monitor_region_configs")
+}

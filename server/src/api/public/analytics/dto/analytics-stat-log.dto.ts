@@ -1,6 +1,5 @@
+import { SiteStatus } from '@generated/turso/enums';
 import { ApiProperty } from '@nestjs/swagger';
-import { SiteStatus } from 'generated/prisma/enums';
-import { BaseRegionDto } from '../../region/dto';
 
 export class AnalyticsStatLogDto {
 	@ApiProperty({ example: 100 })
@@ -15,6 +14,6 @@ export class AnalyticsStatLogDto {
 	@ApiProperty({ example: SiteStatus.UP, enum: SiteStatus })
 	status: SiteStatus;
 
-	@ApiProperty({ type: BaseRegionDto })
-	region: BaseRegionDto;
+	@ApiProperty({ example: '8430dc88-35ec-408d-b888-cf871a9b2375' })
+	regionId: string;
 }

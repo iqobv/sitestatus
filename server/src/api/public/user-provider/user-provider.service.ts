@@ -1,10 +1,10 @@
+import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/infra/prisma/prisma.service';
 import { CreateUserProviderDto } from './dto';
 
 @Injectable()
 export class UserProviderService {
-	constructor(private readonly prismaService: PrismaService) {}
+	constructor(private readonly prismaService: PgPrismaService) {}
 
 	async findByProviderAndProviderId(provider: string, providerId: string) {
 		return this.prismaService.userProvider.findUnique({

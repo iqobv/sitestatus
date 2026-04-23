@@ -1,15 +1,14 @@
+import { Prisma, TokenType } from '@generated/postgres/client';
+import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
+import { ERROR_MESSAGES } from '@libs/constants';
+import { userSelect } from '@libs/prisma';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import crypto from 'crypto';
-import { Prisma } from 'generated/prisma/client';
-import { TokenType } from 'generated/prisma/enums';
-import { PrismaService } from 'src/infra/prisma/prisma.service';
-import { ERROR_MESSAGES } from 'src/libs/constants';
-import { userSelect } from 'src/libs/prisma';
 import { CreateTokenDto } from './dto';
 
 @Injectable()
 export class TokenService {
-	constructor(private readonly prismaService: PrismaService) {}
+	constructor(private readonly prismaService: PgPrismaService) {}
 
 	async createToken(
 		dto: CreateTokenDto,

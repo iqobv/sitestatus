@@ -1,4 +1,4 @@
-import { Prisma } from 'generated/prisma/client';
+import { Prisma } from '@generated/postgres/client';
 
 export const projectSelect: Prisma.ProjectSelect = {
 	id: true,

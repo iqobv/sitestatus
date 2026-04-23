@@ -1,3 +1,13 @@
+import { PrivateModule } from '@api/private/private.module';
+import { PublicModule } from '@api/public/public.module';
+import {
+	getApiVersioningConfig,
+	getCorsConfig,
+	getPrivateSwaggerConfig,
+	getPublicSwaggerConfig,
+	getValidationPipeConfig,
+} from '@config';
+import { setupSwagger } from '@libs/utils';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -5,17 +15,7 @@ import cookieParser from 'cookie-parser';
 import { json, urlencoded } from 'express';
 import basicAuth from 'express-basic-auth';
 import helmet from 'helmet';
-import { PrivateModule } from './api/private/private.module';
-import { PublicModule } from './api/public/public.module';
 import { AppModule } from './app.module';
-import {
-	getApiVersioningConfig,
-	getCorsConfig,
-	getPrivateSwaggerConfig,
-	getPublicSwaggerConfig,
-	getValidationPipeConfig,
-} from './config';
-import { setupSwagger } from './libs/utils';
 
 async function bootstrap() {
 	const app = await NestFactory.create<NestExpressApplication>(AppModule);

@@ -1,22 +1,28 @@
+import { Prisma } from '@generated/postgres/client';
+import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
 import {
 	ConflictException,
 	Injectable,
 	NotFoundException,
 } from '@nestjs/common';
-import { Prisma } from 'generated/prisma/client';
-import { PrismaService } from 'src/infra/prisma/prisma.service';
-import { ERROR_MESSAGES, SUCCESS_MESSAGES } from 'src/libs/constants';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { CACHE_EMIT_EVENTS } from '../monitor-engine/constants';
+import { RegionCachePayload } from '../monitor-engine/interfaces';
 import { CreateRegionDto, UpdateRegionDto } from './dto';
 
 @Injectable()
 export class AdminRegionService {
-	constructor(private readonly prismaService: PrismaService) {}
+	constructor(
+		private readonly prismaService: PgPrismaService,
+		private readonly eventEmitter: EventEmitter2,
+	) {}
 
 	async createRegion(dto: CreateRegionDto) {
 		const { key, name, continent, isActive = true, longitude, latitude } = dto;
 
 		try {
-			return await this.prismaService.region.create({
+			const region = await this.prismaService.region.create({
 				data: {
 					key: key.toLowerCase(),
 					name,
@@ -26,6 +32,16 @@ export class AdminRegionService {
 					latitude,
 				},
 			});
+
+			const emitPayload: RegionCachePayload = {
+				id: region.id,
+				key: region.key,
+				isActive: region.isActive,
+			};
+
+			this.eventEmitter.emit(CACHE_EMIT_EVENTS.REGION.UPDATED, emitPayload);
+
+			return region;
 		} catch (error) {
 			this.throwConflictException(error);
 		}
@@ -61,7 +77,7 @@ export class AdminRegionService {
 		const region = await this.getRegionById(id);
 
 		try {
-			return await this.prismaService.region.update({
+			const updatedRegion = await this.prismaService.region.update({
 				where: { id: region.id },
 				data: {
 					...(key && { key: key.toLowerCase() }),
@@ -72,6 +88,18 @@ export class AdminRegionService {
 					latitude,
 				},
 			});
+
+			const emitPayload: RegionCachePayload = {
+				id: updatedRegion.id,
+				key: updatedRegion.key,
+				isActive: updatedRegion.isActive,
+			};
+
+			console.log(emitPayload);
+
+			this.eventEmitter.emit(CACHE_EMIT_EVENTS.REGION.UPDATED, emitPayload);
+
+			return updatedRegion;
 		} catch (error) {
 			this.throwConflictException(error);
 		}
@@ -81,6 +109,8 @@ export class AdminRegionService {
 		const region = await this.getRegionById(id);
 
 		await this.prismaService.region.delete({ where: { id: region.id } });
+
+		this.eventEmitter.emit(CACHE_EMIT_EVENTS.REGION.DELETED, region.id);
 
 		return SUCCESS_MESSAGES.REGION.REGION_DELETED;
 	}

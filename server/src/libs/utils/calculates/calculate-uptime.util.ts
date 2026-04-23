@@ -1,8 +1,8 @@
 import {
 	AnalyticsRawDataDto,
 	AnalyticsStatLogDto,
-} from 'src/api/public/analytics/dto';
-import { CalculateLog, CalculateLogs } from 'src/libs/types';
+} from '@api/public/analytics/dto';
+import { CalculateLog, CalculateLogs } from '@libs/types';
 import { formatResult } from './format-result.util';
 
 export const calculateUptime = (logs: CalculateLogs): string => {

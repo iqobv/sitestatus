@@ -1,18 +1,18 @@
+import { Prisma } from '@generated/postgres/client';
+import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
+import { ERROR_MESSAGES } from '@libs/constants';
+import { userSelect } from '@libs/prisma/user-select.prisma';
+import { hashPassword } from '@libs/utils';
 import {
 	ConflictException,
 	Injectable,
 	NotFoundException,
 } from '@nestjs/common';
-import { Prisma } from 'generated/prisma/client';
-import { PrismaService } from 'src/infra/prisma/prisma.service';
-import { ERROR_MESSAGES } from 'src/libs/constants';
-import { userSelect } from 'src/libs/prisma/user-select.prisma';
-import { hashPassword } from 'src/libs/utils';
 import { CreateUserDto, UpdateUserDto } from './dto';
 
 @Injectable()
 export class UserService {
-	constructor(private readonly prismaService: PrismaService) {}
+	constructor(private readonly prismaService: PgPrismaService) {}
 
 	async create(dto: CreateUserDto, tx?: Prisma.TransactionClient) {
 		const { email, password } = dto;
@@ -21,12 +21,16 @@ export class UserService {
 
 		await this.alreadyExists(email, tx);
 
+		const countOfUsers = await prisma.user.count();
+		const isAdmin = countOfUsers === 0;
+
 		const hashedPassword = password ? await hashPassword(password) : null;
 
 		const user = await prisma.user.create({
 			data: {
 				email,
 				password: hashedPassword,
+				role: isAdmin ? 'ADMIN' : 'USER',
 			},
 			select: userSelect,
 		});

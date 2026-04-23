@@ -1,6 +1,6 @@
+import { getCookieConfig } from '@config/cookie.config';
 import { ConfigService } from '@nestjs/config';
 import type { Response } from 'express';
-import { getCookieConfig } from 'src/config';
 
 export const setAuthCookies = (
 	res: Response,

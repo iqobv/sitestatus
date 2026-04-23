@@ -1,7 +1,7 @@
+import { Monitor } from '@generated/postgres/client';
+import { SiteStatus } from '@generated/turso/enums';
+import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Monitor } from 'generated/prisma/client';
-import { SiteStatus } from 'generated/prisma/enums';
-import { PrismaService } from 'src/infra/prisma/prisma.service';
 import { MonitorService } from './monitor.service';
 
 type PrismaMock = {
@@ -22,10 +22,9 @@ describe('MonitorService', () => {
 		id: 'monitorId',
 		name: 'Test Monitor',
 		url: 'https://example.com',
+		method: 'GET',
 		projectId: null,
 		checkIntervalSeconds: 60,
-		lastCheckedAt: new Date(),
-		lastStatus: SiteStatus.UP,
 		isActive: true,
 		userId: 'userId',
 		createdAt: new Date(),
@@ -68,7 +67,7 @@ describe('MonitorService', () => {
 			providers: [
 				MonitorService,
 				{
-					provide: PrismaService,
+					provide: PgPrismaService,
 					useValue: prisma,
 				},
 			],
@@ -97,28 +96,25 @@ describe('MonitorService', () => {
 				checkIntervalSeconds: 300,
 				isActive: true,
 				regions: ['region_1'],
+				method: 'GET',
 			};
 
 			const result = await service.create('userId', dto);
 
-			expect(prisma.monitor.create).toHaveBeenCalledWith(
-				expect.objectContaining({
-					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-					data: expect.objectContaining({
-						name: dto.name,
-						url: dto.url,
-						checkIntervalSeconds: dto.checkIntervalSeconds,
-						isActive: dto.isActive,
-						lastCheckedAt: undefined,
-						lastStatus: undefined,
-						user: {
-							connect: {
-								id: 'userId',
-							},
+			expect(prisma.monitor.create).toHaveBeenCalledWith({
+				data: {
+					name: dto.name,
+					url: dto.url,
+					method: dto.method,
+					checkIntervalSeconds: dto.checkIntervalSeconds,
+					isActive: dto.isActive,
+					user: {
+						connect: {
+							id: 'userId',
 						},
-					}),
-				}),
-			);
+					},
+				},
+			});
 			expect(result).toEqual(monitor);
 		});
 	});

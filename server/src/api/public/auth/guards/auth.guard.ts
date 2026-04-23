@@ -1,3 +1,4 @@
+import { ERROR_MESSAGES } from '@libs/constants';
 import {
 	CanActivate,
 	ExecutionContext,
@@ -5,7 +6,6 @@ import {
 	UnauthorizedException,
 } from '@nestjs/common';
 import type { Request } from 'express';
-import { ERROR_MESSAGES } from 'src/libs/constants';
 import { UserService } from '../../user/user.service';
 
 @Injectable()

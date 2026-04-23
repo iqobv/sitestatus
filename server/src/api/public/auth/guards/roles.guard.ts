@@ -1,3 +1,5 @@
+import { User, UserRole } from '@generated/postgres/client';
+import { ERROR_MESSAGES } from '@libs/constants';
 import {
 	CanActivate,
 	ExecutionContext,
@@ -6,8 +8,6 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
-import { User, UserRole } from 'generated/prisma/client';
-import { ERROR_MESSAGES } from 'src/libs/constants';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 
 @Injectable()

@@ -43,18 +43,12 @@ export class TokenService {
 	) {
 		const prisma = tx ?? this.prismaService;
 
-		console.log(token);
-
 		const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 
 		const record = await prisma.token.findUnique({
 			where: { token: hashedToken },
 			include: { user: { select: userSelect } },
 		});
-
-		console.log(await prisma.token.findMany());
-
-		console.log(record);
 
 		if (!record || record.type !== type) {
 			throw new BadRequestException(ERROR_MESSAGES.TOKEN.TOKEN_INVALID);

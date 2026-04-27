@@ -95,8 +95,6 @@ export class AdminRegionService {
 				isActive: updatedRegion.isActive,
 			};
 
-			console.log(emitPayload);
-
 			this.eventEmitter.emit(CACHE_EMIT_EVENTS.REGION.UPDATED, emitPayload);
 
 			return updatedRegion;

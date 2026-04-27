@@ -1,10 +1,10 @@
 import { SectionHeader } from '@/components/ui';
-import { MonitorFull } from '@/types';
+import { MonitorWithRegions } from '@/types';
 import styles from './MonitorHeader.module.scss';
 import MonitorHeaderDropdown from './MonitorHeaderDropdown';
 
 interface MonitorHeaderProps {
-	monitor: MonitorFull;
+	monitor: MonitorWithRegions;
 }
 
 const MonitorHeader = ({ monitor }: MonitorHeaderProps) => {

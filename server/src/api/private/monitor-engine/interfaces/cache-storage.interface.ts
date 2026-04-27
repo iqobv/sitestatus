@@ -16,6 +16,7 @@ export type MonitorCachePayload = Omit<MonitorCache, 'nextCheckAt'>;
 
 export interface MonitorUpdatePayload extends MonitorCachePayload {
 	isActive: boolean;
+	isNew?: boolean;
 }
 
 export interface RegionCachePayload {

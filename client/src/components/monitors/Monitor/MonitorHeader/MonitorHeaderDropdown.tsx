@@ -2,7 +2,7 @@
 
 import { Button, Dropdown } from '@/components/ui';
 import { PRIVATE_PAGES } from '@/config';
-import { MonitorFull } from '@/types';
+import { MonitorWithRegions } from '@/types';
 import Link from 'next/link';
 import { MdMoreVert, MdOutlineEdit } from 'react-icons/md';
 import MonitorDeleteModal from './MonitorDeleteModal';
@@ -10,7 +10,7 @@ import MonitorDropdownUpdateActiveStatus from './MonitorDropdownUpdateActiveStat
 import styles from './MonitorHeader.module.scss';
 
 interface MonitorHeaderDropdownProps {
-	monitor: MonitorFull;
+	monitor: MonitorWithRegions;
 }
 
 const MonitorHeaderDropdown = ({ monitor }: MonitorHeaderDropdownProps) => {

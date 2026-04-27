@@ -3,7 +3,7 @@ export const PRIVATE_PAGES = {
 	MONITORS: {
 		ALL: '/dashboard/monitors',
 		ONE: (id: string) => `/dashboard/monitors/${id}`,
-		NEW: '/dashboard/monitors/create',
+		NEW: '/dashboard/monitors/new',
 		EDIT: (id: string) => `/dashboard/monitors/${id}/edit`,
 	} as const,
 	PROJECTS: {

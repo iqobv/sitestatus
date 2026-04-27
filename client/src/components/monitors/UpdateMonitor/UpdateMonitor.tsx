@@ -4,7 +4,7 @@ import { getMonitorById, updateMonitor } from '@/api';
 import { QUERY_KEYS } from '@/config';
 import { UpdateMonitorDto } from '@/dto';
 import { updateMonitorSchema } from '@/schemas';
-import { MonitorWithRegions } from '@/types';
+import { MonitorWithRegionsIds } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import MonitorForm from '../MonitorForm/MonitorForm';
@@ -28,7 +28,7 @@ const UpdateMonitor = ({ monitorId }: UpdateMonitorProps) => {
 		<div>
 			{isLoading && <UpdateMonitorLoader />}
 			{!isLoading && data && (
-				<MonitorForm<UpdateMonitorDto, MonitorWithRegions>
+				<MonitorForm<UpdateMonitorDto, MonitorWithRegionsIds>
 					fields={UPDATE_MONITOR_FIELDS}
 					mutationFn={(data) => updateMonitor(monitorId, data)}
 					buttonLabel="Update Monitor"

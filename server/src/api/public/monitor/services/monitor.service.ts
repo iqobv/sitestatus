@@ -1,17 +1,16 @@
+// src/monitor/monitor.service.ts
+
 import { CACHE_EMIT_EVENTS } from '@api/private/monitor-engine/constants';
 import { MonitorUpdatePayload } from '@api/private/monitor-engine/interfaces';
 import { Monitor, Prisma } from '@generated/postgres/client';
-import { SiteStatus } from '@generated/turso/enums';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
-import { calculateUptime, formatResult } from '@libs/utils';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { AnalyticsRawDataDto } from '../analytics/dto';
-import { RegionService } from '../region/region.service';
-import { CreateMonitorDto, MonitorTimelineDto, UpdateMonitorDto } from './dto';
-import { LogEntry } from './interfaces';
+import { RegionService } from '../../region/region.service';
+import { CreateMonitorDto, UpdateMonitorDto } from '../dto';
+import { MonitorCalculationService } from './monitor-calculation.service';
 
 @Injectable()
 export class MonitorService {
@@ -20,6 +19,7 @@ export class MonitorService {
 		private readonly tursoPrismaService: TursoPrismaService,
 		private readonly eventEmitter: EventEmitter2,
 		private readonly regionService: RegionService,
+		private readonly monitorCalculationService: MonitorCalculationService,
 	) {}
 
 	async create(userId: string, dto: CreateMonitorDto) {
@@ -60,7 +60,7 @@ export class MonitorService {
 
 		const { regions: resultRegions, ...createdMonitor } = monitor;
 
-		this.emitUpdateEvent(createdMonitor, resultRegions);
+		this.emitUpdateEvent(createdMonitor, resultRegions, true);
 
 		return createdMonitor;
 	}
@@ -73,75 +73,78 @@ export class MonitorService {
 			orderBy: { createdAt: 'desc' },
 		});
 
-		const monitorStates = await this.tursoPrismaService.monitorState.findMany({
-			where: { monitorId: { in: monitors.map((m) => m.id) } },
+		return await this.monitorCalculationService.calculateMonitorStats(
+			monitors,
+			targetHours,
+		);
+	}
+
+	async findAllPublicMonitors(projectId: string) {
+		const targetHours = 24;
+
+		const endDate = new Date();
+		const startDate = new Date(
+			endDate.getTime() - targetHours * 60 * 60 * 1000,
+		);
+
+		const monitors = await this.pgPrismaService.monitor.findMany({
+			where: { projectId },
+			orderBy: { createdAt: 'desc' },
 		});
 
-		const monitorStats = await this.tursoPrismaService.monitorStats.findMany({
-			where: {
-				monitorId: { in: monitors.map((m) => m.id) },
-				period: 'HOURLY',
-				timestamp: {
-					gt: new Date(Date.now() - targetHours * 60 * 60 * 1000),
+		const monitorIds = monitors.map((m) => m.id);
+
+		const [logs, monitorStates] = await Promise.all([
+			this.tursoPrismaService.monitorLog.findMany({
+				where: {
+					monitorId: { in: monitorIds },
+					createdAt: { gte: startDate, lte: endDate },
 				},
-			},
-			orderBy: { timestamp: 'desc' },
-		});
+				orderBy: { createdAt: 'asc' },
+				select: {
+					monitorId: true,
+					status: true,
+					responseTimeMs: true,
+					createdAt: true,
+					errorMessage: true,
+					regionId: true,
+				},
+			}),
+			this.tursoPrismaService.monitorState.findMany({
+				where: { monitorId: { in: monitorIds } },
+				select: { monitorId: true, lastStatus: true },
+			}),
+		]);
 
-		const finalMonitors = monitors.map((monitor) => {
-			const monitorState = monitorStates.find(
-				(ms) => ms.monitorId === monitor.id,
-			);
+		const result = monitors.map((monitor) => {
+			const monitorLogs = logs.filter((log) => log.monitorId === monitor.id);
+			const state = monitorStates.find((ms) => ms.monitorId === monitor.id);
+
+			const { uptime, timeline } =
+				this.monitorCalculationService.calculateTimeline(
+					monitor,
+					monitorLogs,
+					targetHours,
+					endDate,
+					state?.lastStatus,
+				);
 
 			return {
 				...monitor,
-				nextCheckAt: monitorState?.nextCheckAt || new Date(),
-				lastCheckedAt: monitorState?.lastCheckedAt || null,
-				lastStatus: monitorState?.lastStatus || SiteStatus.UNKNOWN,
-				monitorStats: monitorStats.filter(
-					(stat) => stat.monitorId === monitor.id,
-				),
+				lastStatus: state?.lastStatus || 'UNKNOWN',
+				uptime,
+				timeline,
 			};
 		});
 
-		const mappedMonitors = finalMonitors.map((monitor) => {
-			const { monitorStats, ...rest } = monitor;
+		const mappedResult = monitors.map(
+			({ userId: _userId, url: _url, ...monitor }) => ({
+				...monitor,
+				...result.find((r) => r.id === monitor.id),
+			}),
+		);
 
-			const statsCount = monitorStats.length;
-
-			let calculatedUptime: number;
-
-			if (monitor.isActive) {
-				if (statsCount === 0) {
-					calculatedUptime = 100;
-				} else {
-					const currentSum = monitorStats.reduce(
-						(sum, stat) => sum + stat.uptimePercent,
-						0,
-					);
-
-					if (statsCount < targetHours) {
-						const missingCount = targetHours - statsCount;
-						const oldestStat = monitorStats[statsCount - 1];
-						const fallbackUptime = oldestStat.uptimePercent;
-
-						const totalSum = currentSum + missingCount * fallbackUptime;
-						calculatedUptime = totalSum / targetHours;
-					} else {
-						calculatedUptime = currentSum / statsCount;
-					}
-				}
-			} else {
-				calculatedUptime = 0;
-			}
-
-			return {
-				...rest,
-				uptime: formatResult(calculatedUptime),
-			};
-		});
-
-		return mappedMonitors;
+		return mappedResult;
 	}
 
 	async findByIdFull(userId: string, id: string) {
@@ -199,36 +202,18 @@ export class MonitorService {
 
 		const { regionConfigs, userId: _, ...rest } = monitor;
 
-		const timelineLogs: AnalyticsRawDataDto[] = monitorLogs.map((log) => ({
-			status: log.status,
-			responseTimeMs: log.responseTimeMs || 0,
-			errorMessage: log.errorMessage || '',
-			createdAt: log.createdAt,
-			regionId: log.regionId,
-		}));
-
-		const allUnknownOrEmpty =
-			timelineLogs.length === 0 ||
-			timelineLogs.every((log) => log.status === SiteStatus.UNKNOWN);
-
-		let timeline: MonitorTimelineDto[];
-
-		if (allUnknownOrEmpty || !monitor.isActive) {
-			timeline = Array.from({ length: targetHours }, (_, index) => ({
-				timestamp: new Date(
-					endDate.getTime() - (targetHours - 1 - index) * 60 * 60 * 1000,
-				),
-				status: SiteStatus.UNKNOWN,
-			}));
-		} else {
-			timeline = this.buildRollingTimeline(timelineLogs, endDate, targetHours);
-		}
-
 		const mappedRegions = regionConfigs.map((config) => ({
 			...config.region,
 		}));
 
-		const uptime = calculateUptime(monitorLogs);
+		const { uptime, timeline } =
+			this.monitorCalculationService.calculateTimeline(
+				monitor,
+				monitorLogs,
+				targetHours,
+				endDate,
+				monitorState?.lastStatus,
+			);
 
 		return {
 			...rest,
@@ -317,7 +302,7 @@ export class MonitorService {
 
 		const { regions: resultRegions, ...resultMonitor } = result;
 
-		this.emitUpdateEvent(resultMonitor, resultRegions);
+		this.emitUpdateEvent(resultMonitor, resultRegions, false);
 
 		return result;
 	}
@@ -341,6 +326,7 @@ export class MonitorService {
 		this.emitUpdateEvent(
 			result,
 			regionConfigs.map((config) => config.regionId),
+			true,
 		);
 
 		return result;
@@ -369,7 +355,11 @@ export class MonitorService {
 		return monitor;
 	}
 
-	private emitUpdateEvent(monitor: Monitor, regionIds: string[]) {
+	private emitUpdateEvent(
+		monitor: Monitor,
+		regionIds: string[],
+		isNew: boolean = false,
+	) {
 		const emitPayload: MonitorUpdatePayload = {
 			id: monitor.id,
 			checkIntervalSeconds: monitor.checkIntervalSeconds,
@@ -377,6 +367,7 @@ export class MonitorService {
 			method: monitor.method,
 			url: monitor.url,
 			regionIds: regionIds,
+			isNew,
 		};
 
 		this.eventEmitter.emit(CACHE_EMIT_EVENTS.MONITOR.UPDATED, emitPayload);
@@ -394,62 +385,5 @@ export class MonitorService {
 		});
 
 		return dbRegions.map((r) => r.regionId);
-	}
-
-	private buildRollingTimeline(
-		logs: LogEntry[],
-		endTime: Date,
-		hours: number,
-	): MonitorTimelineDto[] {
-		const buckets = Array.from({ length: hours }, (_, index) => {
-			return {
-				timestamp: new Date(endTime.getTime() - index * 60 * 60 * 1000),
-				statuses: [] as SiteStatus[],
-			};
-		});
-
-		for (const log of logs) {
-			const diffMs = endTime.getTime() - log.createdAt.getTime();
-			const hoursAgo = Math.floor(diffMs / (60 * 60 * 1000));
-			const bucketIndex = hours - 1 - hoursAgo;
-
-			if (bucketIndex >= 0 && bucketIndex < hours) {
-				buckets[bucketIndex].statuses.push(log.status);
-			}
-		}
-
-		const oldestKnownStatus =
-			logs.find((log) => log.status !== SiteStatus.UNKNOWN)?.status ??
-			SiteStatus.UNKNOWN;
-
-		let previousStatus = oldestKnownStatus;
-
-		return buckets.map((bucket) => {
-			const isUp =
-				bucket.statuses.length > 0
-					? bucket.statuses.every(
-							(status) =>
-								status === SiteStatus.UP || status !== SiteStatus.UNKNOWN,
-						)
-					: false;
-
-			let currentStatus =
-				bucket.statuses.length === 0
-					? SiteStatus.UNKNOWN
-					: isUp
-						? SiteStatus.UP
-						: SiteStatus.DOWN;
-
-			if (currentStatus === SiteStatus.UNKNOWN) {
-				currentStatus = previousStatus;
-			} else {
-				previousStatus = currentStatus;
-			}
-
-			return {
-				timestamp: bucket.timestamp,
-				status: currentStatus,
-			};
-		});
 	}
 }

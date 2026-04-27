@@ -1,52 +1,31 @@
 'use client';
 
 import { Logo } from '@/components/icons';
-import { Button, Loader } from '@/components/ui';
-import { AUTH_PAGES, PRIVATE_PAGES, PUBLIC_PAGES } from '@/config';
-import { useAuth } from '@/hooks';
+import { Button } from '@/components/ui';
+import { AUTH_PAGES, PUBLIC_PAGES } from '@/config';
 import Link from 'next/link';
-import { MdLogout } from 'react-icons/md';
 import HeaderContainer from '../HeaderContainer';
 import styles from './HeaderMain.module.scss';
 
 const HeaderMain = () => {
-	const { isAuthenticated, isLoading, logout } = useAuth();
-
 	return (
 		<HeaderContainer
-			headerClassName={styles['header']}
-			containerClassName={styles['header__container']}
+			headerClassName={styles.header}
+			containerClassName={styles.container}
 		>
-			<Link href={PUBLIC_PAGES.HOME} className={styles['header__logo']}>
+			<Link href={PUBLIC_PAGES.HOME} className={styles.logo}>
 				<Logo width={32} height={32} />
-				<span className={styles['header__logo-text']}>
-					<span className={styles['header__logo-text--highlight']}>Site</span>
+				<span className={styles.logoText}>
+					<span className={styles.highlight}>Site</span>
 					Status
 				</span>
 			</Link>
-			{isLoading && (
-				<div>
-					<Loader />
-				</div>
-			)}
-			{!isLoading && !isAuthenticated && (
-				<div className={styles['header__buttons']}>
-					<Button variant="link" href={AUTH_PAGES.LOGIN} size="sm">
-						Log in
-					</Button>
-					<Button href={AUTH_PAGES.SIGN_UP}>Sign Up</Button>
-				</div>
-			)}
-			{!isLoading && isAuthenticated && (
-				<div className={styles['header__buttons']}>
-					<Button href={PRIVATE_PAGES.DASHBOARD} variant="secondary">
-						Dashboard
-					</Button>
-					<Button onClick={() => logout()} isIcon>
-						<MdLogout size={20} />
-					</Button>
-				</div>
-			)}
+			<div className={styles.buttons}>
+				<Button variant="link" href={AUTH_PAGES.LOGIN} size="sm">
+					Log in
+				</Button>
+				<Button href={AUTH_PAGES.SIGN_UP}>Sign Up</Button>
+			</div>
 		</HeaderContainer>
 	);
 };

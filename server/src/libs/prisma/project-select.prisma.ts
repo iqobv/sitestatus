@@ -5,6 +5,7 @@ export const projectSelect: Prisma.ProjectSelect = {
 	slug: true,
 	name: true,
 	description: true,
+	isPublic: true,
 	createdAt: true,
 	updatedAt: true,
 };

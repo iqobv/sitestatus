@@ -1,0 +1,29 @@
+@use '../../../../../styles/mixins' as *;
+
+.service {
+	background-color: var(--public-page-monitor-card-bg);
+	padding: 20px;
+	border-radius: var(--border-radius);
+	border: 1px solid var(--border-color);
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: flex-start;
+	gap: var(--gap);
+
+	@include respond-to(xl) {
+		flex-direction: row;
+		align-items: center;
+	}
+}
+
+.title {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.uptime {
+	padding-top: 4px;
+	color: var(--secondary-color);
+}

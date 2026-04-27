@@ -17,7 +17,12 @@ import {
 	ApiOkResponse,
 	ApiOperation,
 } from '@nestjs/swagger';
-import { CreateProjectDto, ProjectDto, UpdateProjectDto } from './dto';
+import {
+	CreateProjectDto,
+	ProjectDto,
+	PublicProjectDto,
+	UpdateProjectDto,
+} from './dto';
 import { ProjectService } from './project.service';
 
 @Controller('projects')
@@ -53,12 +58,25 @@ export class ProjectController {
 		type: createCustomMessageDto(ERROR_MESSAGES.PROJECT.PROJECT_NOT_FOUND),
 	})
 	@ApiOkResponse({ type: ProjectDto })
-	@Get(':id')
+	@Get('id/:id')
 	async getProjectById(
 		@Param('id', ParseUUIDPipe) id: string,
 		@Authorized('id') userId: string,
 	) {
 		return await this.projectService.getProjectById(id, userId);
+	}
+
+	@ApiOperation({
+		summary: 'Get public project by slug',
+		description: 'Retrieves a public project by its unique slug',
+	})
+	@ApiNotFoundResponse({
+		type: createCustomMessageDto(ERROR_MESSAGES.PROJECT.PROJECT_NOT_FOUND),
+	})
+	@ApiOkResponse({ type: PublicProjectDto })
+	@Get('slug/:slug')
+	async getPublicProjectBySlug(@Param('slug') slug: string) {
+		return await this.projectService.getPublicProjectBySlug(slug);
 	}
 
 	@Auth()

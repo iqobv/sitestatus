@@ -1,13 +1,13 @@
 import { Button, UptimeStatus } from '@/components/ui';
 import { PRIVATE_PAGES } from '@/config';
-import { MonitorWithMonitorStats } from '@/types';
+import { FullMonitor } from '@/types';
 import { ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
 dayjs.extend(relativeTime);
 
-export const COLUMNS: ColumnDef<MonitorWithMonitorStats>[] = [
+export const COLUMNS: ColumnDef<FullMonitor>[] = [
 	{
 		header: 'Name',
 		accessorKey: 'name',

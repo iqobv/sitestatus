@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui';
 import { PRIVATE_PAGES } from '@/config';
-import { MonitorWithMonitorStats } from '@/types';
+import { FullMonitor } from '@/types';
 import {
 	keepPreviousData,
 	useQuery,
@@ -12,7 +12,7 @@ import MonitorRefresh from './MonitorRefresh/MonitorRefresh';
 import styles from './Monitors.module.scss';
 import MonitorsTable from './MonitorsTable/MonitorsTable';
 
-interface MonitorsProps extends UseQueryOptions<MonitorWithMonitorStats[]> {
+interface MonitorsProps extends UseQueryOptions<FullMonitor[]> {
 	createHref?: string;
 }
 

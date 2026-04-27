@@ -8,6 +8,9 @@ export class ProjectDto extends DefaultFieldsDto {
 	@ApiProperty({ example: 'My Project' })
 	name: string;
 
+	@ApiProperty({ example: false })
+	isPublic: boolean;
+
 	@ApiProperty({ example: 'A simple project' })
 	description: string;
 }

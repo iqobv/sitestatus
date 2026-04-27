@@ -1,7 +1,7 @@
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { MonitorCache, RegionCache } from '../interfaces';
+import { MonitorCache, MonitorCachePayload, RegionCache } from '../interfaces';
 
 @Injectable()
 export class MonitorCacheService implements OnModuleInit {
@@ -71,13 +71,16 @@ export class MonitorCacheService implements OnModuleInit {
 		return Array.from(this.monitors.values());
 	}
 
-	upsertMonitor(data: Omit<MonitorCache, 'nextCheckAt'>): void {
+	upsertMonitor(data: MonitorCachePayload, isNew: boolean = false): void {
 		const existing = this.monitors.get(data.id);
+
 		this.monitors.set(data.id, {
 			...data,
 			nextCheckAt: existing
 				? existing.nextCheckAt
-				: Date.now() + data.checkIntervalSeconds * 1000,
+				: isNew
+					? Date.now()
+					: Date.now() + data.checkIntervalSeconds * 1000,
 		});
 	}
 

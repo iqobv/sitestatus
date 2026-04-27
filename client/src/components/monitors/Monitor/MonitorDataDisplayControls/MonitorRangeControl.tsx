@@ -1,12 +1,12 @@
 'use client';
 
-import { MonitorFull } from '@/types';
+import { MonitorWithRegions } from '@/types';
 import MonitorRangeButtons from './MonitorRangeButtons/MonitorRangeButtons';
 import styles from './MonitorRangeControl.module.scss';
 import MonitorRefreshTimer from './MonitorRefreshTimer/MonitorRefreshTimer';
 
 interface MonitorRangeControlProps {
-	monitor: MonitorFull;
+	monitor: MonitorWithRegions;
 }
 
 const MonitorRangeControl = ({ monitor }: MonitorRangeControlProps) => {

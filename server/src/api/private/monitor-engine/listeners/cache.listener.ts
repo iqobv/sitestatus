@@ -14,10 +14,10 @@ export class CacheListener {
 
 	@OnEvent(CACHE_EMIT_EVENTS.MONITOR.UPDATED)
 	handleMonitorUpdated(payload: MonitorUpdatePayload) {
-		const { isActive, ...cacheData } = payload;
+		const { isActive, isNew = false, ...cacheData } = payload;
 
 		if (isActive) {
-			this.cacheService.upsertMonitor(cacheData);
+			this.cacheService.upsertMonitor(cacheData, isNew);
 		} else {
 			this.cacheService.removeMonitor(payload.id);
 		}

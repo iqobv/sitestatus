@@ -35,5 +35,7 @@ export const QUERY_KEYS = {
 		byId: (projectId: string) => ['project', projectId],
 		create: ['projectCreate'],
 		update: (projectId: string) => ['projectUpdate', projectId],
+		bySlug: (slug: string) => ['projectBySlug', slug],
+		delete: (projectId: string) => ['projectDelete', projectId],
 	} as const,
 } as const;

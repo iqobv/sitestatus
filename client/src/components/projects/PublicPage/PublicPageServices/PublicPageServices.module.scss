@@ -1,0 +1,15 @@
+@use '../../../../styles/mixins' as *;
+
+.services {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: var(--gap);
+
+	@include respond-to(md) {
+		grid-template-columns: repeat(2, 1fr);
+
+		& > *:nth-child(odd):last-child {
+			grid-column: 1 / -1;
+		}
+	}
+}

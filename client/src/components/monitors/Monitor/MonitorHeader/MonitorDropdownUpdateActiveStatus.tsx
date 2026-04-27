@@ -3,14 +3,14 @@
 import { updateMonitorActiveStatus } from '@/api';
 import { Dropdown } from '@/components/ui';
 import { QUERY_KEYS } from '@/config';
-import { Monitor } from '@/types';
+import { MonitorWithRegions } from '@/types';
 import { useQueryClient } from '@tanstack/react-query';
 import { MdPauseCircleOutline, MdPlayCircleOutline } from 'react-icons/md';
 import styles from './MonitorHeader.module.scss';
 import { useMonitorDropdownItemMutation } from './useMonitorDropdownItemMutation.hook';
 
 interface MonitorDropdownUpdateActiveStatusProps {
-	monitor: Monitor;
+	monitor: MonitorWithRegions;
 }
 
 const MonitorDropdownUpdateActiveStatus = ({

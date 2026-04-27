@@ -9,21 +9,22 @@ import {
 	NotFoundException,
 } from '@nestjs/common';
 import { isUUID } from 'class-validator';
+import { MonitorService } from '../monitor/services/monitor.service';
 import { CreateProjectDto, UpdateProjectDto } from './dto';
 
 @Injectable()
 export class ProjectService {
-	constructor(private readonly prismaService: PgPrismaService) {}
+	constructor(
+		private readonly prismaService: PgPrismaService,
+		private readonly monitorService: MonitorService,
+	) {}
 
 	async createProject(dto: CreateProjectDto, userId: string) {
-		const { name, slug, description } = dto;
-
 		try {
 			return await this.prismaService.project.create({
 				data: {
-					name,
-					slug,
-					description,
+					...dto,
+					isPublic: false,
 					owner: { connect: { id: userId } },
 				},
 				select: projectSelect,
@@ -40,17 +41,21 @@ export class ProjectService {
 		}
 	}
 
-	async getProjectBySlug(slug: string, throwError: boolean = true) {
+	async getPublicProjectBySlug(slug: string) {
 		const project = await this.prismaService.project.findUnique({
-			where: { slug },
+			where: { slug, isPublic: true },
 			select: projectSelect,
 		});
 
-		if (!project && throwError) {
+		if (!project) {
 			throw new NotFoundException(ERROR_MESSAGES.PROJECT.PROJECT_NOT_FOUND);
 		}
 
-		return project;
+		const monitors = await this.monitorService.findAllPublicMonitors(
+			project.id,
+		);
+
+		return { ...project, monitors };
 	}
 
 	async getProjectById(id: string, userId: string) {
@@ -77,17 +82,13 @@ export class ProjectService {
 	}
 
 	async updateProject(id: string, userId: string, dto: UpdateProjectDto) {
-		const { description, name, slug } = dto;
-
 		await this.getProjectById(id, userId);
 
 		try {
 			return await this.prismaService.project.update({
 				where: { id },
 				data: {
-					description,
-					name,
-					slug,
+					...dto,
 				},
 				select: projectSelect,
 			});

@@ -4,16 +4,18 @@ import { createMonitor } from '@/api';
 import { PRIVATE_PAGES } from '@/config';
 import { CreateMonitorDto } from '@/dto';
 import { createMonitorSchema } from '@/schemas';
-import { Monitor } from '@/types';
+import { BaseMonitor } from '@/types';
 import { useRouter } from 'next/navigation';
+import { useQueryState } from 'nuqs';
 import MonitorForm from '../MonitorForm/MonitorForm';
 import { CREATE_MONITOR_FIELDS } from './createMonitorFields';
 
 const CreateMonitor = () => {
 	const router = useRouter();
+	const [projectId] = useQueryState('projectId');
 
 	return (
-		<MonitorForm<CreateMonitorDto, Monitor>
+		<MonitorForm<CreateMonitorDto, BaseMonitor>
 			fields={CREATE_MONITOR_FIELDS}
 			mutationFn={createMonitor}
 			onSuccess={(data) => {
@@ -26,7 +28,7 @@ const CreateMonitor = () => {
 				name: '',
 				checkIntervalSeconds: 300,
 				url: '',
-				projectId: '',
+				projectId: projectId || '',
 				regions: [],
 			}}
 		/>

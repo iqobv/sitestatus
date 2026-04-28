@@ -4,7 +4,7 @@ import { ComponentPropsWithRef } from 'react';
 import styles from './Checkbox.module.scss';
 
 interface CheckboxProps extends ComponentPropsWithRef<'input'> {
-	label?: string;
+	label?: React.ReactNode;
 	error?: string;
 	isBordered?: boolean;
 }
@@ -17,21 +17,16 @@ const Checkbox = ({
 	...props
 }: CheckboxProps) => {
 	const wrapperClass = `
-    ${styles['checkbox__wrapper']}
-    ${isBordered ? styles['checkbox__wrapper--bordered'] : ''}
-    ${error ? styles['has-error'] : ''}
+    ${styles.wrapper}
+    ${isBordered ? styles.bordered : ''}
+    ${error ? styles.error : ''}
   `.trim();
 
 	return (
 		<div className={wrapperClass}>
-			<label className={styles['checkbox__container']}>
-				<input
-					type="checkbox"
-					className={styles['checkbox__input']}
-					ref={ref}
-					{...props}
-				/>
-				<span className={styles['checkbox__label-text']}>{label}</span>
+			<label className={styles.container}>
+				<input type="checkbox" className={styles.input} ref={ref} {...props} />
+				<span className={styles.label}>{label}</span>
 			</label>
 			{error && <p className="error-message">{error}</p>}
 		</div>

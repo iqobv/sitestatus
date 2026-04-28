@@ -55,7 +55,7 @@ const EmailVerificationWait = () => {
 
 	return (
 		<EmailVerificationWrapper>
-			<div className={styles['email-verification__wait']}>
+			<div className={styles.wait}>
 				<SectionHeader
 					title="Your Email is not Verified!"
 					description={`Your email ${

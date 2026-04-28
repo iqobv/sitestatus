@@ -6,9 +6,12 @@ export const registerSchema = baseAuthSchema
 		passwordConfirm: z
 			.string()
 			.min(1, { message: 'Password confirmation is required' }),
+		acceptTerms: z.literal(true, {
+			message: 'You must accept the terms and conditions',
+		}),
 	})
 	.refine((data) => data.password === data.passwordConfirm, {
 		message: 'Passwords do not match',
 		path: ['passwordConfirm'],
 	})
-	.transform(({ passwordConfirm, ...data }) => data);
+	.transform(({ passwordConfirm, acceptTerms, ...data }) => data);

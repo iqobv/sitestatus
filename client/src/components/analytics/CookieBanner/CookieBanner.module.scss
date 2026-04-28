@@ -1,0 +1,83 @@
+@use '../../../styles/mixins' as *;
+
+.bannerContainer {
+	background: var(--cookie-banner-bg) !important;
+	padding: 1rem !important;
+	border: 1px solid var(--border-color);
+	display: flex !important;
+	flex-direction: column !important;
+	flex: unset !important;
+	bottom: 20px !important;
+	max-width: 90vw !important;
+	min-width: unset !important;
+	width: 100% !important;
+	margin: 0 auto !important;
+	left: 50% !important;
+	transform: translateX(-50%) !important;
+	border-radius: var(--border-radius) !important;
+
+	& > div {
+		display: flex !important;
+		gap: 10px !important;
+		margin-top: 15px !important;
+		flex: unset !important;
+	}
+
+	@include respond-to(md) {
+		max-width: 400px !important;
+		left: 20px !important;
+		transform: unset !important;
+		align-items: center !important;
+	}
+}
+
+.content {
+	color: var(--primary-color);
+	font-family: inherit;
+	font-size: 14px;
+	line-height: 1.5;
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap);
+
+	a {
+		color: var(--cookie-banner-link-color);
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+}
+
+.buttonWrapper {
+	display: flex !important;
+	flex-direction: row !important;
+	justify-content: flex-end !important;
+	width: 100% !important;
+	padding: 0 1rem !important;
+}
+
+.acceptButton,
+.declineButton {
+	border-radius: var(--border-radius) !important;
+	margin: 0 !important;
+	padding: 0.5rem 1rem !important;
+	font-size: 0.95rem !important;
+}
+
+.acceptButton {
+	background: var(--btn-bg-contained) !important;
+	color: var(--btn-color-contained) !important;
+	font-weight: 600 !important;
+}
+
+.declineButton {
+	background: transparent !important;
+	color: var(--primary-color) !important;
+	border: 1px solid var(--btn-border-outlined) !important;
+	// 	'bg': transparent,
+	// 'border': var(),
+	// 'bg-hover': var(--btn-bg-outlined-hover),
+	// 'border-hover': var(--btn-border-outlined-hover),
+}

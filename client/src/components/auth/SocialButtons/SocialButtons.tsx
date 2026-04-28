@@ -5,11 +5,11 @@ import styles from './SocialButtons.module.scss';
 
 const SocialButtons = () => {
 	return (
-		<div className={styles['social-buttons']}>
+		<div className={styles.buttons}>
 			<div>
 				<Google />
 			</div>
-			<div className={styles['or-separator']}></div>
+			<div className={styles.separator}></div>
 		</div>
 	);
 };

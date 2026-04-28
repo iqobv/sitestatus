@@ -1,5 +1,6 @@
 'use client';
 
+import { PRIVATE_PAGES } from '@/config';
 import { useRouter } from 'next/navigation';
 
 export const useLoginWindow = (url: string) => {
@@ -32,7 +33,7 @@ export const useLoginWindow = (url: string) => {
 
 			if (event.data?.success) {
 				window.removeEventListener('message', messageListener);
-				router.push('/dashboard');
+				router.push(PRIVATE_PAGES.DASHBOARD);
 				router.refresh();
 			}
 		};

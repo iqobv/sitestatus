@@ -15,7 +15,7 @@ export class MailService {
 	}
 
 	async sendVerificationEmail(email: string, token: string) {
-		const domain = this.configService.getOrThrow<string>('MAIL_TO_URL');
+		const domain = this.configService.getOrThrow<string>('APP_URL');
 		const url = `${domain}/email-verify?token=${token}`;
 		const html = await render(VerificationEmailTemplate({ url }));
 
@@ -27,7 +27,7 @@ export class MailService {
 	}
 
 	async sendPasswordResetEmail(email: string, token: string) {
-		const domain = this.configService.getOrThrow<string>('MAIL_TO_URL');
+		const domain = this.configService.getOrThrow<string>('APP_URL');
 		const url = `${domain}/reset-password?token=${token}`;
 		const html = await render(ResetPasswordTemplate({ url }));
 

@@ -1,8 +1,11 @@
 import { IsEmail, IsString } from 'class-validator';
 
-export class GoogleUserDto {
+export class OAuthUserDto {
 	@IsString()
-	googleId: string;
+	provider: string;
+
+	@IsString()
+	providerId: string;
 
 	@IsEmail()
 	email: string;

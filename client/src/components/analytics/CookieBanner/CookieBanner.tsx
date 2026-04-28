@@ -5,6 +5,8 @@ import CookieConsent from 'react-cookie-consent';
 import styles from './CookieBanner.module.scss';
 
 const CookieBanner = () => {
+	const cookieDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN;
+
 	const handleConsentUpdate = (isGranted: boolean) => {
 		if (typeof window.gtag === 'function') {
 			window.gtag('consent', 'update', {
@@ -27,6 +29,7 @@ const CookieBanner = () => {
 			onDecline={() => handleConsentUpdate(false)}
 			buttonWrapperClasses={styles.buttonWrapper}
 			expires={365}
+			extraCookieOptions={{ domain: cookieDomain }}
 		>
 			<div className={styles.content}>
 				<h2>We use cookies</h2>

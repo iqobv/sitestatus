@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { AUTH_PAGES, PRIVATE_PAGES } from './config';
+import { AUTH_PAGES, PRIVATE_PAGES, SUBDOMAINS } from './config';
 
 export async function proxy(request: NextRequest) {
 	const accessToken = request.cookies.get('accessToken')?.value;
@@ -41,25 +41,51 @@ export async function proxy(request: NextRequest) {
 	}
 
 	let response: NextResponse;
-	const path = request.nextUrl.pathname;
 
-	if (!isAuthenticated && path.startsWith(PRIVATE_PAGES.DASHBOARD)) {
-		response = NextResponse.redirect(new URL(AUTH_PAGES.LOGIN, request.url));
-	} else if (
-		isAuthenticated &&
-		(path.startsWith(AUTH_PAGES.LOGIN) ||
-			path.startsWith(AUTH_PAGES.SIGN_UP) ||
-			path.startsWith(AUTH_PAGES.VERIFY_EMAIL))
-	) {
-		response = NextResponse.redirect(
-			new URL(PRIVATE_PAGES.DASHBOARD, request.url),
-		);
+	const url = request.nextUrl.clone();
+	const hostname = request.headers.get('host') || '';
+	const path = url.pathname;
+
+	const isAppSubdomain = hostname.startsWith(`${SUBDOMAINS.APP}.`);
+	const isStatusSubdomain = hostname.startsWith(`${SUBDOMAINS.STATUS}.`);
+	const isAuthPage = Object.values(AUTH_PAGES).some((page) =>
+		path.startsWith(page),
+	);
+
+	if (isAppSubdomain) {
+		if (!isAuthenticated && !isAuthPage) {
+			url.pathname = AUTH_PAGES.LOGIN;
+			response = NextResponse.redirect(url);
+		} else if (isAuthenticated && isAuthPage) {
+			url.pathname = PRIVATE_PAGES.DASHBOARD;
+			response = NextResponse.redirect(url);
+		} else {
+			const internalPath = isAuthPage
+				? path
+				: path === '/'
+					? '/dashboard'
+					: `/dashboard${path}`;
+			response = NextResponse.rewrite(new URL(internalPath, request.url));
+		}
+	} else if (isStatusSubdomain) {
+		const internalPath = `/p${path}`;
+		response = NextResponse.rewrite(new URL(internalPath, request.url));
 	} else {
-		response = NextResponse.next({
-			request: {
-				headers: request.headers,
-			},
-		});
+		const isPrivateSection =
+			path.startsWith(PRIVATE_PAGES.MONITORS.ALL) ||
+			path.startsWith(PRIVATE_PAGES.PROJECTS.ALL);
+
+		if (isPrivateSection || isAuthPage) {
+			const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || '';
+			url.host = `${SUBDOMAINS.APP}.${rootDomain}`;
+			response = NextResponse.redirect(url);
+		} else {
+			response = NextResponse.next({
+				request: {
+					headers: request.headers,
+				},
+			});
+		}
 	}
 
 	if (refreshedCookies.length > 0) {

@@ -55,7 +55,11 @@ const ProjectHeaderDropdownItemPublicPage = ({
 		<>
 			<Dropdown.Item asChild>
 				{data.isPublic ? (
-					<Link href={PUBLIC_PAGES.PUBLIC_PROJECT(data.slug)}>
+					<Link
+						href={PUBLIC_PAGES.PUBLIC_PROJECT(data.slug)}
+						target="_blank"
+						rel="noopener noreferrer"
+					>
 						<MdOutlinePublic size={20} />
 						View Public Page
 					</Link>

@@ -1,4 +1,5 @@
-import { HeaderMain } from '@/components/layout';
+import { GoogleOneTap } from '@/components/auth';
+import { Footer, HeaderMain } from '@/components/layout';
 
 export default function MainLayout({
 	children,
@@ -9,6 +10,8 @@ export default function MainLayout({
 		<>
 			<HeaderMain />
 			<main>{children}</main>
+			<Footer />
+			<GoogleOneTap />
 		</>
 	);
 }

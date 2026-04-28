@@ -7,4 +7,9 @@ export const AUTH_ERROR_MESSAGES = {
 	EMAIL_NOT_VERIFIED: 'Email not verified',
 	ALREADY_VERIFIED: 'Email already verified',
 	INVALID_OR_EXPIRED_REFRESH_TOKEN: 'Invalid or expired refresh token',
+	FAILED_TO_VERIFY_GOOGLE_TOKEN: 'Failed to verify Google One Tap token',
+	INVALID_GOOGLE_TOKEN_PAYLOAD: 'Invalid Google token payload',
+	GITHUB_NO_EMAIL: 'Email is required from GitHub account',
+	GOOGLE_NO_EMAIL: 'Email is required from Google account',
+	REFRESH_TOKEN_MISSING: 'Refresh token missing',
 } as const;

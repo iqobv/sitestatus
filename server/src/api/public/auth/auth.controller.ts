@@ -137,7 +137,10 @@ export class AuthController {
 		@Cookie('refreshToken') rt: string,
 		@Res({ passthrough: true }) res: Response,
 	) {
-		if (!rt) throw new UnauthorizedException('Refresh token missing');
+		if (!rt)
+			throw new UnauthorizedException(
+				ERROR_MESSAGES.AUTH.REFRESH_TOKEN_MISSING,
+			);
 		const info = extractClientInfo(req);
 		const tokens = await this.authService.refreshTokens(rt, info);
 		setAuthCookies(

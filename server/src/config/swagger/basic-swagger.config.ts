@@ -13,7 +13,12 @@ export const basicSwaggerConfig = (
 			status: '5XX',
 			description: 'Internal Server Error',
 		})
-		.addCookieAuth('sid', {
+		.addCookieAuth('accessToken', {
+			type: 'http',
+			in: 'Header',
+			scheme: 'Bearer',
+		})
+		.addCookieAuth('refreshToken', {
 			type: 'http',
 			in: 'Header',
 			scheme: 'Bearer',

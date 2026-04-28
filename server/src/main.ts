@@ -7,7 +7,7 @@ import {
 	getPublicSwaggerConfig,
 	getValidationPipeConfig,
 } from '@config';
-import { setupSwagger } from '@libs/utils';
+import { isDev, setupSwagger } from '@libs/utils';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -22,6 +22,8 @@ async function bootstrap() {
 
 	const config = app.get(ConfigService);
 
+	const isProd = !isDev(config);
+
 	app.use(
 		helmet({
 			crossOriginOpenerPolicy: { policy: 'unsafe-none' },
@@ -29,6 +31,7 @@ async function bootstrap() {
 				directives: {
 					...helmet.contentSecurityPolicy.getDefaultDirectives(),
 					'script-src': ["'self'", "'unsafe-inline'"],
+					'upgrade-insecure-requests': isProd ? [] : null,
 				},
 			},
 		}),

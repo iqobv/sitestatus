@@ -41,9 +41,9 @@ html.dark {
 	--sepator-color: #333333;
 
 	/* Errors */
-	--error-bg: #ab424b57;
-	--error-text: #da132b;
-	--error-border: #eb2630;
+	--error-bg: #ff293b10;
+	--error-text: #ffffff;
+	--error-border: #b51f26;
 
 	/* Cards */
 	--card-bg: #1a1a1a;
@@ -158,4 +158,21 @@ html.dark {
 
 	/* Public Page */
 	--public-page-monitor-card-bg: #1a1a1a;
+
+	/* Cookie Banner */
+	--cookie-banner-bg: #1a1a1a;
+	--cookie-banner-link-color: #3b82f6;
+
+	/* Legal Pages */
+	--legal-text-color: #dedede;
+	--legal-heading-color: #ffffff;
+	--legal-heading-color-secondary: #ffffff;
+	--legal-accent-color: #ffffff;
+	--legal-table-row-bg: rgba(255, 255, 255, 0.05);
+	--legal-table-row-second-bg: rgba(255, 255, 255, 0.03);
+	--legal-cell-border: rgba(255, 255, 255, 0.1);
+
+	/* Auth */
+	--auth-separator-color: #333333;
+	--auth-separator-text-color: #888;
 }

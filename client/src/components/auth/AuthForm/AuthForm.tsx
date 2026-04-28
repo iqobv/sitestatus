@@ -6,7 +6,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { useState } from 'react';
-import { DefaultValues, FieldValues, Path, useForm } from 'react-hook-form';
+import {
+	DefaultValues,
+	FieldValues,
+	Path,
+	useForm,
+	UseFormRegister,
+} from 'react-hook-form';
 import { ZodType } from 'zod';
 import styles from './AuthForm.module.scss';
 import AuthFormGlobalError from './AuthFormGlobalError/AuthFormGlobalError';
@@ -21,6 +27,10 @@ interface AuthFormProps<T extends FieldValues, R> {
 	buttonLabel?: string;
 	bottomText?: React.ReactNode;
 	defaultValues?: DefaultValues<T>;
+	renderExtra?: (
+		register: UseFormRegister<T>,
+		error?: string,
+	) => React.ReactNode;
 }
 
 const AuthForm = <T extends FieldValues, R>({
@@ -31,6 +41,7 @@ const AuthForm = <T extends FieldValues, R>({
 	schema,
 	bottomText,
 	defaultValues,
+	renderExtra,
 }: AuthFormProps<T, R>) => {
 	const [isUnverified, setIsUnverified] = useState(false);
 
@@ -104,6 +115,11 @@ const AuthForm = <T extends FieldValues, R>({
 					);
 				},
 			)}
+			{renderExtra &&
+				renderExtra(
+					register,
+					errors['acceptTerms' as Path<T>]?.message as string,
+				)}
 			<Button loading={isPending} type="submit" fullWidth>
 				{buttonLabel}
 			</Button>

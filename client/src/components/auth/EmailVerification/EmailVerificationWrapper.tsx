@@ -9,11 +9,7 @@ interface EmailVerificationWrapperProps {
 const EmailVerificationWrapper = ({
 	children,
 }: EmailVerificationWrapperProps) => {
-	return (
-		<div className={`${styles['email-verification__wrapper']} container`}>
-			{children}
-		</div>
-	);
+	return <div className={`${styles.wrapper} container`}>{children}</div>;
 };
 
 export default EmailVerificationWrapper;

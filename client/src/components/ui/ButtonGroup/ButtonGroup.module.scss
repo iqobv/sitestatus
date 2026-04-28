@@ -1,4 +1,4 @@
-.button-group {
+.buttonGroup {
 	--padding: 8px;
 	--direction: row;
 	--gap: 0;
@@ -13,7 +13,7 @@
 	flex-direction: var(--direction);
 	gap: var(--gap);
 
-	&--no-gap * {
+	&.noGap * {
 		border-radius: 0;
 
 		&:first-child {

@@ -44,8 +44,8 @@
 	--sepator-color: #e5e8eb;
 
 	/* Errors */
-	--error-bg: #f8d7da;
-	--error-text: #721c24;
+	--error-bg: #fae1e3;
+	--error-text: #5c070f;
 	--error-border: #e7000b;
 
 	/* Cards */
@@ -156,4 +156,21 @@
 
 	/* Public Page */
 	--public-page-monitor-card-bg: #ffffff;
+
+	/* Cookie Banner */
+	--cookie-banner-bg: #ffffff;
+	--cookie-banner-link-color: #3b82f6;
+
+	/* Legal Pages */
+	--legal-text-color: #0d141c;
+	--legal-heading-color: #000000;
+	--legal-heading-color-secondary: #000000;
+	--legal-accent-color: #000000;
+	--legal-table-row-bg: rgba(0, 0, 0, 0.05);
+	--legal-table-row-second-bg: rgba(0, 0, 0, 0.03);
+	--legal-cell-border: rgba(0, 0, 0, 0.1);
+
+	/* Auth */
+	--auth-separator-color: #e5e8eb;
+	--auth-separator-text-color: #888;
 }

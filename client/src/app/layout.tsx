@@ -1,4 +1,5 @@
 import { getServerProfile } from '@/api';
+import { CookieBanner, GoogleAnalyticsHandler } from '@/components/analytics';
 import MainProvider from '@/providers/MainProvider';
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
@@ -39,6 +40,8 @@ export default async function RootLayout({
 			</head>
 			<body className={`${roboto.variable}`}>
 				<MainProvider user={user}>{children}</MainProvider>
+				<GoogleAnalyticsHandler />
+				<CookieBanner />
 			</body>
 		</html>
 	);

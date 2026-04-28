@@ -10,10 +10,8 @@ interface AuthWrapperProps {
 
 const AuthWrapper = ({ children, header }: AuthWrapperProps) => {
 	return (
-		<div className={`${styles['auth-wrapper']} container`}>
-			{!!header && (
-				<div className={styles['auth-wrapper__header']}>{header}</div>
-			)}
+		<div className={`${styles.wrapper} container`}>
+			{!!header && <div className={styles.authHeader}>{header}</div>}
 			<SocialButtons />
 			{children}
 		</div>

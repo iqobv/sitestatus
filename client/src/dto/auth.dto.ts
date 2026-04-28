@@ -6,4 +6,5 @@ export type LoginDto = z.infer<typeof loginSchema>;
 export type RegisterDto = z.infer<typeof registerSchema>;
 export type RegisterFormDto = RegisterDto & {
 	passwordConfirm: string;
+	acceptTerms: boolean;
 };

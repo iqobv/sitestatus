@@ -1,4 +1,8 @@
+import { getAbsoluteUrl } from '@/utils';
+import { SUBDOMAINS } from './subdomains.config';
+
 export const PUBLIC_PAGES = {
-	HOME: '/',
-	PUBLIC_PROJECT: (slug: string) => `/p/${slug}`,
+	HOME: getAbsoluteUrl('', '/'),
+	PUBLIC_PROJECT: (slug: string) =>
+		getAbsoluteUrl(SUBDOMAINS.STATUS, `/${slug}`),
 } as const;

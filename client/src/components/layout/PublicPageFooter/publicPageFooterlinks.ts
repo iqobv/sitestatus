@@ -1,4 +1,4 @@
-import { PUBLIC_PAGES } from '@/config';
+import { LEGAL_PAGES } from '@/config';
 
 interface LinkItem {
 	label: string;
@@ -8,10 +8,10 @@ interface LinkItem {
 export const PUBLIC_PAGE_FOOTER_LINKS: LinkItem[] = [
 	{
 		label: 'Privacy Policy',
-		href: PUBLIC_PAGES.HOME,
+		href: LEGAL_PAGES.PRIVACY_POLICY,
 	},
 	{
 		label: 'Terms of Service',
-		href: PUBLIC_PAGES.HOME,
+		href: LEGAL_PAGES.TERMS_OF_SERVICE,
 	},
 ];

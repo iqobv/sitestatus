@@ -12,7 +12,6 @@ import {
 	Res,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ApiExcludeController } from '@nestjs/swagger';
 import type { Request, Response } from 'express';
 import { AuthService } from '../../auth.service';
 import { GoogleAuth } from '../../decorators';
@@ -20,7 +19,6 @@ import { OAuthDto } from '../dto';
 import { GoogleOneTapDto } from './dto';
 import { GoogleService } from './google.service';
 
-@ApiExcludeController()
 @Controller('oauth/google')
 export class GoogleController {
 	constructor(

@@ -1,7 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { ReactNode, useEffect, useRef } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { MdClose } from 'react-icons/md';
 import Button from '../../../Button/Button';
@@ -10,10 +10,24 @@ import styles from './ModalContent.module.scss';
 
 const ModalContent = ({ children }: { children: ReactNode }) => {
 	const overlayRef = useRef<HTMLDivElement>(null);
-
+	const [mounted, setMounted] = useState<boolean>(false);
 	const { open, onClose } = useModalContext('Modal.Content');
 
 	useEffect(() => {
+		setMounted(true);
+	}, []);
+
+	useEffect(() => {
+		if (mounted && open && overlayRef.current) {
+			overlayRef.current.focus();
+		}
+	}, [mounted, open]);
+
+	useEffect(() => {
+		if (!mounted || !open) {
+			return;
+		}
+
 		const handleCloseOnEscape = (event: KeyboardEvent) => {
 			if (event.key === 'Escape') {
 				onClose();
@@ -26,20 +40,20 @@ const ModalContent = ({ children }: { children: ReactNode }) => {
 			}
 		};
 
-		if (open) {
-			overlayRef.current?.focus();
-
-			document.addEventListener('keydown', handleCloseOnEscape);
-			document.addEventListener('mousedown', handleCloseOnClickOutside);
-			document.body.style.overflow = 'hidden';
-		}
+		document.addEventListener('keydown', handleCloseOnEscape);
+		document.addEventListener('mousedown', handleCloseOnClickOutside);
+		document.body.style.overflow = 'hidden';
 
 		return () => {
 			document.removeEventListener('keydown', handleCloseOnEscape);
 			document.removeEventListener('mousedown', handleCloseOnClickOutside);
 			document.body.style.overflow = 'auto';
 		};
-	}, [open, onClose]);
+	}, [open, onClose, mounted]);
+
+	if (!mounted) {
+		return null;
+	}
 
 	return createPortal(
 		<AnimatePresence>

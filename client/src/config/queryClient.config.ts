@@ -38,4 +38,9 @@ export const QUERY_KEYS = {
 		bySlug: (slug: string) => ['projectBySlug', slug],
 		delete: (projectId: string) => ['projectDelete', projectId],
 	} as const,
+	session: {
+		all: ['sessionsList'],
+		terminate: (sessionId: string) => ['terminateSession', sessionId],
+		terminateAllOther: ['terminateAllOtherSessions'],
+	} as const,
 } as const;

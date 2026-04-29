@@ -49,7 +49,7 @@ const Sidebar = () => {
 				<div className={styles['sidebar__content']}>
 					<SidebarHeader onClick={handleClick} />
 					<SidebarBody onClick={handleClick} />
-					<SidebarFooter />
+					<SidebarFooter onClick={handleClick} />
 				</div>
 			</aside>
 			<div className={styles['sidebar__toggle-container']}>

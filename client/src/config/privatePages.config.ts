@@ -1,5 +1,5 @@
 export const PRIVATE_PAGES = {
-	DASHBOARD: '',
+	DASHBOARD: '/',
 	MONITORS: {
 		ALL: '/monitors',
 		ONE: (id: string) => `/monitors/${id}`,
@@ -12,5 +12,12 @@ export const PRIVATE_PAGES = {
 		ID: (id: string) => `/projects/${id}`,
 		NEW: '/projects/new',
 		EDIT: (id: string) => `/projects/${id}/edit`,
+	} as const,
+	BASE_SETTINGS: '/settings',
+	SETTINGS: {
+		GENERAL: '/settings',
+		SECURITY: '/settings/security',
+		SESSIONS: '/settings/security/sessions',
+		ALERTING: '/settings/alerting',
 	} as const,
 } as const;

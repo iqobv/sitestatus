@@ -24,7 +24,7 @@ const SidebarLink = ({
 		<Link
 			key={href}
 			href={href}
-			className={`${styles['sidebar-link']} ${pathname === href ? styles['sidebar-link--active'] : ''}`}
+			className={`${styles.link} ${pathname === href ? styles.active : ''}`}
 			onClick={onClick}
 		>
 			<Icon size={22} />

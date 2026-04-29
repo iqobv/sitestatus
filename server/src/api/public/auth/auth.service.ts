@@ -1,10 +1,13 @@
+// src/api/public/auth/auth.service.ts
+
 import { User } from '@generated/postgres/client';
 import { TokenType } from '@generated/postgres/enums';
 import { MailService } from '@infra/mail/mail.service';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
+import { ClientInfoDto } from '@libs/dto';
 import { userSelect } from '@libs/prisma';
-import { ClientInfo } from '@libs/types';
+import { JwtPayload } from '@libs/types';
 import { comparePassword, hashPassword } from '@libs/utils';
 import {
 	BadRequestException,
@@ -59,7 +62,7 @@ export class AuthService {
 		});
 	}
 
-	async login(dto: LoginDto, clientInfo: ClientInfo) {
+	async login(dto: LoginDto, clientInfo: ClientInfoDto) {
 		const { email, password } = dto;
 
 		const user = await this.userService.findByEmail(email, true);
@@ -68,6 +71,7 @@ export class AuthService {
 			throw new UnauthorizedException(ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS);
 
 		const isMatch = await comparePassword(password, user.password);
+
 		if (!isMatch)
 			throw new UnauthorizedException(ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS);
 
@@ -94,6 +98,7 @@ export class AuthService {
 
 	async validateUser(email: string, password: string) {
 		const user = await this.userService.findByEmail(email, true);
+
 		if (!user) return null;
 
 		const isMatch =
@@ -106,7 +111,7 @@ export class AuthService {
 		return user;
 	}
 
-	async verifyEmail(token: string, clientInfo: ClientInfo) {
+	async verifyEmail(token: string, clientInfo: ClientInfoDto) {
 		const user = await this.tokenService.verifyAndConsumeToken(
 			token,
 			TokenType.EMAIL_VERIFICATION,
@@ -119,6 +124,7 @@ export class AuthService {
 		});
 
 		const tokens = await this.generateAndSaveTokens(user, clientInfo);
+
 		return { ...SUCCESS_MESSAGES.AUTH.EMAIL_VERIFIED, user, tokens };
 	}
 
@@ -146,6 +152,7 @@ export class AuthService {
 
 	async forgotPassword(email: string) {
 		const user = await this.userService.findByEmail(email, true);
+
 		if (!user || !user.password) return;
 
 		const expiresAt = new Date();
@@ -181,9 +188,11 @@ export class AuthService {
 		const user = await this.prismaService.user.findUnique({
 			where: { id: userId },
 		});
+
 		if (!user || !user.password) throw new UnauthorizedException();
 
 		const isMatch = await comparePassword(dto.oldPassword, user.password);
+
 		if (!isMatch)
 			throw new BadRequestException(ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS);
 
@@ -197,7 +206,7 @@ export class AuthService {
 		return SUCCESS_MESSAGES.AUTH.CHANGE_PASSWORD;
 	}
 
-	async refreshTokens(rawRefreshToken: string, clientInfo: ClientInfo) {
+	async refreshTokens(rawRefreshToken: string, clientInfo: ClientInfoDto) {
 		const hashedToken = crypto
 			.createHash('sha256')
 			.update(rawRefreshToken)
@@ -208,8 +217,9 @@ export class AuthService {
 		});
 
 		if (!session || session.expiresAt < new Date()) {
-			if (session)
+			if (session) {
 				await this.sessionService.deleteSession(session.id, session.userId);
+			}
 
 			throw new UnauthorizedException(
 				ERROR_MESSAGES.AUTH.INVALID_OR_EXPIRED_REFRESH_TOKEN,
@@ -223,10 +233,11 @@ export class AuthService {
 		if (!user || !user.emailVerified) throw new UnauthorizedException();
 
 		await this.sessionService.deleteSession(session.id, session.userId);
+
 		return this.generateAndSaveTokens(user, clientInfo);
 	}
 
-	async validateOAuthLogin(dto: OAuthDto, clientInfo: ClientInfo) {
+	async validateOAuthLogin(dto: OAuthDto, clientInfo: ClientInfoDto) {
 		const { provider, providerId, email } = dto;
 
 		const providerUser =
@@ -235,10 +246,12 @@ export class AuthService {
 				providerId,
 			);
 
-		if (providerUser)
+		if (providerUser) {
 			return await this.generateAndSaveTokens(providerUser.user, clientInfo);
+		}
 
 		let user = await this.userService.findByEmail(email, true);
+
 		if (!user) {
 			user = await this.userService.createOauthUser(email);
 		}
@@ -252,12 +265,7 @@ export class AuthService {
 		return await this.generateAndSaveTokens(user, clientInfo);
 	}
 
-	private async generateAndSaveTokens(user: User, clientInfo: ClientInfo) {
-		const accessToken = this.jwtService.sign(
-			{ id: user.id, email: user.email, role: user.role },
-			{ secret: process.env.JWT_ACCESS_SECRET, expiresIn: '15m' },
-		);
-
+	private async generateAndSaveTokens(user: User, clientInfo: ClientInfoDto) {
 		const rawRefreshToken = crypto.randomBytes(32).toString('hex');
 		const refreshTokenHash = crypto
 			.createHash('sha256')
@@ -267,11 +275,23 @@ export class AuthService {
 		const now = new Date();
 		const expiresAt = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
 
-		await this.sessionService.createSession({
+		const session = await this.sessionService.createSession({
 			userId: user.id,
 			refreshTokenHash,
 			clientInfo,
 			expiresAt,
+		});
+
+		const payload: JwtPayload = {
+			id: user.id,
+			email: user.email,
+			role: user.role,
+			sessionId: session.id,
+		};
+
+		const accessToken = this.jwtService.sign(payload, {
+			secret: this.configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
+			expiresIn: '15m',
 		});
 
 		return { accessToken, refreshToken: rawRefreshToken };

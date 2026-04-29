@@ -8,7 +8,7 @@ import {
 	Injectable,
 	NotFoundException,
 } from '@nestjs/common';
-import { CreateUserDto, UpdateUserDto } from './dto';
+import { CreateUserDto, InternalUpdateUserDto, UpdateUserDto } from './dto';
 
 @Injectable()
 export class UserService {
@@ -83,12 +83,40 @@ export class UserService {
 		});
 	}
 
-	async update(id: string, dto: UpdateUserDto, tx?: Prisma.TransactionClient) {
+	async update(
+		userId: string,
+		dto: UpdateUserDto,
+		tx?: Prisma.TransactionClient,
+	) {
+		const prisma = tx ?? this.prismaService;
+
+		const { email } = dto;
+
+		const user = await this.findById(userId);
+
+		if (email && email !== user.email) await this.alreadyExists(email, tx);
+
+		const updatedUser = await prisma.user.update({
+			where: { id: user.id },
+			data: {
+				email,
+			},
+			select: userSelect,
+		});
+
+		return updatedUser;
+	}
+
+	async updateInternal(
+		userId: string,
+		dto: InternalUpdateUserDto,
+		tx?: Prisma.TransactionClient,
+	) {
 		const prisma = tx ?? this.prismaService;
 
 		const { email, emailVerified, role } = dto;
 
-		const user = await this.findById(id);
+		const user = await this.findById(userId);
 
 		if (email && email !== user.email) await this.alreadyExists(email, tx);
 

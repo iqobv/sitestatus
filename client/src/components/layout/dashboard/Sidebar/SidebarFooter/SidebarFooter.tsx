@@ -1,19 +1,35 @@
 'use client';
 
 import { Button } from '@/components/ui';
+import { PRIVATE_PAGES } from '@/config';
 import { useAuth } from '@/hooks';
-import { MdLogout } from 'react-icons/md';
+import { MdLogout, MdOutlineSettings } from 'react-icons/md';
+import SidebarLink from '../SidebarLink/SidebarLink';
 import styles from './SidebarFooter.module.scss';
 
-const SidebarFooter = () => {
+interface SidebarFooterProps {
+	onClick: () => void;
+}
+
+const SidebarFooter = ({ onClick }: SidebarFooterProps) => {
 	const { isAuthenticated, isLoading, logout } = useAuth();
 
 	return (
-		<div className={styles['sidebar-footer']}>
+		<div className={styles.footer}>
 			{isAuthenticated && !isLoading && (
-				<Button onClick={() => logout()} variant="secondary" fullWidth>
-					<MdLogout size={20} /> Logout
-				</Button>
+				<>
+					<SidebarLink
+						link={{
+							href: PRIVATE_PAGES.SETTINGS.GENERAL,
+							label: 'Settings',
+							icon: MdOutlineSettings,
+						}}
+						onClick={onClick}
+					/>
+					<Button onClick={() => logout()} variant="secondary" fullWidth>
+						<MdLogout size={20} /> Logout
+					</Button>
+				</>
 			)}
 		</div>
 	);

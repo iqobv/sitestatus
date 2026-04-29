@@ -1,5 +1,5 @@
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
-import { Auth, Authorized } from '@libs/decorators';
+import { Auth, Authorized, IsPublic } from '@libs/decorators';
 import { createCustomMessageDto } from '@libs/utils';
 import {
 	Body,
@@ -25,6 +25,7 @@ import {
 } from './dto';
 import { ProjectService } from './project.service';
 
+@IsPublic()
 @Controller('projects')
 export class ProjectController {
 	constructor(private readonly projectService: ProjectService) {}

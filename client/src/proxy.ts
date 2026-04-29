@@ -62,9 +62,7 @@ export async function proxy(request: NextRequest) {
 		} else {
 			const internalPath = isAuthPage
 				? path
-				: path === '/'
-					? '/dashboard'
-					: `/dashboard${path}`;
+				: `/app${path === '/' ? '' : path}`;
 			response = NextResponse.rewrite(new URL(internalPath, request.url));
 		}
 	} else if (isStatusSubdomain) {
@@ -73,11 +71,13 @@ export async function proxy(request: NextRequest) {
 	} else {
 		const isPrivateSection =
 			path.startsWith(PRIVATE_PAGES.MONITORS.ALL) ||
-			path.startsWith(PRIVATE_PAGES.PROJECTS.ALL);
+			path.startsWith(PRIVATE_PAGES.PROJECTS.ALL) ||
+			path.startsWith(PRIVATE_PAGES.BASE_SETTINGS);
 
 		if (isPrivateSection || isAuthPage) {
 			const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || '';
 			url.host = `${SUBDOMAINS.APP}.${rootDomain}`;
+			url.pathname = path.replace('/app', '');
 			response = NextResponse.redirect(url);
 		} else {
 			response = NextResponse.next({

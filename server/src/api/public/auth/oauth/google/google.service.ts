@@ -1,5 +1,5 @@
 import { ERROR_MESSAGES } from '@libs/constants';
-import { ClientInfo } from '@libs/types';
+import { ClientInfoDto } from '@libs/dto';
 import {
 	forwardRef,
 	Inject,
@@ -20,7 +20,7 @@ export class GoogleService {
 		this.googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 	}
 
-	async verifyOneTapToken(credential: string, clientInfo: ClientInfo) {
+	async verifyOneTapToken(credential: string, clientInfo: ClientInfoDto) {
 		try {
 			const ticket = await this.googleClient.verifyIdToken({
 				idToken: credential,

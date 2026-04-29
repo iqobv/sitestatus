@@ -1,6 +1,7 @@
 import { ERROR_MESSAGES } from '@libs/constants';
+import { Auth, Authorized } from '@libs/decorators';
 import { createCustomMessageDto } from '@libs/utils';
-import { Body, Controller, Param, ParseUUIDPipe, Patch } from '@nestjs/common';
+import { Body, Controller, Patch } from '@nestjs/common';
 import {
 	ApiConflictResponse,
 	ApiOkResponse,
@@ -13,6 +14,7 @@ import { UserService } from './user.service';
 export class UserController {
 	constructor(private readonly userService: UserService) {}
 
+	@Auth()
 	@ApiOperation({
 		summary: 'Update user information',
 		description: 'Updates the information of an existing user',
@@ -22,10 +24,7 @@ export class UserController {
 		type: createCustomMessageDto(ERROR_MESSAGES.USER.USER_ALREADY_EXISTS),
 	})
 	@Patch(':id')
-	async update(
-		@Param('id', ParseUUIDPipe) id: string,
-		@Body() dto: UpdateUserDto,
-	) {
-		return await this.userService.update(id, dto);
+	async update(@Authorized('id') userId: string, @Body() dto: UpdateUserDto) {
+		return await this.userService.update(userId, dto);
 	}
 }

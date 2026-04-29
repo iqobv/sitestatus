@@ -6,3 +6,4 @@ export { default as LegalHeader } from './LegalHeader/LegalHeader';
 export { default as LegalWrapper } from './LegalWrapper/LegalWrapper';
 export { default as NotFoundWrapper } from './NotFoundWrapper/NotFoundWrapper';
 export { default as PublicPageFooter } from './PublicPageFooter/PublicPageFooter';
+export * from './settings/index';

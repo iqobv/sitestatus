@@ -10,6 +10,7 @@ export const QUERY_KEYS = {
 			'resendVerificationEmail',
 			email,
 		],
+		restoreAccount: (token: string) => ['restoreAccount', token],
 	} as const,
 	monitors: {
 		list: ['monitorsList'],

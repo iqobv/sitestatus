@@ -1,6 +1,4 @@
-// src/api/public/auth/auth.service.ts
-
-import { User } from '@generated/postgres/client';
+import { Prisma, User } from '@generated/postgres/client';
 import { TokenType } from '@generated/postgres/enums';
 import { MailService } from '@infra/mail/mail.service';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
@@ -265,7 +263,48 @@ export class AuthService {
 		return await this.generateAndSaveTokens(user, clientInfo);
 	}
 
-	private async generateAndSaveTokens(user: User, clientInfo: ClientInfoDto) {
+	async generateRestoreAccountToken(email: string) {
+		const user = await this.userService.findByEmail(email, true, true);
+
+		if (!user) return;
+
+		const token = await this.tokenService.createToken({
+			userId: user.id,
+			type: TokenType.RESTORE_ACCOUNT,
+			expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+		});
+
+		await this.mailService.sendRestoreAccountEmail(user.email, token);
+
+		return SUCCESS_MESSAGES.AUTH.SEND_RESTORE_ACCOUNT_EMAIL;
+	}
+
+	async restoreAccount(token: string, clientInfo: ClientInfoDto) {
+		return await this.prismaService.$transaction(async (tx) => {
+			const user = await this.tokenService.verifyAndConsumeToken(
+				token,
+				TokenType.RESTORE_ACCOUNT,
+				tx,
+			);
+
+			const tokens = await this.generateAndSaveTokens(user, clientInfo);
+
+			await tx.user.update({
+				where: { id: user.id },
+				data: { deletedAt: null },
+			});
+
+			return tokens;
+		});
+	}
+
+	private async generateAndSaveTokens(
+		user: User,
+		clientInfo: ClientInfoDto,
+		tx?: Prisma.TransactionClient,
+	) {
+		const prisma = tx ?? this.prismaService;
+
 		const rawRefreshToken = crypto.randomBytes(32).toString('hex');
 		const refreshTokenHash = crypto
 			.createHash('sha256')
@@ -275,12 +314,15 @@ export class AuthService {
 		const now = new Date();
 		const expiresAt = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
 
-		const session = await this.sessionService.createSession({
-			userId: user.id,
-			refreshTokenHash,
-			clientInfo,
-			expiresAt,
-		});
+		const session = await this.sessionService.createSession(
+			{
+				userId: user.id,
+				refreshTokenHash,
+				clientInfo,
+				expiresAt,
+			},
+			prisma,
+		);
 
 		const payload: JwtPayload = {
 			id: user.id,

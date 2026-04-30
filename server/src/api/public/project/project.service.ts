@@ -43,7 +43,7 @@ export class ProjectService {
 
 	async getPublicProjectBySlug(slug: string) {
 		const project = await this.prismaService.project.findUnique({
-			where: { slug, isPublic: true },
+			where: { slug, isPublic: true, deletedAt: null },
 			select: projectSelect,
 		});
 
@@ -64,7 +64,7 @@ export class ProjectService {
 		}
 
 		const project = await this.prismaService.project.findUnique({
-			where: { id, ownerId: userId },
+			where: { id, ownerId: userId, deletedAt: null },
 			select: projectSelect,
 		});
 
@@ -76,7 +76,7 @@ export class ProjectService {
 
 	async getAllProjects(userId: string) {
 		return await this.prismaService.project.findMany({
-			where: { ownerId: userId },
+			where: { ownerId: userId, deletedAt: null },
 			select: projectSelect,
 		});
 	}
@@ -86,7 +86,7 @@ export class ProjectService {
 
 		try {
 			return await this.prismaService.project.update({
-				where: { id },
+				where: { id, ownerId: userId, deletedAt: null },
 				data: {
 					...dto,
 				},
@@ -107,8 +107,9 @@ export class ProjectService {
 	async deleteProject(id: string, userId: string) {
 		await this.getProjectById(id, userId);
 
-		await this.prismaService.project.delete({
-			where: { id },
+		await this.prismaService.project.update({
+			where: { id, ownerId: userId, deletedAt: null },
+			data: { deletedAt: new Date() },
 		});
 
 		return SUCCESS_MESSAGES.PROJECT.PROJECT_DELETED;

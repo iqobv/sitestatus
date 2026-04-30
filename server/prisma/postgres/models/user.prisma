@@ -11,6 +11,8 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  deletedAt DateTime? @map("deleted_at")
+
   providers UserProvider[]
   tokens    Token[]
   monitors  Monitor[]

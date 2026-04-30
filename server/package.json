@@ -27,7 +27,8 @@
 		"prisma:studio:pg": "prisma studio --config ./prisma/postgres/prisma.config.ts",
 		"prisma:studio:turso": "prisma studio --config ./prisma/turso/prisma.config.ts",
 		"prisma:migrate:deploy:pg": "prisma migrate deploy --config ./prisma/postgres/prisma.config.ts",
-		"prisma:migrate:deploy:turso": "prisma migrate deploy --config ./prisma/turso/prisma.config.ts"
+		"prisma:migrate:deploy:turso": "prisma migrate deploy --config ./prisma/turso/prisma.config.ts",
+		"email:dev": "npx email dev --dir src/infra/mail/templates/ --port 3001"
 	},
 	"dependencies": {
 		"@azure/service-bus": "^7.9.5",
@@ -80,6 +81,7 @@
 		"@nestjs/cli": "^11.0.17",
 		"@nestjs/schematics": "^11.0.10",
 		"@nestjs/testing": "^11.1.18",
+		"@react-email/ui": "^6.0.5",
 		"@swc/cli": "^0.8.1",
 		"@swc/core": "^1.15.24",
 		"@types/bcrypt": "^6.0.0",
@@ -103,6 +105,7 @@
 		"globals": "^17.4.0",
 		"jest": "^30.3.0",
 		"prettier": "^3.8.1",
+		"react-email": "^6.0.5",
 		"source-map-support": "^0.5.21",
 		"supertest": "^7.2.2",
 		"ts-jest": "^29.4.9",
@@ -117,7 +120,8 @@
 		"lodash": "^4.17.24",
 		"path-to-regexp": "^8.3.1",
 		"picomatch": "^4.0.4",
-		"@hono/node-server": "1.19.13"
+		"@hono/node-server": "1.19.13",
+		"postcss": "^8.5.10"
 	},
 	"jest": {
 		"moduleFileExtensions": [

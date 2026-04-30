@@ -7,4 +7,6 @@ export const AUTH_SUCCESS_MESSAGES = {
 	REFRESH_TOKENS: 'Tokens refreshed successfully',
 	FORGOT_PASSWORD: 'Reset link sent',
 	RESET_PASSWORD: 'Password reset successfully',
+	SEND_RESTORE_ACCOUNT_EMAIL: 'Restore account email sent',
+	RESTORE_ACCOUNT: 'Account restored successfully',
 } as const;

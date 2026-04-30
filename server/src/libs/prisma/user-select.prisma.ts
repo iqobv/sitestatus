@@ -5,5 +5,6 @@ export const userSelect: Prisma.UserSelect = {
 	email: true,
 	createdAt: true,
 	role: true,
+	deletedAt: true,
 	emailVerified: true,
 };

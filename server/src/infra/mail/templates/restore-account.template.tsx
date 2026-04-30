@@ -3,24 +3,21 @@ import React from 'react';
 import { BaseEmailProps } from './base-email-props.types';
 import { Button, Wrapper } from './components';
 
-export default function VerificationEmailTemplate({
-	url,
-	iconUrl,
-}: BaseEmailProps) {
+const RestoreAccountTemplate = ({ url, iconUrl }: BaseEmailProps) => {
 	return (
 		<Wrapper
 			iconUrl={iconUrl}
-			preview="Thanks for signing up! Please click the button below to verify your email address and complete your registration."
+			preview="We received a request to restore your account. Click the button below to confirm restoration."
 		>
 			<Heading as="h2" className="text-left text-2xl text-white m-0">
-				Verify Your Email
+				Restore Your Account
 			</Heading>
 			<Section className="py-1 text-left">
 				<Text className="font-base text-white m-0 mt-8 mb-6 leading-[24px]">
-					Thanks for signing up! Please click the button below to verify your
-					email address and complete your registration.
+					We received a request to restore your account. Click the button below
+					to confirm restoration.
 				</Text>
-				<Button href={url}>Verify Email</Button>
+				<Button href={url}>Restore Account</Button>
 			</Section>
 			<Text className="font-base text-white mt-8 mb-2 leading-[24px]">
 				If you did not request this email, you can safely ignore it. This link
@@ -31,4 +28,6 @@ export default function VerificationEmailTemplate({
 			</Text>
 		</Wrapper>
 	);
-}
+};
+
+export default RestoreAccountTemplate;

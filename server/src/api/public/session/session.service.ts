@@ -24,7 +24,9 @@ export class SessionService {
 
 		const prisma = tx ?? this.prismaService;
 
-		const geo = isPrivateIP(ip) ? null : await this.getGeoInfo(ip);
+		const geo: GeoDataDto | null = isPrivateIP(ip)
+			? null
+			: await this.getGeoInfo(ip);
 
 		const parsedUa = this.parseUserAgent(userAgent);
 

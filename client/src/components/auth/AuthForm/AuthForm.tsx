@@ -5,7 +5,7 @@ import { ApiErrorResponse, Field } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
 	DefaultValues,
 	FieldValues,
@@ -16,6 +16,7 @@ import {
 import { ZodType } from 'zod';
 import styles from './AuthForm.module.scss';
 import AuthFormGlobalError from './AuthFormGlobalError/AuthFormGlobalError';
+import UserDeletedError from './UserDeletedError/UserDeletedError';
 import VerifyEmailButton from './VerifyEmailButton/VerifyEmailButton';
 
 interface AuthFormProps<T extends FieldValues, R> {
@@ -44,6 +45,7 @@ const AuthForm = <T extends FieldValues, R>({
 	renderExtra,
 }: AuthFormProps<T, R>) => {
 	const [isUnverified, setIsUnverified] = useState(false);
+	const [isUserDeletedError, setIsUserDeletedError] = useState<boolean>(false);
 
 	const resolver = !!schema ? zodResolver(schema) : undefined;
 
@@ -62,6 +64,11 @@ const AuthForm = <T extends FieldValues, R>({
 
 	const { mutate, isPending } = useMutation({
 		mutationFn,
+		onMutate: () => {
+			setIsUserDeletedError(false);
+			setError('root', { message: undefined });
+			setIsUnverified(false);
+		},
 		onSuccess(data) {
 			reset();
 			onSuccess?.(data);
@@ -72,7 +79,6 @@ const AuthForm = <T extends FieldValues, R>({
 
 				if (apiData.field) {
 					setError(apiData.field as Path<T>, {
-						type: 'server',
 						message: apiData.message,
 					});
 				} else {
@@ -80,7 +86,11 @@ const AuthForm = <T extends FieldValues, R>({
 						setIsUnverified(true);
 					}
 
-					setError('root', { message: apiData.message, type: 'server' });
+					if (apiData.code === 'USER_DELETED') {
+						setIsUserDeletedError(true);
+					}
+
+					setError('root', { message: apiData.message });
 					resetField('password' as Path<T>);
 				}
 			}
@@ -97,6 +107,7 @@ const AuthForm = <T extends FieldValues, R>({
 				<>
 					<AuthFormGlobalError message={errors.root.message} />
 					{isUnverified && <VerifyEmailButton email={email} />}
+					{isUserDeletedError && <UserDeletedError email={email} />}
 				</>
 			)}
 			{fields.map(

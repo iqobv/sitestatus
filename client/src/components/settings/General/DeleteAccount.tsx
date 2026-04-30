@@ -1,10 +1,27 @@
 'use client';
 
+import { deleteAccount } from '@/api';
 import { Button, ConfirmAction } from '@/components/ui';
 import { useAuth } from '@/hooks';
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
 const DeleteAccount = () => {
+	const router = useRouter();
+
 	const { user } = useAuth();
+
+	const { mutate } = useMutation({
+		mutationFn: deleteAccount,
+		onSuccess: () => {
+			router.refresh();
+		},
+		onError: (error) => {
+			toast.error(error.message || 'Failed to delete account');
+			router.refresh();
+		},
+	});
 
 	if (!user) return null;
 
@@ -18,7 +35,7 @@ const DeleteAccount = () => {
 					Delete
 				</Button>
 			}
-			onConfirm={() => console.log('Account deleted')}
+			onConfirm={() => mutate()}
 			confirmWithInput
 			exceptedInputValue={user.email}
 		/>

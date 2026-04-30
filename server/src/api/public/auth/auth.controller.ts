@@ -37,6 +37,7 @@ import {
 	RegisterMessageDto,
 	ResendVerificationEmailDto,
 	ResetPasswordDto,
+	RestoreAccountDto,
 	VerifyEmailDto,
 } from './dto';
 
@@ -190,6 +191,7 @@ export class AuthController {
 		return SUCCESS_MESSAGES.AUTH.FORGOT_PASSWORD;
 	}
 
+	@Throttle({ strict: { limit: 3, ttl: 60000 } })
 	@Post('reset-password')
 	@ApiOperation({ summary: 'Reset user password' })
 	@ApiOkResponse({
@@ -201,6 +203,7 @@ export class AuthController {
 	}
 
 	@Auth()
+	@Throttle({ strict: { limit: 3, ttl: 60000 } })
 	@ApiOperation({ summary: 'Change user password' })
 	@ApiOkResponse({
 		type: createCustomMessageDto(SUCCESS_MESSAGES.AUTH.CHANGE_PASSWORD),
@@ -215,5 +218,42 @@ export class AuthController {
 	) {
 		await this.authService.changePassword(userId, dto);
 		return SUCCESS_MESSAGES.AUTH.CHANGE_PASSWORD;
+	}
+
+	@Throttle({ strict: { limit: 3, ttl: 60000 } })
+	@ApiOperation({ summary: 'Generate account restore token' })
+	@ApiOkResponse({
+		type: createCustomMessageDto(
+			SUCCESS_MESSAGES.AUTH.SEND_RESTORE_ACCOUNT_EMAIL,
+		),
+	})
+	@Post('generate-restore-token')
+	async generateRestoreToken(@Body() dto: RestoreAccountDto) {
+		await this.authService.generateRestoreAccountToken(dto.email);
+		return SUCCESS_MESSAGES.AUTH.SEND_RESTORE_ACCOUNT_EMAIL;
+	}
+
+	@ApiOperation({ summary: 'Generate account restore token' })
+	@ApiOkResponse({
+		type: createCustomMessageDto(
+			SUCCESS_MESSAGES.AUTH.SEND_RESTORE_ACCOUNT_EMAIL,
+		),
+	})
+	@Post('restore-account')
+	async restoreAccount(
+		@Query('token') token: string,
+		@Req() req: Request,
+		@Res({ passthrough: true }) res: Response,
+	) {
+		const info = extractClientInfo(req);
+
+		const { accessToken, refreshToken } = await this.authService.restoreAccount(
+			token,
+			info,
+		);
+
+		setAuthCookies(res, accessToken, refreshToken, this.configService);
+
+		return SUCCESS_MESSAGES.AUTH.RESTORE_ACCOUNT;
 	}
 }

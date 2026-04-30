@@ -1,5 +1,3 @@
-// src/monitor/monitor.service.ts
-
 import { CACHE_EMIT_EVENTS } from '@api/private/monitor-engine/constants';
 import { MonitorUpdatePayload } from '@api/private/monitor-engine/interfaces';
 import { Monitor, Prisma } from '@generated/postgres/client';
@@ -69,7 +67,7 @@ export class MonitorService {
 		const targetHours = 24;
 
 		const monitors = await this.pgPrismaService.monitor.findMany({
-			where: { userId, projectId: projectId || null },
+			where: { userId, projectId: projectId || null, deletedAt: null },
 			orderBy: { createdAt: 'desc' },
 		});
 
@@ -88,7 +86,7 @@ export class MonitorService {
 		);
 
 		const monitors = await this.pgPrismaService.monitor.findMany({
-			where: { projectId },
+			where: { projectId, deletedAt: null },
 			orderBy: { createdAt: 'desc' },
 		});
 
@@ -156,7 +154,7 @@ export class MonitorService {
 		);
 
 		const monitor = await this.pgPrismaService.monitor.findUnique({
-			where: { id, userId },
+			where: { id, userId, deletedAt: null },
 			include: {
 				regionConfigs: {
 					where: { isActive: true },
@@ -226,7 +224,7 @@ export class MonitorService {
 
 	async findById(userId: string, id: string) {
 		const monitor = await this.pgPrismaService.monitor.findUnique({
-			where: { id, userId },
+			where: { id, userId, deletedAt: null },
 			include: {
 				regionConfigs: {
 					where: { isActive: true },
@@ -311,7 +309,7 @@ export class MonitorService {
 		const monitor = await this.ownerCheck(id, userId);
 
 		const updatedMonitor = await this.pgPrismaService.monitor.update({
-			where: { id: monitor.id, userId },
+			where: { id: monitor.id, userId, deletedAt: null },
 			data: { isActive: !monitor.isActive },
 			include: {
 				regionConfigs: {
@@ -335,8 +333,9 @@ export class MonitorService {
 	async remove(id: string, userId: string) {
 		const monitor = await this.ownerCheck(id, userId);
 
-		await this.pgPrismaService.monitor.delete({
-			where: { id: monitor.id, userId },
+		await this.pgPrismaService.monitor.update({
+			where: { id: monitor.id, userId, deletedAt: null },
+			data: { deletedAt: new Date(), isActive: false },
 		});
 
 		this.eventEmitter.emit(CACHE_EMIT_EVENTS.MONITOR.DELETED, id);
@@ -346,7 +345,7 @@ export class MonitorService {
 
 	private async ownerCheck(id: string, userId: string) {
 		const monitor = await this.pgPrismaService.monitor.findUnique({
-			where: { id, userId },
+			where: { id, userId, deletedAt: null },
 		});
 
 		if (!monitor)

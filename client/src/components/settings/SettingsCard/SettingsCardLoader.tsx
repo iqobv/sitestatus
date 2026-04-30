@@ -1,7 +1,7 @@
-import React from 'react';
+import { SkeletonLoader } from '@/components/ui';
 
 const SettingsCardLoader = () => {
-  return <div>SettingsCardLoader</div>;
+	return <SkeletonLoader height={130} />;
 };
 
 export default SettingsCardLoader;

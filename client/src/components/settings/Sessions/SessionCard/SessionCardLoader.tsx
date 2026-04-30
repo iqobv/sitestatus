@@ -1,7 +1,7 @@
-import React from 'react';
+import { SkeletonLoader } from '@/components/ui';
 
 const SessionCardLoader = () => {
-  return <div>SessionCardLoader</div>;
+	return <SkeletonLoader height={130} />;
 };
 
 export default SessionCardLoader;

@@ -2,8 +2,10 @@
 
 import { Button } from '@/components/ui';
 import { Session } from '@/types';
+import { capitalize } from '@/utils';
 import styles from './SessionCard.module.scss';
 import SessionDevice from './SessionDevice';
+import { useTerminateMutations } from './useTerminateMutataions.hook';
 
 interface SessionCardProps {
 	session: Session;
@@ -16,9 +18,14 @@ const SessionCard = ({
 	isCurrentSession = false,
 	showTerminateAllButton = false,
 }: SessionCardProps) => {
+	const { terminateAllOtherSessionsMutation, terminateSessionMutation } =
+		useTerminateMutations();
+
 	const { device, os, browser, city, country } = session;
 
-	const deviceLabel = [device, os, browser].filter(Boolean).join(', ');
+	const deviceLabel = [device && capitalize(device), os, browser]
+		.filter(Boolean)
+		.join(', ');
 	const location = [city, country].filter(Boolean).join(', ');
 
 	return (
@@ -31,12 +38,24 @@ const SessionCard = ({
 				</div>
 			</div>
 			{!isCurrentSession && (
-				<Button variant="outlined" fullWidth className={styles.terminateButton}>
+				<Button
+					variant="outlined"
+					fullWidth
+					className={styles.terminateButton}
+					onClick={() => terminateSessionMutation.mutate(session.id)}
+					disabled={terminateSessionMutation.isPending}
+				>
 					Terminate
 				</Button>
 			)}
 			{isCurrentSession && showTerminateAllButton && (
-				<Button variant="outlined" fullWidth className={styles.terminateButton}>
+				<Button
+					variant="outlined"
+					fullWidth
+					className={styles.terminateButton}
+					onClick={() => terminateAllOtherSessionsMutation.mutate()}
+					disabled={terminateAllOtherSessionsMutation.isPending}
+				>
 					Terminate All Other Sessions
 				</Button>
 			)}

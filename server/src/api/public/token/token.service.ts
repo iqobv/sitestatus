@@ -59,7 +59,11 @@ export class TokenService {
 			throw new BadRequestException(ERROR_MESSAGES.TOKEN.TOKEN_EXPIRED);
 		}
 
-		await prisma.token.delete({ where: { id: record.id } });
+		try {
+			await prisma.token.delete({ where: { id: record.id } });
+		} catch (error) {
+			console.log(error);
+		}
 
 		return { ...record.user };
 	}

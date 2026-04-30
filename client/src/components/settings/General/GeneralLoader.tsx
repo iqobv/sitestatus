@@ -1,7 +1,8 @@
-import React from 'react';
+import SettingsWrapperLoader from '../SettingsWrapper/SettingsWrapperLoader';
+import { GENERAL_SETTINGS_ITEMS } from './generalSettingsItems';
 
 const GeneralLoader = () => {
-  return <div>GeneralLoader</div>;
+	return <SettingsWrapperLoader count={GENERAL_SETTINGS_ITEMS.length} />;
 };
 
 export default GeneralLoader;

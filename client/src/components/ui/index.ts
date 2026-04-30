@@ -4,6 +4,7 @@ export { default as BackButton } from './BackButton/BackButton';
 export { default as Button } from './Button/Button';
 export { default as ButtonGroup } from './ButtonGroup/ButtonGroup';
 export { default as Checkbox } from './Checkbox/Checkbox';
+export { default as ConfirmAction } from './ConfirmAction/ConfirmAction';
 export { default as Dropdown } from './Dropdown/index';
 export type { FormProps } from './Form/Form.types';
 export { default as Form } from './Form/index';

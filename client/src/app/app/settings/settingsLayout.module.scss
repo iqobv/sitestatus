@@ -1,0 +1,11 @@
+@use '../../../styles/mixins' as *;
+
+.container {
+	display: flex;
+	flex-direction: column;
+	gap: 32px;
+
+	@include respond-to(lg) {
+		flex-direction: row;
+	}
+}

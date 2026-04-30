@@ -1,5 +1,5 @@
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
-import { Auth, Authorized } from '@libs/decorators';
+import { Auth, Authorized, IsPublic } from '@libs/decorators';
 import { createCustomMessageDto } from '@libs/utils';
 import {
 	Body,
@@ -27,6 +27,7 @@ import {
 } from './dto';
 import { MonitorService } from './services/monitor.service';
 
+@IsPublic()
 @Controller('monitors')
 export class MonitorController {
 	constructor(private readonly monitorService: MonitorService) {}

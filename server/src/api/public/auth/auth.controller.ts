@@ -1,5 +1,5 @@
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
-import { Auth, Authorized, Cookie } from '@libs/decorators';
+import { Auth, Authorized, Cookie, IsPublic } from '@libs/decorators';
 import {
 	clearAuthCookies,
 	createCustomMessageDto,
@@ -48,6 +48,7 @@ export class AuthController {
 		private readonly configService: ConfigService,
 	) {}
 
+	@IsPublic()
 	@Throttle({ strict: { limit: 5, ttl: 60000 } })
 	@ApiOperation({ summary: 'Register a new user' })
 	@ApiOkResponse({ type: RegisterMessageDto })
@@ -60,6 +61,7 @@ export class AuthController {
 		return await this.authService.register(dto);
 	}
 
+	@IsPublic()
 	@Throttle({ strict: { limit: 5, ttl: 60000 } })
 	@ApiOperation({ summary: 'Log in a user and create a session' })
 	@Post('login')
@@ -83,6 +85,7 @@ export class AuthController {
 		return SUCCESS_MESSAGES.AUTH.LOGIN_SUCCESS;
 	}
 
+	@IsPublic()
 	@ApiOperation({ summary: 'Log out the current user' })
 	@ApiOkResponse({ type: Boolean })
 	@Auth()
@@ -125,6 +128,7 @@ export class AuthController {
 		return { ...rest };
 	}
 
+	@IsPublic()
 	@Throttle({ strict: { limit: 10, ttl: 60000 } })
 	@Post('refresh')
 	@ApiOperation({ summary: 'Refresh authentication tokens' })
@@ -137,19 +141,20 @@ export class AuthController {
 		@Cookie('refreshToken') rt: string,
 		@Res({ passthrough: true }) res: Response,
 	) {
-		if (!rt)
-			throw new UnauthorizedException(
-				ERROR_MESSAGES.AUTH.REFRESH_TOKEN_MISSING,
-			);
-		const info = extractClientInfo(req);
-		const tokens = await this.authService.refreshTokens(rt, info);
-		setAuthCookies(
-			res,
-			tokens.accessToken,
-			tokens.refreshToken,
-			this.configService,
-		);
-		return SUCCESS_MESSAGES.AUTH.REFRESH_TOKENS;
+		try {
+			if (!rt)
+				throw new UnauthorizedException(
+					ERROR_MESSAGES.AUTH.REFRESH_TOKEN_MISSING,
+				);
+			const info = extractClientInfo(req);
+			const { accessToken, refreshToken } =
+				await this.authService.refreshTokens(rt, info);
+			setAuthCookies(res, accessToken, refreshToken, this.configService);
+			return SUCCESS_MESSAGES.AUTH.REFRESH_TOKENS;
+		} catch (error) {
+			clearAuthCookies(res, this.configService);
+			throw error;
+		}
 	}
 
 	@Throttle({ strict: { limit: 3, ttl: 60000 } })
@@ -165,6 +170,7 @@ export class AuthController {
 		return await this.authService.resendVerification(dto.email);
 	}
 
+	@IsPublic()
 	@ApiOperation({ summary: 'Get current user profile' })
 	@Auth()
 	@ApiOkResponse({ type: UserWithoutPasswordDto })

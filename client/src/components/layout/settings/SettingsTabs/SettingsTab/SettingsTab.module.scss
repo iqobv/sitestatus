@@ -1,0 +1,27 @@
+@use '../../../../../styles/mixins' as *;
+
+.tab {
+	--active-border: 2px solid;
+
+	color: var(--secondary-color);
+	font-size: 1.1rem;
+	padding: 8px 18px;
+	font-weight: 500;
+	border-left: 2px solid transparent;
+
+	&.active {
+		border-bottom: var(--active-border);
+		border-bottom-color: var(--primary-color);
+		color: var(--primary-color);
+	}
+
+	@include respond-to(lg) {
+		border-radius: 0 4px 4px 0;
+
+		&.active {
+			background-color: var(--dashboard-sidebar-link-active-bg);
+			border-bottom: none;
+			border-left-color: var(--primary-color);
+		}
+	}
+}

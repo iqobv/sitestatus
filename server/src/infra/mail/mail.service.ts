@@ -5,9 +5,13 @@ import { render } from '@react-email/components';
 import Mail from 'nodemailer/lib/mailer';
 import { createElement } from 'react';
 import { SendEmailDto } from './dto';
-import { ResetPasswordTemplate, VerificationEmailTemplate } from './templates';
+import {
+	EmailNotificationChannelVerifyTemplate,
+	ResetPasswordTemplate,
+	RestoreAccountTemplate,
+	VerificationEmailTemplate,
+} from './templates';
 import { BaseEmailProps } from './templates/base-email-props.types';
-import RestoreAccountTemplate from './templates/restore-account.template';
 
 @Injectable()
 export class MailService {
@@ -50,6 +54,20 @@ export class MailService {
 		return await this.sendMail({
 			recipients: [email],
 			subject: 'Restore your account',
+			html: html,
+		});
+	}
+
+	async sendEmailNotificationChannelVerify(email: string, token: string) {
+		const url = `/notification-channel-verify?token=${token}`;
+		const html = await this.generateTemplate(
+			EmailNotificationChannelVerifyTemplate,
+			url,
+		);
+
+		return await this.sendMail({
+			recipients: [email],
+			subject: 'Verify your email address',
 			html: html,
 		});
 	}

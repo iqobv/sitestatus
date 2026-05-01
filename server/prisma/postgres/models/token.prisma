@@ -1,7 +1,8 @@
 model Token {
   id String @id @default(uuid()) @db.Uuid
 
-  userId String @map("user_id") @db.Uuid
+  userId    String  @map("user_id") @db.Uuid
+  channelId String? @map("channel_id") @db.Uuid
 
   token String @unique
 
@@ -11,6 +12,8 @@ model Token {
   createdAt DateTime @default(now()) @map("created_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  channel NotificationChannel? @relation(fields: [channelId], references: [id], onDelete: Cascade)
 
   @@unique([userId, type])
   @@index([userId, type])

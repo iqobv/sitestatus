@@ -8,14 +8,20 @@ import {
 	Injectable,
 	NotFoundException,
 } from '@nestjs/common';
+import { AlertSettingsService } from '../alert-settings/alert-settings.service';
+import { NotificationChannelService } from '../notification-channel/notification-channel.service';
 import { CreateUserDto, InternalUpdateUserDto, UpdateUserDto } from './dto';
 
 @Injectable()
 export class UserService {
-	constructor(private readonly prismaService: PgPrismaService) {}
+	constructor(
+		private readonly prismaService: PgPrismaService,
+		private readonly notificationChannelService: NotificationChannelService,
+		private readonly alertSettingsService: AlertSettingsService,
+	) {}
 
 	async create(dto: CreateUserDto, tx?: Prisma.TransactionClient) {
-		const { email, password } = dto;
+		const { email, password, ...rest } = dto;
 
 		const prisma = tx || this.prismaService;
 
@@ -31,23 +37,18 @@ export class UserService {
 				email,
 				password: hashedPassword,
 				role: isAdmin ? 'ADMIN' : 'USER',
+				...rest,
 			},
 			select: userSelect,
 		});
 
-		return user;
-	}
+		await this.notificationChannelService.initPrimaryNotificationChannel(
+			user.id,
+			email,
+			tx,
+		);
 
-	async createOauthUser(email: string) {
-		await this.alreadyExists(email);
-
-		const user = await this.prismaService.user.create({
-			data: {
-				email,
-				emailVerified: true,
-			},
-			select: userSelect,
-		});
+		await this.alertSettingsService.createAlertSettings(user.id, {}, tx);
 
 		return user;
 	}
@@ -170,6 +171,36 @@ export class UserService {
 		await this.prismaService.session.deleteMany({ where: { userId: user.id } });
 
 		return SUCCESS_MESSAGES.USER.USER_DELETED;
+	}
+
+	async createInitialDataForRegisteredUser() {
+		return await this.prismaService.$transaction(async (tx) => {
+			const usersWithoutChannels = await tx.user.findMany({
+				where: {
+					notificationChannels: { none: {} },
+					deletedAt: null,
+				},
+			});
+
+			const usersWithoutAlertSettings = await tx.user.findMany({
+				where: {
+					alertSettings: { none: {} },
+					deletedAt: null,
+				},
+			});
+
+			for (const user of usersWithoutChannels) {
+				await this.notificationChannelService.initPrimaryNotificationChannel(
+					user.id,
+					user.email,
+					tx,
+				);
+			}
+
+			for (const user of usersWithoutAlertSettings) {
+				await this.alertSettingsService.createAlertSettings(user.id, {}, tx);
+			}
+		});
 	}
 
 	private async alreadyExists(email: string, tx?: Prisma.TransactionClient) {

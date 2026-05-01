@@ -15,7 +15,8 @@ model Project {
 
   deletedAt DateTime? @map("deleted_at")
 
-  monitors Monitor[]
+  monitors      Monitor[]
+  alertSettings AlertSettings[]
 
   owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 

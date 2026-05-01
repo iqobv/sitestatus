@@ -5,7 +5,7 @@ const colors = {
 	bg: '#0A0A0A',
 	'bg-2': '#131313',
 	fg: '#404040',
-	'fg-dark': '#E5E5E5',
+	'fg-2': '#d5d5d5',
 	stroke: '#474747',
 	accent: '#299f4e',
 } as const;

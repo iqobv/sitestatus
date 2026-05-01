@@ -1,7 +1,8 @@
+import { UserRole } from '@generated/postgres/enums';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
 import { Auth, Authorized } from '@libs/decorators';
 import { clearAuthCookies, createCustomMessageDto } from '@libs/utils';
-import { Body, Controller, Delete, Patch, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Patch, Post, Res } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
 	ApiConflictResponse,
@@ -55,5 +56,11 @@ export class UserController {
 		clearAuthCookies(res, this.configService);
 
 		return result;
+	}
+
+	@Auth(UserRole.ADMIN)
+	@Post('initial-data')
+	async createInitialDataForRegisteredUser() {
+		return await this.userService.createInitialDataForRegisteredUser();
 	}
 }

@@ -1,16 +1,27 @@
+import { ServiceBusClient, ServiceBusSender } from '@azure/service-bus';
 import { Prisma } from '@generated/turso/client';
 import { SiteStatus } from '@generated/turso/enums';
 import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
 import { Injectable } from '@nestjs/common';
-import { PingResultDto } from '../dto';
+import { PingResultDto, ServiceBusIncedentPayload } from '../dto';
 import { MonitorCacheService } from './monitor-cache.service';
 
 @Injectable()
 export class EngineDbService {
+	private sender: ServiceBusSender;
+
 	constructor(
 		private readonly tursoPrismaService: TursoPrismaService,
 		private readonly cache: MonitorCacheService,
+		private readonly sbClient: ServiceBusClient,
 	) {}
+
+	private getSender() {
+		if (!this.sender) {
+			const queueName = 'incedents';
+			this.sender = this.sbClient.createSender(queueName);
+		}
+	}
 
 	public async saveBatchResults(results: PingResultDto[]): Promise<void> {
 		if (results.length === 0) return;
@@ -21,6 +32,7 @@ export class EngineDbService {
 
 		const regions = this.cache.getRegions();
 		const monitors = this.cache.getMonitors();
+		const messagesToSend: ServiceBusIncedentPayload[] = [];
 
 		await this.tursoPrismaService.$transaction(async (tx) => {
 			const mappedRegions = new Map(regions.map((r) => [r.key, r.id]));
@@ -33,11 +45,16 @@ export class EngineDbService {
 
 			const activeIncidents = await tx.monitorIncident.findMany({
 				where: { monitorId: { in: monitorIds }, resolved: false },
-				select: { id: true, monitorId: true, regionId: true },
+				select: {
+					id: true,
+					monitorId: true,
+					regionId: true,
+					alertTriggered: true,
+				},
 			});
 
 			const activeIncidentMap = new Map(
-				activeIncidents.map((a) => [`${a.monitorId}-${a.regionId}`, a.id]),
+				activeIncidents.map((a) => [`${a.monitorId}-${a.regionId}`, a]),
 			);
 
 			const logsData = results.map((r) => ({
@@ -106,9 +123,9 @@ export class EngineDbService {
 				);
 
 				const incidentKey = `${monitorId}-${regionId}`;
-				const activeIncidentId = activeIncidentMap.get(incidentKey);
+				const activeIncident = activeIncidentMap.get(incidentKey);
 
-				if (isDown && !activeIncidentId) {
+				if (isDown && !activeIncident) {
 					incidentsToCreate.push({
 						monitorId,
 						regionId,
@@ -116,8 +133,20 @@ export class EngineDbService {
 						statusCode: result.statusCode || null,
 						triggerLogId: logMap.get(incidentKey) || null,
 					});
-				} else if (status === SiteStatus.UP && activeIncidentId) {
-					incidentsToResolveIds.push(activeIncidentId);
+				} else if (status === SiteStatus.UP && activeIncident) {
+					incidentsToResolveIds.push(activeIncident.id);
+
+					if (activeIncident.alertTriggered) {
+						messagesToSend.push({
+							body: {
+								type: SiteStatus.UP,
+								incidentId: activeIncident.id,
+								monitorId,
+								regionId,
+							},
+							contentType: 'application/json',
+						});
+					}
 				}
 			}
 
@@ -139,9 +168,24 @@ export class EngineDbService {
 			}
 
 			if (incidentsToCreate.length > 0) {
-				stateUpdates.push(
-					tx.monitorIncident.createMany({ data: incidentsToCreate }),
-				);
+				const createdIncidents = await tx.monitorIncident.createManyAndReturn({
+					data: incidentsToCreate,
+				});
+
+				const scheduledEnqueueTimeUtc = new Date(Date.now() + 60 * 1000);
+
+				for (const incedent of createdIncidents) {
+					messagesToSend.push({
+						body: {
+							type: SiteStatus.DOWN,
+							incidentId: incedent.id,
+							monitorId: incedent.monitorId,
+							regionId: incedent.regionId,
+						},
+						contentType: 'application/json',
+						scheduledEnqueueTimeUtc,
+					});
+				}
 			}
 
 			if (incidentsToResolveIds.length > 0) {
@@ -155,5 +199,9 @@ export class EngineDbService {
 
 			await Promise.all([...monitorRegionUpdates, ...stateUpdates]);
 		});
+
+		if (messagesToSend.length > 0) {
+			await this.sender.sendMessages(messagesToSend);
+		}
 	}
 }

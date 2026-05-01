@@ -56,16 +56,6 @@ const Wrapper = ({ children, iconUrl, preview, head }: WrapperProps) => {
 							font-weight: inherit;
 							line-height: inherit;
 						}
-
-						.keep-white {
-							background-color: #ffffff !important;
-							background-image: linear-gradient(#ffffff, #ffffff) !important;
-						}
-
-						.keep-black-text {
-							color: #000000 !important;
-							-webkit-text-fill-color: #000000 !important;
-						}
 					`}
 					</style>
 					{head}

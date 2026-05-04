@@ -20,7 +20,7 @@ export class MonitorCacheService implements OnModuleInit {
 	private async loadRegions() {
 		const dbRegions = await this.prismaService.region.findMany({
 			where: { isActive: true },
-			select: { id: true, key: true },
+			select: { id: true, key: true, name: true },
 		});
 
 		dbRegions.forEach((region) => {
@@ -67,11 +67,11 @@ export class MonitorCacheService implements OnModuleInit {
 		});
 	}
 
-	getMonitors(): MonitorCache[] {
+	getMonitors() {
 		return Array.from(this.monitors.values());
 	}
 
-	upsertMonitor(data: MonitorCachePayload, isNew: boolean = false): void {
+	upsertMonitor(data: MonitorCachePayload, isNew: boolean = false) {
 		const existing = this.monitors.get(data.id);
 
 		this.monitors.set(data.id, {
@@ -84,36 +84,36 @@ export class MonitorCacheService implements OnModuleInit {
 		});
 	}
 
-	updateMonitorNextCheck(id: string, nextCheckAt: number): void {
+	updateMonitorNextCheck(id: string, nextCheckAt: number) {
 		const monitor = this.monitors.get(id);
 		if (monitor) {
 			this.monitors.set(id, { ...monitor, nextCheckAt });
 		}
 	}
 
-	removeMonitor(id: string): void {
+	removeMonitor(id: string) {
 		this.monitors.delete(id);
 	}
 
-	getRegions(): RegionCache[] {
+	getRegions() {
 		return Array.from(this.regions.values());
 	}
 
-	getRegionByKey(key: string): RegionCache | undefined {
+	getRegionByKey(key: string) {
 		return Array.from(this.regions.values()).find(
 			(region) => region.key === key,
 		);
 	}
 
-	getRegionById(id: string): RegionCache | undefined {
+	getRegionById(id: string) {
 		return this.regions.get(id);
 	}
 
-	upsertRegion(region: RegionCache): void {
+	upsertRegion(region: RegionCache) {
 		this.regions.set(region.id, region);
 	}
 
-	removeRegion(id: string): void {
+	removeRegion(id: string) {
 		this.regions.delete(id);
 	}
 }

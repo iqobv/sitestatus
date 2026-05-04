@@ -37,6 +37,7 @@ export class AdminRegionService {
 				id: region.id,
 				key: region.key,
 				isActive: region.isActive,
+				name: region.name,
 			};
 
 			this.eventEmitter.emit(CACHE_EMIT_EVENTS.REGION.UPDATED, emitPayload);
@@ -93,6 +94,7 @@ export class AdminRegionService {
 				id: updatedRegion.id,
 				key: updatedRegion.key,
 				isActive: updatedRegion.isActive,
+				name: updatedRegion.name,
 			};
 
 			this.eventEmitter.emit(CACHE_EMIT_EVENTS.REGION.UPDATED, emitPayload);

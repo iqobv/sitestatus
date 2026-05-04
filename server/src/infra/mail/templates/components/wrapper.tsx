@@ -2,7 +2,6 @@ import {
 	Body,
 	Container,
 	Head,
-	Hr,
 	Html,
 	Preview,
 	Section,
@@ -11,6 +10,7 @@ import {
 import React from 'react';
 import { themeConfig } from '../theme';
 import RobotoFonts from '../theme-fonts';
+import Divider from './divider';
 import Logo from './logo';
 
 interface WrapperProps {
@@ -65,7 +65,7 @@ const Wrapper = ({ children, iconUrl, preview, head }: WrapperProps) => {
 					<Container className="mx-auto max-w-[640px] my-6 bg-bg-2 border-2 border-stroke rounded-[8px]">
 						<Section className="mobile:px-4 px-6 py-6 text-left">
 							<Logo logoUrl={iconUrl} />
-							<Hr className="my-[16px] border-stroke border-t-2" />
+							<Divider />
 							{children}
 						</Section>
 					</Container>

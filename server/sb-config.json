@@ -12,6 +12,9 @@
 					},
 					{
 						"Name": "monitor-results"
+					},
+					{
+						"Name": "incidents"
 					}
 				]
 			}

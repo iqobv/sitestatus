@@ -1,5 +1,6 @@
 import { createErrorDomain } from '../utils';
 import {
+	ALERT_ERROR_MESSAGES,
 	AUTH_ERROR_MESSAGES,
 	MONITOR_ERROR_MESSAGES,
 	NOTIFICATION_CHANNEL_ERROR_MESSAGES,
@@ -11,6 +12,7 @@ import {
 } from './error-messages';
 
 export const ERROR_MESSAGES = {
+	ALERT: createErrorDomain(ALERT_ERROR_MESSAGES),
 	AUTH: createErrorDomain(AUTH_ERROR_MESSAGES),
 	MONITOR: createErrorDomain(MONITOR_ERROR_MESSAGES),
 	NOTIFICATION_CHANNEL: createErrorDomain(NOTIFICATION_CHANNEL_ERROR_MESSAGES),

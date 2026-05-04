@@ -2,13 +2,13 @@ import { ServiceBusClient, ServiceBusSender } from '@azure/service-bus';
 import { Prisma } from '@generated/turso/client';
 import { SiteStatus } from '@generated/turso/enums';
 import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { PingResultDto, ServiceBusIncedentPayload } from '../dto';
 import { MonitorCacheService } from './monitor-cache.service';
 
 @Injectable()
-export class EngineDbService {
-	private sender: ServiceBusSender;
+export class EngineDbService implements OnModuleInit, OnModuleDestroy {
+	private sender: ServiceBusSender | null = null;
 
 	constructor(
 		private readonly tursoPrismaService: TursoPrismaService,
@@ -16,14 +16,18 @@ export class EngineDbService {
 		private readonly sbClient: ServiceBusClient,
 	) {}
 
-	private getSender() {
-		if (!this.sender) {
-			const queueName = 'incedents';
-			this.sender = this.sbClient.createSender(queueName);
+	onModuleInit() {
+		const queueName = 'incidents';
+		this.sender = this.sbClient.createSender(queueName);
+	}
+
+	async onModuleDestroy() {
+		if (this.sender) {
+			await this.sender.close();
 		}
 	}
 
-	public async saveBatchResults(results: PingResultDto[]): Promise<void> {
+	async saveBatchResults(results: PingResultDto[]) {
 		if (results.length === 0) return;
 
 		const monitorIds = [...new Set(results.map((r) => r.monitorId))];
@@ -88,7 +92,7 @@ export class EngineDbService {
 					status === SiteStatus.DOWN || status === SiteStatus.UNKNOWN;
 
 				const nextInterval = isDown
-					? Math.min(60, monitor.checkIntervalSeconds)
+					? Math.min(30, monitor.checkIntervalSeconds)
 					: monitor.checkIntervalSeconds;
 
 				const calculatedNextRun = checkedAtMs + nextInterval * 1000;
@@ -200,7 +204,7 @@ export class EngineDbService {
 			await Promise.all([...monitorRegionUpdates, ...stateUpdates]);
 		});
 
-		if (messagesToSend.length > 0) {
+		if (messagesToSend.length > 0 && this.sender) {
 			await this.sender.sendMessages(messagesToSend);
 		}
 	}

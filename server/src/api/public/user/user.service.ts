@@ -42,13 +42,20 @@ export class UserService {
 			select: userSelect,
 		});
 
-		await this.notificationChannelService.initPrimaryNotificationChannel(
+		const primaryChannel =
+			await this.notificationChannelService.initPrimaryNotificationChannel(
+				user.id,
+				email,
+				tx,
+			);
+
+		await this.alertSettingsService.upsertSettings(
 			user.id,
-			email,
+			{
+				channelIds: [primaryChannel.id],
+			},
 			tx,
 		);
-
-		await this.alertSettingsService.createAlertSettings(user.id, {}, tx);
 
 		return user;
 	}
@@ -182,23 +189,21 @@ export class UserService {
 				},
 			});
 
-			const usersWithoutAlertSettings = await tx.user.findMany({
-				where: {
-					alertSettings: { none: {} },
-					deletedAt: null,
-				},
-			});
-
 			for (const user of usersWithoutChannels) {
-				await this.notificationChannelService.initPrimaryNotificationChannel(
+				const primaryChannel =
+					await this.notificationChannelService.initPrimaryNotificationChannel(
+						user.id,
+						user.email,
+						tx,
+					);
+
+				await this.alertSettingsService.upsertSettings(
 					user.id,
-					user.email,
+					{
+						channelIds: [primaryChannel.id],
+					},
 					tx,
 				);
-			}
-
-			for (const user of usersWithoutAlertSettings) {
-				await this.alertSettingsService.createAlertSettings(user.id, {}, tx);
 			}
 		});
 	}

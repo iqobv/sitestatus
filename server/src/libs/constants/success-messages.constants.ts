@@ -1,5 +1,6 @@
 import { createErrorDomain } from '../utils';
 import {
+	ALERT_SUCCESS_MESSAGES,
 	AUTH_SUCCESS_MESSAGES,
 	MONITOR_SUCCESS_MESSAGES,
 	NOTIFICATION_CHANNEL_SUCCESS_MESSAGES,
@@ -10,6 +11,7 @@ import {
 } from './success-messages';
 
 export const SUCCESS_MESSAGES = {
+	ALERT: createErrorDomain(ALERT_SUCCESS_MESSAGES),
 	AUTH: createErrorDomain(AUTH_SUCCESS_MESSAGES),
 	MONITOR: createErrorDomain(MONITOR_SUCCESS_MESSAGES),
 	NOTIFICATION_CHANNEL: createErrorDomain(

@@ -1,6 +1,7 @@
 import { Prisma } from '@generated/postgres/client';
+import { AlertSettingsInclude } from '@generated/postgres/models';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
-import { ERROR_MESSAGES } from '@libs/constants';
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAlertSettingsDto } from './dto';
 
@@ -69,8 +70,14 @@ export class AlertSettingsService {
 		return null;
 	}
 
-	async upsertSettings(userId: string, dto: CreateAlertSettingsDto) {
-		const { monitorId, projectId, channelIds } = dto;
+	async upsertSettings(
+		userId: string,
+		dto: CreateAlertSettingsDto,
+		tx?: Prisma.TransactionClient,
+	) {
+		const { monitorId, projectId, channelIds, ...rest } = dto;
+
+		const prisma = tx ?? this.prismaService;
 
 		const searchData = {
 			userId,
@@ -78,36 +85,89 @@ export class AlertSettingsService {
 			monitorId: monitorId ?? null,
 		};
 
-		const existingSetting = await this.prismaService.alertSettings.findFirst({
+		const existingSetting = await prisma.alertSettings.findFirst({
 			where: searchData,
 			select: { id: true },
 		});
 
-		const setting = await this.prismaService.alertSettings.upsert({
-			where: { id: existingSetting?.id },
-			update: {
-				...dto,
-				channels: channelIds
-					? { set: channelIds.map((id) => ({ id })) }
-					: undefined,
-			},
-			create: {
+		const include: AlertSettingsInclude = {
+			channels: { where: { isActive: true, status: 'VERIFIED' } },
+		};
+
+		if (existingSetting) {
+			return await prisma.alertSettings.update({
+				where: { id: existingSetting.id },
+				data: {
+					...rest,
+					channels: channelIds
+						? { set: channelIds.map((id) => ({ id })) }
+						: undefined,
+				},
+				include,
+			});
+		}
+
+		return await prisma.alertSettings.create({
+			data: {
 				...searchData,
-				...dto,
+				...rest,
 				channels: channelIds
 					? { connect: channelIds.map((id) => ({ id })) }
 					: undefined,
 			},
-			include: {
-				channels: {
-					where: {
-						isActive: true,
-						status: 'VERIFIED',
-					},
-				},
-			},
+			include,
+		});
+	}
+
+	async getSettingsHierarchy(
+		userId: string,
+		projectId?: string,
+		monitorId?: string,
+	) {
+		let resolvedProjectId = projectId;
+
+		if (monitorId) {
+			const monitor = await this.prismaService.monitor.findUnique({
+				where: { id: monitorId },
+				select: { projectId: true },
+			});
+
+			if (monitor?.projectId) {
+				resolvedProjectId = monitor.projectId;
+			}
+		}
+
+		const filters: Prisma.AlertSettingsWhereInput[] = [
+			{ userId, projectId: null, monitorId: null },
+		];
+
+		if (resolvedProjectId) {
+			filters.push({ userId, projectId: resolvedProjectId, monitorId: null });
+		}
+
+		if (monitorId) {
+			filters.push({ userId, monitorId });
+		}
+
+		return await this.prismaService.alertSettings.findMany({
+			where: { OR: filters },
+			include: { channels: true },
+		});
+	}
+
+	async deleteAlertSettings(userId: string, id: string) {
+		const setting = await this.prismaService.alertSettings.findUnique({
+			where: { id, userId },
+			select: { id: true, userId: true },
 		});
 
-		return setting;
+		if (!setting)
+			throw new NotFoundException(ERROR_MESSAGES.ALERT.ALERT_NOT_FOUND);
+
+		await this.prismaService.alertSettings.delete({
+			where: { id: setting.id, userId: setting.userId },
+		});
+
+		return SUCCESS_MESSAGES.ALERT.ALERT_DELETED;
 	}
 }

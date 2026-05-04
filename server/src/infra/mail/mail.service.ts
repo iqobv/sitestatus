@@ -1,12 +1,15 @@
 import { getMailerConfig } from '@config';
+import { SiteStatus } from '@generated/turso/enums';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { render } from '@react-email/components';
 import Mail from 'nodemailer/lib/mailer';
 import { createElement } from 'react';
-import { SendEmailDto } from './dto';
+import { IncidentAlertDto, SendEmailDto } from './dto';
 import {
 	EmailNotificationChannelVerifyTemplate,
+	MonitorDownTemplate,
+	MonitorUpTemplate,
 	ResetPasswordTemplate,
 	RestoreAccountTemplate,
 	VerificationEmailTemplate,
@@ -27,7 +30,11 @@ export class MailService {
 
 	async sendVerificationEmail(email: string, token: string) {
 		const url = `/email-verify?token=${token}`;
-		const html = await this.generateTemplate(VerificationEmailTemplate, url);
+		const html = await this.generateTemplate(
+			VerificationEmailTemplate,
+			url,
+			{},
+		);
 
 		return await this.sendMail({
 			recipients: [email],
@@ -38,7 +45,7 @@ export class MailService {
 
 	async sendPasswordResetEmail(email: string, token: string) {
 		const url = `/reset-password?token=${token}`;
-		const html = await this.generateTemplate(ResetPasswordTemplate, url);
+		const html = await this.generateTemplate(ResetPasswordTemplate, url, {});
 
 		return await this.sendMail({
 			recipients: [email],
@@ -49,7 +56,7 @@ export class MailService {
 
 	async sendRestoreAccountEmail(email: string, token: string) {
 		const url = `/restore?token=${token}`;
-		const html = await this.generateTemplate(RestoreAccountTemplate, url);
+		const html = await this.generateTemplate(RestoreAccountTemplate, url, {});
 
 		return await this.sendMail({
 			recipients: [email],
@@ -63,12 +70,28 @@ export class MailService {
 		const html = await this.generateTemplate(
 			EmailNotificationChannelVerifyTemplate,
 			url,
+			{},
 		);
 
 		return await this.sendMail({
 			recipients: [email],
 			subject: 'Verify your email address',
 			html: html,
+		});
+	}
+
+	async sendIncidentAlert(email: string, dto: IncidentAlertDto) {
+		const { incidentId, monitorId, status } = dto;
+
+		const url = `/monitors/${monitorId}/incidents/${incidentId}`;
+		const template =
+			status === SiteStatus.UP ? MonitorUpTemplate : MonitorDownTemplate;
+		const html = await this.generateTemplate(template, url, { incident: dto });
+
+		return await this.sendMail({
+			recipients: [email],
+			subject: 'Incident alert',
+			html,
 		});
 	}
 
@@ -93,16 +116,18 @@ export class MailService {
 		}
 	}
 
-	private async generateTemplate(
-		template: React.ComponentType<BaseEmailProps>,
+	private async generateTemplate<TProps extends BaseEmailProps>(
+		template: React.ComponentType<TProps>,
 		url: string,
+		props: Omit<TProps, keyof BaseEmailProps>,
 	) {
-		const html = await render(
-			createElement(template, {
-				url: `${this.DOMAIN}${url}`,
-				iconUrl: this.ICON_URL,
-			}),
-		);
+		const componentProps = {
+			url: `${this.DOMAIN}${url}`,
+			iconUrl: this.ICON_URL,
+			...props,
+		} as TProps;
+
+		const html = await render(createElement(template, componentProps));
 
 		return html;
 	}

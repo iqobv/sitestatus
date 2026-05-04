@@ -24,7 +24,7 @@ const Select = ({
 					<Dropdown.Trigger>
 						<button
 							type="button"
-							className={`${styles.trigger} ${error ? styles.error : ''} ${className}`.trim()}
+							className={`${styles.trigger} ${error ? styles.error : ''} ${className || ''}`.trim()}
 							disabled={disabled}
 						>
 							<span>{selectedOption ? selectedOption.label : placeholder}</span>

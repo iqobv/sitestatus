@@ -33,6 +33,7 @@ interface AnchorButtonProps
 		ButtonBaseProps {
 	href: string;
 	type?: never;
+	ref?: React.Ref<HTMLAnchorElement>;
 }
 
 interface NativeButtonProps
@@ -41,6 +42,7 @@ interface NativeButtonProps
 		ButtonBaseProps {
 	href?: undefined;
 	type?: ButtonType;
+	ref?: React.Ref<HTMLButtonElement>;
 }
 
 export type ButtonProps = AnchorButtonProps | NativeButtonProps;

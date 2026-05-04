@@ -19,5 +19,7 @@ export const PRIVATE_PAGES = {
 		SECURITY: '/settings/security',
 		SESSIONS: '/settings/security/sessions',
 		ALERTING: '/settings/alerting',
+		ALERTING_VERIFY: (token: string) =>
+			`/settings/alerting/verify?token=${token}`,
 	} as const,
 } as const;

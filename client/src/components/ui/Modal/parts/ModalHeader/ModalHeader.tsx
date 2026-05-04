@@ -5,7 +5,7 @@ import styles from './ModalHeader.module.scss';
 
 const ModalHeader = ({ children }: { children: ReactNode }) => {
 	return (
-		<div className={styles['modal__header']}>
+		<div className={styles.header}>
 			<h2>{children}</h2>
 		</div>
 	);

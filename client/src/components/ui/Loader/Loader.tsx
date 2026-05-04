@@ -12,8 +12,8 @@ export default function Loader({
 }: LoaderProps) {
 	return (
 		<div
-			className={`${styles.loader__container} ${
-				disablePadding ? '' : styles.loader__padding
+			className={`${styles.container} ${
+				disablePadding ? '' : styles.padding
 			} ${containerClassName}`}
 		>
 			<div

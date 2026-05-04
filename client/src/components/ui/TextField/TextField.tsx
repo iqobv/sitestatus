@@ -45,20 +45,20 @@ export default function TextField({
 
 	return (
 		<div
-			className={`${cssStyles['text-field__container']} ${
-				!!fullWidth ? cssStyles['full-width--true'] : ''
+			className={`${cssStyles.container} ${
+				!!fullWidth ? cssStyles.fullWidth : ''
 			} ${containerClassName || ''}`}
 		>
 			{!!label && <FormLabel id={id}>{label}</FormLabel>}
 			<div
-				className={`${cssStyles['text-field__wrapper']} ${
-					disabled ? cssStyles['disabled'] : ''
-				} ${!!error && !disabled ? cssStyles['error'] : ''} ${className || ''}`}
+				className={`${cssStyles.wrapper} ${
+					disabled ? cssStyles.disabled : ''
+				} ${!!error && !disabled ? cssStyles.error : ''} ${className || ''}`}
 			>
 				{!!leftIcon && (
 					<TextFieldIcon
 						id={id}
-						className={`${cssStyles['icon--left']} ${leftIconClassName}`}
+						className={`${cssStyles.iconLeft} ${leftIconClassName}`}
 					>
 						{leftIcon}
 					</TextFieldIcon>
@@ -74,7 +74,7 @@ export default function TextField({
 				{!!rightIcon && (
 					<TextFieldIcon
 						id={id}
-						className={`${cssStyles['icon--right']} ${rightIconClassName}`}
+						className={`${cssStyles.iconRight} ${rightIconClassName}`}
 					>
 						{rightIcon}
 					</TextFieldIcon>
@@ -82,7 +82,7 @@ export default function TextField({
 				{isPassword && (
 					<TextFieldIcon
 						id={id}
-						className={`${cssStyles['icon--right']} ${rightIconClassName}`}
+						className={`${cssStyles.iconRight} ${rightIconClassName}`}
 					>
 						<Button
 							variant="text"
@@ -96,7 +96,7 @@ export default function TextField({
 				)}
 			</div>
 			{error && !disabled && (
-				<p className={cssStyles['error__text']}>{error}</p>
+				<p className={cssStyles.errorText}>{error}</p>
 			)}
 		</div>
 	);

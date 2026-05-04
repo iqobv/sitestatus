@@ -1,7 +1,12 @@
-import React from 'react';
+import SettingsWrapperLoader from '../SettingsWrapper/SettingsWrapperLoader';
+import NotificationChannelsListLoader from './NotificationChannelsList/NotificationChannelsListLoader';
 
 const AlertingLoader = () => {
-  return <div>AlertingLoader</div>;
+	return (
+		<SettingsWrapperLoader count={0}>
+			<NotificationChannelsListLoader />
+		</SettingsWrapperLoader>
+	);
 };
 
 export default AlertingLoader;

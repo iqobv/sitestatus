@@ -48,7 +48,7 @@ const DropdownMenu = ({
 					>
 						<div
 							ref={setFloating}
-							style={{ ...floatingStyles, zIndex: 1000 }}
+							style={{ ...floatingStyles, zIndex: 2000 }}
 							{...getFloatingProps()}
 						>
 							<motion.div

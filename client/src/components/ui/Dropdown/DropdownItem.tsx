@@ -47,7 +47,7 @@ const DropdownItem = ({
 
 	const baseProps = getItemProps({
 		className:
-			`${styles['dropdown-item']} ${className} ${isActive ? styles['active'] : ''}`.trim(),
+			`${styles['dropdown-item']} ${className || ''} ${isActive ? styles['active'] : ''}`.trim(),
 		role: 'menuitem',
 		tabIndex: isActive ? 0 : -1,
 		'aria-disabled': disabled,

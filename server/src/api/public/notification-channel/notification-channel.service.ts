@@ -86,10 +86,19 @@ export class NotificationChannelService {
 	}
 
 	async getAllNotificationChannelsForUser(userId: string) {
-		return await this.prismaService.notificationChannel.findMany({
-			where: { userId },
-			orderBy: { createdAt: 'desc' },
+		const notificationChannels =
+			await this.prismaService.notificationChannel.findMany({
+				where: { userId },
+				orderBy: { createdAt: 'desc' },
+			});
+
+		const sortedChannels = notificationChannels.sort((a, b) => {
+			if (a.isPrimary && !b.isPrimary) return -1;
+			if (!a.isPrimary && b.isPrimary) return 1;
+			return 0;
 		});
+
+		return sortedChannels;
 	}
 
 	async getNotificationChannelById(userId: string, channelId: string) {

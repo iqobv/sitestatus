@@ -17,7 +17,7 @@ const SettingsCard = ({
 		>
 			<div>
 				<h3>{title}</h3>
-				<p>{description}</p>
+				<div>{description}</div>
 			</div>
 			<div>{action}</div>
 		</div>

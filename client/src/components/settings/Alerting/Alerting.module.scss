@@ -1,3 +1,28 @@
-.alerting {
+@use '../../../styles/mixins' as *;
 
+.header {
+	display: flex;
+	flex-direction: row;
+	gap: var(--gap);
+	justify-content: space-between;
+	align-items: center;
+}
+
+.addButton {
+	padding: 12px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+
+	@include respond-to(md) {
+		padding: 12px 20px;
+	}
+}
+
+.text {
+	display: none;
+
+	@include respond-to(sm) {
+		display: inline;
+	}
 }

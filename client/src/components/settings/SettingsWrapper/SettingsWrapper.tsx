@@ -1,11 +1,9 @@
-'use client';
-
 import { SectionHeader } from '@/components/ui';
 import styles from './SettingsWrapper.module.scss';
 
 interface SettingsWrapperProps {
 	children: React.ReactNode;
-	title: string;
+	title: React.ReactNode;
 }
 
 const SettingsWrapper = ({ children, title }: SettingsWrapperProps) => {

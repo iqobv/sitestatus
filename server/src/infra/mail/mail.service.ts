@@ -66,7 +66,7 @@ export class MailService {
 	}
 
 	async sendEmailNotificationChannelVerify(email: string, token: string) {
-		const url = `/notification-channel-verify?token=${token}`;
+		const url = `/settings/alerting/verify?token=${token}`;
 		const html = await this.generateTemplate(
 			EmailNotificationChannelVerifyTemplate,
 			url,

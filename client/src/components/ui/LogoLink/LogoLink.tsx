@@ -14,7 +14,7 @@ const LogoLink = ({ href, logoProps, className, onClick }: LogoLinkProps) => {
 	return (
 		<Link
 			href={href}
-			className={`${styles['logo']} ${className || ''}`}
+			className={`${styles.logo} ${className || ''}`}
 			onClick={onClick}
 		>
 			<Logo
@@ -22,8 +22,8 @@ const LogoLink = ({ href, logoProps, className, onClick }: LogoLinkProps) => {
 				height={logoProps?.height || 32}
 				{...logoProps}
 			/>
-			<span className={styles['logo__text']}>
-				<span className={styles['logo__text--highlight']}>Site</span>
+			<span className={styles.text}>
+				<span className={styles.highlight}>Site</span>
 				Status
 			</span>
 		</Link>

@@ -12,8 +12,8 @@ const TableHeaderCell = <T,>({ header }: TableHeaderCellProps<T>) => {
 	const meta = header.column.columnDef.meta;
 	const columnSize = header.getSize();
 
-	const cellClassName = `${styles['table-header-cell']} ${meta?.className || ''}`;
-	const innerClassName = `${styles['table-header-cell__inner']} ${header.column.getCanSort() ? styles['table-header-cell__inner--sortable'] : ''}`;
+	const cellClassName = `${styles.cell} ${meta?.className || ''}`;
+	const innerClassName = `${styles.cellInner} ${header.column.getCanSort() ? styles.sortable : ''}`;
 
 	return (
 		<th

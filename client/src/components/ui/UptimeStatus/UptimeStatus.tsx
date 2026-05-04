@@ -10,14 +10,10 @@ const UptimeStatus = ({
 	textClassName,
 }: UptimeStatusProps) => {
 	return (
-		<div className={styles['uptime-status']}>
+		<div className={styles.status}>
 			<div
-				className={`${styles['uptime-status__indicator']} ${
-					styles[
-						`uptime-status__indicator--${status
-							.toLowerCase()
-							.replaceAll('/', '')}`
-					]
+				className={`${styles.indicator} ${
+					styles[`${status.toLowerCase().replaceAll('/', '')}`]
 				}`}
 			/>
 			{showText && <p className={textClassName}>{capitalize(status)}</p>}

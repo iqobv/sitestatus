@@ -44,4 +44,14 @@ export const QUERY_KEYS = {
 		terminate: (sessionId: string) => ['terminateSession', sessionId],
 		terminateAllOther: ['terminateAllOtherSessions'],
 	} as const,
+	notificationChannel: {
+		all: ['notificationChannelsList'],
+		create: ['notificationChannelCreate'],
+		update: (id: string) => ['notificationChannelUpdate', id],
+		delete: (id: string) => ['notificationChannelDelete', id],
+		resendVerification: (id: string) => [
+			'notificationChannelResendVerification',
+			id,
+		],
+	},
 } as const;

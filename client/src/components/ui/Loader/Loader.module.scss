@@ -1,8 +1,12 @@
-.loader__container {
+.container {
 	width: 100%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+
+	&.padding {
+		padding: 30px;
+	}
 }
 
 .loader {
@@ -24,10 +28,6 @@
 		#000 0
 	);
 	animation: l13 1s infinite linear;
-}
-
-.loader__padding {
-	padding: 30px;
 }
 
 @keyframes l13 {

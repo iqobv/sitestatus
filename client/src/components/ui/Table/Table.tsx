@@ -36,8 +36,8 @@ const Table = <T extends RowData>(props: TableOptions<T>) => {
 
 	return (
 		<TableContext.Provider value={contextValue}>
-			<div className={styles['table-container']}>
-				<table className={styles['table']}>
+			<div className={styles.container}>
+				<table className={styles.table}>
 					<TableHeader />
 					<TableBody />
 					{hasFooters && <TableFooter />}

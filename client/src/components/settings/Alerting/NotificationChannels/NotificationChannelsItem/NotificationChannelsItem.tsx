@@ -55,7 +55,7 @@ const NotificationChannelsItem = ({
 				</div>
 			}
 			action={
-				<div className={styles.actions}>
+				<>
 					{channel.isActive && (
 						<>
 							{!channel.isPrimary && (
@@ -67,9 +67,10 @@ const NotificationChannelsItem = ({
 					{channel.status === ChannelStatus.PENDING && (
 						<NotificationChannelsItemResend id={channel.id} />
 					)}
-				</div>
+				</>
 			}
 			desktopDirection="column"
+			actionJustify="flex-end"
 		/>
 	);
 };

@@ -16,4 +16,12 @@
 	@include respond-to(lg) {
 		flex-direction: var(--desktop-direction);
 	}
+
+	.action {
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+		justify-content: var(--action-justify);
+		gap: var(--gap);
+	}
 }

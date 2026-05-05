@@ -64,15 +64,13 @@ const NotificationChannelsItemEdit = ({
 						</Form.Field>
 					</Modal.Body>
 					<Modal.Footer>
-						<Form.Actions className={styles.actions}>
+						<Form.Actions justifyContent="flex-end">
 							<Modal.Close>
 								<Form.Reset buttonProps={{ variant: 'outlined' }}>
 									Cancel
 								</Form.Reset>
 							</Modal.Close>
-							<Modal.Close>
-								<Form.Submit disabledOnEmpty>Save</Form.Submit>
-							</Modal.Close>
+							<Form.Submit disabledOnEmpty>Save</Form.Submit>
 						</Form.Actions>
 					</Modal.Footer>
 				</Form>

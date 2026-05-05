@@ -31,7 +31,7 @@ const MonitorFormProject = () => {
 					]}
 					error={error?.message}
 					placeholder="Select a project"
-					value={value}
+					value={value || ''}
 					onChange={onChange}
 				/>
 			)}

@@ -99,6 +99,10 @@ export class AlertSettingsService {
 				where: { id: existingSetting.id },
 				data: {
 					...rest,
+					isEnabled:
+						!searchData.monitorId && !searchData.projectId
+							? true
+							: rest.isEnabled,
 					channels: channelIds
 						? { set: channelIds.map((id) => ({ id })) }
 						: undefined,

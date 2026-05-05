@@ -53,5 +53,9 @@ export const QUERY_KEYS = {
 			'notificationChannelResendVerification',
 			id,
 		],
-	},
+	} as const,
+	alertSettings: {
+		hierarchy: (id?: string) => ['alertSettingsHierarchy', id ?? ''],
+		upsert: ['alertSettingsUpsert'],
+	} as const,
 } as const;

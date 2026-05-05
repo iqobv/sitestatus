@@ -12,7 +12,7 @@ import { Controller } from 'react-hook-form';
 import { FiPlus } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import styles from './Alerting.module.scss';
-import { NOTIFICATION_CHANNEL_ITEM_LABELS } from './NotificationChannelsList/NotificationChannelsItem/notificationChannelsItemTypes';
+import { NOTIFICATION_CHANNEL_ITEM_LABELS } from './NotificationChannels/NotificationChannelsItem/notificationChannelsItemTypes';
 
 const CreateNotificationChannel = () => {
 	const queryClient = useQueryClient();

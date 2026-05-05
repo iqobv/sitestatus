@@ -6,6 +6,7 @@ import { Project } from '@/types/project';
 import Link from 'next/link';
 import { MdMoreVert, MdOutlineDelete, MdOutlineEdit } from 'react-icons/md';
 import styles from './ProjectHeaderDropdown.module.scss';
+import ProjectHeaderDropdownItemAlertSettings from './ProjectHeaderDropdownItems/ProjectHeaderDropdownItemAlertSettings';
 import ProjectHeaderDropdownItemPublicPage from './ProjectHeaderDropdownItems/ProjectHeaderDropdownItemPublicPage';
 
 interface ProjectHeaderDropdownProps {
@@ -20,7 +21,7 @@ const ProjectHeaderDropdown = ({ projectData }: ProjectHeaderDropdownProps) => {
 					<MdMoreVert size={20} />
 				</Button>
 			</Dropdown.Trigger>
-			<Dropdown.Menu>
+			<Dropdown.Menu zIndex={1400}>
 				<Dropdown.Item asChild>
 					<Link href={PRIVATE_PAGES.PROJECTS.EDIT(projectData.id)}>
 						<MdOutlineEdit size={20} />
@@ -28,6 +29,7 @@ const ProjectHeaderDropdown = ({ projectData }: ProjectHeaderDropdownProps) => {
 					</Link>
 				</Dropdown.Item>
 				<ProjectHeaderDropdownItemPublicPage data={projectData} />
+				<ProjectHeaderDropdownItemAlertSettings id={projectData.id} />
 				<Dropdown.Item asChild className={styles.deleteButton}>
 					<MdOutlineDelete size={20} />
 					Delete

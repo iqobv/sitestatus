@@ -1,10 +1,12 @@
 import SettingsWrapperLoader from '../SettingsWrapper/SettingsWrapperLoader';
-import NotificationChannelsListLoader from './NotificationChannelsList/NotificationChannelsListLoader';
+import { GlobalAlertSettingsLoader } from './GlobalAlertSettings';
+import { NotificationChannelsLoader } from './NotificationChannels';
 
 const AlertingLoader = () => {
 	return (
 		<SettingsWrapperLoader count={0}>
-			<NotificationChannelsListLoader />
+			<GlobalAlertSettingsLoader />
+			<NotificationChannelsLoader />
 		</SettingsWrapperLoader>
 	);
 };

@@ -1,5 +1,4 @@
 import { DefaultFields } from '../defaultFields.types';
-import { NotificationChannel } from './notificationChannel.types';
 
 export interface AlertSettings extends DefaultFields {
 	userId: string;
@@ -9,5 +8,4 @@ export interface AlertSettings extends DefaultFields {
 	onDown: boolean;
 	onUp: boolean;
 	delay: number;
-	channels: NotificationChannel[];
 }

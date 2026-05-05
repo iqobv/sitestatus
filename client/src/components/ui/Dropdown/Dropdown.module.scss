@@ -1,4 +1,4 @@
-.dropdown-menu {
+.dropdownMenu {
 	min-width: 220px;
 	background-color: var(--dropdown-bg);
 	border-radius: 8px;
@@ -11,7 +11,7 @@
 	flex-direction: column;
 }
 
-.dropdown-item {
+.item {
 	display: inline-flex;
 	width: 100%;
 	text-align: left;

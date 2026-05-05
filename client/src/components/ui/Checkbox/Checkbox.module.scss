@@ -25,6 +25,11 @@
 			border-color: var(--checkbox-error);
 		}
 	}
+
+	&.disabled {
+		opacity: 0.6;
+		pointer-events: none;
+	}
 }
 
 .container {

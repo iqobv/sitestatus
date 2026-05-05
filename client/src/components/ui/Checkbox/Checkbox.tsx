@@ -14,18 +14,26 @@ const Checkbox = ({
 	error,
 	ref,
 	isBordered = false,
+	disabled,
 	...props
 }: CheckboxProps) => {
 	const wrapperClass = `
     ${styles.wrapper}
     ${isBordered ? styles.bordered : ''}
     ${error ? styles.error : ''}
+		${disabled ? styles.disabled : ''}
   `.trim();
 
 	return (
 		<div className={wrapperClass}>
 			<label className={styles.container}>
-				<input type="checkbox" className={styles.input} ref={ref} {...props} />
+				<input
+					type="checkbox"
+					className={styles.input}
+					ref={ref}
+					disabled={disabled}
+					{...props}
+				/>
 				<span className={styles.label}>{label}</span>
 			</label>
 			{error && <p className="error-message">{error}</p>}

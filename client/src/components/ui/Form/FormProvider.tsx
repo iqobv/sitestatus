@@ -3,7 +3,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BaseSyntheticEvent, useEffect } from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
-import styles from './Form.module.scss';
 import { FormProps } from './Form.types';
 
 const Form = <D extends FieldValues = FieldValues>({
@@ -33,7 +32,6 @@ const Form = <D extends FieldValues = FieldValues>({
 							)
 						: undefined
 				}
-				className={styles.form}
 			>
 				{typeof children === 'function' ? children(methods) : children}
 			</form>

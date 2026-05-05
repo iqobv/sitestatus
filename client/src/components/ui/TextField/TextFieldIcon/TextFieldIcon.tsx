@@ -15,7 +15,7 @@ const TextFieldIcon = ({
 	children,
 }: PropsWithChildren<TextFieldIconProps>) => {
 	return (
-		<label htmlFor={id} className={`${styles['icon']} ${className}`}>
+		<label htmlFor={id} className={`${styles.icon} ${className || ''}`}>
 			{children}
 		</label>
 	);

@@ -18,7 +18,7 @@ const Sepator = ({
 					'--sepator-margin': `${margin}px`,
 				} as React.CSSProperties
 			}
-			className={styles['sepator']}
+			className={styles.sepator}
 		/>
 	);
 };

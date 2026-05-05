@@ -56,7 +56,7 @@ const Accordion = ({
 	};
 
 	return (
-		<div className={`${styles['accordion']} ${className}`}>
+		<div className={`${styles['accordion']} ${className || ''}`}>
 			{items.map((item, index) => (
 				<AccordionItem
 					key={index}

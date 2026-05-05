@@ -27,8 +27,8 @@ const ThemeSwitcher = () => {
 	return (
 		<Select
 			options={options}
-			value={theme}
-			onChange={(value) => setTheme(value)}
+			value={theme || ''}
+			onChange={(value) => setTheme(value as string)}
 		/>
 	);
 };

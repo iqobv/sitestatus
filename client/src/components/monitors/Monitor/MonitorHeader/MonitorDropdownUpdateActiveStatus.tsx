@@ -35,11 +35,11 @@ const MonitorDropdownUpdateActiveStatus = ({
 			<button onClick={handleUpdate} className={styles.dropdownItem}>
 				{monitor.isActive ? (
 					<>
-						<MdPauseCircleOutline /> Pause
+						<MdPauseCircleOutline size={20} /> Pause
 					</>
 				) : (
 					<>
-						<MdPlayCircleOutline /> Resume
+						<MdPlayCircleOutline size={20} /> Resume
 					</>
 				)}
 			</button>

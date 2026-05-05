@@ -125,17 +125,25 @@ export class MonitorCalculationService {
 				currentStatus = previousStatus;
 				calculatedUptime = currentStatus === SiteStatus.UP ? 100 : 0;
 			} else {
-				const isUp = bucket.statuses.every(
-					(status) => status === SiteStatus.UP || status !== SiteStatus.UNKNOWN,
+				const hasDown = bucket.statuses.some(
+					(status) => status === SiteStatus.DOWN,
 				);
 
-				currentStatus = isUp ? SiteStatus.UP : SiteStatus.DOWN;
+				currentStatus = hasDown ? SiteStatus.DOWN : SiteStatus.UP;
 				previousStatus = currentStatus;
 
-				const upCount = bucket.statuses.filter(
-					(s) => s === SiteStatus.UP,
-				).length;
-				calculatedUptime = (upCount / bucket.statuses.length) * 100;
+				const validStatuses = bucket.statuses.filter(
+					(s) => s !== SiteStatus.UNKNOWN,
+				);
+
+				if (validStatuses.length === 0) {
+					calculatedUptime = previousStatus === SiteStatus.UP ? 100 : 0;
+				} else {
+					const upCount = validStatuses.filter(
+						(s) => s === SiteStatus.UP,
+					).length;
+					calculatedUptime = (upCount / validStatuses.length) * 100;
+				}
 			}
 
 			return {

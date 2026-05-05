@@ -1,7 +1,7 @@
 import { Heading, Section, Text } from '@react-email/components';
 import React from 'react';
 import { BaseEmailProps } from './base-email-props.types';
-import { Button, Wrapper } from './components';
+import { Button, Footer, Wrapper } from './components';
 
 const RestoreAccountTemplate = ({ url, iconUrl }: BaseEmailProps) => {
 	return (
@@ -19,13 +19,7 @@ const RestoreAccountTemplate = ({ url, iconUrl }: BaseEmailProps) => {
 				</Text>
 				<Button href={url}>Restore Account</Button>
 			</Section>
-			<Text className="font-base text-white mt-8 mb-2 leading-[24px]">
-				If you did not request this email, you can safely ignore it. This link
-				will expire in 24 hours.
-			</Text>
-			<Text className="font-base text-white m-0 leading-[24px]">
-				Thanks, for using our service!
-			</Text>
+			<Footer expiresIn="24 hours" />
 		</Wrapper>
 	);
 };

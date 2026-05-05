@@ -1,0 +1,24 @@
+model AlertSettings {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId    String  @map("user_id") @db.Uuid
+  projectId String? @map("project_id") @db.Uuid
+  monitorId String? @map("monitor_id") @db.Uuid
+
+  isEnabled Boolean @default(true) @map("is_enabled")
+
+  onDown Boolean @default(true) @map("on_down")
+  onUp   Boolean @default(true) @map("on_up")
+  delay  Int     @default(0) @map("delay_minutes")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  monitor Monitor? @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+
+  channels NotificationChannel[] @relation("ChannelToSettings")
+
+  @@map("alert_settings")
+}

@@ -39,7 +39,7 @@ const TooltipContent = ({ children, className }: TooltipContentProps) => {
 							{...getFloatingProps()}
 						>
 							<motion.div
-								className={`${styles['tooltip']} ${className}`}
+								className={`${styles.tooltip} ${className || ''}`}
 								initial={{ opacity: 0, y: -8, scale: 0.95 }}
 								animate={{ opacity: 1, y: 0, scale: 1 }}
 								exit={{ opacity: 0, y: -8, scale: 0.95 }}
@@ -50,7 +50,6 @@ const TooltipContent = ({ children, className }: TooltipContentProps) => {
 									ref={arrowRef}
 									context={context}
 									fill="var(--tooltip-border)"
-									
 								/>
 							</motion.div>
 						</div>

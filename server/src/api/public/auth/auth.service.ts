@@ -238,29 +238,39 @@ export class AuthService {
 	async validateOAuthLogin(dto: OAuthDto, clientInfo: ClientInfoDto) {
 		const { provider, providerId, email } = dto;
 
-		const providerUser =
-			await this.userProviderService.findByProviderAndProviderId(
-				provider,
-				providerId,
+		return await this.prismaService.$transaction(async (tx) => {
+			const providerUser =
+				await this.userProviderService.findByProviderAndProviderId(
+					provider,
+					providerId,
+					tx,
+				);
+
+			if (providerUser) {
+				return await this.generateAndSaveTokens(
+					providerUser.user,
+					clientInfo,
+					tx,
+				);
+			}
+
+			let user = await this.userService.findByEmail(email, true, false, tx);
+
+			if (!user) {
+				user = await this.userService.create({ email }, tx);
+			}
+
+			await this.userProviderService.create(
+				{
+					provider,
+					providerId,
+					userId: user.id,
+				},
+				tx,
 			);
 
-		if (providerUser) {
-			return await this.generateAndSaveTokens(providerUser.user, clientInfo);
-		}
-
-		let user = await this.userService.findByEmail(email, true);
-
-		if (!user) {
-			user = await this.userService.createOauthUser(email);
-		}
-
-		await this.userProviderService.create({
-			provider,
-			providerId,
-			userId: user.id,
+			return await this.generateAndSaveTokens(user, clientInfo, tx);
 		});
-
-		return await this.generateAndSaveTokens(user, clientInfo);
 	}
 
 	async generateRestoreAccountToken(email: string) {
@@ -303,8 +313,6 @@ export class AuthService {
 		clientInfo: ClientInfoDto,
 		tx?: Prisma.TransactionClient,
 	) {
-		const prisma = tx ?? this.prismaService;
-
 		const rawRefreshToken = crypto.randomBytes(32).toString('hex');
 		const refreshTokenHash = crypto
 			.createHash('sha256')
@@ -321,7 +329,7 @@ export class AuthService {
 				clientInfo,
 				expiresAt,
 			},
-			prisma,
+			tx,
 		);
 
 		const payload: JwtPayload = {

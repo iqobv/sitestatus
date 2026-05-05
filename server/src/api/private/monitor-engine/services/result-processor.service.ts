@@ -1,4 +1,8 @@
-import { ServiceBusClient, ServiceBusReceiver } from '@azure/service-bus';
+import {
+	ServiceBusClient,
+	ServiceBusReceivedMessage,
+	ServiceBusReceiver,
+} from '@azure/service-bus';
 import {
 	Injectable,
 	Logger,
@@ -19,7 +23,7 @@ export class ResultProcessorService implements OnModuleInit, OnModuleDestroy {
 		private readonly engineDbService: EngineDbService,
 	) {}
 
-	public onModuleInit(): void {
+	public onModuleInit() {
 		this.receiver = this.sbClient.createReceiver('monitor-results');
 		this.isRunning = true;
 		this.processBatchesContinuously().catch((error: unknown) => {
@@ -27,17 +31,19 @@ export class ResultProcessorService implements OnModuleInit, OnModuleDestroy {
 		});
 	}
 
-	public async onModuleDestroy(): Promise<void> {
+	public async onModuleDestroy() {
 		this.isRunning = false;
 		if (this.receiver) {
 			await this.receiver.close();
 		}
 	}
 
-	private async processBatchesContinuously(): Promise<void> {
+	private async processBatchesContinuously() {
 		while (this.isRunning && this.receiver) {
+			let messages: ServiceBusReceivedMessage[] = [];
+
 			try {
-				const messages = await this.receiver.receiveMessages(50, {
+				messages = await this.receiver.receiveMessages(50, {
 					maxWaitTimeInMs: 5000,
 				});
 
@@ -51,22 +57,19 @@ export class ResultProcessorService implements OnModuleInit, OnModuleDestroy {
 
 				await this.engineDbService.saveBatchResults(payloads);
 
-				const completePromises = messages.map((m) => {
-					if (this.receiver) {
-						return this.receiver.completeMessage(m);
-					}
-					return Promise.resolve();
-				});
-
-				await Promise.all(completePromises);
+				await Promise.all(
+					messages.map((m) => this.receiver!.completeMessage(m)),
+				);
 			} catch (error: unknown) {
-				if (error instanceof Error) {
-					this.logger.error(`Failed to process batch: ${error.message}`);
-				} else {
-					this.logger.error(
-						'Failed to process batch with unknown error',
-						error,
+				this.logger.error('Failed to process batch', error);
+
+				if (messages.length > 0 && this.receiver) {
+					const abandonPromises = messages.map((m) =>
+						this.receiver!.abandonMessage(m).catch((e: unknown) =>
+							this.logger.error('Failed to abandon message', e),
+						),
 					);
+					await Promise.allSettled(abandonPromises);
 				}
 
 				await this.delay(5000);
@@ -74,7 +77,7 @@ export class ResultProcessorService implements OnModuleInit, OnModuleDestroy {
 		}
 	}
 
-	private delay(ms: number): Promise<void> {
+	private delay(ms: number) {
 		return new Promise((resolve) => setTimeout(resolve, ms));
 	}
 }

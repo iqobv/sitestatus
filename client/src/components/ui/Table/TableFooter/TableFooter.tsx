@@ -8,11 +8,11 @@ const TableFooter = () => {
 	const { table } = useTableContext();
 
 	return (
-		<tfoot className={styles['table-footer']}>
+		<tfoot className={styles.tableFooter}>
 			{table.getFooterGroups().map((footerGroup) => (
 				<tr
 					key={footerGroup.id}
-					className={styles['table-footer__row']}
+					className={styles.row}
 				>
 					{footerGroup.headers.map((header) => (
 						<th

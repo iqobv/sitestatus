@@ -59,7 +59,7 @@ const ModalContent = ({ children }: { children: ReactNode }) => {
 		<AnimatePresence>
 			{open && (
 				<motion.div
-					className={styles['modal__overlay']}
+					className={styles.overlay}
 					ref={overlayRef}
 					tabIndex={-1}
 					initial={{ opacity: 0 }}
@@ -68,7 +68,7 @@ const ModalContent = ({ children }: { children: ReactNode }) => {
 					transition={{ duration: 0.1 }}
 				>
 					<motion.div
-						className={styles['modal__content']}
+						className={styles.content}
 						role="dialog"
 						aria-modal="true"
 						onClick={(e) => e.stopPropagation()}
@@ -83,7 +83,7 @@ const ModalContent = ({ children }: { children: ReactNode }) => {
 							isIcon
 							rounded
 							size="sm"
-							className={styles['modal__close-button']}
+							className={styles.closeButton}
 						>
 							<MdClose size={20} />
 						</Button>

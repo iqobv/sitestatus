@@ -14,12 +14,14 @@ interface DropdownMenuProps {
 	children: ReactNode;
 	ariaLabel?: string;
 	menuWidth?: 'fit-content' | 'max-content' | 'trigger';
+	zIndex?: number;
 }
 
 const DropdownMenu = ({
 	children,
 	ariaLabel,
 	menuWidth = 'fit-content',
+	zIndex = 2000,
 }: DropdownMenuProps) => {
 	const {
 		isOpen,
@@ -48,11 +50,11 @@ const DropdownMenu = ({
 					>
 						<div
 							ref={setFloating}
-							style={{ ...floatingStyles, zIndex: 1000 }}
+							style={{ ...floatingStyles, zIndex }}
 							{...getFloatingProps()}
 						>
 							<motion.div
-								className={styles['dropdown-menu']}
+								className={styles.dropdownMenu}
 								style={{
 									width: finalWidth,
 								}}

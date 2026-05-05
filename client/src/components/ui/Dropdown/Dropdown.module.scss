@@ -1,17 +1,17 @@
-.dropdown-menu {
+.dropdownMenu {
 	min-width: 220px;
 	background-color: var(--dropdown-bg);
 	border-radius: 8px;
 	padding: 8px 0;
 	border: 1px solid var(--border-color);
-	z-index: 1000;
+	z-index: 1800;
 	outline: none;
 	transform-origin: top;
 	display: flex;
 	flex-direction: column;
 }
 
-.dropdown-item {
+.item {
 	display: inline-flex;
 	width: 100%;
 	text-align: left;

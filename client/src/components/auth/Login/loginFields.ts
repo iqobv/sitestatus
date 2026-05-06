@@ -8,7 +8,7 @@ export const LOGIN_FIELDS: Field<LoginDto>[] = [
 		label: 'Enter your email',
 		placeholder: 'user@example.com',
 		type: 'email',
-		autocomplete: 'username',
+		autoComplete: 'username',
 		iconLeft: MdOutlineEmail,
 	},
 	{
@@ -16,7 +16,7 @@ export const LOGIN_FIELDS: Field<LoginDto>[] = [
 		label: 'Enter Password',
 		placeholder: 'Your secure password',
 		type: 'password',
-		autocomplete: 'current-password',
+		autoComplete: 'current-password',
 		iconLeft: MdOutlineKey,
 	},
 ];

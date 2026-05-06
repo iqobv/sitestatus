@@ -8,7 +8,7 @@ export const REGISTER_FIELDS: Field<RegisterFormDto>[] = [
 		label: 'Enter your email',
 		placeholder: 'user@example.com',
 		type: 'email',
-		autocomplete: 'username',
+		autoComplete: 'username',
 		iconLeft: MdOutlineEmail,
 	},
 	{
@@ -16,7 +16,7 @@ export const REGISTER_FIELDS: Field<RegisterFormDto>[] = [
 		label: 'Enter Password',
 		placeholder: 'Your secure password',
 		type: 'password',
-		autocomplete: 'new-password',
+		autoComplete: 'new-password',
 		iconLeft: MdOutlineKey,
 	},
 	{
@@ -24,7 +24,7 @@ export const REGISTER_FIELDS: Field<RegisterFormDto>[] = [
 		label: 'Confirm Your Password',
 		placeholder: 'Re-enter your secure password',
 		type: 'password',
-		autocomplete: 'new-password',
+		autoComplete: 'new-password',
 		iconLeft: MdOutlineKey,
 	},
 ];

@@ -35,12 +35,29 @@ const Login = () => {
 				schema={loginSchema}
 				buttonLabel="Log in"
 				bottomText={
-					<>
-						Don&apos;t have an account?{' '}
-						<Link style={{ fontWeight: 600 }} href={AUTH_PAGES.SIGN_UP}>
-							Sign Up
-						</Link>
-					</>
+					<div
+						style={{
+							display: 'flex',
+							gap: 'var(--gap)',
+							flexDirection: 'column',
+						}}
+					>
+						<div>
+							Forgot your password?{' '}
+							<Link
+								style={{ fontWeight: 600 }}
+								href={AUTH_PAGES.FORGOT_PASSWORD}
+							>
+								Reset it
+							</Link>
+						</div>
+						<div>
+							Don&apos;t have an account?{' '}
+							<Link style={{ fontWeight: 600 }} href={AUTH_PAGES.REGISTER}>
+								Sign Up
+							</Link>
+						</div>
+					</div>
 				}
 			/>
 		</AuthWrapper>

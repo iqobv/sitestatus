@@ -12,4 +12,5 @@ export const AUTH_ERROR_MESSAGES = {
 	GITHUB_NO_EMAIL: 'Email is required from GitHub account',
 	GOOGLE_NO_EMAIL: 'Email is required from Google account',
 	REFRESH_TOKEN_MISSING: 'Refresh token missing',
+	OLD_PASSWORD_INCORRECT: 'Old password is incorrect',
 } as const;

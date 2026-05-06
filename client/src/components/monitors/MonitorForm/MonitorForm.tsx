@@ -88,7 +88,7 @@ const MonitorForm = <T extends FieldValues, R extends { id: string }>({
 								label={field.label}
 								placeholder={field.placeholder}
 								error={errors[field.name]?.message as string}
-								autoComplete={field.autocomplete}
+								autoComplete={field.autoComplete}
 								type={field.type}
 								{...register(field.name)}
 							/>

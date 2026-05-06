@@ -7,7 +7,11 @@ export const SECURITY_SETTINGS_ITEMS: SettingsCardProps[] = [
 		title: 'Change Password',
 		description: 'Update your password',
 		action: (
-			<Button variant="outlined" fullWidth>
+			<Button
+				variant="outlined"
+				fullWidth
+				href={PRIVATE_PAGES.SETTINGS.CHANGE_PASSWORD}
+			>
 				Change Password
 			</Button>
 		),

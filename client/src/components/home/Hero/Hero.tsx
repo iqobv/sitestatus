@@ -16,7 +16,7 @@ const Hero = () => {
 						Global distributed checks, hybrid project grouping, and public
 						status pages. Forever free.
 					</p>
-					<Button href={AUTH_PAGES.SIGN_UP}>Start Monitoring Now</Button>
+					<Button href={AUTH_PAGES.REGISTER}>Start Monitoring Now</Button>
 				</div>
 			</div>
 		</div>

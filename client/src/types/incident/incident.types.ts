@@ -1,10 +1,11 @@
-export interface MonitorIncident {
-	id: string;
+import { DefaultFields } from '../defaultFields.types';
+
+export interface Incident extends DefaultFields {
 	monitorId: string;
 	regionId: string;
-	statusCode: number | null;
-	createdAt: Date;
+	triggerLogId: string;
 	errorMessage: string | null;
+	statusCode: number | null;
 	resolved: boolean;
 	resolvedAt: Date | null;
 	alertTriggered: boolean;

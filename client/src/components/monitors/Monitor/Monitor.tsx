@@ -9,7 +9,7 @@ import styles from './Monitor.module.scss';
 import MonitorAnalyticsLoader from './MonitorAnalyticsLoader';
 import MonitorRangeControl from './MonitorDataDisplayControls/MonitorRangeControl';
 import MonitorHeader from './MonitorHeader/MonitorHeader';
-import MonitorAccidents from './MonitorIncidents/MonitorIncidents';
+import MonitorIncidents from './MonitorIncidents/MonitorIncidents';
 import MonitorLoader from './MonitorLoader';
 import MonitorOverall from './MonitorOverall/MonitorOverall';
 import MonitorRegionControl from './MonitorRegionControl/MonitorRegionControl';
@@ -40,30 +40,28 @@ const Monitor = ({ id }: MonitorProps) => {
 			placeholderData: keepPreviousData,
 		});
 
+	if (isLoading) return <MonitorLoader />;
+	if (!monitor) return null;
+
 	return (
-		<div className={styles['monitor']}>
-			{isLoading && <MonitorLoader />}
-			{!isLoading && monitor && (
-				<div className={`${styles['monitor__content']} fade`}>
-					<MonitorHeader monitor={monitor} />
-					<MonitorRangeControl monitor={monitor} />
-					<MonitorOverall monitor={monitor} />
-					<MonitorRegionControl
-						regions={monitor.regions}
-						isLoading={isMonitorAnalyticsLoading}
+		<div className={`${styles.content} fade`}>
+			<MonitorHeader monitor={monitor} />
+			<MonitorRangeControl monitor={monitor} />
+			<MonitorOverall monitor={monitor} />
+			<MonitorRegionControl
+				regions={monitor.regions}
+				isLoading={isMonitorAnalyticsLoading}
+			/>
+			{isMonitorAnalyticsLoading && <MonitorAnalyticsLoader />}
+			{!isMonitorAnalyticsLoading && monitorAnalytics && (
+				<>
+					<MonitorRegionStats data={monitorAnalytics} />
+					<MonitorResponseChart monitor={monitorAnalytics} />
+					<MonitorResponseCards
+						responseStatistics={monitorAnalytics.statistics.responseTime}
 					/>
-					{isMonitorAnalyticsLoading && <MonitorAnalyticsLoader />}
-					{!isMonitorAnalyticsLoading && monitorAnalytics && (
-						<>
-							<MonitorRegionStats data={monitorAnalytics} />
-							<MonitorResponseChart monitor={monitorAnalytics} />
-							<MonitorResponseCards
-								responseStatistics={monitorAnalytics.statistics.responseTime}
-							/>
-							<MonitorAccidents incidents={monitorAnalytics.incidents} />
-						</>
-					)}
-				</div>
+					<MonitorIncidents incidents={monitorAnalytics.incidents} />
+				</>
 			)}
 		</div>
 	);

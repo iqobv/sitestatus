@@ -1,6 +1,6 @@
 @use '../../../styles/mixins' as *;
 
-.monitor__content {
+.content {
 	display: flex;
 	flex-direction: column;
 	gap: var(--gap);

@@ -65,24 +65,29 @@ const Select = ({
 						</button>
 					</Dropdown.Trigger>
 					<Dropdown.Menu menuWidth="trigger">
-						{options.map((option) => (
-							<Dropdown.Item
-								key={String(option.value)}
-								onClick={() => handleOptionClick(option.value)}
-								className={isSelected(option.value) ? styles.selected : ''}
-								closeOnClick={!multiple}
-							>
-								{multiple && (
-									<input
-										type="checkbox"
-										checked={isSelected(option.value)}
-										readOnly
-										className={styles.checkbox}
-									/>
-								)}
-								{option.label}
-							</Dropdown.Item>
-						))}
+						{options.map((option) => {
+							const Icon = option.icon;
+
+							return (
+								<Dropdown.Item
+									key={String(option.value)}
+									onClick={() => handleOptionClick(option.value)}
+									className={isSelected(option.value) ? styles.selected : ''}
+									closeOnClick={!multiple}
+								>
+									{Icon && <Icon size={20} />}
+									{multiple && (
+										<input
+											type="checkbox"
+											checked={isSelected(option.value)}
+											readOnly
+											className={styles.checkbox}
+										/>
+									)}
+									{option.label}
+								</Dropdown.Item>
+							);
+						})}
 					</Dropdown.Menu>
 				</Dropdown>
 			</label>

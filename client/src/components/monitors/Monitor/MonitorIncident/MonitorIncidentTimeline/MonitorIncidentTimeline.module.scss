@@ -1,0 +1,33 @@
+@use '../../../../../styles/mixins' as *;
+
+.container {
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap);
+}
+
+.timelineEvent {
+	display: flex;
+	justify-content: space-between;
+	gap: 10px;
+	width: 100%;
+	flex-direction: column;
+	align-items: flex-start;
+
+	@include respond-to(lg) {
+		align-items: center;
+		flex-direction: row;
+	}
+}
+
+.eventContent {
+	display: flex;
+	flex-direction: row;
+	gap: 6px;
+	align-items: center;
+}
+
+.timestamp {
+	font-size: 0.9rem;
+	color: var(--secondary-color);
+}

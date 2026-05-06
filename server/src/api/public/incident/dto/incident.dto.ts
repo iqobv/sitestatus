@@ -1,23 +1,21 @@
+import { DefaultFieldsDto } from '@libs/dto';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class AnalyticsIncidentDto {
-	@ApiProperty({ example: 'incident-1' })
-	id: string;
-
+export class IncidentDto extends DefaultFieldsDto {
 	@ApiProperty({ example: 'monitor-1' })
 	monitorId: string;
 
 	@ApiProperty({ example: 'region-1' })
 	regionId: string;
 
-	@ApiProperty({ example: 200 })
-	statusCode: number | null;
-
-	@ApiProperty({ example: new Date() })
-	createdAt: Date;
+	@ApiProperty({ example: 'log-1' })
+	triggerLogId: string;
 
 	@ApiProperty({ example: 'Error message' })
 	errorMessage: string | null;
+
+	@ApiProperty({ example: 500 })
+	statusCode: number | null;
 
 	@ApiProperty({ example: true })
 	resolved: boolean;

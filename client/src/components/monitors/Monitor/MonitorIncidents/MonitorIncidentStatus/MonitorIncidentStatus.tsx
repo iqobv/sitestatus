@@ -11,7 +11,7 @@ interface MonitorIncidentStatusProps {
 const MonitorIncidentStatus = ({ isResolved }: MonitorIncidentStatusProps) => {
 	return (
 		<div
-			className={styles['monitor-incident-status']}
+			className={styles.status}
 			style={
 				{
 					'--status-color': `var(--accident-${isResolved ? 'resolved' : 'open'})`,

@@ -1,5 +1,6 @@
 export * from './alertSettings/index';
 export * from './auth/index';
+export * from './incident/index';
 export * from './monitor/index';
 export * from './notificationChannel/index';
 export * from './project/index';

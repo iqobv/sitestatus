@@ -1,6 +1,6 @@
+import { IncidentDto } from '@api/public/incident/dto';
 import { StatPeriod } from '@generated/turso/enums';
 import { ApiProperty } from '@nestjs/swagger';
-import { AnalyticsIncidentDto } from './analytics-incident.dto';
 import { AnalyticsRawDataDto } from './analytics-raw-log.dto';
 import { AnalyticsStatLogDto } from './analytics-stat-log.dto';
 import { AnalyticsStatisticsDto } from './analytics-statistics.dto';
@@ -19,8 +19,8 @@ export class AnalyticsDto {
 	@ApiProperty({ type: AnalyticsStatisticsDto })
 	statistics: AnalyticsStatisticsDto;
 
-	@ApiProperty({ type: [AnalyticsIncidentDto] })
-	incidents: AnalyticsIncidentDto[];
+	@ApiProperty({ type: [IncidentDto] })
+	incidents: IncidentDto[];
 
 	@ApiProperty({ type: AnalyticsStatLogDto })
 	data: AnalyticsRawDataDto | AnalyticsStatLogDto;

@@ -5,6 +5,8 @@ export const PRIVATE_PAGES = {
 		ONE: (id: string) => `/monitors/${id}`,
 		NEW: '/monitors/new',
 		EDIT: (id: string) => `/monitors/${id}/edit`,
+		INCIDENT: (monitorId: string, incidentId: string) =>
+			`/monitors/${monitorId}/incidents/${incidentId}`,
 	} as const,
 	PROJECTS: {
 		ALL: '/projects',

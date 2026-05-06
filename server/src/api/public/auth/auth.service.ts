@@ -6,7 +6,7 @@ import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
 import { ClientInfoDto } from '@libs/dto';
 import { userSelect } from '@libs/prisma';
 import { JwtPayload } from '@libs/types';
-import { comparePassword, hashPassword } from '@libs/utils';
+import { comparePassword, hashPassword, withField } from '@libs/utils';
 import {
 	BadRequestException,
 	Injectable,
@@ -192,7 +192,9 @@ export class AuthService {
 		const isMatch = await comparePassword(dto.oldPassword, user.password);
 
 		if (!isMatch)
-			throw new BadRequestException(ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS);
+			throw new BadRequestException(
+				withField(ERROR_MESSAGES.AUTH.OLD_PASSWORD_INCORRECT, 'oldPassword'),
+			);
 
 		const hashedPassword = await hashPassword(dto.newPassword);
 

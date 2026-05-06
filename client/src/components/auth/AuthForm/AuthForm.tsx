@@ -24,7 +24,7 @@ interface AuthFormProps<T extends FieldValues, R> {
 	mutationFn: (data: T) => Promise<R>;
 	onSuccess?: (data: R) => void;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	schema?: ZodType<T, any, any>;
+	schema: ZodType<T, any, any>;
 	buttonLabel?: string;
 	bottomText?: React.ReactNode;
 	defaultValues?: DefaultValues<T>;
@@ -110,27 +110,29 @@ const AuthForm = <T extends FieldValues, R>({
 					{isUserDeletedError && <UserDeletedError email={email} />}
 				</>
 			)}
-			{fields.map(
-				({ label, placeholder, type, name, autocomplete, iconLeft }) => {
-					return (
-						<TextField
-							key={name}
-							label={label}
-							placeholder={placeholder}
-							type={type}
-							leftIcon={iconLeft ? <>{iconLeft({})}</> : undefined}
-							autoComplete={autocomplete}
-							error={errors[name]?.message as string}
-							{...register(name)}
-						/>
-					);
-				},
-			)}
-			{renderExtra &&
-				renderExtra(
-					register,
-					errors['acceptTerms' as Path<T>]?.message as string,
+			<div className={styles.fields}>
+				{fields.map(
+					({ label, placeholder, type, name, autoComplete, iconLeft }) => {
+						return (
+							<TextField
+								key={name}
+								label={label}
+								placeholder={placeholder}
+								type={type}
+								leftIcon={iconLeft ? <>{iconLeft({})}</> : undefined}
+								autoComplete={autoComplete}
+								error={errors[name]?.message as string}
+								{...register(name)}
+							/>
+						);
+					},
 				)}
+				{renderExtra &&
+					renderExtra(
+						register,
+						errors['acceptTerms' as Path<T>]?.message as string,
+					)}
+			</div>
 			<Button loading={isPending} type="submit" fullWidth>
 				{buttonLabel}
 			</Button>

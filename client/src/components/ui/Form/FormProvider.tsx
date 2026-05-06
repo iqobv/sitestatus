@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BaseSyntheticEvent, useEffect } from 'react';
+import { BaseSyntheticEvent } from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import { FormProps } from './Form.types';
 
@@ -14,13 +14,8 @@ const Form = <D extends FieldValues = FieldValues>({
 	const methods = useForm<D>({
 		resolver: zodResolver(schema),
 		defaultValues,
+		values: defaultValues as D,
 	});
-
-	useEffect(() => {
-		if (defaultValues) {
-			methods.reset(defaultValues);
-		}
-	}, [defaultValues]);
 
 	return (
 		<FormProvider {...methods}>

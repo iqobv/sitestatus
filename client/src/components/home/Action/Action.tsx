@@ -12,7 +12,7 @@ const Action = () => {
 				titleClassName={styles.title}
 				descriptionClassName={styles.description}
 			/>
-			<Button href={AUTH_PAGES.SIGN_UP}>CREATE FREE ACCOUNT</Button>
+			<Button href={AUTH_PAGES.REGISTER}>CREATE FREE ACCOUNT</Button>
 		</div>
 	);
 };

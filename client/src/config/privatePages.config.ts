@@ -1,5 +1,5 @@
 export const PRIVATE_PAGES = {
-	DASHBOARD: '/',
+	DASHBOARD: '/' as const,
 	MONITORS: {
 		ALL: '/monitors',
 		ONE: (id: string) => `/monitors/${id}`,
@@ -13,7 +13,7 @@ export const PRIVATE_PAGES = {
 		NEW: '/projects/new',
 		EDIT: (id: string) => `/projects/${id}/edit`,
 	} as const,
-	BASE_SETTINGS: '/settings',
+	BASE_SETTINGS: '/settings' as const,
 	SETTINGS: {
 		GENERAL: '/settings',
 		SECURITY: '/settings/security',
@@ -21,5 +21,6 @@ export const PRIVATE_PAGES = {
 		ALERTING: '/settings/alerting',
 		ALERTING_VERIFY: (token: string) =>
 			`/settings/alerting/verify?token=${token}`,
+		CHANGE_PASSWORD: '/settings/security/change-password',
 	} as const,
 } as const;

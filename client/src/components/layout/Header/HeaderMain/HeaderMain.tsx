@@ -24,7 +24,7 @@ const HeaderMain = () => {
 				<Button variant="link" href={AUTH_PAGES.LOGIN} size="sm">
 					Log in
 				</Button>
-				<Button href={AUTH_PAGES.SIGN_UP}>Sign Up</Button>
+				<Button href={AUTH_PAGES.REGISTER}>Sign Up</Button>
 			</div>
 		</HeaderContainer>
 	);

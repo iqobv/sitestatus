@@ -30,11 +30,7 @@ export class MailService {
 
 	async sendVerificationEmail(email: string, token: string) {
 		const url = `/email-verify?token=${token}`;
-		const html = await this.generateTemplate(
-			VerificationEmailTemplate,
-			url,
-			{},
-		);
+		const html = await this.generateTemplate(VerificationEmailTemplate, url);
 
 		return await this.sendMail({
 			recipients: [email],
@@ -45,7 +41,7 @@ export class MailService {
 
 	async sendPasswordResetEmail(email: string, token: string) {
 		const url = `/reset-password?token=${token}`;
-		const html = await this.generateTemplate(ResetPasswordTemplate, url, {});
+		const html = await this.generateTemplate(ResetPasswordTemplate, url);
 
 		return await this.sendMail({
 			recipients: [email],
@@ -56,7 +52,7 @@ export class MailService {
 
 	async sendRestoreAccountEmail(email: string, token: string) {
 		const url = `/restore?token=${token}`;
-		const html = await this.generateTemplate(RestoreAccountTemplate, url, {});
+		const html = await this.generateTemplate(RestoreAccountTemplate, url);
 
 		return await this.sendMail({
 			recipients: [email],
@@ -70,7 +66,6 @@ export class MailService {
 		const html = await this.generateTemplate(
 			EmailNotificationChannelVerifyTemplate,
 			url,
-			{},
 		);
 
 		return await this.sendMail({
@@ -119,7 +114,7 @@ export class MailService {
 	private async generateTemplate<TProps extends BaseEmailProps>(
 		template: React.ComponentType<TProps>,
 		url: string,
-		props: Omit<TProps, keyof BaseEmailProps>,
+		props?: Omit<TProps, keyof BaseEmailProps>,
 	) {
 		const componentProps = {
 			url: `${this.DOMAIN}${url}`,

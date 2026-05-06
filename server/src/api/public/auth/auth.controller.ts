@@ -209,7 +209,10 @@ export class AuthController {
 		type: createCustomMessageDto(SUCCESS_MESSAGES.AUTH.CHANGE_PASSWORD),
 	})
 	@ApiBadRequestResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS),
+		type: createCustomMessageDto(
+			ERROR_MESSAGES.AUTH.OLD_PASSWORD_INCORRECT,
+			'oldPassword',
+		),
 	})
 	@Post('change-password')
 	async changePassword(

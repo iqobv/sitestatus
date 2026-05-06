@@ -1,6 +1,7 @@
 export { default as CreateMonitor } from './CreateMonitor/CreateMonitor';
 export { default as CreateMonitorFormModal } from './CreateMonitor/CreateMonitorFormModal';
 export { default as Monitor } from './Monitor/Monitor';
+export * from './Monitor/MonitorIncident/index';
 export { default as MonitorLoader } from './Monitor/MonitorLoader';
 export { default as Monitors } from './Monitors/Monitors';
 export { default as MonitorsAll } from './Monitors/MonitorsAll';

@@ -5,9 +5,14 @@ import styles from './NotFoundWrapper.module.scss';
 interface NotFoundWrapperProps {
 	title: string;
 	description?: string;
+	href?: string;
 }
 
-const NotFoundWrapper = ({ title, description }: NotFoundWrapperProps) => {
+const NotFoundWrapper = ({
+	title,
+	description,
+	href = PUBLIC_PAGES.HOME,
+}: NotFoundWrapperProps) => {
 	return (
 		<div className="container">
 			<div className={styles.notFound}>
@@ -16,7 +21,7 @@ const NotFoundWrapper = ({ title, description }: NotFoundWrapperProps) => {
 					{description ||
 						'The page you are looking for does not exist or has been moved.'}
 				</p>
-				<Button href={PUBLIC_PAGES.HOME}>Back to Home</Button>
+				<Button href={href}>Back to Home</Button>
 			</div>
 		</div>
 	);

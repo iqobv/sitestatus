@@ -1,7 +1,7 @@
 import ProjectItemLoader from './ProjectItem/ProjectItemLoader';
 import styles from './Projects.module.scss';
 
-const projects = Array.from({ length: 12 }, (_, i) => (
+const projects = Array.from({ length: 4 }, (_, i) => (
 	<ProjectItemLoader key={i} />
 ));
 

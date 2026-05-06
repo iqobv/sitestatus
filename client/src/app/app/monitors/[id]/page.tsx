@@ -7,6 +7,7 @@ import {
 	QueryClient,
 } from '@tanstack/react-query';
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { cache } from 'react';
 
 interface MonitorPageProps {
@@ -24,6 +25,7 @@ export async function generateMetadata({
 
 	try {
 		const monitor = await getCachedMonitor(id);
+
 		return {
 			title: monitor?.name || 'Monitor',
 		};
@@ -37,18 +39,26 @@ export async function generateMetadata({
 export default async function MonitorPage({ params }: MonitorPageProps) {
 	const { id } = await params;
 
-	const queryClient = new QueryClient();
+	try {
+		const monitor = await getCachedMonitor(id);
 
-	await queryClient.prefetchQuery({
-		queryKey: QUERY_KEYS.monitors.byIdFull(id),
-		queryFn: () => getCachedMonitor(id),
-	});
+		if (!monitor) notFound();
 
-	return (
-		<HydrationBoundary state={dehydrate(queryClient)}>
-			<div className="fade">
-				<Monitor id={id} />
-			</div>
-		</HydrationBoundary>
-	);
+		const queryClient = new QueryClient();
+
+		await queryClient.prefetchQuery({
+			queryKey: QUERY_KEYS.monitors.byIdFull(id),
+			queryFn: () => getCachedMonitor(id),
+		});
+
+		return (
+			<HydrationBoundary state={dehydrate(queryClient)}>
+				<div className="fade">
+					<Monitor id={id} />
+				</div>
+			</HydrationBoundary>
+		);
+	} catch {
+		notFound();
+	}
 }

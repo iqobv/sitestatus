@@ -1,0 +1,13 @@
+@use '../../../../styles/mixins' as *;
+
+.incidentDetails {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: var(--gap);
+}
+
+.incidentInfo {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: var(--gap);
+}

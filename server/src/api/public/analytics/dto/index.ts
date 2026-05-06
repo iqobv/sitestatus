@@ -1,4 +1,3 @@
-export * from './analytics-incident.dto';
 export * from './analytics-query.dto';
 export * from './analytics-raw-log.dto';
 export * from './analytics-stat-log.dto';

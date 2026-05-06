@@ -44,6 +44,36 @@ export class SessionService {
 		});
 	}
 
+	async rotateSession(
+		sessionId: string,
+		dto: CreateSessionDto,
+		tx?: Prisma.TransactionClient,
+	) {
+		const { clientInfo, expiresAt, refreshTokenHash } = dto;
+		const { ip, userAgent } = clientInfo;
+
+		const prisma = tx ?? this.prismaService;
+
+		const geo: GeoDataDto | null = isPrivateIP(ip)
+			? null
+			: await this.getGeoInfo(ip);
+
+		const parsedUa = this.parseUserAgent(userAgent);
+
+		return await prisma.session.update({
+			where: { id: sessionId },
+			data: {
+				refreshToken: refreshTokenHash,
+				ip,
+				country: geo?.countryCode,
+				city: geo?.city,
+				userAgent,
+				expiresAt,
+				...parsedUa,
+			},
+		});
+	}
+
 	async findSessionById(sessionId: string) {
 		const session = await this.prismaService.session.findUnique({
 			where: { id: sessionId },

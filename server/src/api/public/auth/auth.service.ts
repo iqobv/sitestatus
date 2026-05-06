@@ -6,7 +6,12 @@ import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
 import { ClientInfoDto } from '@libs/dto';
 import { userSelect } from '@libs/prisma';
 import { JwtPayload } from '@libs/types';
-import { comparePassword, hashPassword, withField } from '@libs/utils';
+import {
+	comparePassword,
+	hashPassword,
+	hashToken,
+	withField,
+} from '@libs/utils';
 import {
 	BadRequestException,
 	Injectable,
@@ -80,10 +85,7 @@ export class AuthService {
 	}
 
 	async logout(rawRefreshToken: string, userId: string) {
-		const hashedToken = crypto
-			.createHash('sha256')
-			.update(rawRefreshToken)
-			.digest('hex');
+		const hashedToken = hashToken(rawRefreshToken);
 
 		const session = await this.prismaService.session.findUnique({
 			where: { refreshToken: hashedToken },
@@ -207,10 +209,7 @@ export class AuthService {
 	}
 
 	async refreshTokens(rawRefreshToken: string, clientInfo: ClientInfoDto) {
-		const hashedToken = crypto
-			.createHash('sha256')
-			.update(rawRefreshToken)
-			.digest('hex');
+		const hashedToken = hashToken(rawRefreshToken);
 
 		const session = await this.prismaService.session.findUnique({
 			where: { refreshToken: hashedToken },
@@ -232,9 +231,32 @@ export class AuthService {
 
 		if (!user || !user.emailVerified) throw new UnauthorizedException();
 
-		await this.sessionService.deleteSession(session.id, session.userId);
+		const newRawRefreshToken = crypto.randomBytes(32).toString('hex');
+		const newRefreshTokenHash = hashToken(newRawRefreshToken);
 
-		return this.generateAndSaveTokens(user, clientInfo);
+		const now = new Date();
+		const expiresAt = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+
+		const updatedSession = await this.sessionService.rotateSession(session.id, {
+			userId: user.id,
+			refreshTokenHash: newRefreshTokenHash,
+			clientInfo,
+			expiresAt,
+		});
+
+		const payload: JwtPayload = {
+			id: user.id,
+			email: user.email,
+			role: user.role,
+			sessionId: updatedSession.id,
+		};
+
+		const accessToken = this.jwtService.sign(payload, {
+			secret: this.configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
+			expiresIn: '15m',
+		});
+
+		return { accessToken, refreshToken: newRawRefreshToken };
 	}
 
 	async validateOAuthLogin(dto: OAuthDto, clientInfo: ClientInfoDto) {
@@ -316,10 +338,7 @@ export class AuthService {
 		tx?: Prisma.TransactionClient,
 	) {
 		const rawRefreshToken = crypto.randomBytes(32).toString('hex');
-		const refreshTokenHash = crypto
-			.createHash('sha256')
-			.update(rawRefreshToken)
-			.digest('hex');
+		const refreshTokenHash = hashToken(rawRefreshToken);
 
 		const now = new Date();
 		const expiresAt = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);

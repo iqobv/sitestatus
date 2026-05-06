@@ -7,6 +7,7 @@ import {
 	QueryClient,
 } from '@tanstack/react-query';
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { cache } from 'react';
 
 interface ProjectPageProps {
@@ -38,22 +39,30 @@ export async function generateMetadata({
 export default async function ProjectPage({ params }: ProjectPageProps) {
 	const { id } = await params;
 
-	const queryClient = new QueryClient();
+	try {
+		const project = await getCachedProject(id);
 
-	await queryClient.prefetchQuery({
-		queryKey: QUERY_KEYS.project.byId(id),
-		queryFn: () => getCachedProject(id),
-	});
+		if (!project) notFound();
 
-	await queryClient.prefetchQuery({
-		queryKey: QUERY_KEYS.monitors.allByProjectId(id),
-		queryFn: () => getServerAllMonitorsByProjectId(id),
-	});
+		const queryClient = new QueryClient();
 
-	return (
-		<HydrationBoundary state={dehydrate(queryClient)}>
-			<ProjectHeader />
-			<Project />
-		</HydrationBoundary>
-	);
+		await queryClient.prefetchQuery({
+			queryKey: QUERY_KEYS.project.byId(id),
+			queryFn: () => getCachedProject(id),
+		});
+
+		await queryClient.prefetchQuery({
+			queryKey: QUERY_KEYS.monitors.allByProjectId(id),
+			queryFn: () => getServerAllMonitorsByProjectId(id),
+		});
+
+		return (
+			<HydrationBoundary state={dehydrate(queryClient)}>
+				<ProjectHeader />
+				<Project />
+			</HydrationBoundary>
+		);
+	} catch {
+		notFound();
+	}
 }

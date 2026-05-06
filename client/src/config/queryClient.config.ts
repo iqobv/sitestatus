@@ -27,7 +27,12 @@ export const QUERY_KEYS = {
 			region,
 		],
 		delete: (monitorId: string) => ['monitorDelete', monitorId],
-	},
+		incidentDetails: (monitorId: string, incidentId: string) => [
+			'monitorIncidentDetails',
+			monitorId,
+			incidentId,
+		],
+	} as const,
 	region: {
 		list: ['regionsList'],
 	} as const,

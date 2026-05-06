@@ -1,5 +1,6 @@
 export * from './alert.constants';
 export * from './auth.constants';
+export * from './incident.constants';
 export * from './monitor.constants';
 export * from './notification-channel.constants';
 export * from './project.constants';

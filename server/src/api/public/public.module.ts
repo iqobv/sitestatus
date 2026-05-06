@@ -10,6 +10,7 @@ import { UserProviderModule } from './user-provider/user-provider.module';
 import { UserModule } from './user/user.module';
 import { NotificationChannelModule } from './notification-channel/notification-channel.module';
 import { AlertSettingsModule } from './alert-settings/alert-settings.module';
+import { IncidentModule } from './incident/incident.module';
 
 @Module({
 	imports: [
@@ -24,6 +25,7 @@ import { AlertSettingsModule } from './alert-settings/alert-settings.module';
 		SessionModule,
 		NotificationChannelModule,
 		AlertSettingsModule,
+		IncidentModule,
 	],
 })
 export class PublicModule {}

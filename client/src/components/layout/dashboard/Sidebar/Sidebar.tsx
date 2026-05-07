@@ -40,21 +40,19 @@ const Sidebar = () => {
 	return (
 		<>
 			<div
-				className={`${styles['sidebar__overlay']} ${expanded ? styles['sidebar__overlay--active'] : ''}`}
+				className={`${styles.overlay} ${expanded ? styles.active : ''}`}
 				onClick={handleClose}
 			/>
-			<aside
-				className={`${styles['sidebar']} ${expanded ? styles['sidebar--expanded'] : ''}`}
-			>
-				<div className={styles['sidebar__content']}>
+			<aside className={`${styles.sidebar} ${expanded ? styles.expanded : ''}`}>
+				<div className={styles.content}>
 					<SidebarHeader onClick={handleClick} />
 					<SidebarBody onClick={handleClick} />
 					<SidebarFooter onClick={handleClick} />
 				</div>
 			</aside>
-			<div className={styles['sidebar__toggle-container']}>
+			<div className={styles.toggleContainer}>
 				<Button
-					className={styles['sidebar__toggle']}
+					className={styles.toggle}
 					onClick={handleClose}
 					isIcon
 					variant="text"
@@ -62,7 +60,7 @@ const Sidebar = () => {
 				>
 					<TbLayoutSidebarRightCollapse
 						size={24}
-						className={`${styles['sidebar__toggle-icon']} ${expanded ? styles['sidebar__toggle-icon--expanded'] : ''}`}
+						className={`${styles.toggleIcon} ${expanded ? styles.expanded : ''}`}
 					/>
 				</Button>
 			</div>

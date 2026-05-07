@@ -20,60 +20,10 @@
 	transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 	max-width: 100vw;
 
-	&__overlay {
-		position: fixed;
-		top: 0;
-		left: 0;
-		height: 100vh;
-		height: 100dvh;
-		background-color: rgba(0, 0, 0, 0.5);
-		width: 100vw;
-		z-index: 1300;
-		pointer-events: none;
-		transition: opacity 0.3s ease;
-		opacity: 0;
-
-		&.sidebar__overlay--active {
-			opacity: 1;
-			pointer-events: auto;
-		}
-
-		@include respond-to(xl) {
-			width: 0;
-			height: 0;
-			z-index: -1000;
-		}
-	}
-
-	&__content {
-		padding: 0 10px;
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-		gap: 32px;
-		height: 100%;
-	}
-
-	&__toggle-container {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: $dashboard-header-height;
-		height: $dashboard-header-height;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		z-index: 1500;
-		transform: translateX(0);
-		transition:
-			transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-			left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-	}
-
-	&--expanded {
+	&.expanded {
 		transform: translateX(0);
 
-		& ~ .sidebar__toggle-container {
+		& ~ .toggleContainer {
 			transform: translateX(calc(100vw - #{$dashboard-header-height}));
 
 			@include respond-to(sm) {
@@ -84,23 +34,10 @@
 		}
 	}
 
-	&__toggle {
-		position: fixed;
-
-		&-icon {
-			transition: transform 0.3s ease;
-			transform: rotate(0deg);
-
-			&.sidebar__toggle-icon--expanded {
-				transform: rotate(180deg);
-			}
-		}
-	}
-
 	@include respond-to(sm) {
 		max-width: $sidebar-width;
 
-		&__toggle-container {
+		.toggleContainer {
 			transition:
 				transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
 				left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -122,10 +59,73 @@
 			min-width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
 			border-color 0.3s ease;
 
-		&--expanded {
+		&.expanded {
 			width: $sidebar-width;
 			min-width: $sidebar-width;
 			border-right: 1px solid var(--dashboard-sidebar-border);
+		}
+	}
+}
+
+.toggleContainer {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: $dashboard-header-height;
+	height: $dashboard-header-height;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 1500;
+	transform: translateX(0);
+	transition:
+		transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+		left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.content {
+	padding: 0 10px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	gap: 32px;
+	height: 100%;
+}
+
+.overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100vh;
+	height: 100dvh;
+	background-color: rgba(0, 0, 0, 0.5);
+	width: 100vw;
+	z-index: 1300;
+	pointer-events: none;
+	transition: opacity 0.3s ease;
+	opacity: 0;
+
+	&.active {
+		opacity: 1;
+		pointer-events: auto;
+	}
+
+	@include respond-to(xl) {
+		width: 0;
+		height: 0;
+		z-index: -1000;
+	}
+}
+
+.toggle {
+	position: fixed;
+
+	&Icon {
+		transition: transform 0.3s ease;
+		transform: rotate(0deg);
+
+		&.expanded {
+			transform: rotate(180deg);
 		}
 	}
 }

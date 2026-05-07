@@ -1,0 +1,20 @@
+@use '../../../styles/mixins' as *;
+
+.button {
+	padding: 12px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+
+	@include respond-to(md) {
+		padding: 12px 20px;
+	}
+}
+
+.text {
+	display: none;
+
+	@include respond-to(md) {
+		display: inline;
+	}
+}

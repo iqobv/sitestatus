@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import styles from './Textarea.module.scss';
 import { TextareaProps } from './Textarea.types';

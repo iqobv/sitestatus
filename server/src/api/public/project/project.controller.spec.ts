@@ -23,9 +23,9 @@ describe('ProjectController', () => {
 		ownerId: 'user_1',
 		name: 'Test Project',
 		description: 'A test project for demonstration purposes.',
-		slug: 'test-project',
 		createdAt: new Date(),
 		updatedAt: new Date(),
+		deletedAt: null,
 	};
 
 	const { id, ownerId } = mockProject;
@@ -54,7 +54,6 @@ describe('ProjectController', () => {
 	describe('Create Project', () => {
 		const dto: CreateProjectDto = {
 			name: 'Test Project',
-			slug: 'test-project',
 			description: undefined,
 		};
 

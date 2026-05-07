@@ -6,5 +6,6 @@ export * from './notification-channel.constants';
 export * from './project.constants';
 export * from './region.constants';
 export * from './session.constants';
+export * from './status-page.constants';
 export * from './token.constants';
 export * from './user.constants';

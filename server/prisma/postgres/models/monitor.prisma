@@ -17,8 +17,9 @@ model Monitor {
 
   deletedAt DateTime? @map("deleted_at")
 
-  regionConfigs MonitorRegionConfig[]
-  alertSettings AlertSettings[]
+  regionConfigs      MonitorRegionConfig[]
+  alertSettings      AlertSettings[]
+  statusPageMonitors StatusPageMonitor[]
 
   user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   project Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)

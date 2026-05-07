@@ -13,7 +13,6 @@ const ProjectItem = ({ project }: ProjectItemProps) => {
 	return (
 		<div className={styles.item}>
 			<div className={styles.content}>
-				<p className={styles.projectSlug}>{project.slug}</p>
 				<div className={styles.projectInfo}>
 					<h2 className={styles.projectName}>{project.name}</h2>
 					<p className={styles.projectDescription}>{project.description}</p>

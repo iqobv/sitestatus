@@ -77,7 +77,7 @@ export class MonitorService {
 		);
 	}
 
-	async findAllPublicMonitors(projectId: string) {
+	async findAllPublicMonitors(ids: string[]) {
 		const targetHours = 24;
 
 		const endDate = new Date();
@@ -86,7 +86,7 @@ export class MonitorService {
 		);
 
 		const monitors = await this.pgPrismaService.monitor.findMany({
-			where: { projectId, deletedAt: null },
+			where: { id: { in: ids }, deletedAt: null },
 			orderBy: { createdAt: 'desc' },
 		});
 

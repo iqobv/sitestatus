@@ -20,6 +20,7 @@ model User {
   sessions             Session[]
   notificationChannels NotificationChannel[]
   alertSettings        AlertSettings[]
+  statusPages          StatusPage[]
 
   @@map("users")
 }

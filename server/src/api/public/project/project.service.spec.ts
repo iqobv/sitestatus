@@ -25,9 +25,9 @@ describe('ProjectService', () => {
 		ownerId: 'user_1',
 		name: 'Test Project',
 		description: 'A test project for demonstration purposes.',
-		slug: 'test-project',
 		createdAt: new Date(),
 		updatedAt: new Date(),
+		deletedAt: null,
 	};
 
 	const prismaError = new Prisma.PrismaClientKnownRequestError(
@@ -71,7 +71,6 @@ describe('ProjectService', () => {
 
 			const dto: CreateProjectDto = {
 				name: 'New Project',
-				slug: 'new-project',
 				description: undefined,
 			};
 
@@ -95,7 +94,6 @@ describe('ProjectService', () => {
 
 			const dto: CreateProjectDto = {
 				name: 'New Project',
-				slug: 'new-project',
 				description: undefined,
 			};
 
@@ -189,7 +187,6 @@ describe('ProjectService', () => {
 
 			const dto: UpdateProjectDto = {
 				name: 'Updated Project',
-				slug: 'existing-project',
 			};
 
 			await expect(service.updateProject(id, ownerId, dto)).rejects.toThrow(

@@ -1,7 +1,6 @@
 'use client';
 
 import { Form } from '@/components/ui';
-import styles from './ProjectForm.module.scss';
 
 interface ProjectFormActionsProps {
 	isEdit: boolean;
@@ -15,7 +14,7 @@ const ProjectFormActions = ({
 	buttonLabel,
 }: ProjectFormActionsProps) => {
 	return (
-		<Form.Actions className={styles.formActions}>
+		<Form.Actions justifyContent="flex-end">
 			{isEdit && (
 				<Form.Reset buttonProps={{ variant: 'secondary' }} disabledOnEmpty>
 					Cancel

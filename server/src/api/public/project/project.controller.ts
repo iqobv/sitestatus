@@ -17,7 +17,12 @@ import {
 	ApiOkResponse,
 	ApiOperation,
 } from '@nestjs/swagger';
-import { CreateProjectDto, ProjectDto, UpdateProjectDto } from './dto';
+import {
+	CreateProjectDto,
+	ProjectDto,
+	ProjectWithMonitorsDto,
+	UpdateProjectDto,
+} from './dto';
 import { ProjectService } from './project.service';
 
 @IsPublic()
@@ -71,6 +76,18 @@ export class ProjectController {
 	@Get()
 	async getAllProjects(@Authorized('id') userId: string) {
 		return await this.projectService.getAllProjects(userId);
+	}
+
+	@Auth()
+	@ApiOperation({
+		summary: 'Get all projects with monitors',
+	})
+	@ApiOkResponse({
+		type: [ProjectWithMonitorsDto],
+	})
+	@Get('with-monitors')
+	async getAllProjectsWithMonitors(@Authorized('id') userId: string) {
+		return await this.projectService.getAllProjectsWithMonitors(userId);
 	}
 
 	@Auth()

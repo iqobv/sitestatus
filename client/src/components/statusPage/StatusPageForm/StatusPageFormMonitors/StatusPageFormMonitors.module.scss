@@ -1,0 +1,11 @@
+.monitorsWrapper {
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap);
+}
+
+.monitorsList {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}

@@ -46,6 +46,13 @@ export class ProjectService {
 		});
 	}
 
+	async getAllProjectsWithMonitors(userId: string) {
+		return await this.prismaService.project.findMany({
+			where: { ownerId: userId, deletedAt: null },
+			select: { ...projectSelect, monitors: true },
+		});
+	}
+
 	async updateProject(id: string, userId: string, dto: UpdateProjectDto) {
 		await this.getProjectById(id, userId);
 

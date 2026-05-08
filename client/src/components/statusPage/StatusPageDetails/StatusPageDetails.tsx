@@ -5,9 +5,9 @@ import { QUERY_KEYS } from '@/config';
 import { useQuery } from '@tanstack/react-query';
 import { notFound, useParams } from 'next/navigation';
 import styles from './StatusPageDetails.module.scss';
-import StatusPageDetailsForm from './StatusPageDetailsForm/StatusPageDetailsForm';
 import StatusPageDetailsHeader from './StatusPageDetailsHeader/StatusPageDetailsHeader';
 import StatusPageDetailsLoader from './StatusPageDetailsLoader';
+import StatusPageDetailsUpdate from './StatusPageDetailsUpdate/StatusPageDetailsUpdate';
 
 const StatusPageDetails = () => {
 	const { id } = useParams<{ id: string }>();
@@ -24,7 +24,7 @@ const StatusPageDetails = () => {
 	return (
 		<div className={styles.details}>
 			<StatusPageDetailsHeader data={data} />
-			<StatusPageDetailsForm data={data} />
+			<StatusPageDetailsUpdate data={data} />
 		</div>
 	);
 };

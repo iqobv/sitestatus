@@ -145,6 +145,7 @@ export class StatusPageService {
 					include: {
 						monitor: true,
 					},
+					orderBy: { sortOrder: 'asc' },
 				},
 			},
 		});
@@ -228,6 +229,7 @@ export class StatusPageService {
 						include: {
 							monitor: true,
 						},
+						orderBy: { sortOrder: 'asc' },
 					},
 				},
 			});

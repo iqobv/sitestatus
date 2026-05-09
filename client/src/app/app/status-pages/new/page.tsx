@@ -1,3 +1,4 @@
+import { StatusPageCreate } from '@/components/statusPage';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -5,5 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function NewStatusPage() {
-	return <div></div>;
+	return <StatusPageCreate />;
 }

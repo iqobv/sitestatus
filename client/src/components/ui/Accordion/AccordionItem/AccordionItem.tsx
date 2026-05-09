@@ -16,17 +16,13 @@ const AccordionItem = ({
 	onClick,
 }: AccordionItemProps) => {
 	return (
-		<div
-			className={`${styles['accordion-item']} ${
-				isOpen ? styles['accordion-item--open'] : ''
-			}`}
-		>
-			<div className={styles['accordion-item__header']} onClick={onClick}>
-				<div className={styles['accordion-item__title']}>{title}</div>
-				<MdKeyboardArrowUp className={styles['accordion-item__icon']} />
+		<div className={`${styles.item} ${isOpen ? styles.open : ''}`}>
+			<div className={styles.header} onClick={onClick}>
+				<div className={styles.title}>{title}</div>
+				<MdKeyboardArrowUp className={styles.icon} />
 			</div>
-			<div className={styles['accordion-item__body']}>
-				<div className={styles['accordion-item__content']}>{content}</div>
+			<div className={styles.body}>
+				<div className={styles.content}>{content}</div>
 			</div>
 		</div>
 	);

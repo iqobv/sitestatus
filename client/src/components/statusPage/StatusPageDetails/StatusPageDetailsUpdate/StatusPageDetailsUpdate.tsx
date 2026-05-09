@@ -11,7 +11,6 @@ import { toast } from 'react-toastify';
 import StatusPageForm, {
 	StatusPageFormDto,
 } from '../../StatusPageForm/StatusPageForm';
-import styles from './StatusPageDetailsUpdate.module.scss';
 import { UPDATE_STATUS_PAGE_FORM_FIELDS } from './statusPageFormFields';
 
 interface StatusPageDetailsUpdateProps {
@@ -40,49 +39,47 @@ const StatusPageDetailsUpdate = ({ data }: StatusPageDetailsUpdateProps) => {
 	});
 
 	return (
-		<div className={styles.statusPageDetailsUpdate}>
-			<StatusPageForm<StatusPageFormDto>
-				schema={updateStatusPageSchema}
-				defaultValues={{
-					title: '',
-					description: '',
-					slug: '',
-					monitors: [],
-					isPublished: false,
-					isAutoSync: true,
-				}}
-				fields={UPDATE_STATUS_PAGE_FORM_FIELDS}
-				values={{
-					title: data.title,
-					description: data.description,
-					slug: data.slug,
-					monitors: data.monitors.map((m) => ({
-						id: m.monitorId,
-						displayName: m.displayName,
-						sortOrder: m.sortOrder,
-						initMonitorName: m.monitor.name,
-					})),
-					isPublished: data.isPublished,
-					isAutoSync: false,
-				}}
-				onSubmit={(data) => {
-					let finalData: UpdateStatusPageDto = data;
+		<StatusPageForm<StatusPageFormDto>
+			schema={updateStatusPageSchema}
+			defaultValues={{
+				title: '',
+				description: '',
+				slug: '',
+				monitors: [],
+				isPublished: false,
+				isAutoSync: true,
+			}}
+			fields={UPDATE_STATUS_PAGE_FORM_FIELDS}
+			values={{
+				title: data.title,
+				description: data.description,
+				slug: data.slug,
+				monitors: data.monitors.map((m) => ({
+					id: m.monitorId,
+					displayName: m.displayName,
+					sortOrder: m.sortOrder,
+					initMonitorName: m.monitor.name,
+				})),
+				isPublished: data.isPublished,
+				isAutoSync: false,
+			}}
+			onSubmit={(data) => {
+				let finalData: UpdateStatusPageDto = data;
 
-					if (data.monitors) {
-						finalData = {
-							...data,
-							monitors: data.monitors.map((m, index) => ({
-								id: m.id,
-								displayName: m.displayName?.trim() ? m.displayName : null,
-								sortOrder: index,
-							})),
-						};
-					}
+				if (data.monitors) {
+					finalData = {
+						...data,
+						monitors: data.monitors.map((m, index) => ({
+							id: m.id,
+							displayName: m.displayName?.trim() ? m.displayName : null,
+							sortOrder: index,
+						})),
+					};
+				}
 
-					mutate(finalData);
-				}}
-			/>
-		</div>
+				mutate(finalData);
+			}}
+		/>
 	);
 };
 

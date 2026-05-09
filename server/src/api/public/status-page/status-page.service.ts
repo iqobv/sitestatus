@@ -29,17 +29,28 @@ export class StatusPageService {
 
 		const monitorIds = monitors.map((m) => m.id);
 
-		const existingMonitors = await this.pgPrismaService.monitor.findMany({
-			where: { id: { in: monitorIds }, userId },
-			select: { id: true },
-		});
+		let existingMonitors: { id: string }[];
+
+		try {
+			existingMonitors = await this.pgPrismaService.monitor.findMany({
+				where: { id: { in: monitorIds }, userId },
+				select: { id: true },
+			});
+		} catch (error) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				if (error.code === 'P2007') {
+					throw new NotFoundException(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND);
+				}
+			}
+			throw error;
+		}
 
 		if (existingMonitors.length !== monitorIds.length) {
 			throw new NotFoundException(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND);
 		}
 
 		return await this.catchUniqueConstraintError(async () => {
-			await this.pgPrismaService.statusPage.create({
+			return await this.pgPrismaService.statusPage.create({
 				data: {
 					...rest,
 					monitors: {

@@ -20,7 +20,7 @@
 	padding: 10px 16px;
 	background: none;
 	border: none;
-	font-size: 0.875rem;
+	font-size: 0.915rem;
 	color: var(--color-main-text);
 	cursor: pointer;
 	transition:
@@ -39,5 +39,15 @@
 	&:disabled {
 		color: var(--dropdown-item-disabled-color);
 		cursor: not-allowed;
+	}
+
+	&.delete {
+		color: var(--input-color-error);
+		font-weight: 500;
+
+		&:hover:not(:disabled),
+		&:focus-visible:not(:disabled) {
+			color: var(--input-color-error);
+		}
 	}
 }

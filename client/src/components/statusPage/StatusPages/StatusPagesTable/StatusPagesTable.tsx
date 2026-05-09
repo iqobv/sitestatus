@@ -7,8 +7,8 @@ import { StatusPage } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import { getCoreRowModel } from '@tanstack/react-table';
 import { LuExternalLink } from 'react-icons/lu';
-import { MdMoreVert } from 'react-icons/md';
 import styles from './StatusPagesTable.module.scss';
+import StatusPagesTableDropdown from './StatusPagesTableDropdown/StatusPagesTableDropdown';
 import StatusPagesTableLoader from './StatusPagesTableLoader';
 
 const StatusPagesTable = () => {
@@ -68,14 +68,7 @@ const StatusPagesTable = () => {
 								>
 									<LuExternalLink size={20} />
 								</Button>
-								<Button
-									className={styles.deleteButton}
-									size="sm"
-									isIcon
-									variant="text"
-								>
-									<MdMoreVert size={20} />
-								</Button>
+								<StatusPagesTableDropdown statusPage={row.original} />
 							</div>
 						),
 						enableSorting: false,

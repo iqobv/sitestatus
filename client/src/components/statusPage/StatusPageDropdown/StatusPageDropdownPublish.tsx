@@ -32,7 +32,7 @@ const StatusPageDropdownPublish = ({
 
 			queryClient.invalidateQueries({ queryKey: QUERY_KEYS.statusPage.all });
 			if (refetchByIdOnSuccess) {
-				queryClient.refetchQueries({
+				queryClient.invalidateQueries({
 					queryKey: QUERY_KEYS.statusPage.byId(data.id),
 				});
 			}

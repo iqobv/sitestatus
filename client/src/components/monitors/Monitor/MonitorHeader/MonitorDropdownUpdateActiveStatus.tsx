@@ -22,7 +22,7 @@ const MonitorDropdownUpdateActiveStatus = ({
 		monitorId: monitor.id,
 		mutationFn: updateMonitorActiveStatus,
 		onSuccess: () => {
-			queryClient.refetchQueries({
+			queryClient.invalidateQueries({
 				queryKey: QUERY_KEYS.monitors.byIdFull(monitor.id),
 			});
 		},

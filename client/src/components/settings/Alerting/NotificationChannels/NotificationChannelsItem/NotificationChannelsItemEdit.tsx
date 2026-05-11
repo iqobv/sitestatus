@@ -20,11 +20,11 @@ const NotificationChannelsItemEdit = ({
 
 	const queryClient = useQueryClient();
 
-	const { mutate, isPending } = useMutation({
+	const { mutate } = useMutation({
 		mutationFn: (dto: UpdateNotificationChannelDto) =>
 			updateNotificationChannel(channel.id, dto),
 		onSuccess: () => {
-			queryClient.refetchQueries({
+			queryClient.invalidateQueries({
 				queryKey: QUERY_KEYS.notificationChannel.all,
 			});
 		},

@@ -2,7 +2,7 @@
 
 import { Logo } from '@/components/icons';
 import { Button } from '@/components/ui';
-import { AUTH_PAGES, PUBLIC_PAGES } from '@/config';
+import { CROSS_DOMAIN_ROUTES, PUBLIC_PAGES } from '@/config';
 import Link from 'next/link';
 import HeaderContainer from '../HeaderContainer';
 import styles from './HeaderMain.module.scss';
@@ -21,10 +21,10 @@ const HeaderMain = () => {
 				</span>
 			</Link>
 			<div className={styles.buttons}>
-				<Button variant="link" href={AUTH_PAGES.LOGIN} size="sm">
+				<Button variant="link" href={CROSS_DOMAIN_ROUTES.APP_LOGIN} size="sm">
 					Log in
 				</Button>
-				<Button href={AUTH_PAGES.REGISTER}>Sign Up</Button>
+				<Button href={CROSS_DOMAIN_ROUTES.APP_REGISTER}>Sign Up</Button>
 			</div>
 		</HeaderContainer>
 	);

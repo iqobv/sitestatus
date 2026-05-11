@@ -20,7 +20,7 @@ import {
 import {
 	CreateProjectDto,
 	ProjectDto,
-	PublicProjectDto,
+	ProjectWithMonitorsDto,
 	UpdateProjectDto,
 } from './dto';
 import { ProjectService } from './project.service';
@@ -67,19 +67,6 @@ export class ProjectController {
 		return await this.projectService.getProjectById(id, userId);
 	}
 
-	@ApiOperation({
-		summary: 'Get public project by slug',
-		description: 'Retrieves a public project by its unique slug',
-	})
-	@ApiNotFoundResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.PROJECT.PROJECT_NOT_FOUND),
-	})
-	@ApiOkResponse({ type: PublicProjectDto })
-	@Get('slug/:slug')
-	async getPublicProjectBySlug(@Param('slug') slug: string) {
-		return await this.projectService.getPublicProjectBySlug(slug);
-	}
-
 	@Auth()
 	@ApiOperation({
 		summary: 'Get all projects',
@@ -89,6 +76,18 @@ export class ProjectController {
 	@Get()
 	async getAllProjects(@Authorized('id') userId: string) {
 		return await this.projectService.getAllProjects(userId);
+	}
+
+	@Auth()
+	@ApiOperation({
+		summary: 'Get all projects with monitors',
+	})
+	@ApiOkResponse({
+		type: [ProjectWithMonitorsDto],
+	})
+	@Get('with-monitors')
+	async getAllProjectsWithMonitors(@Authorized('id') userId: string) {
+		return await this.projectService.getAllProjectsWithMonitors(userId);
 	}
 
 	@Auth()

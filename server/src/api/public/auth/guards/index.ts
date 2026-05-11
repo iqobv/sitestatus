@@ -3,4 +3,5 @@ export * from './authenticated.guard';
 export * from './github-auth.guard';
 export * from './google-auth.guard';
 export * from './local-auth.guard';
+export * from './optional-access-token.guard';
 export * from './roles.guard';

@@ -12,12 +12,10 @@ import { CREATE_PROJECT_FIELDS } from './createProjectFields';
 const CreateProject = () => {
 	const router = useRouter();
 
-	const defaultValues = useMemo(
+	const defaultValues: CreateProjectDto = useMemo(
 		() => ({
 			name: '',
 			description: '',
-			slug: '',
-			isAutoSync: true,
 		}),
 		[],
 	);

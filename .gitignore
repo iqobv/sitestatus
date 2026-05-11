@@ -33,3 +33,5 @@ __*__
 __*__.*
 AzuriteConfig
 ping-worker copy
+*.ipynb_checkpoints
+*.inpyb

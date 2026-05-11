@@ -66,7 +66,7 @@ export async function proxy(request: NextRequest) {
 			response = NextResponse.rewrite(new URL(internalPath, request.url));
 		}
 	} else if (isStatusSubdomain) {
-		const internalPath = `/p${path}`;
+		const internalPath = `/s${path}`;
 		response = NextResponse.rewrite(new URL(internalPath, request.url));
 	} else {
 		const isPrivateSection =

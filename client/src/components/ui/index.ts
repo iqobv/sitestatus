@@ -9,6 +9,7 @@ export { default as Dropdown } from './Dropdown/index';
 export type { FormProps } from './Form/Form.types';
 export { default as Form } from './Form/index';
 export { default as FormLabel } from './Form/parts/FormLabel/FormLabel';
+export { default as IconButton } from './IconButton/IconButton';
 export { default as Loader } from './Loader/Loader';
 export { default as LogoLink } from './LogoLink/LogoLink';
 export { default as Modal } from './Modal/Modal';

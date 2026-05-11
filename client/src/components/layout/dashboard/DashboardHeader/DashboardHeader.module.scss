@@ -1,7 +1,6 @@
-@use '../../../../styles/mixins' as *;
 @use '../../../../styles/variables' as *;
 
-.dashboard-header {
+.header {
 	height: $dashboard-header-height;
 	position: sticky;
 	top: 0;
@@ -12,7 +11,7 @@
 	border-bottom: 1px solid var(--dashboard-header-border);
 	box-sizing: content-box;
 
-	&__content {
+	.content {
 		display: inline-flex;
 		align-items: center;
 		justify-content: space-between;
@@ -21,31 +20,12 @@
 		padding: 0 20px;
 	}
 
-	&__buttons {
+	.buttons {
 		display: flex;
 		align-items: center;
 		gap: 10px;
 		flex-direction: row;
 		justify-content: flex-end;
 		flex: 1;
-	}
-
-	&__add-button {
-		padding: 12px;
-		display: flex;
-		align-items: center;
-		gap: 8px;
-
-		@include respond-to('md') {
-			padding: 12px 20px;
-		}
-	}
-
-	&__button-text {
-		display: none;
-
-		@include respond-to('md') {
-			display: inline;
-		}
 	}
 }

@@ -1,0 +1,31 @@
+@use '../../../../../styles/mixins' as *;
+
+.monitorItem {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	border: 1px solid var(--border-color);
+	background-color: var(--card-bg);
+	border-radius: 4px;
+	padding: 8px;
+	gap: 8px;
+
+	@include respond-to(md) {
+		gap: var(--gap);
+		padding: 8px 16px;
+	}
+}
+
+.textField {
+	input {
+		width: 100px;
+	}
+}
+
+.inputWrapper {
+	flex: 1;
+}
+
+.dragHandle {
+	cursor: grab;
+}

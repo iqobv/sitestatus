@@ -25,4 +25,10 @@ export const PRIVATE_PAGES = {
 			`/settings/alerting/verify?token=${token}`,
 		CHANGE_PASSWORD: '/settings/security/change-password',
 	} as const,
+	STATUS_PAGES: {
+		ALL: '/status-pages',
+		ID: (id: string) => `/status-pages/${id}`,
+		NEW: '/status-pages/new',
+		EDIT: (id: string) => `/status-pages/${id}/edit`,
+	} as const,
 } as const;

@@ -10,7 +10,7 @@ interface SidebarHeaderProps {
 
 const SidebarHeader = ({ onClick }: SidebarHeaderProps) => {
 	return (
-		<div className={styles['sidebar-header']}>
+		<div className={styles.header}>
 			<LogoLink href={PRIVATE_PAGES.DASHBOARD} onClick={onClick} />
 		</div>
 	);

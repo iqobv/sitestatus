@@ -10,11 +10,12 @@ const Form = <D extends FieldValues = FieldValues>({
 	schema,
 	onSubmit,
 	defaultValues,
+	values,
 }: FormProps<D>) => {
 	const methods = useForm<D>({
 		resolver: zodResolver(schema),
 		defaultValues,
-		values: defaultValues as D,
+		values,
 	});
 
 	return (

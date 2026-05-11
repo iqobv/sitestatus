@@ -7,11 +7,11 @@ export default function DashboardLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<div className={styles['dashboard-layout']}>
+		<div className={styles.layout}>
 			<Sidebar />
-			<div className={styles['main-content']}>
+			<div className={styles.content}>
 				<DashboardHeader />
-				<main className={styles['main']}>{children}</main>
+				<main className={styles.main}>{children}</main>
 			</div>
 		</div>
 	);

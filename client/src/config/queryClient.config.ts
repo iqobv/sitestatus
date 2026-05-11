@@ -38,6 +38,7 @@ export const QUERY_KEYS = {
 	} as const,
 	project: {
 		all: ['projectsList'],
+		allWithMonitors: ['projectsListWithMonitors'],
 		byId: (projectId: string) => ['project', projectId],
 		create: ['projectCreate'],
 		update: (projectId: string) => ['projectUpdate', projectId],
@@ -62,5 +63,11 @@ export const QUERY_KEYS = {
 	alertSettings: {
 		hierarchy: (id?: string) => ['alertSettingsHierarchy', id ?? ''],
 		upsert: ['alertSettingsUpsert'],
+	} as const,
+	statusPage: {
+		byId: (id: string) => ['statusPageById', id],
+		bySlug: (slug: string) => ['statusPageBySlug', slug],
+		monitorsBySlug: (slug: string) => ['statusPageMonitorsBySlug', slug],
+		all: ['userStatusPages'],
 	} as const,
 } as const;

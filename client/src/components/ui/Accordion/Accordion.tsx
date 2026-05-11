@@ -12,7 +12,6 @@ const Accordion = ({
 	onChange,
 	className,
 }: AccordionProps) => {
-	// const [openedIndexes, setOpenedIndexes] = useState<number[]>([]);
 	const [openedIndexes, setOpenedIndexes] = useState<number[]>(() => {
 		if (!defaultOpenIndexes || defaultOpenIndexes.length === 0) {
 			return [];
@@ -24,16 +23,6 @@ const Accordion = ({
 
 		return [defaultOpenIndexes[0]];
 	});
-
-	// useLayoutEffect(() => {
-	// 	if (defaultOpenIndexes) {
-	// 		if (multiple && defaultOpenIndexes.length > 0) {
-	// 			setOpenedIndexes(defaultOpenIndexes);
-	// 		} else if (!multiple && defaultOpenIndexes.length > 0) {
-	// 			setOpenedIndexes([defaultOpenIndexes[0]]);
-	// 		}
-	// 	}
-	// }, [multiple, defaultOpenIndexes]);
 
 	const handleItemClick = (index: number) => {
 		let newOpenedIndexes: number[] = [];
@@ -56,7 +45,7 @@ const Accordion = ({
 	};
 
 	return (
-		<div className={`${styles['accordion']} ${className || ''}`}>
+		<div className={`${styles.accordion} ${className || ''}`}>
 			{items.map((item, index) => (
 				<AccordionItem
 					key={index}

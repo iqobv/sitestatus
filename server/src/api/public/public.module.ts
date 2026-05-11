@@ -11,6 +11,7 @@ import { UserModule } from './user/user.module';
 import { NotificationChannelModule } from './notification-channel/notification-channel.module';
 import { AlertSettingsModule } from './alert-settings/alert-settings.module';
 import { IncidentModule } from './incident/incident.module';
+import { StatusPageModule } from './status-page/status-page.module';
 
 @Module({
 	imports: [
@@ -26,6 +27,7 @@ import { IncidentModule } from './incident/incident.module';
 		NotificationChannelModule,
 		AlertSettingsModule,
 		IncidentModule,
+		StatusPageModule,
 	],
 })
 export class PublicModule {}

@@ -10,13 +10,6 @@ export const CREATE_PROJECT_FIELDS: Field<CreateProjectDto>[] = [
 		type: 'text',
 	},
 	{
-		name: 'slug',
-		label: 'Slug',
-		placeholder: 'Enter project slug',
-		isRequired: true,
-		type: 'text',
-	},
-	{
 		name: 'description',
 		label: 'Description',
 		placeholder: 'Enter project description',

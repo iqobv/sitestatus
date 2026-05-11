@@ -26,86 +26,84 @@ const StatusPagesTable = () => {
 		);
 
 	return (
-		<div className={styles.statusPagesTable}>
-			<Table<StatusPage>
-				data={data}
-				getRowHref={(row) => PRIVATE_PAGES.STATUS_PAGES.ID(row.id)}
-				columns={[
-					{
-						header: 'Title',
-						accessorKey: 'title',
-						enableSorting: false,
-						meta: {
-							style: { width: '99%' },
-						},
+		<Table<StatusPage>
+			data={data}
+			getRowHref={(row) => PRIVATE_PAGES.STATUS_PAGES.ID(row.id)}
+			columns={[
+				{
+					header: 'Title',
+					accessorKey: 'title',
+					enableSorting: false,
+					meta: {
+						style: { width: '99%' },
 					},
-					{
-						header: 'Slug',
-						accessorKey: 'slug',
-						enableSorting: false,
-						meta: { disableLink: true },
-						cell: ({ row }) => {
-							const slug = row.original.slug;
+				},
+				{
+					header: 'Slug',
+					accessorKey: 'slug',
+					enableSorting: false,
+					meta: { disableLink: true },
+					cell: ({ row }) => {
+						const slug = row.original.slug;
 
-							const handleCopy = async () => {
-								try {
-									const url = `${process.env.NEXT_PUBLIC_STATUS_PAGE_URL}/${slug}`;
-									await navigator.clipboard.writeText(url);
-									toast.success('Status page URL copied to clipboard!');
-								} catch (err) {
-									console.error('Failed to copy: ', err);
-								}
-							};
+						const handleCopy = async () => {
+							try {
+								const url = `${process.env.NEXT_PUBLIC_STATUS_PAGE_URL}/${slug}`;
+								await navigator.clipboard.writeText(url);
+								toast.success('Status page URL copied to clipboard!');
+							} catch (err) {
+								console.error('Failed to copy: ', err);
+							}
+						};
 
-							return (
-								<span className={styles.slug}>
-									{row.original.slug}
-									<Button size="sm" variant="text" isIcon onClick={handleCopy}>
-										<MdCopyAll />
-									</Button>
-								</span>
-							);
-						},
-					},
-					{
-						header: 'Status',
-						accessorKey: 'status',
-						enableSorting: false,
-						meta: { center: true, disableLink: true },
-						cell: ({ row }) => {
-							const status = row.original.isPublished;
-							return (
-								<span className={styles.status}>
-									{status ? 'Published' : 'Draft'}
-								</span>
-							);
-						},
-					},
-					{
-						header: 'Actions',
-						accessorKey: 'actions',
-						meta: { center: true, disableLink: true },
-						cell: ({ row }) => (
-							<div className={styles.actions}>
-								<Button
-									variant="outlined"
-									isIcon
-									size="sm"
-									href={PUBLIC_PAGES.STATUS_PAGE(row.original.slug)}
-									target="_blank"
-									rel="noopener noreferrer"
-								>
-									<LuExternalLink size={20} />
+						return (
+							<span className={styles.slug}>
+								{row.original.slug}
+								<Button size="sm" variant="text" isIcon onClick={handleCopy}>
+									<MdCopyAll />
 								</Button>
-								<StatusPageDropdown statusPage={row.original} />
-							</div>
-						),
-						enableSorting: false,
+							</span>
+						);
 					},
-				]}
-				getCoreRowModel={getCoreRowModel()}
-			/>
-		</div>
+				},
+				{
+					header: 'Status',
+					accessorKey: 'status',
+					enableSorting: false,
+					meta: { center: true, disableLink: true },
+					cell: ({ row }) => {
+						const status = row.original.isPublished;
+						return (
+							<span className={styles.status}>
+								{status ? 'Published' : 'Draft'}
+							</span>
+						);
+					},
+				},
+				{
+					header: 'Actions',
+					accessorKey: 'actions',
+					meta: { center: true, disableLink: true },
+					cell: ({ row }) => (
+						<div className={styles.actions}>
+							<Button
+								variant="outlined"
+								isIcon
+								size="sm"
+								href={PUBLIC_PAGES.STATUS_PAGE(row.original.slug)}
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								<LuExternalLink size={20} />
+							</Button>
+							<StatusPageDropdown statusPage={row.original} />
+						</div>
+					),
+					enableSorting: false,
+				},
+			]}
+			getCoreRowModel={getCoreRowModel()}
+		/>
 	);
 };
 

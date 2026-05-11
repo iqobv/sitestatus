@@ -5,20 +5,20 @@
 	position: relative;
 	background-image:
 		linear-gradient(
-			var(--hero-grid-color) 0.5px,
+			var(--hero-grid-bg) 0.5px,
 			transparent 0.5px,
 			transparent calc(100% - 0.5px),
-			var(--hero-grid-color) calc(100% - 0.5px)
+			var(--hero-grid-bg) calc(100% - 0.5px)
 		),
 		linear-gradient(
 			90deg,
-			var(--hero-grid-color) 0.5px,
+			var(--hero-grid-bg) 0.5px,
 			transparent 0.5px,
 			transparent calc(100% - 0.5px),
-			var(--hero-grid-color) calc(100% - 0.5px)
+			var(--hero-grid-bg) calc(100% - 0.5px)
 		);
 	background-size: 10% 20%;
-	border: 0.5px solid var(--hero-grid-color);
+	border: 0.5px solid var(--hero-grid-bg);
 	border-bottom: none;
 
 	@include respond-to(md) {
@@ -57,7 +57,7 @@
 .title {
 	font-size: clamp(3.2rem, 5vw, 4.5rem);
 	font-weight: 700;
-	color: var(--primary-color);
+	color: var(--color-primary);
 	line-height: 110%;
 	text-align: center;
 
@@ -68,6 +68,6 @@
 
 .description {
 	font-size: clamp(1rem, 2.5vw, 1.25rem);
-	color: var(--secondary-color);
+	color: var(--color-secondary);
 	max-width: 500px;
 }

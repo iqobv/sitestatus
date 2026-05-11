@@ -11,7 +11,7 @@ interface MonitorRegionStatsProps {
 
 const MonitorRegionStats = ({ data }: MonitorRegionStatsProps) => {
 	return (
-		<div className={styles['monitor-region-stats-cards']}>
+		<div className={styles.stats}>
 			{MONITOR_REGIONS_STATS_CARDS.map(({ title, tooltip, render }, index) => (
 				<MonitorCard key={index} cardTitle={title} tooltip={tooltip}>
 					{render(data)}

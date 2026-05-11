@@ -45,8 +45,8 @@ const ResetPassword = () => {
 				{({ formState: { errors } }) => (
 					<>
 						{RESET_PASSWORD_FORM_FIELDS.map(
-							({ name, isRequired, iconLeft, ...rest }) => {
-								const Icon = iconLeft;
+							({ name, isRequired, leftIcon, rightIcon: _, ...rest }) => {
+								const Icon = leftIcon;
 								return (
 									<Form.Field key={name} name={name}>
 										<TextField

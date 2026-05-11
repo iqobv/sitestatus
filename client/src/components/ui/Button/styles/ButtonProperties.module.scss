@@ -1,23 +1,13 @@
 .fullWidth {
-	&--true {
-		width: 100%;
-	}
-
-	&--false {
-		width: fit-content;
-	}
+	width: 100%;
 }
 
 .disabled {
-	&--true {
-		opacity: 0.5;
-		cursor: default;
-		pointer-events: none;
-	}
+	opacity: 0.5;
+	cursor: default;
+	pointer-events: none;
 }
 
 .rounded {
-	&--true {
-		border-radius: 50%;
-	}
+	border-radius: 50%;
 }

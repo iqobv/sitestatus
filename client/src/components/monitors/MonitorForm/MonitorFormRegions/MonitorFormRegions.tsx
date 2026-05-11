@@ -21,18 +21,15 @@ const MonitorFormRegions = () => {
 	});
 
 	return (
-		<div className={styles['monitor-form-regions']}>
+		<div className={styles.regions}>
 			{isLoading ? (
 				<MonitorFormRegionsLoader />
 			) : (
 				<>
 					<SectionHeader title="Regions" titleComponent="h2" padding={0} />
-					<ul className={styles['monitor-form-regions__list']}>
+					<ul className={styles.list}>
 						{data?.map((region) => (
-							<li
-								key={region.id}
-								className={styles['monitor-form-regions__list-item']}
-							>
+							<li key={region.id} className={styles.item}>
 								<Checkbox
 									id={region.key}
 									value={region.id}

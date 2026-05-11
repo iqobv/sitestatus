@@ -16,7 +16,7 @@ const MonitorRefresh = ({ queryKey }: MonitorRefreshProps) => {
 	});
 
 	return (
-		<div className={styles['monitors__header']}>
+		<div className={styles.header}>
 			<p>Auto refresh after {timer} seconds</p>
 			<Button size="sm" variant="link" onClick={handleRefresh}>
 				Refresh now

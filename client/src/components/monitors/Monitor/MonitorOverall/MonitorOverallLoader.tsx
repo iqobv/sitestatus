@@ -6,7 +6,7 @@ const cards = Array.from({ length: 3 }).map((_, i) => (
 ));
 
 const MonitorOverallLoader = () => {
-	return <div className={styles['monitor-overall']}>{cards}</div>;
+	return <div className={styles.overall}>{cards}</div>;
 };
 
 export default MonitorOverallLoader;

@@ -91,13 +91,12 @@ export class NotificationService {
 				b.createdAt.getTime() - a.createdAt.getTime(),
 		);
 
-		const hasUnread = sortedNotifications.some(
-			(notification) => !notification.isRead,
-		);
-
 		const countUnread = sortedNotifications.filter((n) => !n.isRead).length;
+		const hasUnread = countUnread > 0;
+		const takeCount = Math.max(20, countUnread);
+		const notifications = sortedNotifications.slice(0, takeCount);
 
-		return { notifications: sortedNotifications, hasUnread, countUnread };
+		return { notifications, hasUnread, countUnread };
 	}
 
 	async markAllAsRead(user: User) {

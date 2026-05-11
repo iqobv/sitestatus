@@ -1,6 +1,6 @@
 @use '../../../../styles/mixins' as *;
 
-.monitor-response-cards {
+.responseCards {
 	display: grid;
 	grid-template-columns: 1fr;
 	gap: var(--gap);

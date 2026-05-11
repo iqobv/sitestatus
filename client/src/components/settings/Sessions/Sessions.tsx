@@ -28,7 +28,7 @@ const Sessions = () => {
 							/>
 						</div>
 						{data.otherSessions.length > 0 && (
-							<div className={styles.otherSessions}>
+							<div className={styles.sessions}>
 								<SectionHeader title="Other Sessions" titleComponent="h3" />
 								{data.otherSessions.map((s) => (
 									<SessionCard key={s.id} session={s} />

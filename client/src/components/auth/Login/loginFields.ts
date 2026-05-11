@@ -9,7 +9,7 @@ export const LOGIN_FIELDS: Field<LoginDto>[] = [
 		placeholder: 'user@example.com',
 		type: 'email',
 		autoComplete: 'username',
-		iconLeft: MdOutlineEmail,
+		leftIcon: MdOutlineEmail,
 	},
 	{
 		name: 'password',
@@ -17,6 +17,6 @@ export const LOGIN_FIELDS: Field<LoginDto>[] = [
 		placeholder: 'Your secure password',
 		type: 'password',
 		autoComplete: 'current-password',
-		iconLeft: MdOutlineKey,
+		leftIcon: MdOutlineKey,
 	},
 ];

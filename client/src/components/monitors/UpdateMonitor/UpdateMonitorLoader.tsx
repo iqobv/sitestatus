@@ -9,7 +9,7 @@ const fields = Array.from({ length: UPDATE_MONITOR_FIELDS.length }).map(
 
 const UpdateMonitorLoader = () => {
 	return (
-		<div className={styles['monitor-form']}>
+		<div className={styles.form}>
 			{fields}
 			<MonitorFormRegionsLoader />
 		</div>

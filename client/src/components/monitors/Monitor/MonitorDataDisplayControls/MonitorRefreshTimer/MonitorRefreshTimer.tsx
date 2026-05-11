@@ -18,7 +18,7 @@ const MonitorRefreshTimer = ({ monitor }: MonitorRefreshTimerProps) => {
 	});
 
 	return (
-		<div className={styles['refresh-timer']}>
+		<div className={styles.timer}>
 			{monitor.isActive && (
 				<>
 					<div>Auto-refresh in {timer}s</div>

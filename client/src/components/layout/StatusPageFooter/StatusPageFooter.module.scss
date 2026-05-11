@@ -32,11 +32,11 @@
 
 .link {
 	font-size: 0.95rem;
-	color: var(--footer-link-color);
+	color: var(--footer-link);
 	transition: color 0.3s ease;
 
 	&:hover {
-		color: var(--footer-link-color-hover);
+		color: var(--footer-link-hover);
 	}
 }
 
@@ -54,5 +54,5 @@
 
 .copyright {
 	font-size: 14px;
-	color: var(--secondary-color);
+	color: var(--color-secondary);
 }

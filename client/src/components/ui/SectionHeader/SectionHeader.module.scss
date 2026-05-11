@@ -9,7 +9,7 @@
 }
 
 .title {
-	color: var(--section-title-color);
+	color: var(--section-title-text);
 
 	h1 {
 		font-size: clamp(2.6rem, 6vw, 4.2rem);
@@ -37,6 +37,6 @@
 }
 
 .description {
-	color: var(--section-description-color);
+	color: var(--section-desc-text);
 	font-size: clamp(1rem, 2.8vw, 1.1rem);
 }

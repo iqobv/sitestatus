@@ -63,14 +63,18 @@ const ChangePassword = () => {
 				{({ formState: { errors }, setError }) => (
 					<>
 						{CHANGE_PASSWORD_FIELDS.map(
-							({ name, iconLeft, isRequired, ...rest }) => {
-								const Icon = iconLeft;
+							({ name, leftIcon, rightIcon, isRequired, ...rest }) => {
+								const LeftIcon = leftIcon;
+								const RightIcon = rightIcon;
 								const error = errors[name]?.message as string | undefined;
+
+								if (rest.type === 'textarea') return null;
 
 								return (
 									<Form.Field key={name} name={name}>
 										<TextField
-											leftIcon={Icon ? <Icon /> : undefined}
+											leftIcon={LeftIcon ? <LeftIcon /> : undefined}
+											rightIcon={RightIcon ? <RightIcon /> : undefined}
 											required={isRequired}
 											error={error}
 											{...rest}

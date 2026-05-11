@@ -1,7 +1,7 @@
-import React from 'react';
+import { SkeletonLoader } from '@/components/ui';
 
 const MonitorIncidentTimelineLoader = () => {
-  return <div>MonitorIncidentTimelineLoader</div>;
+	return <SkeletonLoader height={150} />;
 };
 
 export default MonitorIncidentTimelineLoader;

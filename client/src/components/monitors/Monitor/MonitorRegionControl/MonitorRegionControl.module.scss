@@ -1,29 +1,34 @@
-.region-control {
+.regionControl {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	overflow-y: hidden;
 	overflow-x: auto;
 	position: relative;
+}
 
-	&__button {
-		padding: 10px 20px;
-		border-radius: 0;
-		background-color: transparent;
-		white-space: nowrap;
-		position: relative;
-		font-size: 1rem;
-	}
+.button {
+	padding: 10px 20px;
+	border-radius: 0;
+	background-color: transparent;
+	white-space: nowrap;
+	position: relative;
+	font-size: 1rem;
+	color: var(--color-secondary);
 
-	&__indicator {
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		height: 3px;
-		background-color: var(--primary-color);
-		transition:
-			transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-			width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-		will-change: transform, width;
+	&.active {
+		color: var(--color-primary);
 	}
+}
+
+.indicator {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	height: 3px;
+	background-color: var(--color-primary);
+	transition:
+		transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+		width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	will-change: transform, width;
 }

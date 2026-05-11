@@ -9,7 +9,7 @@ export const RESET_PASSWORD_FORM_FIELDS: Field<ResetPasswordDto>[] = [
 		placeholder: 'Your secure password',
 		type: 'password',
 		autoComplete: 'new-password',
-		iconLeft: MdOutlineKey,
+		leftIcon: MdOutlineKey,
 		isRequired: true,
 	},
 	{
@@ -18,7 +18,7 @@ export const RESET_PASSWORD_FORM_FIELDS: Field<ResetPasswordDto>[] = [
 		placeholder: 'Re-enter your new password',
 		type: 'password',
 		autoComplete: 'new-password',
-		iconLeft: MdOutlineKey,
+		leftIcon: MdOutlineKey,
 		isRequired: true,
 	},
 ];

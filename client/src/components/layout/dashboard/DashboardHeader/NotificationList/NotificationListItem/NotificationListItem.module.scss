@@ -8,8 +8,8 @@
 	gap: 12px;
 
 	&.unread {
-		border-left-color: var(--unread-notification-border);
-		background-color: var(--unread-notification-bg);
+		border-left-color: var(--notification-unread-border);
+		background-color: var(--notification-unread-bg);
 	}
 }
 

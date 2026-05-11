@@ -11,17 +11,17 @@
 
 	&.active {
 		border-bottom: var(--active-border);
-		border-bottom-color: var(--primary-color);
-		color: var(--primary-color);
+		border-bottom-color: var(--color-primary);
+		color: var(--color-primary);
 	}
 
 	@include respond-to(lg) {
 		border-radius: 0 4px 4px 0;
 
 		&.active {
-			background-color: var(--dashboard-sidebar-link-active-bg);
+			background-color: var(--dashboard-sidebar-link-active);
 			border-bottom: none;
-			border-left-color: var(--primary-color);
+			border-left-color: var(--color-primary);
 		}
 	}
 }

@@ -4,7 +4,7 @@ import MonitorRefreshTimerLoader from './MonitorRefreshTimer/MonitorRefreshTimer
 
 const MonitorRangeControlLoader = () => {
 	return (
-		<div className={styles['range-control']}>
+		<div className={styles.rangeControl}>
 			<MonitorRangeButtonsLoader />
 			<MonitorRefreshTimerLoader />
 		</div>

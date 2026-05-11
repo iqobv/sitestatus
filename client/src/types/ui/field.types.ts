@@ -7,7 +7,7 @@ export interface Field<T> {
 	placeholder: string;
 	type?: React.ComponentProps<'input'>['type'] | 'textarea';
 	autoComplete?: React.ComponentProps<'input'>['autoComplete'];
-	iconLeft?: IconType;
-	iconRight?: IconType;
+	leftIcon?: IconType;
+	rightIcon?: IconType;
 	isRequired?: boolean;
 }

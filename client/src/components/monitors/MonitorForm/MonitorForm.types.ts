@@ -1,17 +1,12 @@
+import { FormProps } from '@/components/ui';
 import { Field } from '@/types';
-import { DefaultValues, FieldValues } from 'react-hook-form';
-import { ZodType } from 'zod';
+import { FieldValues } from 'react-hook-form';
 
 export interface MonitorFormProps<
-	T extends FieldValues,
+	D extends FieldValues,
 	R extends { id: string },
-> {
-	fields: Field<T>[];
-	mutationFn: (data: T) => Promise<R>;
-	onSuccess?: (data: R) => void;
-	onCancel?: () => void;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	schema?: ZodType<T, any, any>;
+> extends Omit<FormProps<D>, 'children'> {
+	fields: Field<D>[];
 	buttonLabel?: string;
-	defaultValues?: Partial<T> | DefaultValues<T>;
+	isLoading?: boolean;
 }

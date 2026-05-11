@@ -15,14 +15,14 @@
 }
 
 .mobileButton {
-	@include respond-to('md') {
+	@include respond-to(md) {
 		display: none;
 	}
 }
 
 .desktopButton {
 	display: none;
-	@include respond-to('md') {
+	@include respond-to(md) {
 		display: block;
 	}
 }
@@ -33,14 +33,14 @@
 	align-items: center;
 	gap: 8px;
 
-	@include respond-to('md') {
+	@include respond-to(md) {
 		padding: 12px 20px;
 	}
 
 	&Text {
 		display: none;
 
-		@include respond-to('md') {
+		@include respond-to(md) {
 			display: inline;
 		}
 	}

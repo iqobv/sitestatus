@@ -1,9 +1,8 @@
 'use client';
 
 import { googleOneTapLogin } from '@/api';
-import { PRIVATE_PAGES } from '@/config';
+import { CROSS_DOMAIN_ROUTES } from '@/config';
 import { useMutation } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 type GoogleCredentialResponse = {
@@ -11,13 +10,10 @@ type GoogleCredentialResponse = {
 };
 
 export const useGoogleOneTap = () => {
-	const router = useRouter();
-
 	const { mutate: verifyCredential } = useMutation({
 		mutationFn: (credential: string) => googleOneTapLogin(credential),
 		onSuccess: () => {
-			router.push(PRIVATE_PAGES.DASHBOARD);
-			router.refresh();
+			window.location.assign(CROSS_DOMAIN_ROUTES.APP_DASHBOARD);
 		},
 	});
 

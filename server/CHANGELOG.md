@@ -1,5 +1,11 @@
 # Server changelog
 
+## [1.1.1] - 2026-05-12
+
+### Fixed
+
+- Session creation bug.
+
 ## [1.1.0] - 2026-05-12
 
 ### Added

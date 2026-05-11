@@ -35,7 +35,7 @@ export class SessionService {
 				userId,
 				refreshToken: refreshTokenHash,
 				ip: clientInfo.ip,
-				country: geo?.countryCode,
+				countryCode: geo?.countryCode,
 				city: geo?.city,
 				userAgent,
 				expiresAt,
@@ -65,7 +65,7 @@ export class SessionService {
 			data: {
 				refreshToken: refreshTokenHash,
 				ip,
-				country: geo?.countryCode,
+				countryCode: geo?.countryCode,
 				city: geo?.city,
 				userAgent,
 				expiresAt,

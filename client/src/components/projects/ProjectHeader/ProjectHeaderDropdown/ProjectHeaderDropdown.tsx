@@ -28,7 +28,7 @@ const ProjectHeaderDropdown = ({ projectData }: ProjectHeaderDropdownProps) => {
 					</Link>
 				</Dropdown.Item>
 				<ProjectHeaderDropdownItemAlertSettings id={projectData.id} />
-				<Dropdown.Item asChild className={styles.deleteButton}>
+				<Dropdown.Item asChild className={styles.deleteButton} isDelete>
 					<MdOutlineDelete size={20} />
 					Delete
 				</Dropdown.Item>

@@ -1,5 +1,6 @@
 import { SkeletonLoader } from '@/components/ui';
 import styles from './MonitorIncident.module.scss';
+import MonitorIncidentTimelineLoader from './MonitorIncidentTimeline/MonitorIncidentTimelineLoader';
 
 const MonitorIncidentLoader = () => {
 	return (
@@ -10,7 +11,7 @@ const MonitorIncidentLoader = () => {
 					<SkeletonLoader key={index} height={82} />
 				))}
 			</div>
-			<SkeletonLoader height={150} />
+			<MonitorIncidentTimelineLoader />
 		</div>
 	);
 };

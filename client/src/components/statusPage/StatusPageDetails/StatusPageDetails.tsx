@@ -4,7 +4,6 @@ import { getStatusPageById } from '@/api';
 import { QUERY_KEYS } from '@/config';
 import { useQuery } from '@tanstack/react-query';
 import { notFound, useParams } from 'next/navigation';
-import styles from './StatusPageDetails.module.scss';
 import StatusPageDetailsHeader from './StatusPageDetailsHeader/StatusPageDetailsHeader';
 import StatusPageDetailsLoader from './StatusPageDetailsLoader';
 import StatusPageDetailsUpdate from './StatusPageDetailsUpdate/StatusPageDetailsUpdate';
@@ -22,7 +21,7 @@ const StatusPageDetails = () => {
 	if (error || !data) return notFound();
 
 	return (
-		<div className={styles.details}>
+		<div>
 			<StatusPageDetailsHeader data={data} />
 			<StatusPageDetailsUpdate data={data} />
 		</div>

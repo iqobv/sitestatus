@@ -1,7 +1,5 @@
-import React from 'react';
-
 const AlertSettingsFormLoader = () => {
-  return <div>AlertSettingsFormLoader</div>;
+	return <div>AlertSettingsFormLoader</div>;
 };
 
 export default AlertSettingsFormLoader;

@@ -24,7 +24,7 @@ const MonitorOverallUptimeBarItem = ({
 		<Tooltip>
 			<Tooltip.Trigger>
 				<div
-					className={styles['monitor-overall-uptime-bar__item']}
+					className={styles.uptimeBarItem}
 					style={
 						{
 							'--bar-color': `var(--status-${entry.status.toLowerCase()})`,
@@ -33,15 +33,9 @@ const MonitorOverallUptimeBarItem = ({
 					}
 				/>
 			</Tooltip.Trigger>
-			<Tooltip.Content
-				className={styles['monitor-overall-uptime-bar__item-tooltip']}
-			>
+			<Tooltip.Content className={styles.tooltip}>
 				<p>{dtf.format(new Date(entry.timestamp))}</p>
-				<p
-					className={styles['monitor-overall-uptime-bar__item-tooltip-status']}
-				>
-					{entry.status}
-				</p>
+				<p className={styles.tooltipStatus}>{entry.status.toLowerCase()}</p>
 			</Tooltip.Content>
 		</Tooltip>
 	);

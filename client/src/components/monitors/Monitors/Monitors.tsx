@@ -39,7 +39,7 @@ const Monitors = ({
 				</>
 			)}
 			{!isLoading && data && data.length === 0 && (
-				<div className={styles['monitors__empty']}>
+				<div className={styles.empty}>
 					<p>No monitors found. Please add a monitor to get started.</p>
 					<Button href={createHref}>Add Monitor</Button>
 				</div>

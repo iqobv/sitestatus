@@ -3,7 +3,7 @@
 .bannerContainer {
 	background: var(--cookie-banner-bg) !important;
 	padding: 1rem !important;
-	border: 1px solid var(--border-color);
+	border: 1px solid var(--border-color-main);
 	display: flex !important;
 	flex-direction: column !important;
 	flex: unset !important;
@@ -32,7 +32,7 @@
 }
 
 .content {
-	color: var(--primary-color);
+	color: var(--color-primary);
 	font-family: inherit;
 	font-size: 14px;
 	line-height: 1.5;
@@ -41,7 +41,7 @@
 	gap: var(--gap);
 
 	a {
-		color: var(--cookie-banner-link-color);
+		color: var(--cookie-banner-link);
 		text-decoration: none;
 
 		&:hover {
@@ -67,17 +67,13 @@
 }
 
 .acceptButton {
-	background: var(--btn-bg-contained) !important;
-	color: var(--btn-color-contained) !important;
+	background: var(--btn-contained-bg) !important;
+	color: var(--btn-contained-text) !important;
 	font-weight: 600 !important;
 }
 
 .declineButton {
 	background: transparent !important;
-	color: var(--primary-color) !important;
-	border: 1px solid var(--btn-border-outlined) !important;
-	// 	'bg': transparent,
-	// 'border': var(),
-	// 'bg-hover': var(--btn-bg-outlined-hover),
-	// 'border-hover': var(--btn-border-outlined-hover),
+	color: var(--btn-outlined-text) !important;
+	border: 1px solid var(--btn-outlined-border) !important;
 }

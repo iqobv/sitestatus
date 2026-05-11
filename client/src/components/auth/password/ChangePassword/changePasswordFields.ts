@@ -9,7 +9,7 @@ export const CHANGE_PASSWORD_FIELDS: Field<ChangePasswordDto>[] = [
 		type: 'password',
 		autoComplete: 'current-password',
 		placeholder: 'Your current password',
-		iconLeft: MdOutlineKey,
+		leftIcon: MdOutlineKey,
 		isRequired: true,
 	},
 	{
@@ -18,7 +18,7 @@ export const CHANGE_PASSWORD_FIELDS: Field<ChangePasswordDto>[] = [
 		type: 'password',
 		autoComplete: 'new-password',
 		placeholder: 'Your new password',
-		iconLeft: MdOutlineKey,
+		leftIcon: MdOutlineKey,
 		isRequired: true,
 	},
 	{
@@ -27,7 +27,7 @@ export const CHANGE_PASSWORD_FIELDS: Field<ChangePasswordDto>[] = [
 		type: 'password',
 		autoComplete: 'new-password',
 		placeholder: 'Re-enter your new password',
-		iconLeft: MdOutlineKey,
+		leftIcon: MdOutlineKey,
 		isRequired: true,
 	},
 ];

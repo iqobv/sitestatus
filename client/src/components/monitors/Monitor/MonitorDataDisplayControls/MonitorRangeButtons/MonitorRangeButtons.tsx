@@ -25,7 +25,7 @@ const MonitorRangeButtons = () => {
 					key={item.name}
 					onClick={() => handleRangeChange(item.value)}
 					variant={range === URL_TO_RANGE_MAP[item.name] ? 'contained' : 'text'}
-					className={styles['monitor-range-button']}
+					className={styles.button}
 				>
 					{item.label}
 				</Button>

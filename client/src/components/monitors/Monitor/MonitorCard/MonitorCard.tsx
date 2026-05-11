@@ -19,8 +19,8 @@ const MonitorCard = ({
 }: MonitorCardProps) => {
 	return (
 		<div className={`card ${className || ''}`}>
-			<div className={styles['monitor-card__header']}>
-				<p className={`${styles['monitor-card__title']}`}>{cardTitle}</p>
+			<div className={styles.header}>
+				<p className={`${styles.title}`}>{cardTitle}</p>
 				{tooltip && (
 					<Tooltip>
 						<Tooltip.Trigger>

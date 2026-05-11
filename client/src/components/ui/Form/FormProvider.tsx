@@ -11,6 +11,7 @@ const Form = <D extends FieldValues = FieldValues>({
 	onSubmit,
 	defaultValues,
 	values,
+	className,
 }: FormProps<D>) => {
 	const methods = useForm<D>({
 		resolver: zodResolver(schema),
@@ -21,6 +22,7 @@ const Form = <D extends FieldValues = FieldValues>({
 	return (
 		<FormProvider {...methods}>
 			<form
+				className={className}
 				onSubmit={
 					onSubmit
 						? methods.handleSubmit((data: D, event?: BaseSyntheticEvent) =>

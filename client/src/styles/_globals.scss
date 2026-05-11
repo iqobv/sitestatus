@@ -20,7 +20,7 @@ body {
 }
 
 body {
-	color: var(--foreground);
+	color: var(--color-primary);
 	background: var(--bg-body);
 	font-family: Arial, Helvetica, sans-serif;
 	-webkit-font-smoothing: antialiased;
@@ -99,8 +99,8 @@ select:-webkit-autofill:focus {
 }
 
 .card {
-	background: var(--card-bg);
-	border: 1px solid var(--card-border);
+	background: var(--bg-card);
+	border: 1px solid var(--border-color-card);
 	border-radius: 8px;
 	padding: 16px;
 }

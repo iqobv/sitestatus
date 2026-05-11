@@ -7,7 +7,7 @@ const cards = Array.from({ length: 3 }).map((_, i) => (
 ));
 
 const MonitorRegionStatsLoader = () => {
-	return <div className={styles['monitor-region-stats-cards']}>{cards}</div>;
+	return <div className={styles.stats}>{cards}</div>;
 };
 
 export default MonitorRegionStatsLoader;

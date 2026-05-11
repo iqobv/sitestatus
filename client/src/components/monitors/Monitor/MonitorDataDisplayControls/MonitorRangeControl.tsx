@@ -11,7 +11,7 @@ interface MonitorRangeControlProps {
 
 const MonitorRangeControl = ({ monitor }: MonitorRangeControlProps) => {
 	return (
-		<div className={styles['range-control']}>
+		<div className={styles.rangeControl}>
 			<MonitorRangeButtons />
 			<MonitorRefreshTimer monitor={monitor} />
 		</div>

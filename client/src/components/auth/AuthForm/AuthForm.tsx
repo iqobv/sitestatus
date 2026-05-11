@@ -112,14 +112,14 @@ const AuthForm = <T extends FieldValues, R>({
 			)}
 			<div className={styles.fields}>
 				{fields.map(
-					({ label, placeholder, type, name, autoComplete, iconLeft }) => {
+					({ label, placeholder, type, name, autoComplete, leftIcon }) => {
 						return (
 							<TextField
 								key={name}
 								label={label}
 								placeholder={placeholder}
 								type={type}
-								leftIcon={iconLeft ? <>{iconLeft({})}</> : undefined}
+								leftIcon={leftIcon ? <>{leftIcon({})}</> : undefined}
 								autoComplete={autoComplete}
 								error={errors[name]?.message as string}
 								{...register(name)}

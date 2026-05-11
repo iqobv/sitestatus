@@ -8,6 +8,7 @@
 	transition: all 0.2s ease-in-out;
 	user-select: none;
 	font-size: 1rem;
+	width: fit-content;
 
 	&:focus-visible {
 		outline: none;

@@ -12,4 +12,5 @@ export interface FormProps<D extends FieldValues> {
 	) => void | Promise<void>;
 	defaultValues?: DefaultValues<D>;
 	values?: D;
+	className?: string;
 }

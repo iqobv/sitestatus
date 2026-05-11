@@ -1,181 +1,184 @@
 :root {
-	/* General Colors */
-	--bg-body: #ffffff;
-	--bg-header: #ffffff;
-	--bg-header-rgb: 255, 255, 255;
-	--header-border-color: #e5e8eb;
-	--color-main-text: #0d141c;
-	--color-secondary-text: #aeaeae;
+	/* Layout */
 	--header-height: 70px;
-	--secondary-bg: #f7f7f7;
-	--border-color: #e5e7eb;
-	--primary-color: #171717;
-	--secondary-color: #424242;
-	--accent-color: #299f4e;
-	--logo: url('/logo-black.svg');
-	--logo-color: #171717;
 	--border-radius: 6px;
 	--gap: 16px;
+	--checkbox-transition: 0.2s ease-in-out;
 
-	/* Hero */
-	--hero-grid-color: #f4f4f48d;
+	/* Global Brand Colors */
+	--color-primary: #171717;
+	--color-secondary: #424242;
+	--color-accent: #299f4e;
+	--color-logo: #171717;
 
-	/* Values */
-	--value-card-bg: #f4f4f4;
-	--value-card-border: #ccc;
-
-	/* Features */
-	--features-bg: #f7f7f7;
-	--features-card-border: #ccc;
-	--features-card-icon-color: #8bd79b;
-
-	/* Section Header */
-	--section-title-color: #0d141c;
-	--section-description-color: #1d1d1e;
-
-	/* Footer */
+	/* Backgrounds */
+	--bg-body: #ffffff;
+	--bg-secondary: #f7f7f7;
+	--bg-header: #ffffff;
+	--bg-header-rgb: 255, 255, 255;
 	--bg-footer: #fbfbfb;
-	--footer-text-color: #313131;
-	--footer-title-color: #0d141c;
-	--footer-link-color: #595c5e;
-	--footer-link-color-hover: #0d141c;
+	--bg-card: #ffffff;
 
-	/* Sepator */
-	--sepator-color: #e5e8eb;
+	/* Typography */
+	--text-primary: #111111;
+	--text-secondary: #aeaeae;
+	--text-footer: #313131;
+	--text-footer-title: #111111;
 
-	/* Errors */
+	/* Borders */
+	--border-color-main: #e5e5e5;
+	--border-color-header: #eaeaea;
+	--border-color-card: #eaeaea;
+
+	/* Divider */
+	--divider-color: #eaeaea;
+
+	/* Status */
+	--status-up: #4caf50;
+	--status-up-hover: #4caf4f93;
+	--status-down: #e74c3c;
+	--status-down-hover: #c0392b;
+	--status-unknown: #9e9e9e;
+	--status-unknown-hover: #7a7a7a;
+	--status-paused: #ff9800;
+	--status-na: #b0b0b0;
+
+	/* Incident */
+	--incident-resolved: #4caf50;
+	--incident-open: #f44336;
+
+	/* Error */
 	--error-bg: #fae1e3;
 	--error-text: #5c070f;
 	--error-border: #e7000b;
 
-	/* Cards */
-	--card-bg: #ffffff;
-	--card-border: #e5e8eb;
+	/* Buttons */
+	--btn-contained-bg: #171717f2;
+	--btn-contained-bg-hover: #171717cc;
+	--btn-contained-text: #fafafa;
 
-	/* Loader */
-	--loader-color: #000;
-	--skeleton-color: #dcdcdc;
-	--skeleton-highlight: #e8e8e8;
+	--btn-secondary-bg: #ebebeb;
+	--btn-secondary-bg-hover: #ebebeb99;
+	--btn-secondary-text: #171717;
 
-	/* Button Variants */
-	--btn-bg-contained: #171717f2;
-	--btn-bg-contained-hover: #171717cc;
-	--btn-color-contained: #fafafa;
+	--btn-outlined-bg-hover: #f5f5f5;
+	--btn-outlined-border: #e5e5e5;
+	--btn-outlined-border-hover: #e5e5e5;
+	--btn-outlined-text: #111111;
 
-	--btn-bg-secondary: #ebebeb;
-	--btn-bg-secondary-hover: #ebebeb99;
-	--btn-color-secondary: #171717;
-
-	--btn-bg-outlined-hover: #f5f5f5;
-	--btn-border-outlined: #e5e5e5;
-	--btn-border-outlined-hover: #e5e5e5;
-	--btn-color-outlined: #0d141c;
-
-	--btn-bg-text-hover: #eaeaeacc;
-	--btn-color-text: #0d141c;
-
-	--btn-color-link: #171717;
+	--btn-text-bg-hover: #eaeaeacc;
+	--btn-text-color: #111111;
 
 	--btn-danger-bg: #e7000bb3;
 	--btn-danger-bg-hover: #e7000bcc;
-	--btn-danger-color: #ffffff;
+	--btn-danger-text: #ffffff;
 
-	/* Inputs & Forms */
+	--btn-link-text: #171717;
+
+	/* Input */
 	--input-bg: #f8f8f8;
-	--input-color: #000000;
+	--input-text: #000000;
 	--input-border: #e1e1e1;
 	--input-border-focus: #a1a1a1;
 	--input-border-error: #e7000b;
-	--input-color-error: #ff0000;
-	--input-required-color: #e7000b;
+	--input-text-error: #ff0000;
+	--input-required-mark: #e7000b;
 
-	/* Status Indicators */
-	--status-up: #4caf50;
-	--status-down: #e74c3c;
-	--status-unknown: #9e9e9e;
-	--status-paused: #ff9800;
-	--status-na: #b0b0b0;
-	--status-up-hover: #4caf4f93;
-	--status-down-hover: #c0392b;
+	/* Checkbox */
+	--checkbox-wrapper-bg: #ffffff;
+	--checkbox-wrapper-bg-active: #ececec;
+	--checkbox-border: #d1d5db;
+	--checkbox-border-active: #000000;
+	--checkbox-input-bg: #ffffff;
+	--checkbox-input-bg-active: #000000;
+	--checkbox-checkmark: #ffffff;
+	--checkbox-text: #000000;
 
-	/* Dropdown */
-	--dropdown-bg: #e8e8e8;
-	--dropdown-item-hover-bg: #d5d5d5;
-	--dropdown-item-hover-color: #0d141c;
-	--dropdown-item-disabled-color: #8f9294;
-
-	/* Chart */
+	/* Charts */
+	--chart-axis: #8f9294;
+	--chart-line: #171717;
+	--chart-dot: #171717;
+	--chart-dot-active: #171717;
 	--chart-tooltip-bg: #ffffff;
-	--chart-tooltip-border: #e5e8eb;
-	--chart-axis-color: #8f9294;
-	--chart-line-color: #171717;
-	--chart-dot-color: #171717;
-	--chart-active-dot-color: #171717;
+	--chart-tooltip-border: #eaeaea;
 
 	/* Table */
-	--table-border-color: #e5e8eb;
-	--table-header-text-color: #0d141c;
+	--table-border: #eaeaea;
+	--table-header-text: #111111;
+	--table-header-bg: #f7f7f7;
 
-	/* Tooltips */
-	--tooltip-bg: #ffffff;
-	--tooltip-border: #e5e8eb;
-	--tooltip-color: #0d141c;
-
-	/* Scrollbar */
-	--scrollbar-bg: #f0f0f0;
-	--scrollbar-thumb-bg: #c1c1c1;
-	--scrollbar-thumb-hover-bg: #a1a1a1;
-
-	/* Accident */
-	--accident-resolved: #4caf50;
-	--accident-open: #f44336;
+	/* Dropdown */
+	--dropdown-bg: #f7f7f7;
+	--dropdown-item-hover-bg: #e5e5e5;
+	--dropdown-item-hover-text: #111111;
+	--dropdown-item-disabled-text: #8f9294;
 
 	/* Modal */
 	--modal-bg: #eaeaea;
 
-	/* Checkbox */
-	--checkbox-bg-wrapper: #ffffff;
-	--checkbox-bg-wrapper-active: #ececec;
-	--checkbox-border: #d1d5db;
-	--checkbox-border-active: #000;
-	--checkbox-input-bg: #ffffff;
-	--checkbox-input-active-bg: #000;
-	--checkbox-checkmark-color: #ffffff;
-	--checkbox-text: #000000;
-	--checkbox-transition: 0.2s ease-in-out;
+	/* Tooltips */
+	--tooltip-bg: #ffffff;
+	--tooltip-border: #eaeaea;
+	--tooltip-text: #111111;
+
+	/* Scrollbar */
+	--scrollbar-bg: #f0f0f0;
+	--scrollbar-thumb: #c1c1c1;
+	--scrollbar-thumb-hover: #a1a1a1;
+
+	/* Loaders */
+	--loader-color: #000000;
+	--skeleton-base: #dcdcdc;
+	--skeleton-highlight: #e8e8e8;
+
+	/* Specific Sections */
+	--hero-grid-bg: #ededed8d;
+
+	--value-card-bg: #f4f4f4;
+	--value-card-border: #cccccc;
+
+	--features-bg: #f7f7f7;
+	--features-card-border: #cccccc;
+	--features-card-icon: #8bd79b;
+
+	--section-title-text: #111111;
+	--section-desc-text: #1c1c1c;
+
+	--footer-link: #595c5e;
+	--footer-link-hover: #111111;
 
 	/* Dashboard Layout */
 	--dashboard-header-bg: #ffffff;
-	--dashboard-header-border: #e5e8eb;
+	--dashboard-header-border: #eaeaea;
 	--dashboard-sidebar-bg: #f7f7f7;
-	--dashboard-sidebar-border: #e5e8eb;
-	--dashboard-sidebar-link-active-bg: #e5e8eb;
+	--dashboard-sidebar-border: #eaeaea;
+	--dashboard-sidebar-link-active: #eaeaea;
+
+	/* Legal Pages */
+	--legal-text: #111111;
+	--legal-heading: #000000;
+	--legal-heading-secondary: #000000;
+	--legal-accent: #000000;
+	--legal-table-row: rgba(0, 0, 0, 0.05);
+	--legal-table-row-alt: rgba(0, 0, 0, 0.03);
+	--legal-cell-border: rgba(0, 0, 0, 0.1);
 
 	/* Project */
 	--project-card-bg: #ffffff;
-	--project-card-border: #e5e8eb;
+	--project-card-border: #eaeaea;
 
-	/* Public Page */
-	--public-page-monitor-card-bg: #ffffff;
+	/* Status Page */
+	--public-monitor-card-bg: #ffffff;
 
 	/* Cookie Banner */
 	--cookie-banner-bg: #ffffff;
-	--cookie-banner-link-color: #3b82f6;
-
-	/* Legal Pages */
-	--legal-text-color: #0d141c;
-	--legal-heading-color: #000000;
-	--legal-heading-color-secondary: #000000;
-	--legal-accent-color: #000000;
-	--legal-table-row-bg: rgba(0, 0, 0, 0.05);
-	--legal-table-row-second-bg: rgba(0, 0, 0, 0.03);
-	--legal-cell-border: rgba(0, 0, 0, 0.1);
+	--cookie-banner-link: #3b82f6;
 
 	/* Auth */
-	--auth-separator-color: #e5e8eb;
-	--auth-separator-text-color: #888;
+	--auth-separator-line: #eaeaea;
+	--auth-separator-text: #888888;
 
-	/* Notification */
-	--unread-notification-border: #000;
-	--unread-notification-bg: #dbdbdb;
+	/* Notifications */
+	--notification-unread-bg: #dbdbdb;
+	--notification-unread-border: #000000;
 }

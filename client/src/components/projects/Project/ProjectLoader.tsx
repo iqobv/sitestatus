@@ -1,11 +1,7 @@
 import { MonitorsLoader } from '@/components/monitors';
 
 const ProjectLoader = () => {
-	return (
-		<div>
-			<MonitorsLoader />
-		</div>
-	);
+	return <MonitorsLoader />;
 };
 
 export default ProjectLoader;

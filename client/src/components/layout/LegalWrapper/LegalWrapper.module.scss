@@ -5,19 +5,19 @@
 }
 
 .article {
-	color: var(--legal-text-color);
+	color: var(--legal-text);
 	line-height: 1.6;
 
 	h1 {
 		font-size: 2.5rem;
 		margin-bottom: 2rem;
-		color: var(--legal-heading-color);
+		color: var(--legal-heading);
 	}
 
 	h2 {
 		font-size: 1.75rem;
 		margin: 2rem 0 1rem;
-		color: var(--legal-heading-color-secondary);
+		color: var(--legal-heading-secondary);
 	}
 
 	p {
@@ -34,7 +34,7 @@
 	}
 
 	strong {
-		color: var(--legal-accent-color);
+		color: var(--legal-accent);
 	}
 
 	table {
@@ -45,8 +45,8 @@
 	}
 
 	th {
-		background-color: var(--legal-table-row-bg);
-		color: var(--legal-accent-color);
+		background-color: var(--legal-table-row);
+		color: var(--legal-accent);
 		text-align: left;
 		font-weight: 600;
 	}
@@ -58,6 +58,6 @@
 	}
 
 	tr:nth-child(even) {
-		background-color: var(--legal-table-row-second-bg);
+		background-color: var(--legal-table-row-alt);
 	}
 }

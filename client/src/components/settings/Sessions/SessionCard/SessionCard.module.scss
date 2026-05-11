@@ -1,8 +1,8 @@
 @use '../../../../styles/mixins' as *;
 
 .card {
-	background-color: var(--card-bg);
-	border: 1px solid var(--border-color);
+	background-color: var(--bg-card);
+	border: 1px solid var(--border-color-card);
 	padding: 20px;
 	border-radius: var(--border-radius);
 	display: flex;

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function MonitorCreatePage() {
 	return (
-		<div className="container" style={{ paddingTop: 80, paddingBottom: 80 }}>
+		<div className="container" style={{ paddingTop: 20, paddingBottom: 40 }}>
 			<BackButton />
 			<SectionHeader title="Create Monitor" />
 			<Suspense fallback={null}>

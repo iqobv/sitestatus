@@ -9,7 +9,7 @@ interface MonitorHeaderProps {
 
 const MonitorHeader = ({ monitor }: MonitorHeaderProps) => {
 	return (
-		<div className={styles['monitor-header']}>
+		<div className={styles.header}>
 			<SectionHeader
 				title={`${monitor.name}${monitor.isActive ? '' : ' (Paused)'}`}
 				description={monitor.url}

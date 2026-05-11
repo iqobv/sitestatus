@@ -14,7 +14,7 @@ const MonitorIncidentStatus = ({ isResolved }: MonitorIncidentStatusProps) => {
 			className={styles.status}
 			style={
 				{
-					'--status-color': `var(--accident-${isResolved ? 'resolved' : 'open'})`,
+					'--status-color': `var(--incident-${isResolved ? 'resolved' : 'open'})`,
 				} as React.CSSProperties
 			}
 		>

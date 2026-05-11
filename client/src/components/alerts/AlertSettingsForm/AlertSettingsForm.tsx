@@ -34,6 +34,15 @@ const AlertSettingsForm = ({ id, type }: AlertSettingsFormProps) => {
 				<Form<UpsertAlertSettingsDto>
 					schema={upsertAlertSettingsSchema}
 					defaultValues={{
+						isEnabled: true,
+						onDown: true,
+						onUp: true,
+						delay: 0,
+						channelIds: [],
+						monitorId: undefined,
+						projectId: undefined,
+					}}
+					values={{
 						isEnabled: currentSettings.isEnabled,
 						onDown: currentSettings.onDown,
 						onUp: currentSettings.onUp,

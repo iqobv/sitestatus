@@ -36,36 +36,42 @@ const GlobalAlertSettings = () => {
 							key={setting.id}
 							description={
 								<>
-									{GLOBAL_ALERT_SETTINGS_FIELDS.map((field) => {
-										if (field.type === 'checkbox')
+									{GLOBAL_ALERT_SETTINGS_FIELDS.map(
+										({
+											name,
+											type,
+											leftIcon: _leftIcon,
+											rightIcon: _rightIcon,
+											...field
+										}) => {
+											if (type === 'checkbox')
+												return (
+													<Checkbox
+														key={name}
+														label={field.label}
+														name={name}
+														readOnly
+														disabled
+														checked={
+															setting[name as keyof typeof setting] as boolean
+														}
+													/>
+												);
+
 											return (
-												<Checkbox
-													key={field.name}
-													label={field.label}
-													name={field.name}
-													readOnly
-													disabled
-													checked={
-														setting[
-															field.name as keyof typeof setting
-														] as boolean
+												<TextField
+													key={name}
+													value={
+														setting[name as keyof typeof setting] as
+															| string
+															| number
 													}
+													readOnly
+													{...field}
 												/>
 											);
-
-										return (
-											<TextField
-												key={field.name}
-												value={
-													setting[field.name as keyof typeof setting] as
-														| string
-														| number
-												}
-												readOnly
-												{...field}
-											/>
-										);
-									})}
+										},
+									)}
 								</>
 							}
 							action={

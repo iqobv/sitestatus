@@ -1,7 +1,7 @@
 .item {
 	padding: 15px;
-	border-bottom: 1px solid var(--header-border-color);
-	background-color: var(--bg-header);
+	border-bottom: 1px solid var(--border-color-card);
+	background-color: var(--bg-card);
 
 	&.open {
 		.icon {
@@ -21,7 +21,7 @@
 }
 .icon {
 	transition: transform 0.35s ease-in-out;
-	color: var(--color-main-text);
+	color: var(--color-primary);
 }
 
 .header {
@@ -34,7 +34,7 @@
 .title {
 	font-weight: 500;
 	font-size: 1.1rem;
-	color: var(--color-main-text);
+	color: var(--color-primary);
 }
 
 .body {
@@ -45,7 +45,7 @@
 }
 
 .content {
-	color: var(--primary-color);
+	color: var(--color-primary);
 	font-size: 1rem;
 	overflow: hidden;
 	padding-top: 0;

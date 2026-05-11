@@ -12,7 +12,7 @@
 	width: 100%;
 	padding: 10px 16px;
 	font-size: 0.9rem;
-	color: var(--input-color);
+	color: var(--input-text);
 	background-color: var(--input-bg);
 	border: 1px solid var(--input-border);
 	border-radius: 8px;
@@ -32,7 +32,7 @@
 
 	&.error {
 		border-color: var(--input-border-error);
-		color: var(--input-color-error);
+		color: var(--input-text-error);
 	}
 
 	&[data-state='open'] {
@@ -56,5 +56,5 @@
 .selected {
 	font-weight: 600;
 	background-color: var(--dropdown-item-hover-bg);
-	color: var(--dropdown-item-hover-color);
+	color: var(--dropdown-item-hover-text);
 }

@@ -6,7 +6,7 @@ const cards = Array.from({ length: 3 }, (_, i) => (
 ));
 
 const MonitorResponseCardsLoader = () => {
-	return <div className={styles['monitor-response-cards']}>{cards}</div>;
+	return <div className={styles.responseCards}>{cards}</div>;
 };
 
 export default MonitorResponseCardsLoader;

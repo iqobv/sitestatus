@@ -11,9 +11,9 @@ import { AppController } from './app.controller';
 	imports: [
 		ConfigModule.forRoot({ isGlobal: true }),
 		ThrottlerModule.forRoot([
-			{ name: 'short', ttl: 1000, limit: 1000000 },
-			{ name: 'default', ttl: 60000, limit: 10000000 },
-			{ name: 'strict', ttl: 60000, limit: 5000000 },
+			{ name: 'short', ttl: 1000, limit: 10 },
+			{ name: 'default', ttl: 60000, limit: 100 },
+			{ name: 'strict', ttl: 60000, limit: 5 },
 		]),
 		EventEmitterModule.forRoot(),
 		InfraModule,

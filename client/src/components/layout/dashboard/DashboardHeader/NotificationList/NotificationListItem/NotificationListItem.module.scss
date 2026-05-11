@@ -1,0 +1,36 @@
+.item {
+	padding: 16px;
+	margin: 0 8px;
+	border-left: 2px solid transparent;
+	border-radius: 4px;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+
+	&.unread {
+		border-left-color: var(--unread-notification-border);
+		background-color: var(--unread-notification-bg);
+	}
+}
+
+.content {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.title {
+	font-weight: 600;
+	font-size: 1.1rem;
+}
+
+.description {
+	font-size: 0.9rem;
+	color: var(--text-secondary);
+}
+
+.timeAgo {
+	font-size: 0.895rem;
+	color: var(--secondary-color);
+	text-align: end;
+}

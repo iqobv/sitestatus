@@ -88,7 +88,6 @@ const StatusPagesTable = () => {
 						cell: ({ row }) => (
 							<div className={styles.actions}>
 								<Button
-									className={styles.editButton}
 									variant="outlined"
 									isIcon
 									size="sm"

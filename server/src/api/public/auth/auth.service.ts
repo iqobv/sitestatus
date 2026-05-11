@@ -249,6 +249,7 @@ export class AuthService {
 			email: user.email,
 			role: user.role,
 			sessionId: updatedSession.id,
+			createdAt: user.createdAt,
 		};
 
 		const accessToken = this.jwtService.sign(payload, {
@@ -358,6 +359,7 @@ export class AuthService {
 			email: user.email,
 			role: user.role,
 			sessionId: session.id,
+			createdAt: user.createdAt,
 		};
 
 		const accessToken = this.jwtService.sign(payload, {

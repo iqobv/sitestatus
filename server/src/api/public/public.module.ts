@@ -12,6 +12,7 @@ import { NotificationChannelModule } from './notification-channel/notification-c
 import { AlertSettingsModule } from './alert-settings/alert-settings.module';
 import { IncidentModule } from './incident/incident.module';
 import { StatusPageModule } from './status-page/status-page.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
 	imports: [
@@ -28,6 +29,7 @@ import { StatusPageModule } from './status-page/status-page.module';
 		AlertSettingsModule,
 		IncidentModule,
 		StatusPageModule,
+		NotificationModule,
 	],
 })
 export class PublicModule {}

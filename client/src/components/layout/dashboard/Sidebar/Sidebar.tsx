@@ -14,10 +14,10 @@ const Sidebar = () => {
 	const [isMobile, setIsMobile] = useState(true);
 
 	useEffect(() => {
-		const xlBreakpoint = BREAKPOINTS.xl;
+		const xxlBreakpoint = BREAKPOINTS.xxl;
 
 		const handleResize = () => {
-			if (window.innerWidth >= xlBreakpoint) {
+			if (window.innerWidth >= xxlBreakpoint) {
 				setIsMobile(false);
 			} else {
 				setIsMobile(true);

@@ -1,0 +1,8 @@
+enum NotificationType {
+  MAINTENANCE
+  UPDATE
+  NEWS
+  INCIDENT
+  RESOLVED
+  DIRECT_MESSAGE
+}

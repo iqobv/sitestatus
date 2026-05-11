@@ -1,4 +1,5 @@
 import { AlertSettingsService } from '@api/public/alert-settings/alert-settings.service';
+import { PersonalNotificationService } from '@api/public/notification/services';
 import {
 	ProcessErrorArgs,
 	ServiceBusClient,
@@ -34,6 +35,7 @@ export class AlertWorkerService implements OnModuleInit, OnModuleDestroy {
 		private readonly tursoPrismaService: TursoPrismaService,
 		private readonly pgPrismaService: PgPrismaService,
 		private readonly cache: MonitorCacheService,
+		private readonly personalNotificationService: PersonalNotificationService,
 	) {}
 
 	public onModuleInit() {
@@ -114,16 +116,16 @@ export class AlertWorkerService implements OnModuleInit, OnModuleDestroy {
 				where: { monitorId: body.monitorId, resolved: false },
 			});
 
-		const regions: RegionInfoDto[] = allActiveIncidents.reduce<RegionInfoDto[]>(
-			(acc, activeIncident) => {
-				const region = this.cache.getRegionById(activeIncident.regionId);
-				if (region) {
-					acc.push({ id: region.id, name: region.name });
-				}
-				return acc;
-			},
-			[],
-		);
+		const uniqueRegionsMap = new Map<string, RegionInfoDto>();
+
+		for (const activeIncident of allActiveIncidents) {
+			const region = this.cache.getRegionById(activeIncident.regionId);
+			if (region && !uniqueRegionsMap.has(region.id)) {
+				uniqueRegionsMap.set(region.id, { id: region.id, name: region.name });
+			}
+		}
+
+		const regions: RegionInfoDto[] = Array.from(uniqueRegionsMap.values());
 
 		const alertBody: IncidentAlertDto = {
 			monitorName: monitor.name,
@@ -184,6 +186,15 @@ export class AlertWorkerService implements OnModuleInit, OnModuleDestroy {
 
 			if (claimResult.count === 0) return;
 
+			await this.personalNotificationService.createPersonalNotification({
+				title: `Incident detected for monitor ${monitor.name}`,
+				message: `An incident has been detected for your monitor "${monitor.name}" in regions "${regions.map((r) => r.name).join(', ')}". Click to view details.`,
+				userId: monitor.userId,
+				isAppNotification: true,
+				actionUrl: `/monitors/${monitor.id}/incidents/${incident.id}`,
+				type: 'INCIDENT',
+			});
+
 			for (const channel of settings.channels) {
 				await this.sendAlert(channel, alertBody);
 			}
@@ -206,6 +217,15 @@ export class AlertWorkerService implements OnModuleInit, OnModuleDestroy {
 				});
 
 			if (tieBreaker && tieBreaker.id !== body.incidentId) return;
+
+			await this.personalNotificationService.createPersonalNotification({
+				title: `Incident resolved for monitor ${monitor.name}`,
+				message: `An incident has been resolved for your monitor "${monitor.name}". Click to view incident details.`,
+				userId: monitor.userId,
+				isAppNotification: true,
+				actionUrl: `/monitors/${monitor.id}/incidents/${incident.id}`,
+				type: 'RESOLVED',
+			});
 
 			for (const channel of settings.channels) {
 				await this.sendAlert(channel, alertBody);

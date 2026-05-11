@@ -44,7 +44,7 @@
 		}
 	}
 
-	@include respond-to(xl) {
+	@include respond-to(xxl) {
 		position: sticky;
 		transform: translateX(0);
 		width: 0;
@@ -110,7 +110,7 @@
 		pointer-events: auto;
 	}
 
-	@include respond-to(xl) {
+	@include respond-to(xxl) {
 		width: 0;
 		height: 0;
 		z-index: -1000;

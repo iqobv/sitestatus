@@ -47,7 +47,7 @@ const StatusPageDetailsUpdate = ({ data }: StatusPageDetailsUpdateProps) => {
 				slug: '',
 				monitors: [],
 				isPublished: false,
-				isAutoSync: true,
+				isAutoSync: false,
 			}}
 			fields={UPDATE_STATUS_PAGE_FORM_FIELDS}
 			values={{

@@ -70,4 +70,7 @@ export const QUERY_KEYS = {
 		monitorsBySlug: (slug: string) => ['statusPageMonitorsBySlug', slug],
 		all: ['userStatusPages'],
 	} as const,
+	notification: {
+		all: ['notificationsList'],
+	} as const,
 } as const;

@@ -1,5 +1,12 @@
 # Client changelog
 
+## [0.2.1] - 2026-05-12
+
+### Fixed
+
+- CORS issues with subdomains.
+- Paths to legal pages in the footer.
+
 ## [0.2.0] - 2026-05-12
 
 ### Added

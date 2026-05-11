@@ -9,8 +9,8 @@ WORKDIR /app
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
 
-ARG POSTGRES_URI
-ARG TURSO_URI
+ARG POSTGRES_URI="postgresql://dummy"
+ARG TURSO_URI="libsql://dummy"
 
 ENV POSTGRES_URI=$POSTGRES_URI
 ENV TURSO_URI=$TURSO_URI
@@ -30,7 +30,8 @@ RUN apk add --no-cache openssl
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nestjs
 
-COPY --from=builder --chown=nestjs:nodejs /app/prisma.config.ts ./
+COPY --from=builder --chown=nestjs:nodejs /app/package.json ./
+
 COPY --from=builder --chown=nestjs:nodejs /app/dist ./dist
 COPY --from=builder --chown=nestjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nestjs:nodejs /app/prisma ./prisma

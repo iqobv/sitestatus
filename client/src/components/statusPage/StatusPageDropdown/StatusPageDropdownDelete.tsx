@@ -2,13 +2,23 @@
 
 import { deleteStatusPage } from '@/api';
 import { ConfirmAction, Dropdown } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
+import { PRIVATE_PAGES, QUERY_KEYS } from '@/config';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import { MdDelete } from 'react-icons/md';
 import { toast } from 'react-toastify';
-import { iconProps } from './StatusPagesTableDropdown';
+import { iconProps } from './StatusPageDropdown';
 
-const StatusPagesTableDropdownDelete = ({ id }: { id: string }) => {
+interface StatusPageDropdownDeleteProps {
+	id: string;
+	redirectOnDelete?: boolean;
+}
+
+const StatusPageDropdownDelete = ({
+	id,
+	redirectOnDelete,
+}: StatusPageDropdownDeleteProps) => {
+	const router = useRouter();
 	const queryClient = useQueryClient();
 
 	const { mutate } = useMutation({
@@ -16,6 +26,9 @@ const StatusPagesTableDropdownDelete = ({ id }: { id: string }) => {
 		onSuccess: (data) => {
 			queryClient.invalidateQueries({ queryKey: QUERY_KEYS.statusPage.all });
 			toast.success(data.message || 'Status page deleted successfully');
+			if (redirectOnDelete) {
+				router.push(PRIVATE_PAGES.STATUS_PAGES.ALL);
+			}
 		},
 	});
 
@@ -34,4 +47,4 @@ const StatusPagesTableDropdownDelete = ({ id }: { id: string }) => {
 	);
 };
 
-export default StatusPagesTableDropdownDelete;
+export default StatusPageDropdownDelete;

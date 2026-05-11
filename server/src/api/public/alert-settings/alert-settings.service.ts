@@ -33,13 +33,29 @@ export class AlertSettingsService {
 		if (!monitor)
 			throw new NotFoundException(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND);
 
+		const filters: Prisma.AlertSettingsWhereInput[] = [
+			{
+				userId: monitor.userId,
+				monitorId: monitor.id,
+			},
+			{
+				userId: monitor.userId,
+				projectId: null,
+				monitorId: null,
+			},
+		];
+
+		if (monitor.projectId) {
+			filters.push({
+				userId: monitor.userId,
+				projectId: monitor.projectId,
+				monitorId: null,
+			});
+		}
+
 		const settings = await this.prismaService.alertSettings.findMany({
 			where: {
-				OR: [
-					{ monitorId: monitor.id },
-					{ projectId: monitor.projectId, monitorId: null },
-					{ userId: monitor.userId, projectId: null, monitorId: null },
-				],
+				OR: filters,
 			},
 			include: {
 				channels: {
@@ -54,10 +70,12 @@ export class AlertSettingsService {
 		const monitorLevel = settings.find((s) => s.monitorId === monitor.id);
 		if (monitorLevel) return monitorLevel;
 
-		const projectLevel = settings.find(
-			(s) => s.projectId === monitor.projectId && s.monitorId === null,
-		);
-		if (projectLevel) return projectLevel;
+		if (monitor.projectId) {
+			const projectLevel = settings.find(
+				(s) => s.projectId === monitor.projectId && s.monitorId === null,
+			);
+			if (projectLevel) return projectLevel;
+		}
 
 		const userLevel = settings.find(
 			(s) =>

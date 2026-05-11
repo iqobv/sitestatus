@@ -1,4 +1,4 @@
-import { ErrorDomain } from '../types';
+import { ErrorDomain } from '@libs/types';
 
 export const createErrorDomain = <T extends Record<string, string>>(
 	messages: T,

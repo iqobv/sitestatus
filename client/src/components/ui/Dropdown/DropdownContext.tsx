@@ -13,7 +13,13 @@ import {
 	useListNavigation,
 	useRole,
 } from '@floating-ui/react';
-import React, { createContext, ReactNode, useContext, useState } from 'react';
+import React, {
+	createContext,
+	ReactNode,
+	useCallback,
+	useContext,
+	useState,
+} from 'react';
 import { DropdownContextType } from './DropdownContext.types';
 
 const DropdownContext = createContext<DropdownContextType | undefined>(
@@ -31,11 +37,13 @@ export const useDropdown = (): DropdownContextType => {
 interface DropdownProviderProps {
 	children: ReactNode;
 	placement?: Placement;
+	onClose?: () => void;
 }
 
 const DropdownProvider = ({
 	children,
 	placement = 'bottom-start',
+	onClose,
 }: DropdownProviderProps) => {
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -43,9 +51,19 @@ const DropdownProvider = ({
 	const elementsRef = React.useRef<Array<HTMLElement | null>>([]);
 	const labelsRef = React.useRef<Array<string | null>>([]);
 
+	const handleOpenChange = useCallback(
+		(open: boolean) => {
+			setIsOpen(open);
+			if (!open && onClose) {
+				onClose();
+			}
+		},
+		[onClose],
+	);
+
 	const { refs, floatingStyles, context } = useFloating({
 		open: isOpen,
-		onOpenChange: setIsOpen,
+		onOpenChange: handleOpenChange,
 		placement,
 		whileElementsMounted: autoUpdate,
 		middleware: [offset(8), flip(), shift({ padding: 8 })],
@@ -65,15 +83,13 @@ const DropdownProvider = ({
 		[click, dismiss, role, listNavigation],
 	);
 
-	const close = React.useCallback(() => {
-		setIsOpen(false);
+	const close = useCallback(() => {
+		handleOpenChange(false);
 		const referenceElement = refs.domReference.current;
 		if (referenceElement instanceof HTMLElement) {
 			referenceElement.focus();
 		}
-	}, [refs.domReference]);
-
-	refs.reference;
+	}, [handleOpenChange, refs.domReference]);
 
 	return (
 		<DropdownContext.Provider

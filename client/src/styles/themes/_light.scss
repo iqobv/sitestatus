@@ -99,8 +99,8 @@
 	--status-down-hover: #c0392b;
 
 	/* Dropdown */
-	--dropdown-bg: #ffffff;
-	--dropdown-item-hover-bg: #f0f0f0;
+	--dropdown-bg: #e8e8e8;
+	--dropdown-item-hover-bg: #d5d5d5;
 	--dropdown-item-hover-color: #0d141c;
 	--dropdown-item-disabled-color: #8f9294;
 
@@ -149,6 +149,7 @@
 	--dashboard-header-border: #e5e8eb;
 	--dashboard-sidebar-bg: #f7f7f7;
 	--dashboard-sidebar-border: #e5e8eb;
+	--dashboard-sidebar-link-active-bg: #e5e8eb;
 
 	/* Project */
 	--project-card-bg: #ffffff;
@@ -173,4 +174,8 @@
 	/* Auth */
 	--auth-separator-color: #e5e8eb;
 	--auth-separator-text-color: #888;
+
+	/* Notification */
+	--unread-notification-border: #000;
+	--unread-notification-bg: #dbdbdb;
 }

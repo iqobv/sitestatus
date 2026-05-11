@@ -137,8 +137,15 @@ export class EngineDbService implements OnModuleInit, OnModuleDestroy {
 						statusCode: result.statusCode || null,
 						triggerLogId: logMap.get(incidentKey) || null,
 					});
+					activeIncidentMap.set(incidentKey, {
+						id: 'pending-creation',
+						monitorId,
+						regionId,
+						alertTriggered: false,
+					});
 				} else if (status === SiteStatus.UP && activeIncident) {
 					incidentsToResolveIds.push(activeIncident.id);
+					activeIncidentMap.delete(incidentKey);
 
 					if (activeIncident.alertTriggered) {
 						messagesToSend.push({
@@ -171,6 +178,8 @@ export class EngineDbService implements OnModuleInit, OnModuleDestroy {
 				);
 			}
 
+			await Promise.all([...monitorRegionUpdates, ...stateUpdates]);
+
 			if (incidentsToCreate.length > 0) {
 				const createdIncidents = await tx.monitorIncident.createManyAndReturn({
 					data: incidentsToCreate,
@@ -193,15 +202,11 @@ export class EngineDbService implements OnModuleInit, OnModuleDestroy {
 			}
 
 			if (incidentsToResolveIds.length > 0) {
-				stateUpdates.push(
-					tx.monitorIncident.updateMany({
-						where: { id: { in: incidentsToResolveIds } },
-						data: { resolved: true, resolvedAt: checkedAt },
-					}),
-				);
+				await tx.monitorIncident.updateMany({
+					where: { id: { in: incidentsToResolveIds } },
+					data: { resolved: true, resolvedAt: checkedAt },
+				});
 			}
-
-			await Promise.all([...monitorRegionUpdates, ...stateUpdates]);
 		});
 
 		if (messagesToSend.length > 0 && this.sender) {

@@ -13,14 +13,16 @@ model User {
 
   deletedAt DateTime? @map("deleted_at")
 
-  providers            UserProvider[]
-  tokens               Token[]
-  monitors             Monitor[]
-  projects             Project[]
-  sessions             Session[]
-  notificationChannels NotificationChannel[]
-  alertSettings        AlertSettings[]
-  statusPages          StatusPage[]
+  providers               UserProvider[]
+  tokens                  Token[]
+  monitors                Monitor[]
+  projects                Project[]
+  sessions                Session[]
+  notificationChannels    NotificationChannel[]
+  alertSettings           AlertSettings[]
+  statusPages             StatusPage[]
+  notifications           Notification[]
+  globalNotificationReads GlobalNotificationRead[]
 
   @@map("users")
 }

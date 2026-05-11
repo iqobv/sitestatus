@@ -13,10 +13,10 @@ const NotificationChannelsItemDelete = ({
 }: NotificationChannelsItemDeleteProps) => {
 	const queryClient = useQueryClient();
 
-	const { mutate, isPending } = useMutation({
+	const { mutate } = useMutation({
 		mutationFn: () => deleteNotificationChannel(id),
 		onSuccess: () => {
-			queryClient.refetchQueries({
+			queryClient.invalidateQueries({
 				queryKey: QUERY_KEYS.notificationChannel.all,
 			});
 		},

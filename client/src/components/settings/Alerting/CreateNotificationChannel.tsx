@@ -21,7 +21,7 @@ const CreateNotificationChannel = () => {
 		mutationFn: (dto: CreateNotificationChannelDto) =>
 			createNotificationChannel(dto),
 		onSuccess: (data) => {
-			queryClient.refetchQueries({
+			queryClient.invalidateQueries({
 				queryKey: QUERY_KEYS.notificationChannel.all,
 			});
 			toast.success(

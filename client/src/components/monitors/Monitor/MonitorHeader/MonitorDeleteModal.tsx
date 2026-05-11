@@ -21,7 +21,7 @@ const MonitorDeleteModal = ({ id }: MonitorDeleteModalProps) => {
 		monitorId: id,
 		mutationFn: deleteMonitor,
 		onSuccess: () => {
-			queryClient.refetchQueries({ queryKey: QUERY_KEYS.monitors.list });
+			queryClient.invalidateQueries({ queryKey: QUERY_KEYS.monitors.list });
 			router.push(PRIVATE_PAGES.DASHBOARD);
 		},
 	});

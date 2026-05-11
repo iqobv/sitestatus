@@ -20,7 +20,7 @@ const GlobalAlertSettingsEdit = ({ data }: GlobalAlertSettingsEditProps) => {
 	const { mutate, isPending } = useMutation({
 		mutationFn: (dto: UpsertAlertSettingsDto) => upsertAlertSettings(dto),
 		onSuccess: () => {
-			queryClient.refetchQueries({
+			queryClient.invalidateQueries({
 				queryKey: QUERY_KEYS.alertSettings.hierarchy('global'),
 			});
 			toast.success('Global alert settings updated successfully');

@@ -1,7 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { AUTH_PAGES, PRIVATE_PAGES, SUBDOMAINS } from './config';
+import { appendCorsHeaders, getValidatedOrigin } from './utils';
 
 export async function proxy(request: NextRequest) {
+	const origin = getValidatedOrigin(request);
+
+	if (request.method === 'OPTIONS') {
+		const preflightHeaders = new Headers();
+
+		if (origin) {
+			appendCorsHeaders(preflightHeaders, origin);
+		}
+
+		return new NextResponse(null, {
+			status: 204,
+			headers: preflightHeaders,
+		});
+	}
+
 	const accessToken = request.cookies.get('accessToken')?.value;
 	const refreshToken = request.cookies.get('refreshToken')?.value;
 
@@ -35,7 +51,7 @@ export async function proxy(request: NextRequest) {
 			} else {
 				isAuthenticated = false;
 			}
-		} catch (error) {
+		} catch {
 			isAuthenticated = false;
 		}
 	}
@@ -92,6 +108,10 @@ export async function proxy(request: NextRequest) {
 		refreshedCookies.forEach((cookie) => {
 			response.headers.append('Set-Cookie', cookie);
 		});
+	}
+
+	if (origin) {
+		appendCorsHeaders(response.headers, origin);
 	}
 
 	return response;

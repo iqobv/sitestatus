@@ -1,7 +1,10 @@
-.monitor-incidents-table {
-	&__error-info {
-		display: inline-flex;
-		align-items: center;
-		gap: 6px;
-	}
+.errorInfo {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.actions {
+	margin: 0 auto;
+	text-align: center;
 }

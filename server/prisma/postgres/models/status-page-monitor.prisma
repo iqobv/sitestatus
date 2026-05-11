@@ -1,0 +1,19 @@
+model StatusPageMonitor {
+  id String @id @default(uuid()) @db.Uuid
+
+  statusPageId String @map("status_page_id") @db.Uuid
+  monitorId    String @map("monitor_id") @db.Uuid
+
+  sortOrder Int @default(0) @map("sort_order")
+
+  displayName String? @map("display_name")
+
+  statusPage StatusPage @relation(fields: [statusPageId], references: [id], onDelete: Cascade)
+  monitor    Monitor    @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([statusPageId, monitorId])
+  @@map("status_page_monitors")
+}

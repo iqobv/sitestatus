@@ -5,11 +5,10 @@ import { ApiErrorResponse } from '@/types';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { BaseSyntheticEvent } from 'react';
-import { FieldValues, Path, UseFormReturn, useWatch } from 'react-hook-form';
+import { FieldValues, Path, UseFormReturn } from 'react-hook-form';
 import { ProjectFormProps } from './ProjectForm.types';
 import ProjectFormActions from './ProjectFormActions';
 import ProjectFormField from './ProjectFormField';
-import { SlugAutoGenerator } from './SlugAutoGenerator';
 
 const ProjectForm = <D extends FieldValues>({
 	mutationOptions,
@@ -53,35 +52,14 @@ const ProjectForm = <D extends FieldValues>({
 
 	return (
 		<Form<D> {...props} onSubmit={handleSubmit}>
-			{(methods) => {
-				const isAutoSync = useWatch({
-					control: methods.control,
-					name: 'isAutoSync' as Path<D>,
-				});
-
-				return (
-					<>
-						<SlugAutoGenerator<D>
-							source={'name' as Path<D>}
-							target={'slug' as Path<D>}
-							autoSync={!!isAutoSync}
-						/>
-						{fields.map((field) => (
-							<ProjectFormField
-								key={field.name}
-								field={field}
-								isEdit={isEdit}
-								isAutoSync={!!isAutoSync}
-							/>
-						))}
-						<ProjectFormActions
-							buttonLabel={buttonLabel}
-							isEdit={isEdit}
-							isPending={isPending}
-						/>
-					</>
-				);
-			}}
+			{fields.map((field) => (
+				<ProjectFormField key={field.name} field={field} isEdit={isEdit} />
+			))}
+			<ProjectFormActions
+				buttonLabel={buttonLabel}
+				isEdit={isEdit}
+				isPending={isPending}
+			/>
 		</Form>
 	);
 };

@@ -14,7 +14,7 @@ export class TokenService {
 		dto: CreateTokenDto,
 		tx?: Prisma.TransactionClient,
 	): Promise<string> {
-		const { userId, type, expiresAt } = dto;
+		const { userId, type, channelId, expiresAt } = dto;
 		const prisma = tx ?? this.prismaService;
 
 		await prisma.token.deleteMany({
@@ -30,6 +30,7 @@ export class TokenService {
 				type,
 				userId,
 				expiresAt,
+				channelId,
 			},
 		});
 
@@ -47,7 +48,7 @@ export class TokenService {
 
 		const record = await prisma.token.findUnique({
 			where: { token: hashedToken },
-			include: { user: { select: userSelect } },
+			include: { user: { select: userSelect }, channel: true },
 		});
 
 		if (!record || record.type !== type) {
@@ -59,8 +60,12 @@ export class TokenService {
 			throw new BadRequestException(ERROR_MESSAGES.TOKEN.TOKEN_EXPIRED);
 		}
 
-		await prisma.token.delete({ where: { id: record.id } });
+		try {
+			await prisma.token.delete({ where: { id: record.id } });
+		} catch (error) {
+			console.log(error);
+		}
 
-		return { ...record.user };
+		return { ...record.user, channel: record.channel };
 	}
 }

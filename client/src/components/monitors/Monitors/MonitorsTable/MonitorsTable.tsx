@@ -1,7 +1,7 @@
 'use client';
 
 import { Table } from '@/components/ui';
-import { MonitorWithMonitorStats } from '@/types';
+import { FullMonitor } from '@/types';
 import { getCoreRowModel } from '@tanstack/react-table';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -11,7 +11,7 @@ import { COLUMNS } from './monitorsTableColumns';
 dayjs.extend(relativeTime);
 
 interface MonitorsTableProps {
-	monitors: MonitorWithMonitorStats[];
+	monitors: FullMonitor[];
 }
 
 const MonitorsTable = ({ monitors }: MonitorsTableProps) => {

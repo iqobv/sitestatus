@@ -1,15 +1,17 @@
-.dropdown-menu {
+.dropdownMenu {
 	min-width: 220px;
 	background-color: var(--dropdown-bg);
 	border-radius: 8px;
 	padding: 8px 0;
-	border: 1px solid var(--border-color);
-	z-index: 1000;
+	border: 1px solid var(--border-color-main);
+	z-index: 1800;
 	outline: none;
 	transform-origin: top;
+	display: flex;
+	flex-direction: column;
 }
 
-.dropdown-item {
+.item {
 	display: inline-flex;
 	width: 100%;
 	text-align: left;
@@ -18,8 +20,8 @@
 	padding: 10px 16px;
 	background: none;
 	border: none;
-	font-size: 0.875rem;
-	color: var(--color-main-text);
+	font-size: 0.915rem;
+	color: var(--color-primary);
 	cursor: pointer;
 	transition:
 		background-color 0.15s ease-in-out,
@@ -30,12 +32,22 @@
 	&:focus-visible:not(:disabled),
 	&.active:not(:disabled) {
 		background-color: var(--dropdown-item-hover-bg);
-		color: var(--dropdown-item-hover-color);
+		color: var(--dropdown-item-hover-text);
 		outline: none;
 	}
 
 	&:disabled {
-		color: var(--dropdown-item-disabled-color);
+		color: var(--dropdown-item-disabled-text);
 		cursor: not-allowed;
+	}
+
+	&.delete {
+		color: var(--input-text-error);
+		font-weight: 500;
+
+		&:hover:not(:disabled),
+		&:focus-visible:not(:disabled) {
+			color: var(--input-text-error);
+		}
 	}
 }

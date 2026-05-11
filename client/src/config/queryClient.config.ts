@@ -10,6 +10,7 @@ export const QUERY_KEYS = {
 			'resendVerificationEmail',
 			email,
 		],
+		restoreAccount: (token: string) => ['restoreAccount', token],
 	} as const,
 	monitors: {
 		list: ['monitorsList'],
@@ -26,14 +27,50 @@ export const QUERY_KEYS = {
 			region,
 		],
 		delete: (monitorId: string) => ['monitorDelete', monitorId],
-	},
+		incidentDetails: (monitorId: string, incidentId: string) => [
+			'monitorIncidentDetails',
+			monitorId,
+			incidentId,
+		],
+	} as const,
 	region: {
 		list: ['regionsList'],
 	} as const,
 	project: {
 		all: ['projectsList'],
+		allWithMonitors: ['projectsListWithMonitors'],
 		byId: (projectId: string) => ['project', projectId],
 		create: ['projectCreate'],
 		update: (projectId: string) => ['projectUpdate', projectId],
+		bySlug: (slug: string) => ['projectBySlug', slug],
+		delete: (projectId: string) => ['projectDelete', projectId],
+	} as const,
+	session: {
+		all: ['sessionsList'],
+		terminate: (sessionId: string) => ['terminateSession', sessionId],
+		terminateAllOther: ['terminateAllOtherSessions'],
+	} as const,
+	notificationChannel: {
+		all: ['notificationChannelsList'],
+		create: ['notificationChannelCreate'],
+		update: (id: string) => ['notificationChannelUpdate', id],
+		delete: (id: string) => ['notificationChannelDelete', id],
+		resendVerification: (id: string) => [
+			'notificationChannelResendVerification',
+			id,
+		],
+	} as const,
+	alertSettings: {
+		hierarchy: (id?: string) => ['alertSettingsHierarchy', id ?? ''],
+		upsert: ['alertSettingsUpsert'],
+	} as const,
+	statusPage: {
+		byId: (id: string) => ['statusPageById', id],
+		bySlug: (slug: string) => ['statusPageBySlug', slug],
+		monitorsBySlug: (slug: string) => ['statusPageMonitorsBySlug', slug],
+		all: ['userStatusPages'],
+	} as const,
+	notification: {
+		all: ['notificationsList'],
 	} as const,
 } as const;

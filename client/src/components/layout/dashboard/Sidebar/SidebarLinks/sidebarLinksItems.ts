@@ -4,6 +4,7 @@ import {
 	MdOutlineDashboard,
 	MdOutlineMonitorHeart,
 	MdOutlineWorkspaces,
+	MdPublic,
 } from 'react-icons/md';
 
 export interface SidebarLink {
@@ -27,5 +28,10 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
 		href: PRIVATE_PAGES.PROJECTS.ALL,
 		label: 'Projects',
 		icon: MdOutlineWorkspaces,
+	},
+	{
+		href: PRIVATE_PAGES.STATUS_PAGES.ALL,
+		label: 'Status Pages',
+		icon: MdPublic,
 	},
 ];

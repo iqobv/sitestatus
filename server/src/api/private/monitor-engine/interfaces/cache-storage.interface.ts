@@ -9,6 +9,7 @@ export interface MonitorCache {
 
 export interface RegionCache {
 	id: string;
+	name: string;
 	key: string;
 }
 
@@ -19,8 +20,6 @@ export interface MonitorUpdatePayload extends MonitorCachePayload {
 	isNew?: boolean;
 }
 
-export interface RegionCachePayload {
-	id: string;
+export interface RegionCachePayload extends RegionCache {
 	isActive: boolean;
-	key: string;
 }

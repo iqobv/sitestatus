@@ -9,9 +9,9 @@ interface AuthFormGlobalErrorProps {
 
 const AuthFormGlobalError = ({ message }: AuthFormGlobalErrorProps) => {
 	return (
-		<div className={styles['auth-form-global-error']}>
+		<div className={styles.error}>
 			<MdErrorOutline />
-			<div className={styles['auth-form-global-error__message']}>{message}</div>
+			<div className={styles.message}>{message}</div>
 		</div>
 	);
 };

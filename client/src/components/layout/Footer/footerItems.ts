@@ -1,4 +1,4 @@
-import { PUBLIC_PAGES } from '@/config';
+import { LEGAL_PAGES, PUBLIC_PAGES } from '@/config';
 
 interface LinkItem {
 	label: string;
@@ -34,19 +34,19 @@ export const FOOTER_ITEMS: FooterItem[] = [
 		links: [
 			{
 				label: 'About Us',
-				href: PUBLIC_PAGES.HOME,
+				href: LEGAL_PAGES.ABOUT_US,
 			},
 			{
 				label: 'Privacy Policy',
-				href: PUBLIC_PAGES.HOME,
+				href: LEGAL_PAGES.PRIVACY_POLICY,
 			},
 			{
 				label: 'Terms of Service',
-				href: PUBLIC_PAGES.HOME,
+				href: LEGAL_PAGES.TERMS_OF_SERVICE,
 			},
 			{
 				label: 'Cookie Policy',
-				href: PUBLIC_PAGES.HOME,
+				href: LEGAL_PAGES.COOKIE_POLICY,
 			},
 		],
 	},

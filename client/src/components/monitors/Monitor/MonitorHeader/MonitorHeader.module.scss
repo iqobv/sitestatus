@@ -1,6 +1,6 @@
 @use '../../../../styles/mixins' as *;
 
-.monitor-header {
+.header {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -13,10 +13,6 @@
 	display: flex;
 	align-items: center;
 	gap: 8px;
-
-	&.delete {
-		color: var(--error-border);
-	}
 }
 
 .monitorDeleteFooter {

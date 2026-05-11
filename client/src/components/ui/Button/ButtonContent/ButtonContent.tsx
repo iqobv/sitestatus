@@ -14,21 +14,17 @@ const ButtonContent = ({
 	loading,
 	className,
 }: ButtonContentProps) => {
-	const classNames = [
-		styles['button__inner'],
-		loading && styles['button__inner--loading'],
-		className,
-	]
+	const classNames = [styles.inner, loading && styles.loading, className]
 		.filter(Boolean)
 		.join(' ')
 		.trim();
 
 	return (
 		<div className={classNames}>
-			<div className={styles['button__content']}>{children}</div>
+			<div className={styles.content}>{children}</div>
 			{loading && (
 				<Loader
-					containerClassName={styles['button__loader']}
+					containerClassName={styles.loader}
 					disablePadding
 					thickness={4}
 					size={22}

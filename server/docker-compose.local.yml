@@ -2,6 +2,7 @@ services:
   database:
     container_name: sitestatus_db
     image: postgres:18.3
+    restart: "no"
     ports:
       - "5433:5432"
     environment:
@@ -15,6 +16,7 @@ services:
 
   sqledge:
     image: mcr.microsoft.com/azure-sql-edge:latest
+    restart: "no"
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
@@ -25,6 +27,7 @@ services:
 
   servicebus-emulator:
     image: mcr.microsoft.com/azure-messaging/servicebus-emulator:latest
+    restart: "no"
     volumes:
       - ./sb-config.json:/ServiceBus_Emulator/ConfigFiles/Config.json
     ports:
@@ -41,6 +44,7 @@ services:
 
   turso-local:
     image: ghcr.io/tursodatabase/libsql-server:latest
+    restart: "no"
     container_name: turso_local
     ports:
       - "8080:8080"

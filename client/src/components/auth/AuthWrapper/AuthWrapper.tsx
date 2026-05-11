@@ -6,15 +6,18 @@ import styles from './AuthWrapper.module.scss';
 interface AuthWrapperProps {
 	children?: React.ReactNode;
 	header?: React.ReactNode;
+	showSocialButtons?: boolean;
 }
 
-const AuthWrapper = ({ children, header }: AuthWrapperProps) => {
+const AuthWrapper = ({
+	children,
+	header,
+	showSocialButtons = true,
+}: AuthWrapperProps) => {
 	return (
-		<div className={`${styles['auth-wrapper']} container`}>
-			{!!header && (
-				<div className={styles['auth-wrapper__header']}>{header}</div>
-			)}
-			<SocialButtons />
+		<div className={`${styles.wrapper} container`}>
+			{!!header && <div className={styles.authHeader}>{header}</div>}
+			{showSocialButtons && <SocialButtons />}
 			{children}
 		</div>
 	);

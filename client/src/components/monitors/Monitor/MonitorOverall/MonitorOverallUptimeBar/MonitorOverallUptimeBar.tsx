@@ -12,7 +12,7 @@ const MonitorOverallUptimeBar = ({
 	timeline,
 }: MonitorOverallUptimeBarProps) => {
 	return (
-		<div className={styles['monitor-overall-uptime-bar']}>
+		<div className={styles.uptimeBar}>
 			{timeline.map((entry, index) => (
 				<MonitorOverallUptimeBarItem key={index} entry={entry} />
 			))}

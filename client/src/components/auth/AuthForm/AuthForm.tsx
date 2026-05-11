@@ -5,11 +5,18 @@ import { ApiErrorResponse, Field } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
-import { useState } from 'react';
-import { DefaultValues, FieldValues, Path, useForm } from 'react-hook-form';
+import React, { useState } from 'react';
+import {
+	DefaultValues,
+	FieldValues,
+	Path,
+	useForm,
+	UseFormRegister,
+} from 'react-hook-form';
 import { ZodType } from 'zod';
 import styles from './AuthForm.module.scss';
 import AuthFormGlobalError from './AuthFormGlobalError/AuthFormGlobalError';
+import UserDeletedError from './UserDeletedError/UserDeletedError';
 import VerifyEmailButton from './VerifyEmailButton/VerifyEmailButton';
 
 interface AuthFormProps<T extends FieldValues, R> {
@@ -17,10 +24,14 @@ interface AuthFormProps<T extends FieldValues, R> {
 	mutationFn: (data: T) => Promise<R>;
 	onSuccess?: (data: R) => void;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	schema?: ZodType<T, any, any>;
+	schema: ZodType<T, any, any>;
 	buttonLabel?: string;
 	bottomText?: React.ReactNode;
 	defaultValues?: DefaultValues<T>;
+	renderExtra?: (
+		register: UseFormRegister<T>,
+		error?: string,
+	) => React.ReactNode;
 }
 
 const AuthForm = <T extends FieldValues, R>({
@@ -31,8 +42,10 @@ const AuthForm = <T extends FieldValues, R>({
 	schema,
 	bottomText,
 	defaultValues,
+	renderExtra,
 }: AuthFormProps<T, R>) => {
 	const [isUnverified, setIsUnverified] = useState(false);
+	const [isUserDeletedError, setIsUserDeletedError] = useState<boolean>(false);
 
 	const resolver = !!schema ? zodResolver(schema) : undefined;
 
@@ -51,6 +64,11 @@ const AuthForm = <T extends FieldValues, R>({
 
 	const { mutate, isPending } = useMutation({
 		mutationFn,
+		onMutate: () => {
+			setIsUserDeletedError(false);
+			setError('root', { message: undefined });
+			setIsUnverified(false);
+		},
 		onSuccess(data) {
 			reset();
 			onSuccess?.(data);
@@ -61,7 +79,6 @@ const AuthForm = <T extends FieldValues, R>({
 
 				if (apiData.field) {
 					setError(apiData.field as Path<T>, {
-						type: 'server',
 						message: apiData.message,
 					});
 				} else {
@@ -69,7 +86,11 @@ const AuthForm = <T extends FieldValues, R>({
 						setIsUnverified(true);
 					}
 
-					setError('root', { message: apiData.message, type: 'server' });
+					if (apiData.code === 'USER_DELETED') {
+						setIsUserDeletedError(true);
+					}
+
+					setError('root', { message: apiData.message });
 					resetField('password' as Path<T>);
 				}
 			}
@@ -86,24 +107,32 @@ const AuthForm = <T extends FieldValues, R>({
 				<>
 					<AuthFormGlobalError message={errors.root.message} />
 					{isUnverified && <VerifyEmailButton email={email} />}
+					{isUserDeletedError && <UserDeletedError email={email} />}
 				</>
 			)}
-			{fields.map(
-				({ label, placeholder, type, name, autocomplete, iconLeft }) => {
-					return (
-						<TextField
-							key={name}
-							label={label}
-							placeholder={placeholder}
-							type={type}
-							leftIcon={iconLeft ? <>{iconLeft({})}</> : undefined}
-							autoComplete={autocomplete}
-							error={errors[name]?.message as string}
-							{...register(name)}
-						/>
-					);
-				},
-			)}
+			<div className={styles.fields}>
+				{fields.map(
+					({ label, placeholder, type, name, autoComplete, leftIcon }) => {
+						return (
+							<TextField
+								key={name}
+								label={label}
+								placeholder={placeholder}
+								type={type}
+								leftIcon={leftIcon ? <>{leftIcon({})}</> : undefined}
+								autoComplete={autoComplete}
+								error={errors[name]?.message as string}
+								{...register(name)}
+							/>
+						);
+					},
+				)}
+				{renderExtra &&
+					renderExtra(
+						register,
+						errors['acceptTerms' as Path<T>]?.message as string,
+					)}
+			</div>
 			<Button loading={isPending} type="submit" fullWidth>
 				{buttonLabel}
 			</Button>

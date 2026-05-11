@@ -2,15 +2,16 @@
 
 import { Button, Dropdown } from '@/components/ui';
 import { PRIVATE_PAGES } from '@/config';
-import { MonitorFull } from '@/types';
+import { MonitorWithRegions } from '@/types';
 import Link from 'next/link';
 import { MdMoreVert, MdOutlineEdit } from 'react-icons/md';
 import MonitorDeleteModal from './MonitorDeleteModal';
+import MonitorDropdownAlertSettings from './MonitorDropdownAlertSettings';
 import MonitorDropdownUpdateActiveStatus from './MonitorDropdownUpdateActiveStatus';
 import styles from './MonitorHeader.module.scss';
 
 interface MonitorHeaderDropdownProps {
-	monitor: MonitorFull;
+	monitor: MonitorWithRegions;
 }
 
 const MonitorHeaderDropdown = ({ monitor }: MonitorHeaderDropdownProps) => {
@@ -21,7 +22,7 @@ const MonitorHeaderDropdown = ({ monitor }: MonitorHeaderDropdownProps) => {
 					<MdMoreVert size={20} />
 				</Button>
 			</Dropdown.Trigger>
-			<Dropdown.Menu>
+			<Dropdown.Menu zIndex={1300}>
 				<Dropdown.Item asChild>
 					<Link
 						href={PRIVATE_PAGES.MONITORS.EDIT(monitor.id)}
@@ -32,6 +33,7 @@ const MonitorHeaderDropdown = ({ monitor }: MonitorHeaderDropdownProps) => {
 					</Link>
 				</Dropdown.Item>
 				<MonitorDropdownUpdateActiveStatus monitor={monitor} />
+				<MonitorDropdownAlertSettings id={monitor.id} />
 				<MonitorDeleteModal id={monitor.id} />
 			</Dropdown.Menu>
 		</Dropdown>

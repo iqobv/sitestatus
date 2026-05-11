@@ -8,12 +8,6 @@ export class CreateProjectDto {
 	@IsString()
 	name: string;
 
-	@ApiProperty({ example: 'my-project' })
-	@IsString()
-	@MinLength(4)
-	@MaxLength(100)
-	slug: string;
-
 	@ApiProperty({ example: 'A brief description of the project.' })
 	@IsOptional()
 	@IsString()

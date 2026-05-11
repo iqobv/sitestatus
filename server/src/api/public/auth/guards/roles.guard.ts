@@ -1,5 +1,6 @@
-import { User, UserRole } from '@generated/postgres/client';
+import { UserRole } from '@generated/postgres/client';
 import { ERROR_MESSAGES } from '@libs/constants';
+import { JwtPayload } from '@libs/types';
 import {
 	CanActivate,
 	ExecutionContext,
@@ -25,7 +26,7 @@ export class RolesGuard implements CanActivate {
 		}
 
 		const req: Request = context.switchToHttp().getRequest();
-		const user = req.user as User;
+		const user = req.user as JwtPayload;
 
 		if (!user || !roles.includes(user.role)) {
 			throw new ForbiddenException(ERROR_MESSAGES.AUTH.ACCESS_DENIED);

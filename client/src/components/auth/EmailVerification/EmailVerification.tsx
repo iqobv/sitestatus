@@ -5,17 +5,16 @@ import { AUTH_PAGES, PRIVATE_PAGES, QUERY_KEYS } from '@/config';
 import { useAuth } from '@/hooks';
 import { useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import EmailVerificationWait from './EmailVerificationWait';
 import EmailVerificationWrapper from './EmailVerificationWrapper';
 
-interface EmailVerificationProps {
-	token?: string;
-}
+const EmailVerification = () => {
+	const searchParams = useSearchParams();
+	const token = searchParams.get('token') ?? undefined;
 
-const EmailVerification = ({ token }: EmailVerificationProps) => {
 	const [loginCompleted, setLoginCompleted] = useState(false);
 
 	const { login } = useAuth();
@@ -35,7 +34,6 @@ const EmailVerification = ({ token }: EmailVerificationProps) => {
 
 			if (message === 'Email verified successfully' && user) {
 				login(user);
-				// eslint-disable-next-line react-hooks/set-state-in-effect
 				setLoginCompleted(true);
 				router.push(PRIVATE_PAGES.DASHBOARD);
 			}

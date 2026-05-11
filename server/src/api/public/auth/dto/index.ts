@@ -6,3 +6,4 @@ export * from './message.dto';
 export * from './o-auth.dto';
 export * from './resend-verification-email.dto';
 export * from './reset-password.dto';
+export * from './restore-account.dto';

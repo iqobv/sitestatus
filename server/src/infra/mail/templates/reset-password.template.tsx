@@ -1,60 +1,28 @@
-import {
-	Body,
-	Head,
-	Heading,
-	Html,
-	Link,
-	Preview,
-	Tailwind,
-	Text,
-} from '@react-email/components';
+import { Heading, Section, Text } from '@react-email/components';
 import React from 'react';
-
-interface ResetPasswordTemplateProps {
-	url: string;
-}
+import { BaseEmailProps } from './base-email-props.types';
+import { Button, Footer, Wrapper } from './components';
 
 export default function ResetPasswordTemplate({
 	url,
-}: ResetPasswordTemplateProps) {
+	iconUrl,
+}: BaseEmailProps) {
 	return (
-		<Html>
-			<Head />
-			<Preview>Reset your password</Preview>
-			<Tailwind>
-				<Body className="text-black text-center">
-					<Heading className="text-center text-3xl">
-						Reset Your Password
-					</Heading>
-					<Text className="text-center">
-						We received a request to reset your password. Click the button below
-						to choose a new one.
-					</Text>
-					<Link
-						href={url}
-						target="_blank"
-						rel="noopener noreferrer"
-						style={{
-							backgroundColor: '#9c9c9cff',
-							color: '#000000ff',
-							padding: '12px 24px',
-							borderRadius: '8px',
-							textDecoration: 'none',
-							display: 'inline-block',
-							fontWeight: 'bold',
-							marginTop: '16px',
-							textAlign: 'center',
-						}}
-					>
-						Reset Password
-					</Link>
-					<Text>
-						If you did not request this, you can safely ignore this email. The
-						link will expire in 1 hour.
-					</Text>
-					<Text>Thanks, for using our service!</Text>
-				</Body>
-			</Tailwind>
-		</Html>
+		<Wrapper
+			iconUrl={iconUrl}
+			preview="We received a request to reset your password. Click the button below to reset your password."
+		>
+			<Heading as="h2" className="text-left text-2xl text-white m-0">
+				Reset Your Password
+			</Heading>
+			<Section className="py-1 text-left">
+				<Text className="font-base text-white m-0 mt-8 mb-6 leading-[24px]">
+					We received a request to reset your password. Click the button below
+					to reset your password.
+				</Text>
+				<Button href={url}>Reset Password</Button>
+			</Section>
+			<Footer expiresIn="1 hour" />
+		</Wrapper>
 	);
 }

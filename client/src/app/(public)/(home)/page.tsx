@@ -1,5 +1,4 @@
 import { Action, Features, Hero, Values } from '@/components/home';
-import { Footer } from '@/components/layout';
 
 export default function HomePage() {
 	return (
@@ -8,7 +7,6 @@ export default function HomePage() {
 			<Values />
 			<Features />
 			<Action />
-			<Footer />
 		</>
 	);
 }

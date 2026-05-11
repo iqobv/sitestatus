@@ -2,26 +2,26 @@ import { cva } from 'class-variance-authority';
 
 import styles from './TextField.module.scss';
 
-export const textFieldVariants = cva(styles['text-field'], {
+export const textFieldVariants = cva(styles.textField, {
 	variants: {
 		fullWidth: {
-			true: styles['full-width--true'],
-			false: styles['full-width--false'],
+			true: styles.fullWidth,
+			false: null,
 		},
 		disabled: {
-			true: styles['disabled'],
+			true: styles.disabled,
 			false: null,
 		},
 		error: {
-			true: styles['error'],
+			true: styles.error,
 			false: null,
 		},
 		leftIcon: {
-			true: styles['icon--input-left'],
+			true: styles.iconInputLeft,
 			false: null,
 		},
 		rightIcon: {
-			true: styles['icon--input-right'],
+			true: styles.iconInputRight,
 			false: null,
 		},
 	},

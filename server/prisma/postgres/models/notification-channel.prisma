@@ -1,0 +1,26 @@
+model NotificationChannel {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId String @map("user_id") @db.Uuid
+
+  type   ChannelType   @default(EMAIL)
+  status ChannelStatus @default(PENDING)
+
+  name  String
+  value String
+
+  isActive Boolean @default(true) @map("is_active")
+
+  isPrimary Boolean @default(false) @map("is_primary")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  tokens Token[]
+
+  alertSettings AlertSettings[] @relation("ChannelToSettings")
+
+  @@map("notification_channels")
+}

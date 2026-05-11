@@ -2,12 +2,13 @@ import { MonitorEngineModule } from '@api/private/monitor-engine/monitor-engine.
 import { Module } from '@nestjs/common';
 import { RegionModule } from '../region/region.module';
 import { MonitorController } from './monitor.controller';
-import { MonitorService } from './monitor.service';
+import { MonitorCalculationService } from './services/monitor-calculation.service';
+import { MonitorService } from './services/monitor.service';
 
 @Module({
 	controllers: [MonitorController],
 	exports: [MonitorService],
-	providers: [MonitorService],
+	providers: [MonitorCalculationService, MonitorService],
 	imports: [RegionModule, MonitorEngineModule],
 })
 export class MonitorModule {}

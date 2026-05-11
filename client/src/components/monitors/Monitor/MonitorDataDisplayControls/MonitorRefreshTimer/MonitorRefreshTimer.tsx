@@ -3,11 +3,11 @@
 import { Button } from '@/components/ui';
 import { QUERY_KEYS } from '@/config';
 import { useUpdateTimer } from '@/hooks';
-import { MonitorFull } from '@/types';
+import { MonitorWithRegions } from '@/types';
 import styles from './MonitorRefreshTimer.module.scss';
 
 interface MonitorRefreshTimerProps {
-	monitor: MonitorFull;
+	monitor: MonitorWithRegions;
 }
 
 const MonitorRefreshTimer = ({ monitor }: MonitorRefreshTimerProps) => {
@@ -18,7 +18,7 @@ const MonitorRefreshTimer = ({ monitor }: MonitorRefreshTimerProps) => {
 	});
 
 	return (
-		<div className={styles['refresh-timer']}>
+		<div className={styles.timer}>
 			{monitor.isActive && (
 				<>
 					<div>Auto-refresh in {timer}s</div>

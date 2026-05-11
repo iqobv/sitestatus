@@ -1,4 +1,4 @@
-.sidebar-link {
+.link {
 	display: inline-flex;
 	align-items: center;
 	gap: 6px;
@@ -11,10 +11,10 @@
 	font-weight: 500;
 
 	&:hover {
-		background-color: var(--dashboard-sidebar-link-active-bg);
+		background-color: var(--dashboard-sidebar-link-active);
 	}
 
-	&--active {
-		background-color: var(--dashboard-sidebar-link-active-bg);
+	&.active {
+		background-color: var(--dashboard-sidebar-link-active);
 	}
 }

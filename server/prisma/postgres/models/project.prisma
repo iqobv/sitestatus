@@ -3,15 +3,16 @@ model Project {
 
   ownerId String @map("owner_id") @db.Uuid
 
-  slug String @unique
-
   name        String
   description String?
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  monitors Monitor[]
+  deletedAt DateTime? @map("deleted_at")
+
+  monitors      Monitor[]
+  alertSettings AlertSettings[]
 
   owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 

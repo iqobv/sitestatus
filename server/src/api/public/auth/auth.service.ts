@@ -1,11 +1,17 @@
-import { User } from '@generated/postgres/client';
+import { Prisma, User } from '@generated/postgres/client';
 import { TokenType } from '@generated/postgres/enums';
 import { MailService } from '@infra/mail/mail.service';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
+import { ClientInfoDto } from '@libs/dto';
 import { userSelect } from '@libs/prisma';
-import { ClientInfo } from '@libs/types';
-import { comparePassword, hashPassword } from '@libs/utils';
+import { JwtPayload } from '@libs/types';
+import {
+	comparePassword,
+	hashPassword,
+	hashToken,
+	withField,
+} from '@libs/utils';
 import {
 	BadRequestException,
 	Injectable,
@@ -59,7 +65,7 @@ export class AuthService {
 		});
 	}
 
-	async login(dto: LoginDto, clientInfo: ClientInfo) {
+	async login(dto: LoginDto, clientInfo: ClientInfoDto) {
 		const { email, password } = dto;
 
 		const user = await this.userService.findByEmail(email, true);
@@ -68,6 +74,7 @@ export class AuthService {
 			throw new UnauthorizedException(ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS);
 
 		const isMatch = await comparePassword(password, user.password);
+
 		if (!isMatch)
 			throw new UnauthorizedException(ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS);
 
@@ -78,10 +85,7 @@ export class AuthService {
 	}
 
 	async logout(rawRefreshToken: string, userId: string) {
-		const hashedToken = crypto
-			.createHash('sha256')
-			.update(rawRefreshToken)
-			.digest('hex');
+		const hashedToken = hashToken(rawRefreshToken);
 
 		const session = await this.prismaService.session.findUnique({
 			where: { refreshToken: hashedToken },
@@ -94,6 +98,7 @@ export class AuthService {
 
 	async validateUser(email: string, password: string) {
 		const user = await this.userService.findByEmail(email, true);
+
 		if (!user) return null;
 
 		const isMatch =
@@ -106,7 +111,7 @@ export class AuthService {
 		return user;
 	}
 
-	async verifyEmail(token: string, clientInfo: ClientInfo) {
+	async verifyEmail(token: string, clientInfo: ClientInfoDto) {
 		const user = await this.tokenService.verifyAndConsumeToken(
 			token,
 			TokenType.EMAIL_VERIFICATION,
@@ -119,6 +124,7 @@ export class AuthService {
 		});
 
 		const tokens = await this.generateAndSaveTokens(user, clientInfo);
+
 		return { ...SUCCESS_MESSAGES.AUTH.EMAIL_VERIFIED, user, tokens };
 	}
 
@@ -146,6 +152,7 @@ export class AuthService {
 
 	async forgotPassword(email: string) {
 		const user = await this.userService.findByEmail(email, true);
+
 		if (!user || !user.password) return;
 
 		const expiresAt = new Date();
@@ -181,11 +188,15 @@ export class AuthService {
 		const user = await this.prismaService.user.findUnique({
 			where: { id: userId },
 		});
+
 		if (!user || !user.password) throw new UnauthorizedException();
 
 		const isMatch = await comparePassword(dto.oldPassword, user.password);
+
 		if (!isMatch)
-			throw new BadRequestException(ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS);
+			throw new BadRequestException(
+				withField(ERROR_MESSAGES.AUTH.OLD_PASSWORD_INCORRECT, 'oldPassword'),
+			);
 
 		const hashedPassword = await hashPassword(dto.newPassword);
 
@@ -197,19 +208,17 @@ export class AuthService {
 		return SUCCESS_MESSAGES.AUTH.CHANGE_PASSWORD;
 	}
 
-	async refreshTokens(rawRefreshToken: string, clientInfo: ClientInfo) {
-		const hashedToken = crypto
-			.createHash('sha256')
-			.update(rawRefreshToken)
-			.digest('hex');
+	async refreshTokens(rawRefreshToken: string, clientInfo: ClientInfoDto) {
+		const hashedToken = hashToken(rawRefreshToken);
 
 		const session = await this.prismaService.session.findUnique({
 			where: { refreshToken: hashedToken },
 		});
 
 		if (!session || session.expiresAt < new Date()) {
-			if (session)
+			if (session) {
 				await this.sessionService.deleteSession(session.id, session.userId);
+			}
 
 			throw new UnauthorizedException(
 				ERROR_MESSAGES.AUTH.INVALID_OR_EXPIRED_REFRESH_TOKEN,
@@ -222,56 +231,140 @@ export class AuthService {
 
 		if (!user || !user.emailVerified) throw new UnauthorizedException();
 
-		await this.sessionService.deleteSession(session.id, session.userId);
-		return this.generateAndSaveTokens(user, clientInfo);
-	}
-
-	async validateOAuthLogin(dto: OAuthDto, clientInfo: ClientInfo) {
-		const { provider, providerId, email } = dto;
-
-		const providerUser =
-			await this.userProviderService.findByProviderAndProviderId(
-				provider,
-				providerId,
-			);
-
-		if (providerUser)
-			return await this.generateAndSaveTokens(providerUser.user, clientInfo);
-
-		let user = await this.userService.findByEmail(email, true);
-		if (!user) {
-			user = await this.userService.createOauthUser(email);
-		}
-
-		await this.userProviderService.create({
-			provider,
-			providerId,
-			userId: user.id,
-		});
-
-		return await this.generateAndSaveTokens(user, clientInfo);
-	}
-
-	private async generateAndSaveTokens(user: User, clientInfo: ClientInfo) {
-		const accessToken = this.jwtService.sign(
-			{ id: user.id, email: user.email, role: user.role },
-			{ secret: process.env.JWT_ACCESS_SECRET, expiresIn: '15m' },
-		);
-
-		const rawRefreshToken = crypto.randomBytes(32).toString('hex');
-		const refreshTokenHash = crypto
-			.createHash('sha256')
-			.update(rawRefreshToken)
-			.digest('hex');
+		const newRawRefreshToken = crypto.randomBytes(32).toString('hex');
+		const newRefreshTokenHash = hashToken(newRawRefreshToken);
 
 		const now = new Date();
 		const expiresAt = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
 
-		await this.sessionService.createSession({
+		const updatedSession = await this.sessionService.rotateSession(session.id, {
 			userId: user.id,
-			refreshTokenHash,
+			refreshTokenHash: newRefreshTokenHash,
 			clientInfo,
 			expiresAt,
+		});
+
+		const payload: JwtPayload = {
+			id: user.id,
+			email: user.email,
+			role: user.role,
+			sessionId: updatedSession.id,
+			createdAt: user.createdAt,
+		};
+
+		const accessToken = this.jwtService.sign(payload, {
+			secret: this.configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
+			expiresIn: '15m',
+		});
+
+		return { accessToken, refreshToken: newRawRefreshToken };
+	}
+
+	async validateOAuthLogin(dto: OAuthDto, clientInfo: ClientInfoDto) {
+		const { provider, providerId, email } = dto;
+
+		return await this.prismaService.$transaction(async (tx) => {
+			const providerUser =
+				await this.userProviderService.findByProviderAndProviderId(
+					provider,
+					providerId,
+					tx,
+				);
+
+			if (providerUser) {
+				return await this.generateAndSaveTokens(
+					providerUser.user,
+					clientInfo,
+					tx,
+				);
+			}
+
+			let user = await this.userService.findByEmail(email, true, false, tx);
+
+			if (!user) {
+				user = await this.userService.create({ email }, tx);
+			}
+
+			await this.userProviderService.create(
+				{
+					provider,
+					providerId,
+					userId: user.id,
+				},
+				tx,
+			);
+
+			return await this.generateAndSaveTokens(user, clientInfo, tx);
+		});
+	}
+
+	async generateRestoreAccountToken(email: string) {
+		const user = await this.userService.findByEmail(email, true, true);
+
+		if (!user) return;
+
+		const token = await this.tokenService.createToken({
+			userId: user.id,
+			type: TokenType.RESTORE_ACCOUNT,
+			expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+		});
+
+		await this.mailService.sendRestoreAccountEmail(user.email, token);
+
+		return SUCCESS_MESSAGES.AUTH.SEND_RESTORE_ACCOUNT_EMAIL;
+	}
+
+	async restoreAccount(token: string, clientInfo: ClientInfoDto) {
+		return await this.prismaService.$transaction(async (tx) => {
+			const user = await this.tokenService.verifyAndConsumeToken(
+				token,
+				TokenType.RESTORE_ACCOUNT,
+				tx,
+			);
+
+			const tokens = await this.generateAndSaveTokens(user, clientInfo);
+
+			await tx.user.update({
+				where: { id: user.id },
+				data: { deletedAt: null },
+			});
+
+			return tokens;
+		});
+	}
+
+	private async generateAndSaveTokens(
+		user: User,
+		clientInfo: ClientInfoDto,
+		tx?: Prisma.TransactionClient,
+	) {
+		const rawRefreshToken = crypto.randomBytes(32).toString('hex');
+		const refreshTokenHash = hashToken(rawRefreshToken);
+
+		const now = new Date();
+		const expiresAt = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+
+		const session = await this.sessionService.createSession(
+			{
+				userId: user.id,
+				refreshTokenHash,
+				clientInfo,
+				expiresAt,
+			},
+			tx,
+		);
+
+		const payload: JwtPayload = {
+			id: user.id,
+			email: user.email,
+			role: user.role,
+			sessionId: session.id,
+			createdAt: user.createdAt,
+		};
+
+		const accessToken = this.jwtService.sign(payload, {
+			secret: this.configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
+			expiresIn: '15m',
 		});
 
 		return { accessToken, refreshToken: rawRefreshToken };

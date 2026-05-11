@@ -1,5 +1,5 @@
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
-import { Auth, Authorized, Cookie } from '@libs/decorators';
+import { Auth, Authorized, Cookie, IsPublic } from '@libs/decorators';
 import {
 	clearAuthCookies,
 	createCustomMessageDto,
@@ -37,6 +37,7 @@ import {
 	RegisterMessageDto,
 	ResendVerificationEmailDto,
 	ResetPasswordDto,
+	RestoreAccountDto,
 	VerifyEmailDto,
 } from './dto';
 
@@ -48,6 +49,7 @@ export class AuthController {
 		private readonly configService: ConfigService,
 	) {}
 
+	@IsPublic()
 	@Throttle({ strict: { limit: 5, ttl: 60000 } })
 	@ApiOperation({ summary: 'Register a new user' })
 	@ApiOkResponse({ type: RegisterMessageDto })
@@ -60,6 +62,7 @@ export class AuthController {
 		return await this.authService.register(dto);
 	}
 
+	@IsPublic()
 	@Throttle({ strict: { limit: 5, ttl: 60000 } })
 	@ApiOperation({ summary: 'Log in a user and create a session' })
 	@Post('login')
@@ -83,6 +86,7 @@ export class AuthController {
 		return SUCCESS_MESSAGES.AUTH.LOGIN_SUCCESS;
 	}
 
+	@IsPublic()
 	@ApiOperation({ summary: 'Log out the current user' })
 	@ApiOkResponse({ type: Boolean })
 	@Auth()
@@ -125,6 +129,7 @@ export class AuthController {
 		return { ...rest };
 	}
 
+	@IsPublic()
 	@Throttle({ strict: { limit: 10, ttl: 60000 } })
 	@Post('refresh')
 	@ApiOperation({ summary: 'Refresh authentication tokens' })
@@ -137,16 +142,20 @@ export class AuthController {
 		@Cookie('refreshToken') rt: string,
 		@Res({ passthrough: true }) res: Response,
 	) {
-		if (!rt) throw new UnauthorizedException('Refresh token missing');
-		const info = extractClientInfo(req);
-		const tokens = await this.authService.refreshTokens(rt, info);
-		setAuthCookies(
-			res,
-			tokens.accessToken,
-			tokens.refreshToken,
-			this.configService,
-		);
-		return SUCCESS_MESSAGES.AUTH.REFRESH_TOKENS;
+		try {
+			if (!rt)
+				throw new UnauthorizedException(
+					ERROR_MESSAGES.AUTH.REFRESH_TOKEN_MISSING,
+				);
+			const info = extractClientInfo(req);
+			const { accessToken, refreshToken } =
+				await this.authService.refreshTokens(rt, info);
+			setAuthCookies(res, accessToken, refreshToken, this.configService);
+			return SUCCESS_MESSAGES.AUTH.REFRESH_TOKENS;
+		} catch (error) {
+			clearAuthCookies(res, this.configService);
+			throw error;
+		}
 	}
 
 	@Throttle({ strict: { limit: 3, ttl: 60000 } })
@@ -162,6 +171,7 @@ export class AuthController {
 		return await this.authService.resendVerification(dto.email);
 	}
 
+	@IsPublic()
 	@ApiOperation({ summary: 'Get current user profile' })
 	@Auth()
 	@ApiOkResponse({ type: UserWithoutPasswordDto })
@@ -181,6 +191,7 @@ export class AuthController {
 		return SUCCESS_MESSAGES.AUTH.FORGOT_PASSWORD;
 	}
 
+	@Throttle({ strict: { limit: 3, ttl: 60000 } })
 	@Post('reset-password')
 	@ApiOperation({ summary: 'Reset user password' })
 	@ApiOkResponse({
@@ -192,12 +203,16 @@ export class AuthController {
 	}
 
 	@Auth()
+	@Throttle({ strict: { limit: 3, ttl: 60000 } })
 	@ApiOperation({ summary: 'Change user password' })
 	@ApiOkResponse({
 		type: createCustomMessageDto(SUCCESS_MESSAGES.AUTH.CHANGE_PASSWORD),
 	})
 	@ApiBadRequestResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS),
+		type: createCustomMessageDto(
+			ERROR_MESSAGES.AUTH.OLD_PASSWORD_INCORRECT,
+			'oldPassword',
+		),
 	})
 	@Post('change-password')
 	async changePassword(
@@ -206,5 +221,42 @@ export class AuthController {
 	) {
 		await this.authService.changePassword(userId, dto);
 		return SUCCESS_MESSAGES.AUTH.CHANGE_PASSWORD;
+	}
+
+	@Throttle({ strict: { limit: 3, ttl: 60000 } })
+	@ApiOperation({ summary: 'Generate account restore token' })
+	@ApiOkResponse({
+		type: createCustomMessageDto(
+			SUCCESS_MESSAGES.AUTH.SEND_RESTORE_ACCOUNT_EMAIL,
+		),
+	})
+	@Post('generate-restore-token')
+	async generateRestoreToken(@Body() dto: RestoreAccountDto) {
+		await this.authService.generateRestoreAccountToken(dto.email);
+		return SUCCESS_MESSAGES.AUTH.SEND_RESTORE_ACCOUNT_EMAIL;
+	}
+
+	@ApiOperation({ summary: 'Generate account restore token' })
+	@ApiOkResponse({
+		type: createCustomMessageDto(
+			SUCCESS_MESSAGES.AUTH.SEND_RESTORE_ACCOUNT_EMAIL,
+		),
+	})
+	@Post('restore-account')
+	async restoreAccount(
+		@Query('token') token: string,
+		@Req() req: Request,
+		@Res({ passthrough: true }) res: Response,
+	) {
+		const info = extractClientInfo(req);
+
+		const { accessToken, refreshToken } = await this.authService.restoreAccount(
+			token,
+			info,
+		);
+
+		setAuthCookies(res, accessToken, refreshToken, this.configService);
+
+		return SUCCESS_MESSAGES.AUTH.RESTORE_ACCOUNT;
 	}
 }

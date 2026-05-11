@@ -13,7 +13,7 @@ const MonitorResponseCards = ({
 	responseStatistics,
 }: MonitorResponseCardsProps) => {
 	return (
-		<div className={styles['monitor-response-cards']}>
+		<div className={styles.responseCards}>
 			{MONITOR_RESPONSE_CARDS_ITEMS.map((item, index) => (
 				<MonitorCard key={index} cardTitle={item.title}>
 					{item.render(responseStatistics)}

@@ -1,5 +1,5 @@
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
-import { Auth, Authorized } from '@libs/decorators';
+import { Auth, Authorized, IsPublic } from '@libs/decorators';
 import { createCustomMessageDto } from '@libs/utils';
 import {
 	Body,
@@ -18,21 +18,23 @@ import {
 	ApiOperation,
 } from '@nestjs/swagger';
 import {
+	BaseMonitorDto,
 	CreateMonitorDto,
 	MonitorDto,
 	MonitorWithRegionsDto,
+	MonitorWithRegionsIdsDto,
 	UpdateMonitorDto,
 } from './dto';
-import { MonitorFullDto } from './dto/monitor-full.dto';
-import { MonitorService } from './monitor.service';
+import { MonitorService } from './services/monitor.service';
 
+@IsPublic()
 @Controller('monitors')
 export class MonitorController {
 	constructor(private readonly monitorService: MonitorService) {}
 
 	@Auth()
 	@ApiOperation({ summary: 'Create a new monitor' })
-	@ApiCreatedResponse({ type: MonitorDto })
+	@ApiCreatedResponse({ type: BaseMonitorDto })
 	@Post('create')
 	async create(
 		@Authorized('id') userId: string,
@@ -43,15 +45,15 @@ export class MonitorController {
 
 	@Auth()
 	@ApiOperation({ summary: 'Get all monitors for the authenticated user' })
-	@ApiOkResponse({ type: [MonitorFullDto] })
-	@Get('')
+	@ApiOkResponse({ type: [MonitorDto] })
+	@Get()
 	async findAll(@Authorized('id') userId: string) {
 		return await this.monitorService.findAll(userId);
 	}
 
 	@Auth()
 	@ApiOperation({ summary: 'Get all monitors for the authenticated user' })
-	@ApiOkResponse({ type: [MonitorFullDto] })
+	@ApiOkResponse({ type: [MonitorDto] })
 	@Get('projects/:projectId')
 	async findAllMonitorsByProjectId(
 		@Authorized('id') userId: string,
@@ -62,7 +64,7 @@ export class MonitorController {
 
 	@Auth()
 	@ApiOperation({ summary: 'Get full details of a monitor by ID' })
-	@ApiOkResponse({ type: MonitorFullDto })
+	@ApiOkResponse({ type: MonitorWithRegionsDto })
 	@ApiNotFoundResponse({
 		type: createCustomMessageDto(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND),
 	})
@@ -76,7 +78,7 @@ export class MonitorController {
 
 	@Auth()
 	@ApiOperation({ summary: 'Get a monitor by ID' })
-	@ApiOkResponse({ type: MonitorWithRegionsDto })
+	@ApiOkResponse({ type: MonitorWithRegionsIdsDto })
 	@ApiNotFoundResponse({
 		type: createCustomMessageDto(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND),
 	})
@@ -90,7 +92,7 @@ export class MonitorController {
 
 	@Auth()
 	@ApiOperation({ summary: 'Update monitor by ID' })
-	@ApiOkResponse({ type: MonitorDto })
+	@ApiOkResponse({ type: BaseMonitorDto })
 	@ApiNotFoundResponse({
 		type: createCustomMessageDto(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND),
 	})
@@ -105,7 +107,7 @@ export class MonitorController {
 
 	@Auth()
 	@ApiOperation({ summary: 'Update monitor active status by ID' })
-	@ApiOkResponse({ type: MonitorDto })
+	@ApiOkResponse({ type: BaseMonitorDto })
 	@ApiNotFoundResponse({
 		type: createCustomMessageDto(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND),
 	})

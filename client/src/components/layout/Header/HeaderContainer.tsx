@@ -12,10 +12,8 @@ const HeaderContainer = ({
 	containerClassName,
 }: HeaderContainerProps) => {
 	return (
-		<header className={`${styles['header']} ${headerClassName}`}>
-			<div
-				className={`${styles['header__content']} ${containerClassName} container`}
-			>
+		<header className={`${styles.header} ${headerClassName}`}>
+			<div className={`${styles.content} ${containerClassName} container`}>
 				{children}
 			</div>
 		</header>

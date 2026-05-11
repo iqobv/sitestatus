@@ -7,7 +7,7 @@ import MonitorRegionControlLoader from './MonitorRegionControl/MonitorRegionCont
 
 const MonitorLoader = () => {
 	return (
-		<div className={styles['monitor__content']}>
+		<div className={styles.content}>
 			<MonitorHeaderLoader />
 			<MonitorRangeControlLoader />
 			<MonitorOverallLoader />

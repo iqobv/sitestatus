@@ -88,6 +88,7 @@ apiClient.interceptors.response.use(
 
 		if (error.response?.data?.message) {
 			error.message = error.response.data.message;
+			error.code = error.response.data.code;
 		}
 
 		return Promise.reject(error);

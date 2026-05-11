@@ -17,6 +17,7 @@ interface DropdownItemProps {
 	asChild?: boolean;
 	className?: string;
 	closeOnClick?: boolean;
+	isDelete?: boolean;
 }
 
 const DropdownItem = ({
@@ -26,6 +27,7 @@ const DropdownItem = ({
 	asChild = false,
 	className = '',
 	closeOnClick = true,
+	isDelete = false,
 }: DropdownItemProps) => {
 	const { getItemProps, close, activeIndex } = useDropdown();
 	const { ref: listItemRef, index } = useListItem();
@@ -45,9 +47,19 @@ const DropdownItem = ({
 		}
 	};
 
+	const itemClassNames = [
+		styles.item,
+		className,
+		isActive && styles.active,
+		disabled && styles.disabled,
+		isDelete && styles.delete,
+	]
+		.filter(Boolean)
+		.join(' ')
+		.trim();
+
 	const baseProps = getItemProps({
-		className:
-			`${styles['dropdown-item']} ${className} ${isActive ? styles['active'] : ''}`.trim(),
+		className: itemClassNames,
 		role: 'menuitem',
 		tabIndex: isActive ? 0 : -1,
 		'aria-disabled': disabled,

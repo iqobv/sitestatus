@@ -14,12 +14,9 @@ export class UpdateUserDto {
 	)
 	@IsOptional()
 	email?: string;
+}
 
-	@ApiProperty({
-		description: 'Indicates whether the user email is verified',
-		example: true,
-		required: false,
-	})
+export class InternalUpdateUserDto extends UpdateUserDto {
 	@IsBoolean()
 	@IsOptional()
 	emailVerified?: boolean;

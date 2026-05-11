@@ -2,7 +2,6 @@ export * from './analyticsRawData.types';
 export * from './analyticsStatData.types';
 export * from './monitor.types';
 export * from './monitorAnalytics.types';
-export * from './MonitorIncident.types';
 export * from './monitorRange.types';
 export * from './monitorResponseStatistics.types';
 export * from './monitorStat.types';

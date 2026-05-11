@@ -1,56 +1,26 @@
-import { Prisma } from '@generated/postgres/client';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
 import { projectSelect } from '@libs/prisma';
-import { withField } from '@libs/utils';
-import {
-	ConflictException,
-	Injectable,
-	NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { isUUID } from 'class-validator';
+import { MonitorService } from '../monitor/services/monitor.service';
 import { CreateProjectDto, UpdateProjectDto } from './dto';
 
 @Injectable()
 export class ProjectService {
-	constructor(private readonly prismaService: PgPrismaService) {}
+	constructor(
+		private readonly prismaService: PgPrismaService,
+		private readonly monitorService: MonitorService,
+	) {}
 
 	async createProject(dto: CreateProjectDto, userId: string) {
-		const { name, slug, description } = dto;
-
-		try {
-			return await this.prismaService.project.create({
-				data: {
-					name,
-					slug,
-					description,
-					owner: { connect: { id: userId } },
-				},
-				select: projectSelect,
-			});
-		} catch (error) {
-			if (error instanceof Prisma.PrismaClientKnownRequestError) {
-				if (error.code === 'P2002') {
-					throw new ConflictException(
-						withField(ERROR_MESSAGES.PROJECT.PROJECT_SLUG_EXISTS, 'slug'),
-					);
-				}
-			}
-			throw error;
-		}
-	}
-
-	async getProjectBySlug(slug: string, throwError: boolean = true) {
-		const project = await this.prismaService.project.findUnique({
-			where: { slug },
+		return await this.prismaService.project.create({
+			data: {
+				...dto,
+				owner: { connect: { id: userId } },
+			},
 			select: projectSelect,
 		});
-
-		if (!project && throwError) {
-			throw new NotFoundException(ERROR_MESSAGES.PROJECT.PROJECT_NOT_FOUND);
-		}
-
-		return project;
 	}
 
 	async getProjectById(id: string, userId: string) {
@@ -59,7 +29,7 @@ export class ProjectService {
 		}
 
 		const project = await this.prismaService.project.findUnique({
-			where: { id, ownerId: userId },
+			where: { id, ownerId: userId, deletedAt: null },
 			select: projectSelect,
 		});
 
@@ -71,43 +41,36 @@ export class ProjectService {
 
 	async getAllProjects(userId: string) {
 		return await this.prismaService.project.findMany({
-			where: { ownerId: userId },
+			where: { ownerId: userId, deletedAt: null },
 			select: projectSelect,
 		});
 	}
 
-	async updateProject(id: string, userId: string, dto: UpdateProjectDto) {
-		const { description, name, slug } = dto;
+	async getAllProjectsWithMonitors(userId: string) {
+		return await this.prismaService.project.findMany({
+			where: { ownerId: userId, deletedAt: null },
+			select: { ...projectSelect, monitors: true },
+		});
+	}
 
+	async updateProject(id: string, userId: string, dto: UpdateProjectDto) {
 		await this.getProjectById(id, userId);
 
-		try {
-			return await this.prismaService.project.update({
-				where: { id },
-				data: {
-					description,
-					name,
-					slug,
-				},
-				select: projectSelect,
-			});
-		} catch (error) {
-			if (error instanceof Prisma.PrismaClientKnownRequestError) {
-				if (error.code === 'P2002') {
-					throw new ConflictException(
-						withField(ERROR_MESSAGES.PROJECT.PROJECT_SLUG_EXISTS, 'slug'),
-					);
-				}
-			}
-			throw error;
-		}
+		return await this.prismaService.project.update({
+			where: { id, ownerId: userId, deletedAt: null },
+			data: {
+				...dto,
+			},
+			select: projectSelect,
+		});
 	}
 
 	async deleteProject(id: string, userId: string) {
 		await this.getProjectById(id, userId);
 
-		await this.prismaService.project.delete({
-			where: { id },
+		await this.prismaService.project.update({
+			where: { id, ownerId: userId, deletedAt: null },
+			data: { deletedAt: new Date() },
 		});
 
 		return SUCCESS_MESSAGES.PROJECT.PROJECT_DELETED;

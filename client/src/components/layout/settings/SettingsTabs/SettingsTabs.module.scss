@@ -1,0 +1,15 @@
+@use '../../../../styles/mixins' as *;
+
+.tabs {
+	display: flex;
+	flex-direction: row;
+	overflow-x: auto;
+
+	@include respond-to(lg) {
+		flex-direction: column;
+		max-width: 170px;
+		min-width: 170px;
+		width: 100%;
+		overflow: auto;
+	}
+}

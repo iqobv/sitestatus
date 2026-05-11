@@ -10,11 +10,11 @@ interface MonitorResponseChartProps {
 }
 
 const REGION_COLORS = [
-	'#ef4444',
 	'#3b82f6',
 	'#10b981',
 	'#f59e0b',
 	'#8b5cf6',
+	'#ec4899',
 	'#06b6d4',
 ];
 
@@ -41,8 +41,8 @@ const MonitorResponseChart = ({ monitor }: MonitorResponseChartProps) => {
 					tick={false}
 					tickLine={false}
 				/>
-				<XAxis stroke="var(--chart-axis-color)" tick={false} />
-				<YAxis width="auto" stroke="var(--chart-axis-color)" />
+				<XAxis stroke="var(--chart-axis)" tick={false} />
+				<YAxis width="auto" stroke="var(--chart-axis)" />
 				<Tooltip
 					formatter={(value, name) => [`${value} ms`, name]}
 					cursor={false}

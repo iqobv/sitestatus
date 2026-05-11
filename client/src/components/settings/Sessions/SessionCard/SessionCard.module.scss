@@ -1,0 +1,28 @@
+@use '../../../../styles/mixins' as *;
+
+.card {
+	background-color: var(--bg-card);
+	border: 1px solid var(--border-color-card);
+	padding: 20px;
+	border-radius: var(--border-radius);
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	gap: var(--gap);
+
+	@include respond-to(md) {
+		flex-direction: row;
+
+		.terminateButton {
+			max-width: 300px;
+		}
+	}
+}
+
+.info {
+	display: flex;
+	flex-direction: row;
+	gap: 8px;
+	flex: 1;
+	width: 100%;
+}

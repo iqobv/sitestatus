@@ -1,5 +1,5 @@
 import { TokenType } from '@generated/postgres/enums';
-import { IsDate, IsEnum, IsUUID } from 'class-validator';
+import { IsDate, IsEnum, IsOptional, IsUUID } from 'class-validator';
 
 export class CreateTokenDto {
 	@IsUUID('4')
@@ -10,4 +10,8 @@ export class CreateTokenDto {
 
 	@IsDate()
 	expiresAt: Date;
+
+	@IsUUID('4')
+	@IsOptional()
+	channelId?: string;
 }

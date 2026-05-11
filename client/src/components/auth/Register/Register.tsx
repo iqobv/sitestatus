@@ -1,8 +1,8 @@
 'use client';
 
 import { register } from '@/api';
-import { SectionHeader } from '@/components/ui';
-import { AUTH_PAGES } from '@/config';
+import { Checkbox, SectionHeader } from '@/components/ui';
+import { AUTH_PAGES, LEGAL_PAGES } from '@/config';
 import { RegisterFormDto } from '@/dto';
 import { registerSchema } from '@/schemas';
 import Link from 'next/link';
@@ -30,6 +30,7 @@ const Register = () => {
 					email: '',
 					password: '',
 					passwordConfirm: '',
+					acceptTerms: false,
 				}}
 				onSuccess={(data) => {
 					if (
@@ -39,6 +40,26 @@ const Register = () => {
 						router.push(AUTH_PAGES.VERIFY_EMAIL);
 					}
 				}}
+				renderExtra={(register, error) => (
+					<div>
+						<Checkbox
+							{...register('acceptTerms')}
+							label={
+								<span>
+									I agree to the{' '}
+									<Link href={LEGAL_PAGES.TERMS_OF_SERVICE} target="_blank">
+										Terms of Service
+									</Link>{' '}
+									and{' '}
+									<Link href={LEGAL_PAGES.PRIVACY_POLICY} target="_blank">
+										Privacy Policy
+									</Link>
+								</span>
+							}
+							error={error}
+						/>
+					</div>
+				)}
 				mutationFn={register}
 				schema={registerSchema}
 				buttonLabel="Sign Up"

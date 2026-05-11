@@ -1,10 +1,10 @@
-.monitor-overall-uptime-bar {
+.uptimeBar {
 	display: flex;
 	flex-direction: row;
 	gap: 1px;
 	height: 30px;
 
-	&__item {
+	&Item {
 		--bar-color: var(--status-unknown);
 		--bar-color-hover: var(--status-unknown-hover);
 
@@ -12,19 +12,19 @@
 		width: 8px;
 		background-color: var(--bar-color);
 
-		&-tooltip {
-			display: flex;
-			flex-direction: column;
-			gap: 3px;
-			align-items: center;
-
-			&-status {
-				text-transform: capitalize;
-			}
-		}
-
 		&:hover {
 			background-color: var(--bar-color-hover);
 		}
+	}
+}
+
+.tooltip {
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+	align-items: center;
+
+	&Status {
+		text-transform: capitalize;
 	}
 }

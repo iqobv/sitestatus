@@ -1,11 +1,11 @@
-.table-header-cell {
+.cell {
 	width: auto;
 	white-space: nowrap;
 	font-size: 14px;
 	font-weight: 400;
-	color: var(--table-header-text-color);
+	color: var(--table-header-text);
 
-	&__inner {
+	&Inner {
 		cursor: default;
 		display: flex;
 		flex-direction: row;
@@ -13,8 +13,12 @@
 		gap: 5px;
 		white-space: nowrap;
 
-		&--sortable {
+		&.sortable {
 			cursor: pointer;
+		}
+
+		&.center {
+			justify-content: center;
 		}
 	}
 }

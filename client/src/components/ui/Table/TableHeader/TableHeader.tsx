@@ -8,11 +8,11 @@ const TableHeader = () => {
 	const { table } = useTableContext();
 
 	return (
-		<thead className={styles['table-header']}>
+		<thead className={styles.tableHeader}>
 			{table.getHeaderGroups().map((headerGroup) => (
 				<tr
 					key={headerGroup.id}
-					className={styles['table-header__row']}
+					className={styles.row}
 				>
 					{headerGroup.headers.map((header) => (
 						<TableHeaderCell

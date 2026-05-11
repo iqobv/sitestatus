@@ -1,6 +1,6 @@
 @use '../../../../styles/mixins' as *;
 
-.monitor-overall {
+.overall {
 	display: grid;
 	grid-template-columns: 1fr;
 	gap: 16px;

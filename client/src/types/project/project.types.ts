@@ -1,7 +1,11 @@
 import { DefaultFields } from '../defaultFields.types';
+import { BaseMonitor } from '../monitors';
 
 export interface Project extends DefaultFields {
-	slug: string;
 	name: string;
 	description: string | null;
+}
+
+export interface ProjectWithMonitors extends Project {
+	monitors: BaseMonitor[];
 }

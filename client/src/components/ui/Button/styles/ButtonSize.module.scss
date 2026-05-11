@@ -1,33 +1,33 @@
-.size {
-	&--sm {
-		gap: 6px;
+.sm {
+	gap: 6px;
+}
+.md {
+	gap: 8px;
+}
+.lg {
+	gap: 10px;
+}
+
+.padding {
+	&Sm {
+		padding: 6px 12px;
 	}
-
-	&--md {
-		gap: 8px;
+	&Md {
+		padding: 12px 20px;
 	}
-
-	&--lg {
-		gap: 10px;
+	&Lg {
+		padding: 12px 24px;
 	}
 }
 
-.padding-sm {
-	padding: 6px 12px;
-}
-.padding-md {
-	padding: 12px 20px;
-}
-.padding-lg {
-	padding: 12px 24px;
-}
-
-.icon-padding-sm {
-	padding: 6px;
-}
-.icon-padding-md {
-	padding: 12px;
-}
-.icon-padding-lg {
-	padding: 12px;
+.iconPadding {
+	&Sm {
+		padding: 6px;
+	}
+	&Md {
+		padding: 12px;
+	}
+	&Lg {
+		padding: 12px;
+	}
 }

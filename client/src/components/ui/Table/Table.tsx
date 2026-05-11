@@ -10,11 +10,15 @@ import {
 import { useMemo } from 'react';
 import styles from './Table.module.scss';
 import TableBody from './TableBody/TableBody';
-import { TableContext } from './TableContext';
+import { TableContext, TableContextType } from './TableContext';
 import TableFooter from './TableFooter/TableFooter';
 import TableHeader from './TableHeader/TableHeader';
 
-const Table = <T extends RowData>(props: TableOptions<T>) => {
+export interface CustomTableProps<T extends RowData> extends TableOptions<T> {
+	getRowHref?: (row: T) => string | undefined;
+}
+
+const Table = <T extends RowData>(props: CustomTableProps<T>) => {
 	const options = useMemo(
 		() => ({
 			...props,
@@ -23,11 +27,13 @@ const Table = <T extends RowData>(props: TableOptions<T>) => {
 		[props],
 	);
 
-	// eslint-disable-next-line react-hooks/incompatible-library
 	const table = useReactTable(options);
 
-	const contextValue = {
+	const contextValue: TableContextType = {
 		table: table as unknown as TableType<unknown>,
+		getRowHref: props.getRowHref as
+			| ((row: unknown) => string | undefined)
+			| undefined,
 	};
 
 	const hasFooters = table
@@ -36,8 +42,8 @@ const Table = <T extends RowData>(props: TableOptions<T>) => {
 
 	return (
 		<TableContext.Provider value={contextValue}>
-			<div className={styles['table-container']}>
-				<table className={styles['table']}>
+			<div className={styles.container}>
+				<table className={styles.table}>
 					<TableHeader />
 					<TableBody />
 					{hasFooters && <TableFooter />}

@@ -63,7 +63,7 @@ const MonitorRegionControl = ({
 	};
 
 	return (
-		<div className={styles['region-control']}>
+		<div className={styles.regionControl}>
 			{finalRegions.length > 2 && (
 				<>
 					{finalRegions.map((region, index) => (
@@ -73,14 +73,14 @@ const MonitorRegionControl = ({
 								buttonsRef.current[index] = element;
 							}}
 							onClick={() => handleRegionChange(region.key)}
-							className={`${styles['region-control__button']} ${selectedRegion === region.key ? styles['region-control__button--active'] : ''}`}
+							className={`${styles.button} ${selectedRegion === region.key ? styles.active : ''}`}
 							disabled={isLoading}
 						>
 							{region.name}
 						</button>
 					))}
 					<div
-						className={styles['region-control__indicator']}
+						className={styles.indicator}
 						style={indicatorStyles}
 						aria-hidden
 					/>

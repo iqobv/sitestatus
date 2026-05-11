@@ -1,30 +1,31 @@
 import { DefaultFields } from '../defaultFields.types';
 import { BaseRegion } from '../region';
-import { MonitorStat } from './monitorStat.types';
 import { MonitorStatus } from './monitorStatus.types';
 import { MonitorTimeline } from './monitoTimeline.types';
 
-export interface Monitor extends DefaultFields {
+export interface BaseMonitor extends DefaultFields {
 	projectId: string | null;
 	name: string;
 	url: string;
+	method: string;
 	checkIntervalSeconds: number;
-	lastCheckedAt: Date;
-	lastStatus: MonitorStatus;
 	isActive: boolean;
 }
 
-export interface MonitorFull extends Monitor {
-	regions: BaseRegion[];
+export interface FullMonitor extends BaseMonitor {
+	lastCheckedAt: Date;
+	lastStatus: MonitorStatus;
+}
+
+export interface MonitorWithTimeline extends FullMonitor {
 	uptime: string;
 	timeline: MonitorTimeline[];
 }
 
-export interface MonitorWithMonitorStats extends Monitor {
-	uptime: string;
-	monitorStats: MonitorStat[];
+export interface MonitorWithRegions extends MonitorWithTimeline {
+	regions: BaseRegion[];
 }
 
-export interface MonitorWithRegions extends Monitor {
+export interface MonitorWithRegionsIds extends FullMonitor {
 	regions: string[];
 }

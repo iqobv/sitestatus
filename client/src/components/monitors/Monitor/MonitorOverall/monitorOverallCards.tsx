@@ -1,11 +1,11 @@
-import { MonitorCard, MonitorFull } from '@/types';
+import { MonitorCard, MonitorWithRegions } from '@/types';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import MonitorOverallUptimeBar from './MonitorOverallUptimeBar/MonitorOverallUptimeBar';
 
 dayjs.extend(relativeTime);
 
-export const OVERALL_MONITOR_CARDS_ITEMS: MonitorCard<MonitorFull>[] = [
+export const OVERALL_MONITOR_CARDS_ITEMS: MonitorCard<MonitorWithRegions>[] = [
 	{
 		title: 'Last Status',
 		render: (monitor) => <>{monitor.lastStatus}</>,

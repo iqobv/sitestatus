@@ -1,6 +1,6 @@
 import { CreateMonitorDto } from '@/dto';
-import { Monitor } from '@/types';
+import { BaseMonitor } from '@/types';
 import { apiClient } from '../axios';
 
 export const createMonitor = async (dto: CreateMonitorDto) =>
-	(await apiClient.post<Monitor>(`/v1/monitors/create`, dto)).data;
+	(await apiClient.post<BaseMonitor>(`/v1/monitors/create`, dto)).data;

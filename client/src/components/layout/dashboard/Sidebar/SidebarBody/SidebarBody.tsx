@@ -9,7 +9,7 @@ interface SidebarBodyProps {
 
 const SidebarBody = ({ onClick }: SidebarBodyProps) => {
 	return (
-		<div className={styles['sidebar-body']}>
+		<div className={styles.body}>
 			<SidebarLinks onClick={onClick} />
 		</div>
 	);

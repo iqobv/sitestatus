@@ -1,9 +1,8 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BaseSyntheticEvent, useEffect } from 'react';
+import { BaseSyntheticEvent } from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
-import styles from './Form.module.scss';
 import { FormProps } from './Form.types';
 
 const Form = <D extends FieldValues = FieldValues>({
@@ -11,21 +10,19 @@ const Form = <D extends FieldValues = FieldValues>({
 	schema,
 	onSubmit,
 	defaultValues,
+	values,
+	className,
 }: FormProps<D>) => {
 	const methods = useForm<D>({
 		resolver: zodResolver(schema),
 		defaultValues,
+		values,
 	});
-
-	useEffect(() => {
-		if (defaultValues) {
-			methods.reset(defaultValues);
-		}
-	}, [defaultValues]);
 
 	return (
 		<FormProvider {...methods}>
 			<form
+				className={className}
 				onSubmit={
 					onSubmit
 						? methods.handleSubmit((data: D, event?: BaseSyntheticEvent) =>
@@ -33,7 +30,6 @@ const Form = <D extends FieldValues = FieldValues>({
 							)
 						: undefined
 				}
-				className={styles.form}
 			>
 				{typeof children === 'function' ? children(methods) : children}
 			</form>

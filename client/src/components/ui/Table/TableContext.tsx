@@ -3,13 +3,14 @@
 import { RowData, Table } from '@tanstack/react-table';
 import { createContext, useContext } from 'react';
 
-interface TableContextType<T extends RowData> {
-	table: Table<T>;
+export interface TableContextType {
+	table: Table<unknown>;
+	getRowHref?: (row: unknown) => string | undefined;
 }
 
-export const TableContext = createContext<
-	TableContextType<unknown> | undefined
->(undefined);
+export const TableContext = createContext<TableContextType | undefined>(
+	undefined,
+);
 
 export const useTableContext = <T extends RowData>() => {
 	const context = useContext(TableContext);
@@ -18,5 +19,5 @@ export const useTableContext = <T extends RowData>() => {
 		throw new Error('useTableContext must be used within <Table />');
 	}
 
-	return context as TableContextType<T>;
+	return context;
 };

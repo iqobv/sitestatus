@@ -3,7 +3,7 @@ import styles from './MonitorHeader.module.scss';
 
 const MonitorHeaderLoader = () => {
 	return (
-		<div className={styles['monitor-header']}>
+		<div className={styles.header}>
 			<SectionHeader
 				title={<SkeletonLoader width={250} />}
 				description={<SkeletonLoader width={250} />}

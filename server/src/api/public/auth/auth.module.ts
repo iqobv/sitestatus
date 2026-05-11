@@ -7,7 +7,7 @@ import { UserModule } from '../user/user.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { OauthModule } from './oauth/oauth.module';
-import { AccessTokenStrategy, GoogleStrategy } from './strategies';
+import { GithubStrategy, GoogleStrategy, JwtStrategy } from './strategies';
 
 @Module({
 	imports: [
@@ -19,7 +19,7 @@ import { AccessTokenStrategy, GoogleStrategy } from './strategies';
 		SessionModule,
 	],
 	controllers: [AuthController],
-	providers: [AuthService, AccessTokenStrategy, GoogleStrategy],
+	providers: [AuthService, JwtStrategy, GoogleStrategy, GithubStrategy],
 	exports: [AuthService],
 })
 export class AuthModule {}

@@ -10,7 +10,7 @@ interface SidebarLinksProps {
 
 const SidebarLinks = ({ onClick }: SidebarLinksProps) => {
 	return (
-		<div className={styles['sidebar-links']}>
+		<div className={styles.links}>
 			{SIDEBAR_LINKS.map((link) => (
 				<SidebarLink key={link.href} link={link} onClick={onClick} />
 			))}

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import React from 'react';
 import { buttonVariants } from './butonStyles';
 import { ButtonProps } from './Button.types';
 import ButtonContent from './ButtonContent/ButtonContent';
@@ -12,7 +13,7 @@ export default function Button({
 	disabled = false,
 	href = '',
 	id,
-	onClick = () => {},
+	onClick,
 	style,
 	type = 'button',
 	loading = false,
@@ -22,6 +23,7 @@ export default function Button({
 	rounded = false,
 	contentClassName = '',
 	isActive,
+	ref,
 	...rest
 }: ButtonProps) {
 	const isLink = !!href && !disabled && !loading;
@@ -40,32 +42,37 @@ export default function Button({
 		className: contentClassName,
 	};
 
+	if (isLink) {
+		return (
+			<Link
+				href={href}
+				className={`${styles} ${className || ''}`}
+				style={style}
+				id={id}
+				onClick={onClick as React.MouseEventHandler<HTMLAnchorElement>}
+				ref={ref as React.Ref<HTMLAnchorElement>}
+				{...(rest as Omit<
+					React.AnchorHTMLAttributes<HTMLAnchorElement>,
+					'href'
+				>)}
+			>
+				<ButtonContent {...buttonContentProps}>{children}</ButtonContent>
+			</Link>
+		);
+	}
+
 	return (
-		<>
-			{isLink ? (
-				<Link
-					href={href}
-					className={`${styles} ${className}`}
-					style={style}
-					id={id}
-					onClick={onClick}
-					{...(rest as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
-				>
-					<ButtonContent {...buttonContentProps}>{children}</ButtonContent>
-				</Link>
-			) : (
-				<button
-					className={`${styles} ${className}`}
-					onClick={onClick}
-					style={style}
-					disabled={disabled || loading}
-					type={type}
-					id={id}
-					{...(rest as React.ButtonHTMLAttributes<HTMLButtonElement>)}
-				>
-					<ButtonContent {...buttonContentProps}>{children}</ButtonContent>
-				</button>
-			)}
-		</>
+		<button
+			className={`${styles} ${className || ''}`}
+			onClick={onClick as React.MouseEventHandler<HTMLButtonElement>}
+			style={style}
+			disabled={disabled || loading}
+			type={type}
+			id={id}
+			ref={ref as React.Ref<HTMLButtonElement>}
+			{...(rest as React.ButtonHTMLAttributes<HTMLButtonElement>)}
+		>
+			<ButtonContent {...buttonContentProps}>{children}</ButtonContent>
+		</button>
 	);
 }

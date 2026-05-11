@@ -1,17 +1,17 @@
-.monitor-form {
+.form {
 	display: flex;
 	flex-direction: column;
-	gap: 12px;
+	gap: var(--gap);
 }
 
-.checkbox-field {
+.checkboxField {
 	display: flex;
 	align-items: center;
 	gap: 8px;
 	padding: 0 8px;
 }
 
-.form-actions {
+.formActions {
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;

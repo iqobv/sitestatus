@@ -19,7 +19,7 @@ export const useUpdateTimer = ({
 	const [timer, setTimer] = useState<number>(initialTime);
 
 	const handleRefresh = useCallback(() => {
-		queryClient.refetchQueries({
+		queryClient.invalidateQueries({
 			queryKey,
 		});
 		setTimer(initialTime);

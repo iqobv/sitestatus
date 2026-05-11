@@ -11,11 +11,18 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  providers UserProvider[]
-  tokens    Token[]
-  monitors  Monitor[]
-  projects  Project[]
-  sessions  Session[]
+  deletedAt DateTime? @map("deleted_at")
+
+  providers               UserProvider[]
+  tokens                  Token[]
+  monitors                Monitor[]
+  projects                Project[]
+  sessions                Session[]
+  notificationChannels    NotificationChannel[]
+  alertSettings           AlertSettings[]
+  statusPages             StatusPage[]
+  notifications           Notification[]
+  globalNotificationReads GlobalNotificationRead[]
 
   @@map("users")
 }

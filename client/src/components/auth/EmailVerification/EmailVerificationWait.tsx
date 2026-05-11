@@ -55,7 +55,7 @@ const EmailVerificationWait = () => {
 
 	return (
 		<EmailVerificationWrapper>
-			<div className={styles['email-verification__wait']}>
+			<div className={styles.wait}>
 				<SectionHeader
 					title="Your Email is not Verified!"
 					description={`Your email ${
@@ -74,7 +74,7 @@ const EmailVerificationWait = () => {
 						? `Resend Verification Email (${timer})`
 						: 'Resend Verification Email'}
 				</Button>
-				<Button onClick={handleChangeEmail} href={AUTH_PAGES.SIGN_UP}>
+				<Button onClick={handleChangeEmail} href={AUTH_PAGES.REGISTER}>
 					Change Email
 				</Button>
 			</div>

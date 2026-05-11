@@ -1,7 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { ReactNode, useEffect, useRef } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { MdClose } from 'react-icons/md';
 import Button from '../../../Button/Button';
@@ -10,10 +10,24 @@ import styles from './ModalContent.module.scss';
 
 const ModalContent = ({ children }: { children: ReactNode }) => {
 	const overlayRef = useRef<HTMLDivElement>(null);
-
+	const [mounted, setMounted] = useState<boolean>(false);
 	const { open, onClose } = useModalContext('Modal.Content');
 
 	useEffect(() => {
+		setMounted(true);
+	}, []);
+
+	useEffect(() => {
+		if (mounted && open && overlayRef.current) {
+			overlayRef.current.focus();
+		}
+	}, [mounted, open]);
+
+	useEffect(() => {
+		if (!mounted || !open) {
+			return;
+		}
+
 		const handleCloseOnEscape = (event: KeyboardEvent) => {
 			if (event.key === 'Escape') {
 				onClose();
@@ -26,26 +40,26 @@ const ModalContent = ({ children }: { children: ReactNode }) => {
 			}
 		};
 
-		if (open) {
-			overlayRef.current?.focus();
-
-			document.addEventListener('keydown', handleCloseOnEscape);
-			document.addEventListener('mousedown', handleCloseOnClickOutside);
-			document.body.style.overflow = 'hidden';
-		}
+		document.addEventListener('keydown', handleCloseOnEscape);
+		document.addEventListener('mousedown', handleCloseOnClickOutside);
+		document.body.style.overflow = 'hidden';
 
 		return () => {
 			document.removeEventListener('keydown', handleCloseOnEscape);
 			document.removeEventListener('mousedown', handleCloseOnClickOutside);
 			document.body.style.overflow = 'auto';
 		};
-	}, [open, onClose]);
+	}, [open, onClose, mounted]);
+
+	if (!mounted) {
+		return null;
+	}
 
 	return createPortal(
 		<AnimatePresence>
 			{open && (
 				<motion.div
-					className={styles['modal__overlay']}
+					className={styles.overlay}
 					ref={overlayRef}
 					tabIndex={-1}
 					initial={{ opacity: 0 }}
@@ -54,7 +68,7 @@ const ModalContent = ({ children }: { children: ReactNode }) => {
 					transition={{ duration: 0.1 }}
 				>
 					<motion.div
-						className={styles['modal__content']}
+						className={styles.content}
 						role="dialog"
 						aria-modal="true"
 						onClick={(e) => e.stopPropagation()}
@@ -69,7 +83,7 @@ const ModalContent = ({ children }: { children: ReactNode }) => {
 							isIcon
 							rounded
 							size="sm"
-							className={styles['modal__close-button']}
+							className={styles.closeButton}
 						>
 							<MdClose size={20} />
 						</Button>

@@ -12,13 +12,24 @@ const TableHeaderCell = <T,>({ header }: TableHeaderCellProps<T>) => {
 	const meta = header.column.columnDef.meta;
 	const columnSize = header.getSize();
 
-	const cellClassName = `${styles['table-header-cell']} ${meta?.className || ''}`;
-	const innerClassName = `${styles['table-header-cell__inner']} ${header.column.getCanSort() ? styles['table-header-cell__inner--sortable'] : ''}`;
+	const cellClassNames = [styles.cell, meta?.className]
+		.filter(Boolean)
+		.join(' ')
+		.trim();
+
+	const innerClassNames = [
+		styles.cellInner,
+		header.column.getCanSort() ? styles.sortable : '',
+		meta?.center && styles.center,
+	]
+		.filter(Boolean)
+		.join(' ')
+		.trim();
 
 	return (
 		<th
 			colSpan={header.colSpan}
-			className={cellClassName.trim()}
+			className={cellClassNames}
 			style={{
 				width: columnSize || meta?.style?.width || undefined,
 				minWidth:
@@ -30,7 +41,7 @@ const TableHeaderCell = <T,>({ header }: TableHeaderCellProps<T>) => {
 		>
 			<div
 				onClick={header.column.getToggleSortingHandler()}
-				className={innerClassName.trim()}
+				className={innerClassNames}
 			>
 				<p>{flexRender(header.column.columnDef.header, header.getContext())}</p>
 				{header.column.getIsSorted() === 'asc' ? <TiArrowSortedUp /> : null}

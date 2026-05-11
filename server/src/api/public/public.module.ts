@@ -8,6 +8,11 @@ import { SessionModule } from './session/session.module';
 import { TokenModule } from './token/token.module';
 import { UserProviderModule } from './user-provider/user-provider.module';
 import { UserModule } from './user/user.module';
+import { NotificationChannelModule } from './notification-channel/notification-channel.module';
+import { AlertSettingsModule } from './alert-settings/alert-settings.module';
+import { IncidentModule } from './incident/incident.module';
+import { StatusPageModule } from './status-page/status-page.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
 	imports: [
@@ -20,6 +25,11 @@ import { UserModule } from './user/user.module';
 		RegionModule,
 		AnalyticsModule,
 		SessionModule,
+		NotificationChannelModule,
+		AlertSettingsModule,
+		IncidentModule,
+		StatusPageModule,
+		NotificationModule,
 	],
 })
 export class PublicModule {}

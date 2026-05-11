@@ -1,33 +1,43 @@
 {
 	"name": "client",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"private": true,
 	"scripts": {
 		"dev": "next dev",
+		"dev:limit": "NODE_OPTIONS='--max-old-space-size=2560' next dev",
 		"build": "next build",
 		"start": "next start",
 		"lint": "eslint"
 	},
 	"dependencies": {
+		"@dnd-kit/core": "^6.3.1",
+		"@dnd-kit/modifiers": "^9.0.0",
+		"@dnd-kit/sortable": "^10.0.0",
+		"@dnd-kit/utilities": "^3.2.2",
 		"@floating-ui/react": "^0.27.19",
 		"@hookform/resolvers": "^5.2.2",
+		"@next/third-parties": "^16.2.4",
 		"@tanstack/react-query": "^5.96.2",
 		"@tanstack/react-table": "^8.21.3",
+		"@types/google.accounts": "^0.0.18",
 		"axios": "^1.15.0",
 		"class-variance-authority": "^0.7.1",
 		"dayjs": "^1.11.20",
 		"framer-motion": "^12.38.0",
-		"next": "16.2.3",
+		"next": "16.2.6",
 		"next-themes": "^0.4.6",
 		"nuqs": "^2.8.9",
 		"react": "19.2.4",
+		"react-cookie-consent": "^10.0.1",
 		"react-dom": "19.2.4",
 		"react-hook-form": "^7.72.1",
 		"react-icons": "^5.6.0",
 		"react-loading-skeleton": "^3.5.0",
+		"react-markdown": "^10.1.0",
 		"react-textarea-autosize": "^8.5.9",
 		"react-toastify": "^11.0.5",
 		"recharts": "^3.8.1",
+		"remark-gfm": "^4.0.1",
 		"sass": "^1.99.0",
 		"slugify": "^1.6.9",
 		"zod": "^4.3.6",
@@ -40,5 +50,8 @@
 		"eslint": "^10",
 		"eslint-config-next": "16.2.2",
 		"typescript": "^6"
+	},
+	"overrides": {
+		"postcss": "^8.5.10"
 	}
 }

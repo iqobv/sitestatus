@@ -1,5 +1,5 @@
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
-import { Auth, Authorized } from '@libs/decorators';
+import { Auth, Authorized, IsPublic } from '@libs/decorators';
 import { createCustomMessageDto } from '@libs/utils';
 import {
 	Body,
@@ -17,9 +17,15 @@ import {
 	ApiOkResponse,
 	ApiOperation,
 } from '@nestjs/swagger';
-import { CreateProjectDto, ProjectDto, UpdateProjectDto } from './dto';
+import {
+	CreateProjectDto,
+	ProjectDto,
+	ProjectWithMonitorsDto,
+	UpdateProjectDto,
+} from './dto';
 import { ProjectService } from './project.service';
 
+@IsPublic()
 @Controller('projects')
 export class ProjectController {
 	constructor(private readonly projectService: ProjectService) {}
@@ -53,7 +59,7 @@ export class ProjectController {
 		type: createCustomMessageDto(ERROR_MESSAGES.PROJECT.PROJECT_NOT_FOUND),
 	})
 	@ApiOkResponse({ type: ProjectDto })
-	@Get(':id')
+	@Get('id/:id')
 	async getProjectById(
 		@Param('id', ParseUUIDPipe) id: string,
 		@Authorized('id') userId: string,
@@ -70,6 +76,18 @@ export class ProjectController {
 	@Get()
 	async getAllProjects(@Authorized('id') userId: string) {
 		return await this.projectService.getAllProjects(userId);
+	}
+
+	@Auth()
+	@ApiOperation({
+		summary: 'Get all projects with monitors',
+	})
+	@ApiOkResponse({
+		type: [ProjectWithMonitorsDto],
+	})
+	@Get('with-monitors')
+	async getAllProjectsWithMonitors(@Authorized('id') userId: string) {
+		return await this.projectService.getAllProjectsWithMonitors(userId);
 	}
 
 	@Auth()

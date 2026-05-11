@@ -14,7 +14,8 @@ export class WorkerAuthGuard implements CanActivate {
 	canActivate(context: ExecutionContext): boolean {
 		const request: Request = context.switchToHttp().getRequest();
 		const secret = request.headers['x-worker-secret'];
-		const validSecret = this.configService.get<string>('WORKER_SECRET_KEY');
+		const validSecret =
+			this.configService.getOrThrow<string>('WORKER_SECRET_KEY');
 
 		if (!secret || secret !== validSecret) {
 			throw new UnauthorizedException('Invalid worker secret');

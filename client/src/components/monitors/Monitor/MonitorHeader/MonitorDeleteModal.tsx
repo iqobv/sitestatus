@@ -21,7 +21,7 @@ const MonitorDeleteModal = ({ id }: MonitorDeleteModalProps) => {
 		monitorId: id,
 		mutationFn: deleteMonitor,
 		onSuccess: () => {
-			queryClient.refetchQueries({ queryKey: QUERY_KEYS.monitors.list });
+			queryClient.invalidateQueries({ queryKey: QUERY_KEYS.monitors.list });
 			router.push(PRIVATE_PAGES.DASHBOARD);
 		},
 	});
@@ -29,7 +29,7 @@ const MonitorDeleteModal = ({ id }: MonitorDeleteModalProps) => {
 	return (
 		<Modal>
 			<Modal.Trigger>
-				<Dropdown.Item asChild closeOnClick={false}>
+				<Dropdown.Item asChild isDelete closeOnClick={false}>
 					<button className={`${styles.dropdownItem} ${styles.delete}`}>
 						<MdOutlineDelete size={20} />
 						Delete

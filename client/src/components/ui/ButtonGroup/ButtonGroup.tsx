@@ -15,11 +15,7 @@ const ButtonGroup = ({
 	gap = 0,
 	className,
 }: ButtonGroupProps) => {
-	const classNames = [
-		styles['button-group'],
-		gap === 0 && styles['button-group--no-gap'],
-		className,
-	]
+	const classNames = [styles.buttonGroup, gap === 0 && styles.noGap, className]
 		.filter(Boolean)
 		.join(' ')
 		.trim();

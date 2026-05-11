@@ -39,7 +39,11 @@ export class CacheListener {
 	@OnEvent(CACHE_EMIT_EVENTS.REGION.UPDATED)
 	handleRegionUpdated(region: RegionCachePayload) {
 		if (region.isActive) {
-			this.cacheService.upsertRegion({ id: region.id, key: region.key });
+			this.cacheService.upsertRegion({
+				id: region.id,
+				key: region.key,
+				name: region.name,
+			});
 		} else {
 			this.cacheService.removeRegion(region.id);
 		}

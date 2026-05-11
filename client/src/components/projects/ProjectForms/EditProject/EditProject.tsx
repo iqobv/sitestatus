@@ -20,12 +20,10 @@ const EditProject = () => {
 		enabled: !!id,
 	});
 
-	const defaultValues = useMemo(
+	const defaultValues: UpdateProjectDto = useMemo(
 		() => ({
 			name: data?.name ?? '',
-			slug: data?.slug ?? '',
 			description: data?.description ?? '',
-			isAutoSync: false,
 		}),
 		[data],
 	);

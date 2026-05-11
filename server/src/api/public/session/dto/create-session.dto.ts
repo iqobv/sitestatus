@@ -1,5 +1,6 @@
-import type { ClientInfo } from '@libs/types';
-import { IsDate, IsObject, IsString, IsUUID } from 'class-validator';
+import { ClientInfoDto } from '@libs/dto';
+import { Type } from 'class-transformer';
+import { IsDate, IsString, IsUUID } from 'class-validator';
 
 export class CreateSessionDto {
 	@IsUUID('4')
@@ -8,8 +9,8 @@ export class CreateSessionDto {
 	@IsString()
 	refreshTokenHash: string;
 
-	@IsObject()
-	clientInfo: ClientInfo;
+	@Type(() => ClientInfoDto)
+	clientInfo: ClientInfoDto;
 
 	@IsDate()
 	expiresAt: Date;

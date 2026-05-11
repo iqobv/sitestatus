@@ -1,17 +1,17 @@
-.accordion-item {
+.item {
 	padding: 15px;
-	border-bottom: 1px solid var(--header-border-color);
-	background-color: var(--bg-header);
+	border-bottom: 1px solid var(--border-color-card);
+	background-color: var(--bg-card);
 
-	&--open {
-		.accordion-item__icon {
+	&.open {
+		.icon {
 			transform: rotate(180deg);
 		}
 
-		.accordion-item__body {
+		.body {
 			grid-template-rows: 1fr;
 
-			.accordion-item__content {
+			.content {
 				padding-top: 20px;
 				padding-bottom: 10px;
 				opacity: 1;
@@ -19,38 +19,40 @@
 		}
 	}
 }
-.accordion-item__icon {
+.icon {
 	transition: transform 0.35s ease-in-out;
-	color: var(--color-main-text);
+	color: var(--color-primary);
 }
 
-.accordion-item__header {
+.header {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	cursor: pointer;
 }
 
-.accordion-item__title {
+.title {
 	font-weight: 500;
 	font-size: 1.1rem;
-	color: var(--color-main-text);
+	color: var(--color-primary);
 }
 
-.accordion-item__body {
+.body {
 	display: grid;
 	grid-template-rows: 0fr;
 	transition: grid-template-rows 0.35s ease-in-out;
 	padding: 0 13px;
 }
 
-.accordion-item__content {
-	color: var(--primary-color);
+.content {
+	color: var(--color-primary);
 	font-size: 1rem;
 	overflow: hidden;
 	padding-top: 0;
 	padding-bottom: 0;
 	opacity: 0;
-	transition: padding-top 0.35s ease, padding-bottom 0.35s ease,
+	transition:
+		padding-top 0.35s ease,
+		padding-bottom 0.35s ease,
 		opacity 0.2s ease-in;
 }

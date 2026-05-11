@@ -1,14 +1,18 @@
 @use '../../../styles/mixins' as *;
 
-.auth-wrapper {
+.wrapper {
 	max-width: 90%;
+	background-color: var(--bg-card);
+	padding: 20px;
+	border: 1px solid var(--border-color-card);
+	border-radius: var(--border-radius);
 
-	@include respond-to('md') {
+	@include respond-to(md) {
 		max-width: 550px;
 	}
 }
 
-.auth-wrapper__header {
+.authHeader {
 	text-align: center;
 	margin-bottom: 20px;
 }

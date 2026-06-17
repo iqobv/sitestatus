@@ -46,6 +46,9 @@ const NotificationList = () => {
 			<Dropdown.Menu>
 				<div className={styles.list}>
 					{isLoading && <NotificationListLoader />}
+					{data?.notifications.length === 0 && (
+						<p className={styles.noData}>No notifications available</p>
+					)}
 					{data &&
 						data.notifications.map((notification) => (
 							<NotificationListItem

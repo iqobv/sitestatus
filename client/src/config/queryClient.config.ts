@@ -73,4 +73,7 @@ export const QUERY_KEYS = {
 	notification: {
 		all: ['notificationsList'],
 	} as const,
+	dashboard: {
+		base: ['dashboard'],
+	} as const,
 } as const;

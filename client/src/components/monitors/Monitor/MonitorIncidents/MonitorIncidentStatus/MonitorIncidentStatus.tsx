@@ -6,9 +6,13 @@ import styles from './MonitorIncidentStatus.module.scss';
 
 interface MonitorIncidentStatusProps {
 	isResolved: boolean;
+	showText?: boolean;
 }
 
-const MonitorIncidentStatus = ({ isResolved }: MonitorIncidentStatusProps) => {
+const MonitorIncidentStatus = ({
+	isResolved,
+	showText = true,
+}: MonitorIncidentStatusProps) => {
 	return (
 		<div
 			className={styles.status}
@@ -20,11 +24,11 @@ const MonitorIncidentStatus = ({ isResolved }: MonitorIncidentStatusProps) => {
 		>
 			{isResolved ? (
 				<>
-					<MdCheckCircle /> <span>Resolved</span>
+					<MdCheckCircle /> {showText && <span>Resolved</span>}
 				</>
 			) : (
 				<>
-					<MdError /> <span>Open</span>
+					<MdError /> {showText && <span>Open</span>}
 				</>
 			)}
 		</div>

@@ -13,6 +13,7 @@ import { AlertSettingsModule } from './alert-settings/alert-settings.module';
 import { IncidentModule } from './incident/incident.module';
 import { StatusPageModule } from './status-page/status-page.module';
 import { NotificationModule } from './notification/notification.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
 	imports: [
@@ -30,6 +31,7 @@ import { NotificationModule } from './notification/notification.module';
 		IncidentModule,
 		StatusPageModule,
 		NotificationModule,
+		DashboardModule,
 	],
 })
 export class PublicModule {}

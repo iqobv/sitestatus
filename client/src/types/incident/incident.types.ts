@@ -3,7 +3,7 @@ import { DefaultFields } from '../defaultFields.types';
 export interface Incident extends DefaultFields {
 	monitorId: string;
 	regionId: string;
-	triggerLogId: string;
+	triggerLogId: string | null;
 	errorMessage: string | null;
 	statusCode: number | null;
 	resolved: boolean;

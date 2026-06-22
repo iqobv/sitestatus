@@ -7,7 +7,7 @@ export class ProjectDto extends DefaultFieldsDto {
 	name: string;
 
 	@ApiProperty({ example: 'A simple project' })
-	description: string;
+	description: string | null;
 }
 
 export class ProjectWithMonitorsDto extends ProjectDto {

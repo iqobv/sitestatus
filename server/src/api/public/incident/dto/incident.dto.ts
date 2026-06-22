@@ -9,7 +9,7 @@ export class IncidentDto extends DefaultFieldsDto {
 	regionId: string;
 
 	@ApiProperty({ example: 'log-1' })
-	triggerLogId: string;
+	triggerLogId: string | null;
 
 	@ApiProperty({ example: 'Error message' })
 	errorMessage: string | null;

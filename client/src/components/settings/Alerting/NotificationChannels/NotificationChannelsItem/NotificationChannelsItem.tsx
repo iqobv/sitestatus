@@ -65,7 +65,10 @@ const NotificationChannelsItem = ({
 						</>
 					)}
 					{channel.status === ChannelStatus.PENDING && (
-						<NotificationChannelsItemResend id={channel.id} />
+						<>
+							<NotificationChannelsItemResend id={channel.id} />
+							<NotificationChannelsItemDelete id={channel.id} />
+						</>
 					)}
 				</>
 			}

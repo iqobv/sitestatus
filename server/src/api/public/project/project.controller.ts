@@ -17,10 +17,13 @@ import {
 	ParseUUIDPipe,
 	Patch,
 	Post,
+	Query,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateProjectDto } from './dto/create-project.dto';
+import { PaginatedProjectsDto } from './dto/paginated-projects.dto';
 import { ProjectDto, ProjectWithMonitorsDto } from './dto/project.dto';
+import { ProjectsQueryDto } from './dto/projects-query.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { ProjectService } from './project.service';
 
@@ -38,7 +41,7 @@ export class ProjectController {
 	@ApiOkResponse({ type: ProjectDto })
 	@ApiErrorResponse(HttpStatus.CONFLICT, ERROR_MESSAGES.PROJECT.SLUG_EXISTS)
 	@Post()
-	async createProject(
+	public async createProject(
 		@Body() dto: CreateProjectDto,
 		@Authorized('id') userId: string,
 	) {
@@ -52,7 +55,7 @@ export class ProjectController {
 	@ApiOkResponse({ type: ProjectDto })
 	@ApiErrorResponse(HttpStatus.CONFLICT, ERROR_MESSAGES.PROJECT.NOT_FOUND)
 	@Get('id/:id')
-	async getProjectById(
+	public async getProjectById(
 		@Param('id', ParseUUIDPipe) id: string,
 		@Authorized('id') userId: string,
 	) {
@@ -63,10 +66,13 @@ export class ProjectController {
 		summary: 'Get all projects',
 		description: 'Retrieves a list of all projects',
 	})
-	@ApiOkResponse({ type: [ProjectDto] })
+	@ApiOkResponse({ type: PaginatedProjectsDto })
 	@Get()
-	async getAllProjects(@Authorized('id') userId: string) {
-		return await this.projectService.getAllProjects(userId);
+	public async getAllProjects(
+		@Authorized('id') userId: string,
+		@Query() query: ProjectsQueryDto,
+	): Promise<PaginatedProjectsDto> {
+		return await this.projectService.getAllProjects(userId, query);
 	}
 
 	@ApiOperation({
@@ -76,7 +82,7 @@ export class ProjectController {
 		type: [ProjectWithMonitorsDto],
 	})
 	@Get('with-monitors')
-	async getAllProjectsWithMonitors(@Authorized('id') userId: string) {
+	public async getAllProjectsWithMonitors(@Authorized('id') userId: string) {
 		return await this.projectService.getAllProjectsWithMonitors(userId);
 	}
 
@@ -91,7 +97,7 @@ export class ProjectController {
 	)
 	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.PROJECT.NOT_FOUND)
 	@Patch(':id')
-	async updateProject(
+	public async updateProject(
 		@Param('id', ParseUUIDPipe) id: string,
 		@Authorized('id') userId: string,
 		@Body() dto: UpdateProjectDto,
@@ -106,7 +112,7 @@ export class ProjectController {
 	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.PROJECT.DELETED)
 	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.PROJECT.NOT_FOUND)
 	@Delete(':id')
-	async deleteProject(
+	public async deleteProject(
 		@Param('id', ParseUUIDPipe) id: string,
 		@Authorized('id') userId: string,
 	) {

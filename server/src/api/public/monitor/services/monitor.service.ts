@@ -4,10 +4,13 @@ import { Monitor, Prisma } from '@generated/postgres/client';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
+import { paginate } from '@libs/utils/paginate.util';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { RegionService } from '../../region/region.service';
 import { CreateMonitorDto } from '../dto/create-monitor.dto';
+import { QueryMonitorsDto } from '../dto/monitors-query.dto';
+import { PaginatedMonitorsDto } from '../dto/paginated-monitors.dto';
 import { UpdateMonitorDto } from '../dto/update-monitor.dto';
 import { MonitorCalculationService } from './monitor-calculation.service';
 
@@ -64,18 +67,52 @@ export class MonitorService {
 		return createdMonitor;
 	}
 
-	async findAll(userId: string, projectId?: string) {
+	public async findAll(
+		userId: string,
+		query: QueryMonitorsDto,
+		projectId?: string,
+	): Promise<PaginatedMonitorsDto> {
+		const {
+			page = 1,
+			limit = 20,
+			sortBy = 'createdAt',
+			sortOrder = 'desc',
+		} = query;
+
 		const targetHours = 24;
 
-		const monitors = await this.pgPrismaService.monitor.findMany({
-			where: { userId, projectId: projectId || null, deletedAt: null },
-			orderBy: { createdAt: 'desc' },
-		});
+		const { data, meta } = await paginate(
+			{ page, limit },
+			async (limit, offset) => {
+				const where: Prisma.MonitorWhereInput = {
+					userId,
+					projectId: projectId || null,
+					deletedAt: null,
+				};
 
-		return await this.monitorCalculationService.calculateMonitorStats(
-			monitors,
-			targetHours,
+				const [data, total] = await this.pgPrismaService.$transaction([
+					this.pgPrismaService.monitor.findMany({
+						where,
+						orderBy: { [sortBy]: sortOrder },
+						take: limit,
+						skip: offset,
+					}),
+					this.pgPrismaService.monitor.count({
+						where,
+					}),
+				]);
+
+				return { data, total };
+			},
 		);
+
+		const mappedMonitors =
+			await this.monitorCalculationService.calculateMonitorStats(
+				data,
+				targetHours,
+			);
+
+		return { data: mappedMonitors, meta };
 	}
 
 	async findAllPublicMonitors(ids: string[]) {

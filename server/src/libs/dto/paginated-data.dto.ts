@@ -8,7 +8,7 @@ export class PaginatedDataMetaDto {
 	page: number;
 
 	@ApiProperty({ example: 10 })
-	limit: number;
+	pageSize: number;
 
 	@ApiProperty({ example: 10 })
 	totalPages: number;

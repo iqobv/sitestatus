@@ -5,6 +5,7 @@ import {
 } from '@libs/decorators/api-response.decorator';
 import { Auth } from '@libs/decorators/auth.decorator';
 import { Authorized } from '@libs/decorators/authorized.decorator';
+import { IsPublic } from '@libs/decorators/is-public.decorator';
 import { OptionalAuth } from '@libs/decorators/optional-auth.decorator';
 import { withField } from '@libs/utils/error-with-field.util';
 import {
@@ -17,17 +18,21 @@ import {
 	ParseUUIDPipe,
 	Patch,
 	Post,
+	Query,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateStatusPageDto } from './dto/create-status-page.dto';
+import { PaginatedStatusPagesDto } from './dto/paginated-status-pages.dto';
 import {
 	PublicStatusPageDto,
 	PublicStatusPageMonitorsDto,
 } from './dto/public-status-page.dto';
-import { FullStatusPageDto, StatusPageDto } from './dto/status-page.dto';
+import { FullStatusPageDto } from './dto/status-page.dto';
+import { StatusPagesQueryDto } from './dto/status-pages-query.dto';
 import { UpdateStatusPageDto } from './dto/update-status-page.dto';
 import { StatusPageService } from './status-page.service';
 
+@IsPublic()
 @ApiTags('Status Pages')
 @Controller('status-pages')
 export class StatusPageController {
@@ -87,11 +92,14 @@ export class StatusPageController {
 
 	@Auth()
 	@ApiOperation({ summary: 'Get status pages for a user' })
-	@ApiOkResponse({ type: [StatusPageDto] })
+	@ApiOkResponse({ type: PaginatedStatusPagesDto })
 	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.STATUS_PAGE.NOT_FOUND)
 	@Get('me')
-	public async getStatusPagesByUserId(@Authorized('id') userId: string) {
-		return await this.statusPageService.getStatusPagesByUserId(userId);
+	public async getStatusPagesByUserId(
+		@Authorized('id') userId: string,
+		@Query() query: StatusPagesQueryDto,
+	): Promise<PaginatedStatusPagesDto> {
+		return await this.statusPageService.getStatusPagesByUserId(userId, query);
 	}
 
 	@Auth()

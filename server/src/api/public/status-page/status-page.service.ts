@@ -4,6 +4,7 @@ import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
 import { MessageResponseDto } from '@libs/dto/message-response.dto';
 import { publicStatusPageSelect } from '@libs/prisma/status-page-select.prisma';
 import { withField } from '@libs/utils/error-with-field.util';
+import { paginate } from '@libs/utils/paginate.util';
 import {
 	ConflictException,
 	Injectable,
@@ -11,12 +12,14 @@ import {
 } from '@nestjs/common';
 import { MonitorService } from '../monitor/services/monitor.service';
 import { CreateStatusPageDto } from './dto/create-status-page.dto';
+import { PaginatedStatusPagesDto } from './dto/paginated-status-pages.dto';
 import {
 	PublicStatusPageDto,
 	PublicStatusPageMonitorsDto,
 } from './dto/public-status-page.dto';
 import { StatusPageMonitorDto } from './dto/status-page-monitor.dto';
 import { FullStatusPageDto } from './dto/status-page.dto';
+import { StatusPagesQueryDto } from './dto/status-pages-query.dto';
 import { UpdateStatusPageDto } from './dto/update-status-page.dto';
 import { ExistingMonitorRecord } from './interfaces/existing-monitor.interface';
 import { MonitorUpdatePayload } from './interfaces/monitor-update-payload.interface';
@@ -153,10 +156,34 @@ export class StatusPageService {
 		return mappedMonitors;
 	}
 
-	async getStatusPagesByUserId(userId: string) {
-		return await this.pgPrismaService.statusPage.findMany({
-			where: { userId },
+	public async getStatusPagesByUserId(
+		userId: string,
+		query: StatusPagesQueryDto,
+	): Promise<PaginatedStatusPagesDto> {
+		const {
+			page = 1,
+			limit = 20,
+			sortBy = 'createdAt',
+			sortOrder = 'desc',
+		} = query;
+
+		const result = await paginate({ page, limit }, async (limit, offset) => {
+			const [data, total] = await this.pgPrismaService.$transaction([
+				this.pgPrismaService.statusPage.findMany({
+					where: { userId },
+					orderBy: { [sortBy]: sortOrder },
+					skip: offset,
+					take: limit,
+				}),
+				this.pgPrismaService.statusPage.count({
+					where: { userId },
+				}),
+			]);
+
+			return { data, total };
 		});
+
+		return result;
 	}
 
 	async getStatusPageById(id: string, userId: string) {

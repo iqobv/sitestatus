@@ -6,13 +6,17 @@ import { calculateUptime } from '@libs/utils/calculates/calculate-uptime.util';
 import { formatResult } from '@libs/utils/calculates/format-result.util';
 import { Injectable } from '@nestjs/common';
 import { MonitorTimelineDto } from '../dto/monitor-timeline.dto';
+import { MonitorDto } from '../dto/monitor.dto';
 import { LogEntry } from '../interfaces/log-entyry.interface';
 
 @Injectable()
 export class MonitorCalculationService {
 	constructor(private readonly tursoPrismaService: TursoPrismaService) {}
 
-	async calculateMonitorStats(monitors: Monitor[], targetHours: number) {
+	public async calculateMonitorStats(
+		monitors: Monitor[],
+		targetHours: number,
+	): Promise<MonitorDto[]> {
 		const monitorStates = await this.tursoPrismaService.monitorState.findMany({
 			where: { monitorId: { in: monitors.map((m) => m.id) } },
 		});

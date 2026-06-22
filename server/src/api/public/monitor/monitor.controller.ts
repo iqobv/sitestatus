@@ -16,6 +16,7 @@ import {
 	ParseUUIDPipe,
 	Patch,
 	Post,
+	Query,
 } from '@nestjs/common';
 import {
 	ApiCreatedResponse,
@@ -25,10 +26,11 @@ import {
 import { CreateMonitorDto } from './dto/create-monitor.dto';
 import {
 	BaseMonitorDto,
-	MonitorDto,
 	MonitorWithRegionsDto,
 	MonitorWithRegionsIdsDto,
 } from './dto/monitor.dto';
+import { QueryMonitorsDto } from './dto/monitors-query.dto';
+import { PaginatedMonitorsDto } from './dto/paginated-monitors.dto';
 import { UpdateMonitorDto } from './dto/update-monitor.dto';
 import { MonitorService } from './services/monitor.service';
 
@@ -50,21 +52,25 @@ export class MonitorController {
 
 	@Auth()
 	@ApiOperation({ summary: 'Get all monitors for the authenticated user' })
-	@ApiOkResponse({ type: [MonitorDto] })
+	@ApiOkResponse({ type: PaginatedMonitorsDto })
 	@Get()
-	async findAll(@Authorized('id') userId: string) {
-		return await this.monitorService.findAll(userId);
+	async findAll(
+		@Authorized('id') userId: string,
+		@Query() query: QueryMonitorsDto,
+	) {
+		return await this.monitorService.findAll(userId, query);
 	}
 
 	@Auth()
-	@ApiOperation({ summary: 'Get all monitors for the authenticated user' })
-	@ApiOkResponse({ type: [MonitorDto] })
+	@ApiOperation({ summary: 'Get all monitors by projectId' })
+	@ApiOkResponse({ type: PaginatedMonitorsDto })
 	@Get('projects/:projectId')
 	async findAllMonitorsByProjectId(
 		@Authorized('id') userId: string,
 		@Param('projectId', ParseUUIDPipe) projectId: string,
+		@Query() query: QueryMonitorsDto,
 	) {
-		return await this.monitorService.findAll(userId, projectId);
+		return await this.monitorService.findAll(userId, query, projectId);
 	}
 
 	@Auth()

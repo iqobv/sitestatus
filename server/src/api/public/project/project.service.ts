@@ -1,9 +1,12 @@
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
 import { projectSelect } from '@libs/prisma/project-select.prisma';
+import { paginate } from '@libs/utils/paginate.util';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { isUUID } from 'class-validator';
 import { CreateProjectDto } from './dto/create-project.dto';
+import { PaginatedProjectsDto } from './dto/paginated-projects.dto';
+import { ProjectsQueryDto } from './dto/projects-query.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 
 @Injectable()
@@ -35,11 +38,35 @@ export class ProjectService {
 		return project;
 	}
 
-	async getAllProjects(userId: string) {
-		return await this.prismaService.project.findMany({
-			where: { ownerId: userId, deletedAt: null },
-			select: projectSelect,
+	public async getAllProjects(
+		userId: string,
+		query: ProjectsQueryDto,
+	): Promise<PaginatedProjectsDto> {
+		const {
+			page = 1,
+			limit = 20,
+			sortBy = 'createdAt',
+			sortOrder = 'desc',
+		} = query || {};
+
+		const result = await paginate({ page, limit }, async (limit, offset) => {
+			const [data, total] = await this.prismaService.$transaction([
+				this.prismaService.project.findMany({
+					where: { ownerId: userId, deletedAt: null },
+					orderBy: { [sortBy]: sortOrder },
+					skip: offset,
+					take: limit,
+					select: projectSelect,
+				}),
+				this.prismaService.project.count({
+					where: { ownerId: userId, deletedAt: null },
+				}),
+			]);
+
+			return { data, total };
 		});
+
+		return result;
 	}
 
 	async getAllProjectsWithMonitors(userId: string) {

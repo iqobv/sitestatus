@@ -4,7 +4,8 @@ import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AdminRegionController } from './admin-region.controller';
 import { AdminRegionService } from './admin-region.service';
-import { CreateRegionDto, UpdateRegionDto } from './dto';
+import { CreateRegionDto } from './dto/create-region.dto';
+import { UpdateRegionDto } from './dto/update-region.dto';
 
 type ServiceMock = {
 	createRegion: jest.Mock;
@@ -28,6 +29,7 @@ describe('AdminRegionController', () => {
 		longitude: -74.006,
 		createdAt: new Date(),
 		updatedAt: new Date(),
+		deletedAt: null,
 	};
 
 	const { id, key } = regionMock;

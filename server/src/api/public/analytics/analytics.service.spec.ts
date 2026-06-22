@@ -1,9 +1,10 @@
 import { StatPeriod } from '@generated/turso/enums';
+import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AnalyticsService } from './analytics.service';
 
-type PrismaMock = {
+type TursoPrismaMock = {
 	monitorLog: {
 		findMany: jest.Mock;
 	};
@@ -12,17 +13,25 @@ type PrismaMock = {
 	};
 };
 
+type PgPrismaMock = {
+	monitor: {
+		findFirst: jest.Mock;
+	};
+};
+
 describe('AnalyticsService', () => {
 	let service: AnalyticsService;
-	let prisma: PrismaMock;
+	let tursoPrisma: TursoPrismaMock;
+	let pgPrisma: PgPrismaMock;
 
 	const mockDate = new Date('2026-04-08T12:00:00.000Z');
+	const mockUserId = 'user-1';
 
 	beforeEach(async () => {
 		jest.useFakeTimers();
 		jest.setSystemTime(mockDate.getTime());
 
-		prisma = {
+		tursoPrisma = {
 			monitorLog: {
 				findMany: jest.fn(),
 			},
@@ -31,10 +40,17 @@ describe('AnalyticsService', () => {
 			},
 		};
 
+		pgPrisma = {
+			monitor: {
+				findFirst: jest.fn(),
+			},
+		};
+
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
 				AnalyticsService,
-				{ provide: TursoPrismaService, useValue: prisma },
+				{ provide: PgPrismaService, useValue: pgPrisma },
+				{ provide: TursoPrismaService, useValue: tursoPrisma },
 			],
 		}).compile();
 
@@ -54,6 +70,11 @@ describe('AnalyticsService', () => {
 		const monitorId = 'monitor_1';
 
 		it('should return RAW logs when daysRange is 1', async () => {
+			pgPrisma.monitor.findFirst.mockResolvedValue({
+				id: monitorId,
+				userId: mockUserId,
+			});
+
 			const expectedStartDate = new Date('2026-04-07T12:00:00.000Z');
 			const rawLogsMock = [
 				{
@@ -65,14 +86,18 @@ describe('AnalyticsService', () => {
 				},
 			];
 
-			prisma.monitorLog.findMany.mockResolvedValue(rawLogsMock);
+			tursoPrisma.monitorLog.findMany.mockResolvedValue(rawLogsMock);
 
-			const result = await service.getAnalyticsByMonitorId(monitorId, {
-				region: 'global',
-				daysRange: 1,
-			});
+			const result = await service.getAnalyticsByMonitorId(
+				mockUserId,
+				monitorId,
+				{
+					region: 'global',
+					daysRange: 1,
+				},
+			);
 
-			expect(prisma.monitorLog.findMany).toHaveBeenCalledWith({
+			expect(tursoPrisma.monitorLog.findMany).toHaveBeenCalledWith({
 				where: { monitorId, createdAt: { gte: expectedStartDate } },
 				select: {
 					status: true,
@@ -87,7 +112,7 @@ describe('AnalyticsService', () => {
 				period: 'RAW',
 				data: rawLogsMock,
 			});
-			expect(prisma.monitorStats.findMany).not.toHaveBeenCalled();
+			expect(tursoPrisma.monitorStats.findMany).not.toHaveBeenCalled();
 		});
 
 		it('should return HOURLY stats when daysRange is 7', async () => {
@@ -102,14 +127,18 @@ describe('AnalyticsService', () => {
 				},
 			];
 
-			prisma.monitorStats.findMany.mockResolvedValue(statsMock);
+			tursoPrisma.monitorStats.findMany.mockResolvedValue(statsMock);
 
-			const result = await service.getAnalyticsByMonitorId(monitorId, {
-				region: 'global',
-				daysRange: 7,
-			});
+			const result = await service.getAnalyticsByMonitorId(
+				mockUserId,
+				monitorId,
+				{
+					region: 'global',
+					daysRange: 7,
+				},
+			);
 
-			expect(prisma.monitorStats.findMany).toHaveBeenCalledWith({
+			expect(tursoPrisma.monitorStats.findMany).toHaveBeenCalledWith({
 				where: {
 					monitorId,
 					period: StatPeriod.HOURLY,
@@ -129,10 +158,15 @@ describe('AnalyticsService', () => {
 				period: StatPeriod.HOURLY,
 				data: statsMock,
 			});
-			expect(prisma.monitorLog.findMany).not.toHaveBeenCalled();
+			expect(tursoPrisma.monitorLog.findMany).not.toHaveBeenCalled();
 		});
 
 		it('should return DAILY stats when daysRange is 30', async () => {
+			pgPrisma.monitor.findFirst.mockResolvedValue({
+				id: monitorId,
+				userId: mockUserId,
+			});
+
 			const expectedStartDate = new Date('2026-03-09T12:00:00.000Z');
 			const statsMock = [
 				{
@@ -144,14 +178,18 @@ describe('AnalyticsService', () => {
 				},
 			];
 
-			prisma.monitorStats.findMany.mockResolvedValue(statsMock);
+			tursoPrisma.monitorStats.findMany.mockResolvedValue(statsMock);
 
-			const result = await service.getAnalyticsByMonitorId(monitorId, {
-				region: 'global',
-				daysRange: 30,
-			});
+			const result = await service.getAnalyticsByMonitorId(
+				mockUserId,
+				monitorId,
+				{
+					region: 'global',
+					daysRange: 30,
+				},
+			);
 
-			expect(prisma.monitorStats.findMany).toHaveBeenCalledWith({
+			expect(tursoPrisma.monitorStats.findMany).toHaveBeenCalledWith({
 				where: {
 					monitorId,
 					period: StatPeriod.DAILY,
@@ -171,7 +209,7 @@ describe('AnalyticsService', () => {
 				period: StatPeriod.DAILY,
 				data: statsMock,
 			});
-			expect(prisma.monitorLog.findMany).not.toHaveBeenCalled();
+			expect(tursoPrisma.monitorLog.findMany).not.toHaveBeenCalled();
 		});
 	});
 });

@@ -1,10 +1,11 @@
-import { IsPublic } from '@libs/decorators';
+import { IsPublic } from '@libs/decorators/is-public.decorator';
 import { Controller, Get } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
-import { RegionDto } from './dto';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { RegionDto } from './dto/region.dto';
 import { RegionService } from './region.service';
 
 @IsPublic()
+@ApiTags('Regions')
 @Controller('regions')
 export class RegionController {
 	constructor(private readonly regionService: RegionService) {}

@@ -1,5 +1,5 @@
+import { UserWithoutPasswordDto } from '@api/public/user/dto/user.dto';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserWithoutPasswordDto } from '../../user/dto';
 
 export class AccessTokenDto {
 	@ApiProperty({ example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' })

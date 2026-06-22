@@ -1,7 +1,7 @@
 import { User } from '@generated/postgres/client';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { Injectable } from '@nestjs/common';
-import { NotificationDto } from '../dto';
+import { NotificationDto } from '../dto/notification.dto';
 import { GlobalNotificationService } from './global-notification.service';
 import { PersonalNotificationService } from './personal-notification.service';
 

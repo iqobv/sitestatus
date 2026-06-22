@@ -1,21 +1,25 @@
 import { Prisma } from '@generated/postgres/client';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
-import { publicStatusPageSelect } from '@libs/prisma';
-import { withField } from '@libs/utils';
+import { MessageResponseDto } from '@libs/dto/message-response.dto';
+import { publicStatusPageSelect } from '@libs/prisma/status-page-select.prisma';
+import { withField } from '@libs/utils/error-with-field.util';
 import {
 	ConflictException,
 	Injectable,
 	NotFoundException,
 } from '@nestjs/common';
 import { MonitorService } from '../monitor/services/monitor.service';
+import { CreateStatusPageDto } from './dto/create-status-page.dto';
 import {
-	CreateStatusPageDto,
+	PublicStatusPageDto,
 	PublicStatusPageMonitorsDto,
-	StatusPageMonitorDto,
-	UpdateStatusPageDto,
-} from './dto';
-import { ExistingMonitorRecord, MonitorUpdatePayload } from './interfaces';
+} from './dto/public-status-page.dto';
+import { StatusPageMonitorDto } from './dto/status-page-monitor.dto';
+import { FullStatusPageDto } from './dto/status-page.dto';
+import { UpdateStatusPageDto } from './dto/update-status-page.dto';
+import { ExistingMonitorRecord } from './interfaces/existing-monitor.interface';
+import { MonitorUpdatePayload } from './interfaces/monitor-update-payload.interface';
 
 @Injectable()
 export class StatusPageService {
@@ -24,7 +28,10 @@ export class StatusPageService {
 		private readonly monitorService: MonitorService,
 	) {}
 
-	async createStatusPage(userId: string, dto: CreateStatusPageDto) {
+	public async createStatusPage(
+		userId: string,
+		dto: CreateStatusPageDto,
+	): Promise<FullStatusPageDto> {
 		const { monitors, ...rest } = dto;
 
 		const monitorIds = monitors.map((m) => m.id);
@@ -39,14 +46,14 @@ export class StatusPageService {
 		} catch (error) {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				if (error.code === 'P2007') {
-					throw new NotFoundException(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND);
+					throw new NotFoundException(ERROR_MESSAGES.MONITOR.NOT_FOUND);
 				}
 			}
 			throw error;
 		}
 
 		if (existingMonitors.length !== monitorIds.length) {
-			throw new NotFoundException(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND);
+			throw new NotFoundException(ERROR_MESSAGES.MONITOR.NOT_FOUND);
 		}
 
 		return await this.catchUniqueConstraintError(async () => {
@@ -56,7 +63,7 @@ export class StatusPageService {
 					monitors: {
 						createMany: {
 							data: monitors.map(({ id, ...rest }) => ({
-								displayName: rest.displayName,
+								displayName: rest.displayName ?? undefined,
 								monitorId: id,
 								sortOrder: rest.sortOrder,
 							})),
@@ -65,13 +72,19 @@ export class StatusPageService {
 					user: { connect: { id: userId } },
 				},
 				include: {
-					monitors: true,
+					monitors: {
+						include: { monitor: true },
+						orderBy: { sortOrder: 'asc' },
+					},
 				},
 			});
 		});
 	}
 
-	async getStatusPageBySlug(slug: string, userId: string | null) {
+	public async getStatusPageBySlug(
+		slug: string,
+		userId: string | null,
+	): Promise<PublicStatusPageDto> {
 		const statusPage = await this.pgPrismaService.statusPage.findFirst({
 			where: {
 				slug,
@@ -81,9 +94,7 @@ export class StatusPageService {
 		});
 
 		if (!statusPage)
-			throw new NotFoundException(
-				ERROR_MESSAGES.STATUS_PAGE.STATUS_PAGE_NOT_FOUND,
-			);
+			throw new NotFoundException(ERROR_MESSAGES.STATUS_PAGE.NOT_FOUND);
 
 		return statusPage;
 	}
@@ -162,9 +173,7 @@ export class StatusPageService {
 		});
 
 		if (!statusPage)
-			throw new NotFoundException(
-				ERROR_MESSAGES.STATUS_PAGE.STATUS_PAGE_NOT_FOUND,
-			);
+			throw new NotFoundException(ERROR_MESSAGES.STATUS_PAGE.NOT_FOUND);
 
 		return statusPage;
 	}
@@ -186,7 +195,7 @@ export class StatusPageService {
 		});
 
 		if (existingMonitors.length !== monitorIds.length) {
-			throw new NotFoundException(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND);
+			throw new NotFoundException(ERROR_MESSAGES.MONITOR.NOT_FOUND);
 		}
 
 		const { toCreate, toDeleteIds, toUpdate } = this.calculateDiff(
@@ -247,27 +256,29 @@ export class StatusPageService {
 		});
 	}
 
-	async deleteStatusPage(id: string, userId: string) {
+	async deleteStatusPage(
+		id: string,
+		userId: string,
+	): Promise<MessageResponseDto> {
 		await this.getStatusPageById(id, userId);
 
 		await this.pgPrismaService.statusPage.delete({
 			where: { id, userId },
 		});
 
-		return SUCCESS_MESSAGES.STATUS_PAGE.STATUS_PAGE_DELETED;
+		return SUCCESS_MESSAGES.STATUS_PAGE.DELETED;
 	}
 
-	private async catchUniqueConstraintError(callback: () => Promise<unknown>) {
+	private async catchUniqueConstraintError(
+		callback: () => Promise<FullStatusPageDto>,
+	) {
 		try {
 			return await callback();
 		} catch (error) {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				if (error.code === 'P2002') {
 					throw new ConflictException(
-						withField(
-							ERROR_MESSAGES.STATUS_PAGE.STATUS_PAGE_SLUG_EXISTS,
-							'slug',
-						),
+						withField(ERROR_MESSAGES.STATUS_PAGE.SLUG_EXISTS, 'slug'),
 					);
 				}
 			}

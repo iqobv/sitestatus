@@ -1,29 +1,21 @@
+import { UserRole } from '@generated/postgres/enums';
+import { DefaultFieldsDto } from '@libs/dto/default-fields.dto';
 import { ApiProperty, OmitType } from '@nestjs/swagger';
 
-export class UserDto {
-	@ApiProperty({ example: '22ee1ae1-d8e9-45d2-906c-b7846eee5eaa' })
-	id: string;
-
+export class UserDto extends DefaultFieldsDto {
 	@ApiProperty({ example: 'user@example.com' })
 	email: string;
 
 	@ApiProperty({ example: 'hashedpassword123', required: false })
-	password?: string;
+	password?: string | null;
 
 	@ApiProperty({ example: true })
 	emailVerified: boolean;
 
-	@ApiProperty({ example: 'USER' })
-	role: string;
-
-	@ApiProperty({ example: new Date().toISOString() })
-	createdAt: Date;
-
-	@ApiProperty({ example: new Date().toISOString() })
-	updatedAt: Date;
+	@ApiProperty({ example: UserRole.USER, enum: UserRole, enumName: 'UserRole' })
+	role: UserRole;
 }
 
 export class UserWithoutPasswordDto extends OmitType(UserDto, [
 	'password',
-	'updatedAt',
-]) {}
+] as const) {}

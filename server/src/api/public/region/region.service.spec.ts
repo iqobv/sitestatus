@@ -23,6 +23,7 @@ describe('RegionService', () => {
 		longitude: -74.006,
 		createdAt: new Date(),
 		updatedAt: new Date(),
+		deletedAt: null,
 	};
 
 	beforeEach(async () => {

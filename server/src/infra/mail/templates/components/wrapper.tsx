@@ -9,9 +9,9 @@ import {
 } from '@react-email/components';
 import React from 'react';
 import { themeConfig } from '../theme';
-import RobotoFonts from '../theme-fonts';
-import Divider from './divider';
-import Logo from './logo';
+import { RobotoFonts } from '../theme-fonts';
+import { Divider } from './divider';
+import { Logo } from './logo';
 
 interface WrapperProps {
 	children: React.ReactNode;
@@ -20,7 +20,7 @@ interface WrapperProps {
 	head?: React.ReactNode;
 }
 
-const Wrapper = ({ children, iconUrl, preview, head }: WrapperProps) => {
+export const Wrapper = ({ children, iconUrl, preview, head }: WrapperProps) => {
 	return (
 		<Tailwind config={themeConfig}>
 			<Html>
@@ -74,5 +74,3 @@ const Wrapper = ({ children, iconUrl, preview, head }: WrapperProps) => {
 		</Tailwind>
 	);
 };
-
-export default Wrapper;

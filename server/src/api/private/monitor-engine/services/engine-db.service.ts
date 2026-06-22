@@ -3,7 +3,8 @@ import { Prisma } from '@generated/turso/client';
 import { SiteStatus } from '@generated/turso/enums';
 import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import { PingResultDto, ServiceBusIncedentPayload } from '../dto';
+import { ServiceBusIncedentPayload } from '../dto/incedent-payload.dto';
+import { PingResultDto } from '../dto/ping-result.dto';
 import { MonitorCacheService } from './monitor-cache.service';
 
 @Injectable()
@@ -16,18 +17,18 @@ export class EngineDbService implements OnModuleInit, OnModuleDestroy {
 		private readonly sbClient: ServiceBusClient,
 	) {}
 
-	onModuleInit() {
+	public onModuleInit(): void {
 		const queueName = 'incidents';
 		this.sender = this.sbClient.createSender(queueName);
 	}
 
-	async onModuleDestroy() {
+	public async onModuleDestroy(): Promise<void> {
 		if (this.sender) {
 			await this.sender.close();
 		}
 	}
 
-	async saveBatchResults(results: PingResultDto[]) {
+	public async saveBatchResults(results: PingResultDto[]): Promise<void> {
 		if (results.length === 0) return;
 
 		const monitorIds = [...new Set(results.map((r) => r.monitorId))];

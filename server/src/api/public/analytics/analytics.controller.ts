@@ -1,9 +1,22 @@
-import { IsPublic } from '@libs/decorators';
-import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
+import { ERROR_MESSAGES } from '@libs/constants';
+import { ApiErrorResponse } from '@libs/decorators/api-response.decorator';
+import { Auth } from '@libs/decorators/auth.decorator';
+import { Authorized } from '@libs/decorators/authorized.decorator';
+import { IsPublic } from '@libs/decorators/is-public.decorator';
+import {
+	Controller,
+	Get,
+	HttpStatus,
+	Param,
+	ParseUUIDPipe,
+	Query,
+} from '@nestjs/common';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { AnalyticsService } from './analytics.service';
-import { AnalyticsDto, AnalyticsQueryDto } from './dto';
+import { AnalyticsQueryDto } from './dto/analytics-query.dto';
+import { AnalyticsDto } from './dto/analytics.dto';
 
+@Auth()
 @IsPublic()
 @Controller('analytics')
 export class AnalyticsController {
@@ -11,11 +24,20 @@ export class AnalyticsController {
 
 	@ApiOperation({ summary: 'Get analytics for a specific monitor' })
 	@ApiOkResponse({ type: AnalyticsDto })
+	@ApiErrorResponse(HttpStatus.NOT_FOUND, [
+		ERROR_MESSAGES.MONITOR.NOT_FOUND,
+		ERROR_MESSAGES.REGION.NOT_FOUND,
+	])
 	@Get(':monitorId')
-	async getAnalyticsByMonitorId(
+	public async getAnalyticsByMonitorId(
+		@Authorized('id') userId: string,
 		@Param('monitorId', ParseUUIDPipe) monitorId: string,
 		@Query() query: AnalyticsQueryDto,
-	) {
-		return this.analyticsService.getAnalyticsByMonitorId(monitorId, query);
+	): Promise<AnalyticsDto> {
+		return this.analyticsService.getAnalyticsByMonitorId(
+			userId,
+			monitorId,
+			query,
+		);
 	}
 }

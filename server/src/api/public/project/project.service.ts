@@ -1,17 +1,14 @@
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
-import { projectSelect } from '@libs/prisma';
+import { projectSelect } from '@libs/prisma/project-select.prisma';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { isUUID } from 'class-validator';
-import { MonitorService } from '../monitor/services/monitor.service';
-import { CreateProjectDto, UpdateProjectDto } from './dto';
+import { CreateProjectDto } from './dto/create-project.dto';
+import { UpdateProjectDto } from './dto/update-project.dto';
 
 @Injectable()
 export class ProjectService {
-	constructor(
-		private readonly prismaService: PgPrismaService,
-		private readonly monitorService: MonitorService,
-	) {}
+	constructor(private readonly prismaService: PgPrismaService) {}
 
 	async createProject(dto: CreateProjectDto, userId: string) {
 		return await this.prismaService.project.create({
@@ -25,7 +22,7 @@ export class ProjectService {
 
 	async getProjectById(id: string, userId: string) {
 		if (!isUUID(id)) {
-			throw new NotFoundException(ERROR_MESSAGES.PROJECT.PROJECT_NOT_FOUND);
+			throw new NotFoundException(ERROR_MESSAGES.PROJECT.NOT_FOUND);
 		}
 
 		const project = await this.prismaService.project.findUnique({
@@ -33,8 +30,7 @@ export class ProjectService {
 			select: projectSelect,
 		});
 
-		if (!project)
-			throw new NotFoundException(ERROR_MESSAGES.PROJECT.PROJECT_NOT_FOUND);
+		if (!project) throw new NotFoundException(ERROR_MESSAGES.PROJECT.NOT_FOUND);
 
 		return project;
 	}
@@ -73,6 +69,6 @@ export class ProjectService {
 			data: { deletedAt: new Date() },
 		});
 
-		return SUCCESS_MESSAGES.PROJECT.PROJECT_DELETED;
+		return SUCCESS_MESSAGES.PROJECT.DELETED;
 	}
 }

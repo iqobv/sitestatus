@@ -3,7 +3,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Profile, Strategy } from 'passport-github2';
-import { OAuthDto } from '../dto';
+import { OAuthDto } from '../dto/o-auth.dto';
 
 @Injectable()
 export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
@@ -16,7 +16,11 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
 		});
 	}
 
-	validate(_accessToken: string, _refreshToken: string, profile: Profile) {
+	public validate(
+		_accessToken: string,
+		_refreshToken: string,
+		profile: Profile,
+	): OAuthDto {
 		const { id, emails } = profile;
 
 		if (!emails || emails.length === 0)
@@ -24,12 +28,10 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
 
 		const primaryEmail = emails[0];
 
-		const user: OAuthDto = {
+		return {
 			provider: 'github',
 			providerId: id,
 			email: primaryEmail.value,
 		};
-
-		return user;
 	}
 }

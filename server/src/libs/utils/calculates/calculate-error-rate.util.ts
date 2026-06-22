@@ -1,5 +1,5 @@
 import { SiteStatus } from '@generated/turso/enums';
-import { CalculateLogs } from '@libs/types';
+import { CalculateLogs } from '@libs/types/calculate-logs.types';
 import { formatResult } from './format-result.util';
 
 export const calculateErrorRate = (logs: CalculateLogs): string => {

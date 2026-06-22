@@ -1,15 +1,18 @@
+import { RegionDto } from '@api/public/region/dto/region.dto';
 import { Prisma } from '@generated/postgres/client';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
+import { MessageResponse } from '@libs/types/messages/message-detail.types';
 import {
 	ConflictException,
 	Injectable,
 	NotFoundException,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { CACHE_EMIT_EVENTS } from '../monitor-engine/constants';
-import { RegionCachePayload } from '../monitor-engine/interfaces';
-import { CreateRegionDto, UpdateRegionDto } from './dto';
+import { CACHE_EMIT_EVENTS } from '../monitor-engine/constants/emit-events.constants';
+import { RegionCachePayload } from '../monitor-engine/interfaces/cache-storage.interface';
+import { CreateRegionDto } from './dto/create-region.dto';
+import { UpdateRegionDto } from './dto/update-region.dto';
 
 @Injectable()
 export class AdminRegionService {
@@ -18,7 +21,7 @@ export class AdminRegionService {
 		private readonly eventEmitter: EventEmitter2,
 	) {}
 
-	async createRegion(dto: CreateRegionDto) {
+	public async createRegion(dto: CreateRegionDto): Promise<RegionDto> {
 		const { key, name, continent, isActive = true, longitude, latitude } = dto;
 
 		try {
@@ -44,35 +47,40 @@ export class AdminRegionService {
 
 			return region;
 		} catch (error) {
-			this.throwConflictException(error);
+			this.handlePrismaConflictError(error);
+
+			throw error;
 		}
 	}
 
-	async getRegionByKey(key: string) {
+	public async getRegionByKey(key: string): Promise<RegionDto> {
 		const region = await this.prismaService.region.findUnique({
 			where: { key },
 		});
 
 		if (!region) {
-			throw new NotFoundException(ERROR_MESSAGES.REGION.REGION_NOT_FOUND);
+			throw new NotFoundException(ERROR_MESSAGES.REGION.NOT_FOUND);
 		}
 
 		return region;
 	}
 
-	async getRegionById(id: string) {
+	public async getRegionById(id: string): Promise<RegionDto> {
 		const region = await this.prismaService.region.findUnique({
 			where: { id },
 		});
 
 		if (!region) {
-			throw new NotFoundException(ERROR_MESSAGES.REGION.REGION_NOT_FOUND);
+			throw new NotFoundException(ERROR_MESSAGES.REGION.NOT_FOUND);
 		}
 
 		return region;
 	}
 
-	async updateRegion(id: string, dto: UpdateRegionDto) {
+	public async updateRegion(
+		id: string,
+		dto: UpdateRegionDto,
+	): Promise<RegionDto> {
 		const { key, name, continent, isActive, longitude, latitude } = dto;
 
 		const region = await this.getRegionById(id);
@@ -101,26 +109,26 @@ export class AdminRegionService {
 
 			return updatedRegion;
 		} catch (error) {
-			this.throwConflictException(error);
+			this.handlePrismaConflictError(error);
+
+			throw error;
 		}
 	}
 
-	async deleteRegion(id: string) {
+	public async deleteRegion(id: string): Promise<MessageResponse> {
 		const region = await this.getRegionById(id);
 
 		await this.prismaService.region.delete({ where: { id: region.id } });
 
 		this.eventEmitter.emit(CACHE_EMIT_EVENTS.REGION.DELETED, region.id);
 
-		return SUCCESS_MESSAGES.REGION.REGION_DELETED;
+		return SUCCESS_MESSAGES.REGION.DELETED;
 	}
 
-	private throwConflictException(error: unknown) {
+	private handlePrismaConflictError(error: unknown): void {
 		if (error instanceof Prisma.PrismaClientKnownRequestError) {
 			if (error.code === 'P2002') {
-				throw new ConflictException(
-					ERROR_MESSAGES.REGION.REGION_ALREADY_EXISTS,
-				);
+				throw new ConflictException(ERROR_MESSAGES.REGION.ALREADY_EXISTS);
 			}
 		}
 	}

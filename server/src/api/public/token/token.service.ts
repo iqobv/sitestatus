@@ -1,10 +1,10 @@
 import { Prisma, TokenType } from '@generated/postgres/client';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { ERROR_MESSAGES } from '@libs/constants';
-import { userSelect } from '@libs/prisma';
+import { userSelect } from '@libs/prisma/user-select.prisma';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import crypto from 'crypto';
-import { CreateTokenDto } from './dto';
+import { CreateTokenDto } from './dto/create-token.dto';
 
 @Injectable()
 export class TokenService {
@@ -52,12 +52,12 @@ export class TokenService {
 		});
 
 		if (!record || record.type !== type) {
-			throw new BadRequestException(ERROR_MESSAGES.TOKEN.TOKEN_INVALID);
+			throw new BadRequestException(ERROR_MESSAGES.TOKEN.INVALID);
 		}
 
 		if (record.expiresAt < new Date()) {
 			await prisma.token.delete({ where: { id: record.id } });
-			throw new BadRequestException(ERROR_MESSAGES.TOKEN.TOKEN_EXPIRED);
+			throw new BadRequestException(ERROR_MESSAGES.TOKEN.EXPIRED);
 		}
 
 		try {

@@ -1,7 +1,7 @@
 import { Prisma } from '@generated/postgres/client';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { Injectable } from '@nestjs/common';
-import { CreateUserProviderDto } from './dto';
+import { CreateUserProviderDto } from './dto/create-user-provider.dto';
 
 @Injectable()
 export class UserProviderService {

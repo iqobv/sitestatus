@@ -4,7 +4,8 @@ import { SUCCESS_MESSAGES } from '@libs/constants';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AdminRegionService } from './admin-region.service';
-import { CreateRegionDto, UpdateRegionDto } from './dto';
+import { CreateRegionDto } from './dto/create-region.dto';
+import { UpdateRegionDto } from './dto/update-region.dto';
 
 type PrismaMock = {
 	region: {
@@ -29,6 +30,7 @@ describe('AdminRegionService', () => {
 		longitude: -74.006,
 		createdAt: new Date(),
 		updatedAt: new Date(),
+		deletedAt: null,
 	};
 
 	const prismaError = new Prisma.PrismaClientKnownRequestError(
@@ -189,7 +191,7 @@ describe('AdminRegionService', () => {
 			expect(prisma.region.delete).toHaveBeenCalledWith({
 				where: { id },
 			});
-			expect(result).toEqual(SUCCESS_MESSAGES.REGION.REGION_DELETED);
+			expect(result).toEqual(SUCCESS_MESSAGES.REGION.DELETED);
 		});
 
 		it('should throw NotFoundException if region with specified id does not exist', async () => {

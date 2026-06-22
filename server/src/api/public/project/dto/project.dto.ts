@@ -1,5 +1,5 @@
-import { MonitorDto } from '@api/public/monitor/dto';
-import { DefaultFieldsDto } from '@libs/dto';
+import { MonitorDto } from '@api/public/monitor/dto/monitor.dto';
+import { DefaultFieldsDto } from '@libs/dto/default-fields.dto';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ProjectDto extends DefaultFieldsDto {

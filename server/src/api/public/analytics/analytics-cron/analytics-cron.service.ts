@@ -9,7 +9,7 @@ export class AnalyticsCronService {
 	constructor(private readonly prismaService: TursoPrismaService) {}
 
 	@Cron(CronExpression.EVERY_HOUR)
-	async aggregateHourly() {
+	public async aggregateHourly(): Promise<void> {
 		const now = new Date();
 		now.setUTCMinutes(0, 0, 0);
 		const start = new Date(now.getTime() - 60 * 60 * 1000);
@@ -18,7 +18,7 @@ export class AnalyticsCronService {
 	}
 
 	@Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
-	async aggregateDaily() {
+	public async aggregateDaily(): Promise<void> {
 		const now = new Date();
 		now.setUTCHours(0, 0, 0, 0);
 		const start = new Date(now.getTime() - 24 * 60 * 60 * 1000);
@@ -26,7 +26,11 @@ export class AnalyticsCronService {
 		await this.runAggregation(start, now, StatPeriod.DAILY);
 	}
 
-	async runAggregation(start: Date, end: Date, period: StatPeriod) {
+	public async runAggregation(
+		start: Date,
+		end: Date,
+		period: StatPeriod,
+	): Promise<void> {
 		const totalStats = await this.prismaService.monitorLog.groupBy({
 			by: ['monitorId', 'regionId'],
 			where: { createdAt: { gte: start, lt: end } },
@@ -34,9 +38,7 @@ export class AnalyticsCronService {
 			_count: { status: true },
 		});
 
-		if (totalStats.length === 0) {
-			return;
-		}
+		if (totalStats.length === 0) return;
 
 		const upStats = await this.prismaService.monitorLog.groupBy({
 			by: ['monitorId', 'regionId'],
@@ -81,7 +83,7 @@ export class AnalyticsCronService {
 	}
 
 	@Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
-	async cleanupLogsAndStats() {
+	public async cleanupLogsAndStats(): Promise<void> {
 		const now = new Date();
 
 		const oneDayAgo = new Date(now);

@@ -2,18 +2,20 @@ import { Prisma } from '@generated/postgres/client';
 import { AlertSettingsInclude } from '@generated/postgres/models';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
+import { MessageResponse } from '@libs/types/messages/message-detail.types';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateAlertSettingsDto } from './dto';
+import { AlertSettingsDto, FullAlertSettingsDto } from './dto/alert-settings.dto';
+import { CreateAlertSettingsDto } from './dto/create-alert-settings.dto';
 
 @Injectable()
 export class AlertSettingsService {
 	constructor(private readonly prismaService: PgPrismaService) {}
 
-	async createAlertSettings(
+	public async createAlertSettings(
 		userId: string,
 		dto: CreateAlertSettingsDto,
 		tx?: Prisma.TransactionClient,
-	) {
+	): Promise<AlertSettingsDto> {
 		const prisma = tx ?? this.prismaService;
 
 		return await prisma.alertSettings.create({
@@ -24,14 +26,15 @@ export class AlertSettingsService {
 		});
 	}
 
-	async getEffectiveSettings(monitorId: string) {
+	public async getEffectiveSettings(
+		monitorId: string,
+	): Promise<FullAlertSettingsDto | null> {
 		const monitor = await this.prismaService.monitor.findUnique({
 			where: { id: monitorId, isActive: true, deletedAt: null },
 			select: { id: true, userId: true, projectId: true },
 		});
 
-		if (!monitor)
-			throw new NotFoundException(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND);
+		if (!monitor) throw new NotFoundException(ERROR_MESSAGES.MONITOR.NOT_FOUND);
 
 		const filters: Prisma.AlertSettingsWhereInput[] = [
 			{
@@ -88,11 +91,11 @@ export class AlertSettingsService {
 		return null;
 	}
 
-	async upsertSettings(
+	public async upsertSettings(
 		userId: string,
 		dto: CreateAlertSettingsDto,
 		tx?: Prisma.TransactionClient,
-	) {
+	): Promise<AlertSettingsDto> {
 		const { monitorId, projectId, channelIds, ...rest } = dto;
 
 		const prisma = tx ?? this.prismaService;
@@ -141,11 +144,11 @@ export class AlertSettingsService {
 		});
 	}
 
-	async getSettingsHierarchy(
+	public async getSettingsHierarchy(
 		userId: string,
 		projectId?: string,
 		monitorId?: string,
-	) {
+	): Promise<AlertSettingsDto[]> {
 		let resolvedProjectId = projectId;
 
 		if (monitorId) {
@@ -177,19 +180,21 @@ export class AlertSettingsService {
 		});
 	}
 
-	async deleteAlertSettings(userId: string, id: string) {
+	async deleteAlertSettings(
+		userId: string,
+		id: string,
+	): Promise<MessageResponse> {
 		const setting = await this.prismaService.alertSettings.findUnique({
 			where: { id, userId },
 			select: { id: true, userId: true },
 		});
 
-		if (!setting)
-			throw new NotFoundException(ERROR_MESSAGES.ALERT.ALERT_NOT_FOUND);
+		if (!setting) throw new NotFoundException(ERROR_MESSAGES.ALERT.NOT_FOUND);
 
 		await this.prismaService.alertSettings.delete({
 			where: { id: setting.id, userId: setting.userId },
 		});
 
-		return SUCCESS_MESSAGES.ALERT.ALERT_DELETED;
+		return SUCCESS_MESSAGES.ALERT.DELETED;
 	}
 }

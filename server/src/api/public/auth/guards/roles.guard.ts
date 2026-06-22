@@ -1,6 +1,6 @@
 import { UserRole } from '@generated/postgres/client';
 import { ERROR_MESSAGES } from '@libs/constants';
-import { JwtPayload } from '@libs/types';
+import { JwtPayload } from '@libs/types/jwt-payload.types';
 import {
 	CanActivate,
 	ExecutionContext,

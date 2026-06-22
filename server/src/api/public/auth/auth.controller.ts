@@ -1,11 +1,16 @@
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
-import { Auth, Authorized, Cookie, IsPublic } from '@libs/decorators';
 import {
-	clearAuthCookies,
-	createCustomMessageDto,
-	extractClientInfo,
-	setAuthCookies,
-} from '@libs/utils';
+	ApiErrorResponse,
+	ApiSuccessResponse,
+} from '@libs/decorators/api-response.decorator';
+import { Auth } from '@libs/decorators/auth.decorator';
+import { Authorized } from '@libs/decorators/authorized.decorator';
+import { Cookie } from '@libs/decorators/cookie.decorator';
+import { IsPublic } from '@libs/decorators/is-public.decorator';
+import { MessageResponse } from '@libs/types/messages/message-detail.types';
+import { extractClientInfo } from '@libs/utils/client-info.util';
+import { clearAuthCookies, setAuthCookies } from '@libs/utils/cookie.util';
+import { withField } from '@libs/utils/error-with-field.util';
 import {
 	Body,
 	Controller,
@@ -19,28 +24,19 @@ import {
 	UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import {
-	ApiBadRequestResponse,
-	ApiConflictResponse,
-	ApiOkResponse,
-	ApiOperation,
-} from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import type { Request, Response } from 'express';
-import { CreateUserDto, UserWithoutPasswordDto } from '../user/dto';
+import { CreateUserDto } from '../user/dto/create-user.dto';
+import { UserWithoutPasswordDto } from '../user/dto/user.dto';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
-import {
-	ChangePasswordDto,
-	ForgotPasswordDto,
-	LoginDto,
-	RegisterMessageDto,
-	ResendVerificationEmailDto,
-	ResetPasswordDto,
-	RestoreAccountDto,
-	VerifyEmailDto,
-} from './dto';
-
+import { ChangePasswordDto } from './dto/change-password.dto';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { LoginDto } from './dto/login.dto';
+import { ResendVerificationEmailDto } from './dto/resend-verification-email.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
+import { RestoreAccountDto } from './dto/restore-account.dto';
 @Controller('auth')
 export class AuthController {
 	constructor(
@@ -52,13 +48,14 @@ export class AuthController {
 	@IsPublic()
 	@Throttle({ strict: { limit: 5, ttl: 60000 } })
 	@ApiOperation({ summary: 'Register a new user' })
-	@ApiOkResponse({ type: RegisterMessageDto })
-	@ApiConflictResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.USER.USER_ALREADY_EXISTS),
+	@ApiSuccessResponse(HttpStatus.OK, {
+		...SUCCESS_MESSAGES.AUTH.REGISTER_SUCCESS,
+		meta: { email: 'user@example.com' },
 	})
+	@ApiErrorResponse(HttpStatus.CONFLICT, ERROR_MESSAGES.USER.ALREADY_EXISTS)
 	@Post('register')
 	@HttpCode(HttpStatus.CREATED)
-	async register(@Body() dto: CreateUserDto) {
+	public async register(@Body() dto: CreateUserDto): Promise<MessageResponse> {
 		return await this.authService.register(dto);
 	}
 
@@ -66,23 +63,21 @@ export class AuthController {
 	@Throttle({ strict: { limit: 5, ttl: 60000 } })
 	@ApiOperation({ summary: 'Log in a user and create a session' })
 	@Post('login')
-	@ApiOkResponse({
-		type: createCustomMessageDto(SUCCESS_MESSAGES.AUTH.LOGIN_SUCCESS),
-	})
+	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.AUTH.LOGIN_SUCCESS)
 	@HttpCode(HttpStatus.OK)
-	async login(
+	public async login(
 		@Body() dto: LoginDto,
 		@Req() req: Request,
 		@Res({ passthrough: true }) res: Response,
-	) {
+	): Promise<MessageResponse> {
 		const clientInfo = extractClientInfo(req);
-		const tokens = await this.authService.login(dto, clientInfo);
-		setAuthCookies(
-			res,
-			tokens.accessToken,
-			tokens.refreshToken,
-			this.configService,
+		const { accessToken, refreshToken } = await this.authService.login(
+			dto,
+			clientInfo,
 		);
+
+		setAuthCookies(res, accessToken, refreshToken, this.configService);
+
 		return SUCCESS_MESSAGES.AUTH.LOGIN_SUCCESS;
 	}
 
@@ -92,56 +87,56 @@ export class AuthController {
 	@Auth()
 	@Post('logout')
 	@HttpCode(HttpStatus.OK)
-	async logout(
+	public async logout(
 		@Authorized('id') userId: string,
 		@Cookie('refreshToken') rt: string | undefined,
 		@Res({ passthrough: true }) res: Response,
-	) {
+	): Promise<MessageResponse> {
 		if (rt) await this.authService.logout(rt, userId);
 
 		clearAuthCookies(res, this.configService);
-		return true;
+
+		return SUCCESS_MESSAGES.AUTH.LOGOUT_SUCCESS;
 	}
 
 	@ApiOperation({ summary: 'Verify user email address' })
-	@ApiOkResponse({ type: VerifyEmailDto })
-	@ApiBadRequestResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.AUTH.INVALID_OR_EXPIRED_TOKEN),
-	})
+	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.AUTH.EMAIL_VERIFIED)
+	@ApiErrorResponse(HttpStatus.BAD_REQUEST, [
+		ERROR_MESSAGES.AUTH.ALREADY_VERIFIED,
+		ERROR_MESSAGES.TOKEN.INVALID,
+		ERROR_MESSAGES.TOKEN.EXPIRED,
+	])
 	@Get('verify-email')
-	async verifyEmail(
+	public async verifyEmail(
 		@Query('token') token: string,
 		@Req() req: Request,
 		@Res({ passthrough: true }) res: Response,
-	) {
+	): Promise<MessageResponse> {
 		const info = extractClientInfo(req);
 		const result = await this.authService.verifyEmail(token, info);
 
-		const { tokens, ...rest } = result;
+		const { accessToken, refreshToken } = result;
 
-		setAuthCookies(
-			res,
-			tokens.accessToken,
-			tokens.refreshToken,
-			this.configService,
-		);
+		setAuthCookies(res, accessToken, refreshToken, this.configService);
 
-		return { ...rest };
+		return SUCCESS_MESSAGES.AUTH.EMAIL_VERIFIED;
 	}
 
 	@IsPublic()
 	@Throttle({ strict: { limit: 10, ttl: 60000 } })
 	@Post('refresh')
 	@ApiOperation({ summary: 'Refresh authentication tokens' })
-	@ApiOkResponse({
-		type: createCustomMessageDto(SUCCESS_MESSAGES.AUTH.REFRESH_TOKENS),
-	})
+	@ApiErrorResponse(
+		HttpStatus.UNAUTHORIZED,
+		ERROR_MESSAGES.AUTH.REFRESH_TOKEN_MISSING,
+	)
+	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.AUTH.REFRESH_TOKENS)
 	@HttpCode(HttpStatus.OK)
-	async refresh(
+	public async refresh(
 		@Req() req: Request,
 		@Cookie('refreshToken') rt: string,
 		@Res({ passthrough: true }) res: Response,
-	) {
+	): Promise<MessageResponse> {
 		try {
 			if (!rt)
 				throw new UnauthorizedException(
@@ -160,94 +155,107 @@ export class AuthController {
 
 	@Throttle({ strict: { limit: 3, ttl: 60000 } })
 	@ApiOperation({ summary: 'Resend verification email to user' })
-	@ApiOkResponse({
-		type: createCustomMessageDto(
-			SUCCESS_MESSAGES.AUTH.RESEND_VERIFICATION_EMAIL,
-		),
-	})
+	@ApiSuccessResponse(
+		HttpStatus.OK,
+		SUCCESS_MESSAGES.AUTH.RESEND_VERIFICATION_EMAIL,
+	)
 	@Post('resend-verification-email')
 	@HttpCode(HttpStatus.OK)
-	async resendVerificationEmail(@Body() dto: ResendVerificationEmailDto) {
-		return await this.authService.resendVerification(dto.email);
+	public async resendVerificationEmail(
+		@Body() dto: ResendVerificationEmailDto,
+	) {
+		await this.authService.resendVerification(dto.email);
+
+		return SUCCESS_MESSAGES.AUTH.RESEND_VERIFICATION_EMAIL;
 	}
 
 	@IsPublic()
 	@ApiOperation({ summary: 'Get current user profile' })
 	@Auth()
 	@ApiOkResponse({ type: UserWithoutPasswordDto })
+	@ApiErrorResponse(HttpStatus.NOT_FOUND, [
+		ERROR_MESSAGES.USER.NOT_FOUND,
+		ERROR_MESSAGES.USER.DELETED,
+	])
 	@Get('me')
-	async getProfile(@Authorized('id') userId: string) {
+	public async getProfile(@Authorized('id') userId: string) {
 		return await this.userService.findById(userId);
 	}
 
 	@Throttle({ strict: { limit: 3, ttl: 60000 } })
 	@ApiOperation({ summary: 'Request a password reset link' })
-	@ApiOkResponse({
-		type: createCustomMessageDto(SUCCESS_MESSAGES.AUTH.FORGOT_PASSWORD),
-	})
+	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.AUTH.FORGOT_PASSWORD)
+	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.USER.DELETED)
 	@Post('forgot-password')
-	async forgotPassword(@Body() dto: ForgotPasswordDto) {
+	public async forgotPassword(
+		@Body() dto: ForgotPasswordDto,
+	): Promise<MessageResponse> {
 		await this.authService.forgotPassword(dto.email);
+
 		return SUCCESS_MESSAGES.AUTH.FORGOT_PASSWORD;
 	}
 
 	@Throttle({ strict: { limit: 3, ttl: 60000 } })
 	@Post('reset-password')
 	@ApiOperation({ summary: 'Reset user password' })
-	@ApiOkResponse({
-		type: createCustomMessageDto(SUCCESS_MESSAGES.AUTH.RESET_PASSWORD),
-	})
-	async resetPassword(@Body() dto: ResetPasswordDto) {
+	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.AUTH.RESET_PASSWORD)
+	public async resetPassword(
+		@Body() dto: ResetPasswordDto,
+	): Promise<MessageResponse> {
 		await this.authService.resetPassword(dto);
+
 		return SUCCESS_MESSAGES.AUTH.RESET_PASSWORD;
 	}
 
 	@Auth()
 	@Throttle({ strict: { limit: 3, ttl: 60000 } })
 	@ApiOperation({ summary: 'Change user password' })
-	@ApiOkResponse({
-		type: createCustomMessageDto(SUCCESS_MESSAGES.AUTH.CHANGE_PASSWORD),
-	})
-	@ApiBadRequestResponse({
-		type: createCustomMessageDto(
-			ERROR_MESSAGES.AUTH.OLD_PASSWORD_INCORRECT,
-			'oldPassword',
-		),
-	})
+	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.AUTH.CHANGE_PASSWORD)
+	@ApiErrorResponse(
+		HttpStatus.BAD_REQUEST,
+		withField(ERROR_MESSAGES.AUTH.OLD_PASSWORD_INCORRECT, 'oldPassword'),
+	)
+	@ApiErrorResponse(
+		HttpStatus.UNAUTHORIZED,
+		ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS,
+	)
 	@Post('change-password')
-	async changePassword(
+	public async changePassword(
 		@Authorized('id') userId: string,
 		@Body() dto: ChangePasswordDto,
-	) {
+	): Promise<MessageResponse> {
 		await this.authService.changePassword(userId, dto);
+
 		return SUCCESS_MESSAGES.AUTH.CHANGE_PASSWORD;
 	}
 
 	@Throttle({ strict: { limit: 3, ttl: 60000 } })
 	@ApiOperation({ summary: 'Generate account restore token' })
-	@ApiOkResponse({
-		type: createCustomMessageDto(
-			SUCCESS_MESSAGES.AUTH.SEND_RESTORE_ACCOUNT_EMAIL,
-		),
-	})
+	@ApiSuccessResponse(
+		HttpStatus.OK,
+		SUCCESS_MESSAGES.AUTH.SEND_RESTORE_ACCOUNT_EMAIL,
+	)
 	@Post('generate-restore-token')
-	async generateRestoreToken(@Body() dto: RestoreAccountDto) {
+	public async generateRestoreToken(
+		@Body() dto: RestoreAccountDto,
+	): Promise<MessageResponse> {
 		await this.authService.generateRestoreAccountToken(dto.email);
+
 		return SUCCESS_MESSAGES.AUTH.SEND_RESTORE_ACCOUNT_EMAIL;
 	}
 
 	@ApiOperation({ summary: 'Generate account restore token' })
-	@ApiOkResponse({
-		type: createCustomMessageDto(
-			SUCCESS_MESSAGES.AUTH.SEND_RESTORE_ACCOUNT_EMAIL,
-		),
-	})
+	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.AUTH.RESTORE_ACCOUNT)
 	@Post('restore-account')
-	async restoreAccount(
+	@ApiErrorResponse(HttpStatus.BAD_REQUEST, [
+		ERROR_MESSAGES.TOKEN.INVALID,
+		ERROR_MESSAGES.TOKEN.EXPIRED,
+	])
+	public async restoreAccount(
 		@Query('token') token: string,
 		@Req() req: Request,
 		@Res({ passthrough: true }) res: Response,
-	) {
+	): Promise<MessageResponse> {
 		const info = extractClientInfo(req);
 
 		const { accessToken, refreshToken } = await this.authService.restoreAccount(

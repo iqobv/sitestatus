@@ -1,11 +1,11 @@
-import { ErrorDetail } from '../types';
+import { MessageDetail } from '@libs/types/messages/message-detail.types';
 
-export const withField = <K, V>(
-	error: ErrorDetail<K, V>,
+export const withField = <T extends MessageDetail>(
+	message: T,
 	field: string,
-): ErrorDetail<K, V> & { field: string } => {
+): T & { field: string } => {
 	return {
-		...error,
+		...message,
 		field,
 	};
 };

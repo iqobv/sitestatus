@@ -1,19 +1,30 @@
 import { UserRole } from '@generated/postgres/enums';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
-import { Auth, Authorized } from '@libs/decorators';
-import { clearAuthCookies, createCustomMessageDto } from '@libs/utils';
-import { Body, Controller, Delete, Patch, Post, Res } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import {
-	ApiConflictResponse,
-	ApiNotFoundResponse,
-	ApiOkResponse,
-	ApiOperation,
-} from '@nestjs/swagger';
+	ApiErrorResponse,
+	ApiSuccessResponse,
+} from '@libs/decorators/api-response.decorator';
+import { Auth } from '@libs/decorators/auth.decorator';
+import { Authorized } from '@libs/decorators/authorized.decorator';
+import { MessageResponse } from '@libs/types/messages/message-detail.types';
+import { clearAuthCookies } from '@libs/utils/cookie.util';
+import {
+	Body,
+	Controller,
+	Delete,
+	HttpStatus,
+	Patch,
+	Post,
+	Res,
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
-import { UpdateUserDto, UserDto } from './dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { UserWithoutPasswordDto } from './dto/user.dto';
 import { UserService } from './user.service';
 
+@ApiTags('User')
 @Controller('users')
 export class UserController {
 	constructor(
@@ -26,12 +37,17 @@ export class UserController {
 		summary: 'Update user information',
 		description: 'Updates the information of an existing user',
 	})
-	@ApiOkResponse({ type: UserDto })
-	@ApiConflictResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.USER.USER_ALREADY_EXISTS),
-	})
+	@ApiOkResponse({ type: UserWithoutPasswordDto })
+	@ApiErrorResponse(HttpStatus.CONFLICT, ERROR_MESSAGES.USER.ALREADY_EXISTS)
+	@ApiErrorResponse(HttpStatus.NOT_FOUND, [
+		ERROR_MESSAGES.USER.NOT_FOUND,
+		ERROR_MESSAGES.USER.DELETED,
+	])
 	@Patch(':id')
-	async update(@Authorized('id') userId: string, @Body() dto: UpdateUserDto) {
+	public async update(
+		@Authorized('id') userId: string,
+		@Body() dto: UpdateUserDto,
+	): Promise<UserWithoutPasswordDto> {
 		return await this.userService.update(userId, dto);
 	}
 
@@ -40,27 +56,26 @@ export class UserController {
 		summary: 'Delete user account',
 		description: 'Deletes a user account permanently',
 	})
-	@ApiOkResponse({
-		type: createCustomMessageDto(SUCCESS_MESSAGES.USER.USER_DELETED),
-	})
-	@ApiNotFoundResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.USER.USER_NOT_FOUND),
-	})
+	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.USER.DELETED)
+	@ApiErrorResponse(HttpStatus.NOT_FOUND, [
+		ERROR_MESSAGES.USER.NOT_FOUND,
+		ERROR_MESSAGES.USER.DELETED,
+	])
 	@Delete()
-	async removeAccount(
+	public async removeAccount(
 		@Authorized('id') userId: string,
 		@Res({ passthrough: true }) res: Response,
-	) {
-		const result = await this.userService.removeAccount(userId);
+	): Promise<MessageResponse> {
+		await this.userService.removeAccount(userId);
 
 		clearAuthCookies(res, this.configService);
 
-		return result;
+		return SUCCESS_MESSAGES.USER.DELETED;
 	}
 
 	@Auth(UserRole.ADMIN)
 	@Post('initial-data')
-	async createInitialDataForRegisteredUser() {
+	public async createInitialDataForRegisteredUser(): Promise<void> {
 		return await this.userService.createInitialDataForRegisteredUser();
 	}
 }

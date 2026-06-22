@@ -1,47 +1,42 @@
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
-import { Auth, Authorized, IsPublic } from '@libs/decorators';
-import { createCustomMessageDto } from '@libs/utils';
+import {
+	ApiErrorResponse,
+	ApiSuccessResponse,
+} from '@libs/decorators/api-response.decorator';
+import { Auth } from '@libs/decorators/auth.decorator';
+import { Authorized } from '@libs/decorators/authorized.decorator';
+import { IsPublic } from '@libs/decorators/is-public.decorator';
+import { withField } from '@libs/utils/error-with-field.util';
 import {
 	Body,
 	Controller,
 	Delete,
 	Get,
+	HttpStatus,
 	Param,
 	ParseUUIDPipe,
 	Patch,
 	Post,
 } from '@nestjs/common';
-import {
-	ApiConflictResponse,
-	ApiNotFoundResponse,
-	ApiOkResponse,
-	ApiOperation,
-} from '@nestjs/swagger';
-import {
-	CreateProjectDto,
-	ProjectDto,
-	ProjectWithMonitorsDto,
-	UpdateProjectDto,
-} from './dto';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { CreateProjectDto } from './dto/create-project.dto';
+import { ProjectDto, ProjectWithMonitorsDto } from './dto/project.dto';
+import { UpdateProjectDto } from './dto/update-project.dto';
 import { ProjectService } from './project.service';
 
+@Auth()
 @IsPublic()
+@ApiTags('Projects')
 @Controller('projects')
 export class ProjectController {
 	constructor(private readonly projectService: ProjectService) {}
 
-	@Auth()
 	@ApiOperation({
 		summary: 'Create a new project',
 		description: 'Creates a new project with the provided details',
 	})
 	@ApiOkResponse({ type: ProjectDto })
-	@ApiConflictResponse({
-		type: createCustomMessageDto(
-			ERROR_MESSAGES.PROJECT.PROJECT_SLUG_EXISTS,
-			'slug',
-		),
-	})
+	@ApiErrorResponse(HttpStatus.CONFLICT, ERROR_MESSAGES.PROJECT.SLUG_EXISTS)
 	@Post()
 	async createProject(
 		@Body() dto: CreateProjectDto,
@@ -50,15 +45,12 @@ export class ProjectController {
 		return await this.projectService.createProject(dto, userId);
 	}
 
-	@Auth()
 	@ApiOperation({
 		summary: 'Get project by ID',
 		description: 'Retrieves a project by its unique identifier',
 	})
-	@ApiNotFoundResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.PROJECT.PROJECT_NOT_FOUND),
-	})
 	@ApiOkResponse({ type: ProjectDto })
+	@ApiErrorResponse(HttpStatus.CONFLICT, ERROR_MESSAGES.PROJECT.NOT_FOUND)
 	@Get('id/:id')
 	async getProjectById(
 		@Param('id', ParseUUIDPipe) id: string,
@@ -67,7 +59,6 @@ export class ProjectController {
 		return await this.projectService.getProjectById(id, userId);
 	}
 
-	@Auth()
 	@ApiOperation({
 		summary: 'Get all projects',
 		description: 'Retrieves a list of all projects',
@@ -78,7 +69,6 @@ export class ProjectController {
 		return await this.projectService.getAllProjects(userId);
 	}
 
-	@Auth()
 	@ApiOperation({
 		summary: 'Get all projects with monitors',
 	})
@@ -90,21 +80,16 @@ export class ProjectController {
 		return await this.projectService.getAllProjectsWithMonitors(userId);
 	}
 
-	@Auth()
 	@ApiOperation({
 		summary: 'Update a project',
 		description: 'Updates a project with the provided details',
 	})
-	@ApiNotFoundResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.PROJECT.PROJECT_NOT_FOUND),
-	})
-	@ApiConflictResponse({
-		type: createCustomMessageDto(
-			ERROR_MESSAGES.PROJECT.PROJECT_SLUG_EXISTS,
-			'slug',
-		),
-	})
 	@ApiOkResponse({ type: ProjectDto })
+	@ApiErrorResponse(
+		HttpStatus.CONFLICT,
+		withField(ERROR_MESSAGES.PROJECT.SLUG_EXISTS, 'slug'),
+	)
+	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.PROJECT.NOT_FOUND)
 	@Patch(':id')
 	async updateProject(
 		@Param('id', ParseUUIDPipe) id: string,
@@ -114,17 +99,12 @@ export class ProjectController {
 		return await this.projectService.updateProject(id, userId, dto);
 	}
 
-	@Auth()
 	@ApiOperation({
 		summary: 'Delete a project',
 		description: 'Deletes a project with the provided details',
 	})
-	@ApiNotFoundResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.PROJECT.PROJECT_NOT_FOUND),
-	})
-	@ApiOkResponse({
-		type: createCustomMessageDto(SUCCESS_MESSAGES.PROJECT.PROJECT_DELETED),
-	})
+	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.PROJECT.DELETED)
+	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.PROJECT.NOT_FOUND)
 	@Delete(':id')
 	async deleteProject(
 		@Param('id', ParseUUIDPipe) id: string,

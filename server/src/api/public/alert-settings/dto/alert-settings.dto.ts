@@ -1,4 +1,5 @@
-import { DefaultFieldsDto } from '@libs/dto';
+import { NotificationChannelDto } from '@api/public/notification-channel/dto/notification-channel.dto';
+import { DefaultFieldsDto } from '@libs/dto/default-fields.dto';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class AlertSettingsDto extends DefaultFieldsDto {
@@ -22,4 +23,9 @@ export class AlertSettingsDto extends DefaultFieldsDto {
 
 	@ApiProperty({ example: 0 })
 	delay: number;
+}
+
+export class FullAlertSettingsDto extends AlertSettingsDto {
+	@ApiProperty({ type: [NotificationChannelDto] })
+	channels: NotificationChannelDto[];
 }

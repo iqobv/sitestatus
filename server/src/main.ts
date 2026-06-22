@@ -1,12 +1,12 @@
-import {
-	getApiVersioningConfig,
-	getCorsConfig,
-	getPrivateSwaggerConfig,
-	getPublicSwaggerConfig,
-	getValidationPipeConfig,
-} from '@config';
-import { isDev, setupSwagger } from '@libs/utils';
+import { getApiVersioningConfig } from '@config/api-versioning.config';
+import { getCorsConfig } from '@config/cors.config';
+import { getPrivateSwaggerConfig } from '@config/swagger/private-swagger.config';
+import { getPublicSwaggerConfig } from '@config/swagger/public-swagger.config';
+import { getValidationPipeConfig } from '@config/validation-pipe.config';
+import { CustomExceptionFilter } from '@libs/filters/custom-exception.filter';
 import { filterSwaggerDocument } from '@libs/utils/filter-swagger.util';
+import { isDev } from '@libs/utils/is-dev.util';
+import { setupSwagger } from '@libs/utils/swagger.util';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -47,6 +47,8 @@ async function bootstrap() {
 	app.set('trust proxy', true);
 
 	const privateDocs = '/docs/private';
+
+	app.useGlobalFilters(new CustomExceptionFilter());
 
 	app.use(
 		privateDocs,

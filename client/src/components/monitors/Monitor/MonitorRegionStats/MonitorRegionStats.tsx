@@ -1,6 +1,6 @@
 'use client';
 
-import { MonitorAnalytics } from '@/types';
+import { MonitorAnalytics } from '@/types/monitors/monitorAnalytics.types';
 import { MonitorCard } from '../MonitorCard/MonitorCard';
 import styles from './MonitorRegionStats.module.scss';
 import { MONITOR_REGIONS_STATS_CARDS } from './monitorRegionStatsCards';

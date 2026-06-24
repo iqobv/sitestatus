@@ -1,4 +1,4 @@
-import { ProjectWithMonitors } from '@/types';
+import { ProjectWithMonitors } from '@/types/project/project.types';
 import { apiClient } from '../axios';
 
 export const getAllProjectsWithMonitors = async () =>

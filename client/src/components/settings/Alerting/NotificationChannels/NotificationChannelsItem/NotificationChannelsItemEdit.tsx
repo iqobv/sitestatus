@@ -1,4 +1,4 @@
-import { updateNotificationChannel } from '@/api';
+import { updateNotificationChannel } from '@/api/notificationChannel/updateNotificationChannel.api';
 import {
 	Button,
 	Checkbox,
@@ -17,10 +17,10 @@ import {
 	ModalTrigger,
 	TextField,
 } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
-import { UpdateNotificationChannelDto } from '@/dto';
-import { updateNotificationChannelSchema } from '@/schemas';
-import { NotificationChannel } from '@/types';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { UpdateNotificationChannelDto } from '@/dto/notificationChannel.dto';
+import { updateNotificationChannelSchema } from '@/schemas/notificationChannel/updateNotificationChannel.types';
+import { NotificationChannel } from '@/types/notificationChannel/notificationChannel.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { NOTIFICATION_CHANNEL_ITEM_LABELS } from './notificationChannelsItemTypes';

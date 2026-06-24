@@ -3,7 +3,7 @@
 import { Table } from '@/components/ui';
 import { useTablePagination } from '@/hooks/useTablePagination.hook';
 import { useTableSorting } from '@/hooks/useTableSorting.hook';
-import { Project } from '@/types';
+import { Project } from '@/types/project/project.types';
 import { getCoreRowModel } from '@tanstack/react-table';
 import { useProjectFilters } from '../useProjectFilters.hook';
 import { PROJECTS_TABLE_COLUMNS } from './projectsTableColumns';

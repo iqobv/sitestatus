@@ -1,7 +1,7 @@
 'use client';
 
 import { getDashboard } from '@/api/dashboard/dashboard.api';
-import { QUERY_KEYS } from '@/config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { useQuery } from '@tanstack/react-query';
 import styles from './Dashboard.module.scss';
 import { DASHBOARD_CARDS } from './dashboardCards';

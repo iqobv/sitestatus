@@ -1,6 +1,6 @@
 import { getServerDashboard } from '@/api/dashboard/dashboard.api';
 import { Dashboard } from '@/components/dashboard/Dashboard';
-import { QUERY_KEYS } from '@/config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import {
 	dehydrate,
 	HydrationBoundary,

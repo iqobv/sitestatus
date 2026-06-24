@@ -1,6 +1,6 @@
 'use client';
 
-import { createNotificationChannel } from '@/api';
+import { createNotificationChannel } from '@/api/notificationChannel/createNotificationChannel.api';
 import {
 	Button,
 	Form,
@@ -18,11 +18,11 @@ import {
 	Select,
 	TextField,
 } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
-import { CreateNotificationChannelDto } from '@/dto';
-import { createNotificationChannelSchema } from '@/schemas';
-import { ChannelType } from '@/types';
-import { capitalize } from '@/utils';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { CreateNotificationChannelDto } from '@/dto/notificationChannel.dto';
+import { createNotificationChannelSchema } from '@/schemas/notificationChannel/createNotificationChannel.schema';
+import { ChannelType } from '@/types/notificationChannel/channelEnums.types';
+import { capitalize } from '@/utils/capitalize.util';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Controller } from 'react-hook-form';
 import { FiPlus } from 'react-icons/fi';

@@ -1,7 +1,7 @@
-import { getServerProfile } from '@/api';
+import { getServerProfile } from '@/api/auth/auth.api';
 import { CookieBanner } from '@/components/analytics/CookieBanner/CookieBanner';
 import { GoogleAnalyticsHandler } from '@/components/analytics/GoogleAnalyticsHandler';
-import MainProvider from '@/providers/MainProvider';
+import { MainProvider } from '@/providers/MainProvider';
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
 import './index.scss';

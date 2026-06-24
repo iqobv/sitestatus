@@ -1,4 +1,4 @@
-import { PRIVATE_PAGES } from '@/config';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
 import { Dashboard } from '@/types/dashboard/dashboard.types';
 import { MdMonitor } from 'react-icons/md';
 import { MonitorIncidentStatus } from '../monitors/Monitor/MonitorIncidents/MonitorIncidentStatus/MonitorIncidentStatus';

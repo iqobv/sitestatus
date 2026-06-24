@@ -2,8 +2,9 @@
 
 import { SettingsCard } from '@/components/settings/SettingsCard/SettingsCard';
 import { TextField } from '@/components/ui';
-import { ChannelStatus, NotificationChannel } from '@/types';
-import { capitalize } from '@/utils';
+import { ChannelStatus } from '@/types/notificationChannel/channelEnums.types';
+import { NotificationChannel } from '@/types/notificationChannel/notificationChannel.types';
+import { capitalize } from '@/utils/capitalize.util';
 import styles from './NotificationChannelsItem.module.scss';
 import { NotificationChannelsItemDelete } from './NotificationChannelsItemDelete';
 import { NotificationChannelsItemEdit } from './NotificationChannelsItemEdit';

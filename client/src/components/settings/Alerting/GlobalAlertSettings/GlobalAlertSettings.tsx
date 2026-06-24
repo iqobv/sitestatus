@@ -1,8 +1,8 @@
 'use client';
 
-import { getAlertSettingsHierarchy } from '@/api';
+import { getAlertSettingsHierarchy } from '@/api/alertSettings/getAlertSettings.api';
 import { Checkbox, SectionHeader, TextField } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { useQuery } from '@tanstack/react-query';
 import { SettingsCard } from '../../SettingsCard/SettingsCard';
 import styles from './GlobalAlertSettings.module.scss';

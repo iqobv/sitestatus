@@ -2,7 +2,7 @@
 
 import { GLOBAL_ALERT_SETTINGS_FIELDS } from '@/components/settings/Alerting/GlobalAlertSettings/globalAlertSettingsFields';
 import { Checkbox, FormField, TextField } from '@/components/ui';
-import { UpsertAlertSettingsDto } from '@/dto';
+import { UpsertAlertSettingsDto } from '@/dto/alertSettings.dto';
 import { FieldErrors } from 'react-hook-form';
 
 interface AlertSettingsFormFieldsProps {

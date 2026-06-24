@@ -1,8 +1,6 @@
-import {
-	baseNotificationChannelSchema,
-	createNotificationChannelSchema,
-	updateNotificationChannelSchema,
-} from '@/schemas/notificationChannel';
+import { createNotificationChannelSchema } from '@/schemas/notificationChannel/createNotificationChannel.schema';
+import { baseNotificationChannelSchema } from '@/schemas/notificationChannel/notificationBase.schema';
+import { updateNotificationChannelSchema } from '@/schemas/notificationChannel/updateNotificationChannel.types';
 import z from 'zod';
 
 export type CreateNotificationChannelDto = z.infer<

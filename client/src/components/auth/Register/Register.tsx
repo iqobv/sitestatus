@@ -1,10 +1,11 @@
 'use client';
 
-import { register } from '@/api';
+import { register } from '@/api/auth/auth.api';
 import { Checkbox, SectionHeader } from '@/components/ui';
-import { AUTH_PAGES, LEGAL_PAGES } from '@/config';
-import { RegisterFormDto } from '@/dto';
-import { registerSchema } from '@/schemas';
+import { AUTH_PAGES } from '@/config/authPages.config';
+import { LEGAL_PAGES } from '@/config/legalPage.config';
+import { RegisterFormDto } from '@/dto/auth.dto';
+import { registerSchema } from '@/schemas/auth/register.schema';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AuthForm } from '../AuthForm/AuthForm';

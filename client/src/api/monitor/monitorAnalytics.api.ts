@@ -1,4 +1,4 @@
-import { MonitorAnalytics } from '@/types';
+import { MonitorAnalytics } from '@/types/monitors/monitorAnalytics.types';
 import { apiClient } from '../axios';
 
 export const getMonitorAnalytics = async (

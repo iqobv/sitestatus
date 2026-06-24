@@ -1,4 +1,7 @@
-import { MONITOR_STATUSES } from '@/constants';
+export const MonitorStatus = {
+	UP: 'UP',
+	DOWN: 'DOWN',
+	UNKNOWN: 'UNKNOWN',
+} as const;
 
-export type MonitorStatus =
-	(typeof MONITOR_STATUSES)[keyof typeof MONITOR_STATUSES];
+export type MonitorStatus = (typeof MonitorStatus)[keyof typeof MonitorStatus];

@@ -1,5 +1,5 @@
-import { ChangePasswordDto } from '@/dto';
-import { ApiMessageResponse } from '@/types';
+import { ChangePasswordDto } from '@/dto/auth.dto';
+import { ApiMessageResponse } from '@/types/api/messageResponse.api';
 import { apiClient } from '../axios';
 
 export const changePassword = async (dto: ChangePasswordDto) =>

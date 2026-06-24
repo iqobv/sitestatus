@@ -1,4 +1,7 @@
-import { MonitorRange, RangeNumericValue } from '@/types';
+import {
+	MonitorRange,
+	RangeNumericValue,
+} from '@/types/monitors/monitorRange.types';
 
 interface MonitorRangeButtonItem {
 	label: string;

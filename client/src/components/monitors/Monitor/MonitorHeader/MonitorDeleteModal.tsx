@@ -1,6 +1,6 @@
 'use client';
 
-import { deleteMonitor } from '@/api';
+import { deleteMonitor } from '@/api/monitor/deleteMonitor.api';
 import {
 	Button,
 	DropdownItem,
@@ -12,7 +12,8 @@ import {
 	ModalHeader,
 	ModalTrigger,
 } from '@/components/ui';
-import { PRIVATE_PAGES, QUERY_KEYS } from '@/config';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { QueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { MdOutlineDelete } from 'react-icons/md';

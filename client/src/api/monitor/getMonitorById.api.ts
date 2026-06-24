@@ -1,4 +1,7 @@
-import { MonitorWithRegions, MonitorWithRegionsIds } from '@/types';
+import {
+	MonitorWithRegions,
+	MonitorWithRegionsIds,
+} from '@/types/monitors/monitor.types';
 import { apiClient, apiServer } from '../axios';
 
 export const getMonitorById = async (monitorId: string) =>

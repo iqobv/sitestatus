@@ -1,6 +1,6 @@
 'use client';
 
-import { resendVerificationNotificationChannel } from '@/api';
+import { resendVerificationNotificationChannel } from '@/api/notificationChannel/resendVerificationNotificationChannel.api';
 import { Button } from '@/components/ui';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';

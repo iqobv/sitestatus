@@ -1,10 +1,11 @@
 'use client';
 
-import { getMonitorById, updateMonitor } from '@/api';
-import { QUERY_KEYS } from '@/config';
-import { UpdateMonitorDto } from '@/dto';
-import { updateMonitorSchema } from '@/schemas';
-import { MonitorWithRegionsIds } from '@/types';
+import { getMonitorById } from '@/api/monitor/getMonitorById.api';
+import { updateMonitor } from '@/api/monitor/updateMonitor.api';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { UpdateMonitorDto } from '@/dto/monitor.dto';
+import { updateMonitorSchema } from '@/schemas/monitor/updateMonitor.schema';
+import { MonitorWithRegionsIds } from '@/types/monitors/monitor.types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { MonitorForm } from '../MonitorForm/MonitorForm';

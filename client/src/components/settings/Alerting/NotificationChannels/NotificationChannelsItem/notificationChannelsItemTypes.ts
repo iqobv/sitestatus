@@ -1,4 +1,4 @@
-import { ChannelType } from '@/types';
+import { ChannelType } from '@/types/notificationChannel/channelEnums.types';
 import { IconType } from 'react-icons';
 import { MdOutlineEmail } from 'react-icons/md';
 

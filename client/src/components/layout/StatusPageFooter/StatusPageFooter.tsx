@@ -1,5 +1,5 @@
 import { LogoLink } from '@/components/ui';
-import { PUBLIC_PAGES } from '@/config';
+import { PUBLIC_PAGES } from '@/config/publicPages.config';
 import Link from 'next/link';
 import styles from './StatusPageFooter.module.scss';
 import { STATUS_PAGE_FOOTER_LINKS } from './statusPageFooterlinks';

@@ -1,7 +1,7 @@
 'use client';
 
-import { getAllProjects } from '@/api';
-import { QUERY_KEYS } from '@/config';
+import { getAllProjects } from '@/api/project/getAllProjects.api';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { projectsQuerySchema } from '@/schemas/project/projectsQuery.schema';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';

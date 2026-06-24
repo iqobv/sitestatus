@@ -1,7 +1,7 @@
 'use client';
 
 import { SectionHeader } from '@/components/ui';
-import { BaseMonitor } from '@/types';
+import { BaseMonitor } from '@/types/monitors/monitor.types';
 import {
 	closestCenter,
 	DndContext,

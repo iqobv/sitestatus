@@ -1,10 +1,10 @@
 'use client';
 
-import { resetPassword } from '@/api';
+import { resetPassword } from '@/api/auth/resetPassword.api';
 import { Form, FormField, FormSubmit, TextField } from '@/components/ui';
-import { AUTH_PAGES } from '@/config';
-import { ResetPasswordDto } from '@/dto';
-import { resetPasswordSchema } from '@/schemas';
+import { AUTH_PAGES } from '@/config/authPages.config';
+import { ResetPasswordDto } from '@/dto/auth.dto';
+import { resetPasswordSchema } from '@/schemas/auth/resetPassword.schema';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { parseAsString, useQueryState } from 'nuqs';
@@ -47,12 +47,13 @@ export const ResetPassword = () => {
 						{RESET_PASSWORD_FORM_FIELDS.map(
 							({ name, isRequired, leftIcon, rightIcon: _, ...rest }) => {
 								const Icon = leftIcon;
+								const fieldName = name as keyof ResetPasswordDto;
 								return (
 									<FormField key={name} name={name}>
 										<TextField
 											required={isRequired}
 											leftIcon={Icon ? <Icon /> : undefined}
-											error={errors[name]?.message}
+											error={errors[fieldName]?.message}
 											{...rest}
 										/>
 									</FormField>

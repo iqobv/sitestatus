@@ -1,12 +1,13 @@
 'use client';
 
-import { getUserStatusPages } from '@/api';
+import { getUserStatusPages } from '@/api/statusPage/getUserStatusPages.api';
 import { Pagination, Table } from '@/components/ui';
-import { PRIVATE_PAGES, QUERY_KEYS } from '@/config';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { useTablePagination } from '@/hooks/useTablePagination.hook';
 import { useTableSorting } from '@/hooks/useTableSorting.hook';
 import { statusPagesQuerySchema } from '@/schemas/statusPage/statusPagesQuery.schema';
-import { StatusPage } from '@/types';
+import { StatusPage } from '@/types/statusPage/statusPage.types';
 import { useQuery } from '@tanstack/react-query';
 import { getCoreRowModel } from '@tanstack/react-table';
 import { useStatusPagesFilters } from '../useStatusPagesFilters.hook';

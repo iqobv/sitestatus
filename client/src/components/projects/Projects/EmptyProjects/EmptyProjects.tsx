@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui';
-import { PRIVATE_PAGES } from '@/config';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
 import styles from './EmptyProjects.module.scss';
 
 export const EmptyProjects = () => {

@@ -1,5 +1,5 @@
-import { LoginDto, RegisterDto } from '@/dto';
-import { User } from '@/types';
+import { LoginDto, RegisterDto } from '@/dto/auth.dto';
+import { User } from '@/types/user/user.types';
 import { apiClient, apiServer } from '../axios';
 
 export const login = async (dto: LoginDto) =>

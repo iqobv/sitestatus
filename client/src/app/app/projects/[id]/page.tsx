@@ -1,7 +1,8 @@
-import { getServerAllMonitorsByProjectId, getServerProjectById } from '@/api';
+import { getServerAllMonitorsByProjectId } from '@/api/monitor/getAllMonitors.api';
+import { getServerProjectById } from '@/api/project/getProjectById.api';
 import { monitorFiltersSearchParamsCache } from '@/components/monitors/Monitors/monitor.searchParams';
 import { Project } from '@/components/projects/Project/Project';
-import { QUERY_KEYS } from '@/config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { monitorsQuerySchema } from '@/schemas/monitor/monitorsQuery.schema';
 import { SearchParams } from '@/types/searchParams.types';
 import {

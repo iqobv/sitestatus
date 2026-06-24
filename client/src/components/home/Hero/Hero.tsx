@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui';
-import { AUTH_PAGES } from '@/config';
+import { AUTH_PAGES } from '@/config/authPages.config';
 import styles from './Hero.module.scss';
 
 export const Hero = () => {

@@ -1,5 +1,5 @@
 import { IconButton, SectionHeader } from '@/components/ui';
-import { PRIVATE_PAGES } from '@/config';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
 import { FiPlus } from 'react-icons/fi';
 
 export const StatusPagesHeader = () => {

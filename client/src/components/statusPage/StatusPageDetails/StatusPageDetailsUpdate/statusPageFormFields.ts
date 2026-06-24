@@ -1,4 +1,4 @@
-import { Field } from '@/types';
+import { Field } from '@/types/ui/field.types';
 import { StatusPageFormDto } from '../../StatusPageForm/StatusPageForm';
 
 export const UPDATE_STATUS_PAGE_FORM_FIELDS: Field<StatusPageFormDto>[] = [

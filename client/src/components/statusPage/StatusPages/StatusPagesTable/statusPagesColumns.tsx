@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui';
-import { PUBLIC_PAGES } from '@/config';
-import { StatusPage } from '@/types';
+import { PUBLIC_PAGES } from '@/config/publicPages.config';
+import { StatusPage } from '@/types/statusPage/statusPage.types';
 import { ColumnDef } from '@tanstack/react-table';
 import { LuExternalLink } from 'react-icons/lu';
 import { MdCopyAll } from 'react-icons/md';

@@ -1,7 +1,7 @@
 'use client';
 
 import { Form } from '@/components/ui';
-import { ApiErrorResponse } from '@/types';
+import { ApiErrorResponse } from '@/types/api/messageResponse.api';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { BaseSyntheticEvent } from 'react';

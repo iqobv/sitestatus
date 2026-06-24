@@ -1,8 +1,9 @@
 'use client';
 
-import { getAllMonitorsByProjectId } from '@/api';
+import { getAllMonitorsByProjectId } from '@/api/monitor/getAllMonitors.api';
 import { Monitors } from '@/components/monitors/Monitors/Monitors';
-import { PRIVATE_PAGES, QUERY_KEYS } from '@/config';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { useProjectId } from '../useProjectId.hook';
 
 export const ProjectMonitors = () => {

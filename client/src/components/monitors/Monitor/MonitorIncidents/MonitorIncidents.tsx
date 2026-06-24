@@ -1,6 +1,6 @@
 'use client';
 
-import type { Incident } from '@/types';
+import { Incident } from '@/types/incident/incident.types';
 import { MonitorCard } from '../MonitorCard/MonitorCard';
 import { MonitorIncidentsTable } from './MonitorIncidentsTable/MonitorIncidentsTable';
 

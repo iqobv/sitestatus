@@ -1,11 +1,9 @@
-import {
-	baseIsActiveMonitorSchema,
-	baseProjectMonitorSchema,
-	baseRegionsMonitorSchema,
-	createMonitorSchema,
-	updateMonitorSchema,
-} from '@/schemas';
+import { createMonitorSchema } from '@/schemas/monitor/createMonitor.schema';
+import { baseIsActiveMonitorSchema } from '@/schemas/monitor/isActiveMonitor.shema';
+import { baseProjectMonitorSchema } from '@/schemas/monitor/monitorProject.schema';
 import { monitorsQuerySchema } from '@/schemas/monitor/monitorsQuery.schema';
+import { baseRegionsMonitorSchema } from '@/schemas/monitor/regionsMonitor.schema';
+import { updateMonitorSchema } from '@/schemas/monitor/updateMonitor.schema';
 import z from 'zod';
 
 export type CreateMonitorDto = z.infer<typeof createMonitorSchema>;

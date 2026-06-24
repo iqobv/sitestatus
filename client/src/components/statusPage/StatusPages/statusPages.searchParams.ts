@@ -1,4 +1,4 @@
-import { StatusPagesQueryDto } from '@/dto';
+import { StatusPagesQueryDto } from '@/dto/statusPage.dto';
 import { SortOrder } from '@/types/api/sortOrder.types';
 import { StrictParsersMap } from '@/types/parserMap.types';
 import { StatusPagesSortBy } from '@/types/statusPage/monitorSortBy.types';

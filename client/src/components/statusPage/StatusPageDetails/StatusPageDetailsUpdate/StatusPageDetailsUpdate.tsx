@@ -1,10 +1,10 @@
 'use client';
 
-import { updateStatusPage } from '@/api';
-import { QUERY_KEYS } from '@/config';
-import { UpdateStatusPageDto } from '@/dto';
-import { updateStatusPageSchema } from '@/schemas';
-import { FullStatusPage } from '@/types';
+import { updateStatusPage } from '@/api/statusPage/updateStatusPage.api';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { UpdateStatusPageDto } from '@/dto/statusPage.dto';
+import { updateStatusPageSchema } from '@/schemas/statusPage/updateStatusPage.schema';
+import { FullStatusPage } from '@/types/statusPage/statusPage.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { toast } from 'react-toastify';

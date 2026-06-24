@@ -2,7 +2,7 @@
 
 import { MonitorOverallUptimeBar } from '@/components/monitors/Monitor/MonitorOverall/MonitorOverallUptimeBar/MonitorOverallUptimeBar';
 import { UptimeStatus } from '@/components/ui';
-import { PublicStatusPageMonitor } from '@/types';
+import { PublicStatusPageMonitor } from '@/types/statusPage/publicStatusPage.types';
 import styles from './StatusPageMonitor.module.scss';
 
 interface StatusPageMonitorProps {

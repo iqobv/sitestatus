@@ -8,7 +8,7 @@ import {
 	ModalHeader,
 	ModalTrigger,
 } from '@/components/ui';
-import { BaseMonitor } from '@/types';
+import { BaseMonitor } from '@/types/monitors/monitor.types';
 import { useState } from 'react';
 import { FieldArrayWithId } from 'react-hook-form';
 import { StatusPageFormDto } from '../../StatusPageForm';

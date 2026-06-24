@@ -1,6 +1,6 @@
 'use client';
 
-import { capitalize } from '@/utils';
+import { capitalize } from '@/utils/capitalize.util';
 import styles from './UptimeStatus.module.scss';
 import { UptimeStatusProps } from './UptimeStatus.types';
 

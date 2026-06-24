@@ -1,7 +1,8 @@
 'use client';
 
 import { Button, TextField } from '@/components/ui';
-import { ApiErrorResponse, Field } from '@/types';
+import { ApiErrorResponse } from '@/types/api/messageResponse.api';
+import { Field } from '@/types/ui/field.types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';

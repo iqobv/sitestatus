@@ -1,5 +1,8 @@
-import { UpdateMonitorDto } from '@/dto';
-import { BaseMonitor, MonitorWithRegionsIds } from '@/types';
+import { UpdateMonitorDto } from '@/dto/monitor.dto';
+import {
+	BaseMonitor,
+	MonitorWithRegionsIds,
+} from '@/types/monitors/monitor.types';
 import { apiClient } from '../axios';
 
 export const updateMonitor = async (monitorId: string, dto: UpdateMonitorDto) =>

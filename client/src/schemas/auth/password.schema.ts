@@ -3,7 +3,7 @@ import {
 	MIN_LENGTH_ERROR_MESSAGE,
 	NUMBER_ERROR_MESSAGE,
 	UPPERCASE_ERROR_MESSAGE,
-} from '@/constants';
+} from '@/constants/authErrorMessages.constants';
 import { z } from 'zod';
 
 export const passwordSchema = z.object({

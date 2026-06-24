@@ -1,4 +1,5 @@
-import { MonitorCard, MonitorResponseStatistics } from '@/types';
+import { MonitorResponseStatistics } from '@/types/monitors/monitorResponseStatistics.types';
+import { MonitorCard } from '@/types/ui/monitorCard.types';
 
 export const MONITOR_RESPONSE_CARDS_ITEMS: MonitorCard<MonitorResponseStatistics>[] =
 	[

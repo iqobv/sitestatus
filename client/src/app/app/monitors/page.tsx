@@ -1,7 +1,7 @@
-import { getServerAllMonitors } from '@/api';
+import { getServerAllMonitors } from '@/api/monitor/getAllMonitors.api';
 import { MonitorsAll } from '@/components/monitors/Monitors/MonitorsAll';
 import { monitorFiltersSearchParamsCache } from '@/components/monitors/Monitors/monitor.searchParams';
-import { QUERY_KEYS } from '@/config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { monitorsQuerySchema } from '@/schemas/monitor/monitorsQuery.schema';
 import { SearchParams } from '@/types/searchParams.types';
 import {

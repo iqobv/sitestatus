@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from '@/hooks';
+import { useAuth } from '@/hooks/useAuth.hook';
 import Script from 'next/script';
 import { useGoogleOneTap } from './useGoogleOneTap.hook';
 

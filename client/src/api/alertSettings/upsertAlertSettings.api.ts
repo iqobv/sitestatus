@@ -1,5 +1,5 @@
-import { UpsertAlertSettingsDto } from '@/dto';
-import { AlertSettings } from '@/types';
+import { UpsertAlertSettingsDto } from '@/dto/alertSettings.dto';
+import { AlertSettings } from '@/types/alertSettings/alertSettings.types';
 import { apiClient } from '../axios';
 
 export const upsertAlertSettings = async (dto: UpsertAlertSettingsDto) =>

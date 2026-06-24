@@ -1,7 +1,7 @@
 'use client';
 
 import { FormField, FormLabel, Textarea, TextField } from '@/components/ui';
-import { Field } from '@/types';
+import { Field } from '@/types/ui/field.types';
 import { FieldValues } from 'react-hook-form';
 
 interface ProjectFormFieldProps<D extends FieldValues> {

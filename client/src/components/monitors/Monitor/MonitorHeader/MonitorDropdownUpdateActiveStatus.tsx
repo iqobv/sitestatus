@@ -1,9 +1,9 @@
 'use client';
 
-import { updateMonitorActiveStatus } from '@/api';
+import { updateMonitorActiveStatus } from '@/api/monitor/updateMonitor.api';
 import { DropdownItem } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
-import { MonitorWithRegions } from '@/types';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { MonitorWithRegions } from '@/types/monitors/monitor.types';
 import { useQueryClient } from '@tanstack/react-query';
 import { MdPauseCircleOutline, MdPlayCircleOutline } from 'react-icons/md';
 import styles from './MonitorHeader.module.scss';

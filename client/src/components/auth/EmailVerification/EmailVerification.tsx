@@ -1,8 +1,10 @@
 'use client';
 
-import { verifyEmail } from '@/api';
-import { AUTH_PAGES, PRIVATE_PAGES, QUERY_KEYS } from '@/config';
-import { useAuth } from '@/hooks';
+import { verifyEmail } from '@/api/auth/email.api';
+import { AUTH_PAGES } from '@/config/authPages.config';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { useAuth } from '@/hooks/useAuth.hook';
 import { useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { useRouter, useSearchParams } from 'next/navigation';

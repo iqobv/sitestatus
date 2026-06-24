@@ -1,7 +1,7 @@
 'use client';
 
-import { googleOneTapLogin } from '@/api';
-import { CROSS_DOMAIN_ROUTES } from '@/config';
+import { googleOneTapLogin } from '@/api/auth/googleOneTap.api';
+import { CROSS_DOMAIN_ROUTES } from '@/config/navigation.config';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
 

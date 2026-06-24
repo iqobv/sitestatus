@@ -1,7 +1,7 @@
 'use client';
 
 import { FormField, Select } from '@/components/ui';
-import { NotificationChannel } from '@/types';
+import { NotificationChannel } from '@/types/notificationChannel/notificationChannel.types';
 
 interface AlertSettingsFormChannelsProps {
 	notificationChannels: NotificationChannel[];

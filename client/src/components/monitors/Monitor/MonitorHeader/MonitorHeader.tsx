@@ -1,5 +1,5 @@
 import { SectionHeader } from '@/components/ui';
-import { MonitorWithRegions } from '@/types';
+import { MonitorWithRegions } from '@/types/monitors/monitor.types';
 import styles from './MonitorHeader.module.scss';
 import { MonitorHeaderDropdown } from './MonitorHeaderDropdown';
 

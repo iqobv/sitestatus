@@ -1,7 +1,10 @@
 'use client';
 
-import { terminateAllOtherSessions, terminateSpecificSession } from '@/api';
-import { QUERY_KEYS } from '@/config';
+import {
+	terminateAllOtherSessions,
+	terminateSpecificSession,
+} from '@/api/session/terminateSession.api';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 

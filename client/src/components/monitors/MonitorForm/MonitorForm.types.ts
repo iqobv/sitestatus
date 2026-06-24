@@ -1,5 +1,5 @@
 import { FormProps } from '@/components/ui';
-import { Field } from '@/types';
+import { Field } from '@/types/ui/field.types';
 import { FieldValues } from 'react-hook-form';
 
 export interface MonitorFormProps<

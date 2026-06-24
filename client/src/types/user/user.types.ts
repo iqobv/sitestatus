@@ -1,9 +1,9 @@
-import { USER_ROLES } from '@/constants';
+import { UserRole } from './userRole.types';
 
 export interface User {
 	id: string;
 	email: string;
 	createdAt: Date;
-	role: (typeof USER_ROLES)[keyof typeof USER_ROLES];
+	role: UserRole;
 	emailVerified: boolean;
 }

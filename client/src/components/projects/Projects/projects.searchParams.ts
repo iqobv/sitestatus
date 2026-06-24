@@ -1,4 +1,4 @@
-import { ProjectsQueryDto } from '@/dto';
+import { ProjectsQueryDto } from '@/dto/project.dto';
 import { SortOrder } from '@/types/api/sortOrder.types';
 import { StrictParsersMap } from '@/types/parserMap.types';
 import { ProjectSortBy } from '@/types/project/projectSortBy.types';

@@ -1,7 +1,7 @@
 'use client';
 
 import { IconButton } from '@/components/ui';
-import { PRIVATE_PAGES } from '@/config';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
 import { FiPlus } from 'react-icons/fi';
 import styles from './DashboardHeader.module.scss';
 import { NotificationList } from './NotificationList/NotificationList';

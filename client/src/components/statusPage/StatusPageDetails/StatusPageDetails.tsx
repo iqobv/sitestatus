@@ -1,7 +1,7 @@
 'use client';
 
-import { getStatusPageById } from '@/api';
-import { QUERY_KEYS } from '@/config';
+import { getStatusPageById } from '@/api/statusPage/getStatusPageById.api';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { useQuery } from '@tanstack/react-query';
 import { notFound, useParams } from 'next/navigation';
 import { StatusPageDetailsHeader } from './StatusPageDetailsHeader/StatusPageDetailsHeader';

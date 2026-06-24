@@ -1,8 +1,9 @@
 'use client';
 
-import { deleteStatusPage } from '@/api';
+import { deleteStatusPage } from '@/api/statusPage/deleteStatusPage.api';
 import { ConfirmAction, DropdownItem } from '@/components/ui';
-import { PRIVATE_PAGES, QUERY_KEYS } from '@/config';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { MdDelete } from 'react-icons/md';

@@ -3,7 +3,7 @@
 import { Pagination, Table } from '@/components/ui';
 import { useTablePagination } from '@/hooks/useTablePagination.hook';
 import { useTableSorting } from '@/hooks/useTableSorting.hook';
-import { FullMonitor } from '@/types';
+import { FullMonitor } from '@/types/monitors/monitor.types';
 import { MonitorSortBy } from '@/types/monitors/monitorSortBy.types';
 import { getCoreRowModel } from '@tanstack/react-table';
 import dayjs from 'dayjs';

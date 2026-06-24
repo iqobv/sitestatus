@@ -1,7 +1,7 @@
-import { getUserStatusPages } from '@/api';
+import { getUserStatusPages } from '@/api/statusPage/getUserStatusPages.api';
 import { StatusPages } from '@/components/statusPage/StatusPages/StatusPages';
 import { statusPagesFiltersSearchParamsCache } from '@/components/statusPage/StatusPages/statusPages.searchParams';
-import { QUERY_KEYS } from '@/config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { statusPagesQuerySchema } from '@/schemas/statusPage/statusPagesQuery.schema';
 import { SearchParams } from '@/types/searchParams.types';
 import {

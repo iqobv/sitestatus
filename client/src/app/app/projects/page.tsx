@@ -1,8 +1,8 @@
-import { getServerAllProjects } from '@/api';
+import { getServerAllProjects } from '@/api/project/getAllProjects.api';
 import { Projects } from '@/components/projects/Projects/Projects';
 import { projectFiltersSearchParamsCache } from '@/components/projects/Projects/projects.searchParams';
 import { ProjectsHeader } from '@/components/projects/ProjectsHeader/ProjectsHeader';
-import { QUERY_KEYS } from '@/config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { projectsQuerySchema } from '@/schemas/project/projectsQuery.schema';
 import { SearchParams } from '@/types/searchParams.types';
 import {

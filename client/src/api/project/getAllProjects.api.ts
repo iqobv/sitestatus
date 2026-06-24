@@ -1,6 +1,6 @@
-import { ProjectsQueryDto } from '@/dto';
+import { ProjectsQueryDto } from '@/dto/project.dto';
 import { PaginatedData } from '@/types/api/paginatedData.types';
-import { Project } from '@/types/project';
+import { Project } from '@/types/project/project.types';
 import { apiClient, apiServer } from '../axios';
 
 type GetAllProjectsResponse = PaginatedData<Project>;

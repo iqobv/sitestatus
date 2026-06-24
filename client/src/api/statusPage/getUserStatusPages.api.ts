@@ -1,6 +1,6 @@
-import { StatusPagesQueryDto } from '@/dto';
-import { StatusPage } from '@/types';
+import { StatusPagesQueryDto } from '@/dto/statusPage.dto';
 import { PaginatedData } from '@/types/api/paginatedData.types';
+import { StatusPage } from '@/types/statusPage/statusPage.types';
 import { apiClient, apiServer } from '../axios';
 
 type GetUserStatusPagesResponse = PaginatedData<StatusPage>;

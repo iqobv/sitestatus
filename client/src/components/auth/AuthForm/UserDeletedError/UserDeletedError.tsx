@@ -1,6 +1,6 @@
 'use client';
 
-import { sendGenerateRestoreTokenEmail } from '@/api';
+import { sendGenerateRestoreTokenEmail } from '@/api/auth/restoreAccount.api';
 import { Button } from '@/components/ui';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';

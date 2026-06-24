@@ -10,8 +10,11 @@ import {
 	Textarea,
 	TextField,
 } from '@/components/ui';
-import { StatusPageMonitorDto, UpdateStatusPageDto } from '@/dto';
-import { Field } from '@/types';
+import {
+	StatusPageMonitorDto,
+	UpdateStatusPageDto,
+} from '@/dto/statusPage.dto';
+import { Field } from '@/types/ui/field.types';
 import { Control, FieldValues, Path, useWatch } from 'react-hook-form';
 import { SlugAutoGenerator } from './SlugAutoGenerator';
 import styles from './StatusPageForm.module.scss';

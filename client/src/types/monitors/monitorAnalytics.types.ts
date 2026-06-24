@@ -1,4 +1,4 @@
-import { Incident } from '../incident';
+import { Incident } from '../incident/incident.types';
 import { AnalyticsRawData } from './analyticsRawData.types';
 import { AnalyticsStatData } from './analyticsStatData.types';
 import { MonitorStatistics } from './monitorStatistics.types';

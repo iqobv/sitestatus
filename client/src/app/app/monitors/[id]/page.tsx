@@ -1,6 +1,6 @@
-import { getServerMonitorByIdFull } from '@/api';
+import { getServerMonitorByIdFull } from '@/api/monitor/getMonitorById.api';
 import { Monitor } from '@/components/monitors/Monitor/Monitor';
-import { QUERY_KEYS } from '@/config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import {
 	dehydrate,
 	HydrationBoundary,

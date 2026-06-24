@@ -1,5 +1,5 @@
 import { Button, SectionHeader } from '@/components/ui';
-import { AUTH_PAGES } from '@/config';
+import { AUTH_PAGES } from '@/config/authPages.config';
 import styles from './Action.module.scss';
 
 export const Action = () => {

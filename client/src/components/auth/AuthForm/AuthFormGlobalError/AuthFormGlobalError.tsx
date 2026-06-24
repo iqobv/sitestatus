@@ -7,7 +7,7 @@ interface AuthFormGlobalErrorProps {
 	message: React.ReactNode;
 }
 
-const AuthFormGlobalError = ({ message }: AuthFormGlobalErrorProps) => {
+export const AuthFormGlobalError = ({ message }: AuthFormGlobalErrorProps) => {
 	return (
 		<div className={styles.error}>
 			<MdErrorOutline />
@@ -15,5 +15,3 @@ const AuthFormGlobalError = ({ message }: AuthFormGlobalErrorProps) => {
 		</div>
 	);
 };
-
-export default AuthFormGlobalError;

@@ -1,4 +1,4 @@
-import { GoogleOneTap } from '@/components/auth';
+import { GoogleOneTap } from '@/components/auth/GoogleOneTap/GoogleOneTap';
 import { Footer } from '@/components/layout/Footer/Footer';
 import { HeaderMain } from '@/components/layout/Header/HeaderMain/HeaderMain';
 

@@ -10,7 +10,7 @@ interface VerifyEmailButtonProps {
 	email: string;
 }
 
-const VerifyEmailButton = ({ email }: VerifyEmailButtonProps) => {
+export const VerifyEmailButton = ({ email }: VerifyEmailButtonProps) => {
 	const { mutate } = useMutation({
 		mutationFn: () => resendVerificationEmail(email),
 		onSuccess: (data) => {
@@ -27,5 +27,3 @@ const VerifyEmailButton = ({ email }: VerifyEmailButtonProps) => {
 		</div>
 	);
 };
-
-export default VerifyEmailButton;

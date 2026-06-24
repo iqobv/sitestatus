@@ -1,6 +1,6 @@
 'use client';
 
-import SocialButtons from '../SocialButtons/SocialButtons';
+import { SocialButtons } from '../SocialButtons/SocialButtons';
 import styles from './AuthWrapper.module.scss';
 
 interface AuthWrapperProps {
@@ -9,7 +9,7 @@ interface AuthWrapperProps {
 	showSocialButtons?: boolean;
 }
 
-const AuthWrapper = ({
+export const AuthWrapper = ({
 	children,
 	header,
 	showSocialButtons = true,
@@ -22,5 +22,3 @@ const AuthWrapper = ({
 		</div>
 	);
 };
-
-export default AuthWrapper;

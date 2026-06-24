@@ -1,4 +1,4 @@
-import { MonitorsQueryDto, ProjectsQueryDto } from '@/dto';
+import { MonitorsQueryDto, ProjectsQueryDto, StatusPagesQueryDto } from '@/dto';
 import { PaginationQueryDto } from '@/dto/ui.dto';
 
 export const QUERY_KEYS = {
@@ -56,6 +56,8 @@ export const QUERY_KEYS = {
 	statusPages: {
 		all: ['statusPages'] as const,
 		lists: () => ['statusPages', 'list'] as const,
+		list: (query?: StatusPagesQueryDto) =>
+			['statusPages', 'list', query] as const,
 		details: () => ['statusPages', 'detail'] as const,
 		detail: (id: string) => ['statusPages', 'detail', id] as const,
 		detailBySlug: (slug: string) =>

@@ -8,7 +8,7 @@ import { parseAsString, useQueryState } from 'nuqs';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 
-const RestoreAccount = () => {
+export const RestoreAccount = () => {
 	const router = useRouter();
 
 	const [token, setToken] = useQueryState('token', parseAsString);
@@ -42,5 +42,3 @@ const RestoreAccount = () => {
 		</div>
 	);
 };
-
-export default RestoreAccount;

@@ -9,10 +9,10 @@ import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
 import { MdOutlineEmail } from 'react-icons/md';
 import { toast } from 'react-toastify';
-import AuthWrapper from '../../AuthWrapper/AuthWrapper';
+import { AuthWrapper } from '../../AuthWrapper/AuthWrapper';
 import styles from './ForgotPassword.module.scss';
 
-const ForgotPassword = () => {
+export const ForgotPassword = () => {
 	const { mutate, isPending } = useMutation({
 		mutationFn: (data: EmailDto) => forgotPassword(data),
 		onSuccess: (data) => {
@@ -64,5 +64,3 @@ const ForgotPassword = () => {
 		</AuthWrapper>
 	);
 };
-
-export default ForgotPassword;

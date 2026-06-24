@@ -1,10 +1,10 @@
 'use client';
 
 import { FaGithub } from 'react-icons/fa6';
-import ButtonWrapper from '../ButtonWrapper/ButtonWrapper';
+import { ButtonWrapper } from '../ButtonWrapper/ButtonWrapper';
 import { useLoginWindow } from '../useLoginWindow';
 
-const Github = () => {
+export const Github = () => {
 	const { handleOpen } = useLoginWindow('/v1/oauth/github');
 
 	return (
@@ -14,5 +14,3 @@ const Github = () => {
 		</ButtonWrapper>
 	);
 };
-
-export default Github;

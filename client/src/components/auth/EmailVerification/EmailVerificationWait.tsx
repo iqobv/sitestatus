@@ -8,9 +8,9 @@ import { useEffect, useState } from 'react';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import styles from './EmailVerification.module.scss';
-import EmailVerificationWrapper from './EmailVerificationWrapper';
+import { EmailVerificationWrapper } from './EmailVerificationWrapper';
 
-const EmailVerificationWait = () => {
+export const EmailVerificationWait = () => {
 	const [email, setEmail] = useState<string | null>(null);
 	const [timer, setTimer] = useState(0);
 
@@ -80,5 +80,3 @@ const EmailVerificationWait = () => {
 		</EmailVerificationWrapper>
 	);
 };
-
-export default EmailVerificationWait;

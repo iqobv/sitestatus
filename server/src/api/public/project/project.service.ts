@@ -24,11 +24,11 @@ export class ProjectService {
 	}
 
 	async getProjectById(id: string, userId: string) {
-		if (!isUUID(id)) {
+		if (!isUUID(id) || !id) {
 			throw new NotFoundException(ERROR_MESSAGES.PROJECT.NOT_FOUND);
 		}
 
-		const project = await this.prismaService.project.findUnique({
+		const project = await this.prismaService.project.findFirst({
 			where: { id, ownerId: userId, deletedAt: null },
 			select: projectSelect,
 		});

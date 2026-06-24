@@ -8,10 +8,10 @@ import { isAxiosError } from 'axios';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import EmailVerificationWait from './EmailVerificationWait';
-import EmailVerificationWrapper from './EmailVerificationWrapper';
+import { EmailVerificationWait } from './EmailVerificationWait';
+import { EmailVerificationWrapper } from './EmailVerificationWrapper';
 
-const EmailVerification = () => {
+export const EmailVerification = () => {
 	const searchParams = useSearchParams();
 	const token = searchParams.get('token') ?? undefined;
 
@@ -58,5 +58,3 @@ const EmailVerification = () => {
 		</EmailVerificationWrapper>
 	);
 };
-
-export default EmailVerification;

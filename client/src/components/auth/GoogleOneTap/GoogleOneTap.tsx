@@ -4,7 +4,7 @@ import { useAuth } from '@/hooks';
 import Script from 'next/script';
 import { useGoogleOneTap } from './useGoogleOneTap.hook';
 
-const GoogleOneTap = () => {
+export const GoogleOneTap = () => {
 	const { user, isLoading: isAuthLoading } = useAuth();
 
 	useGoogleOneTap();
@@ -18,5 +18,3 @@ const GoogleOneTap = () => {
 		/>
 	);
 };
-
-export default GoogleOneTap;

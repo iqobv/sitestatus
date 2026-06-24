@@ -1,7 +1,7 @@
-import { Login } from '@/components/auth';
 import { Metadata } from 'next';
 
 import styles from '../authPage.module.scss';
+import { Login } from '@/components/auth/Login/Login';
 
 export const metadata: Metadata = {
 	title: 'Log in',

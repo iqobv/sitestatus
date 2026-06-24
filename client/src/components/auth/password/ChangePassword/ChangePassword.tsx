@@ -9,7 +9,7 @@ import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
-import AuthWrapper from '../../AuthWrapper/AuthWrapper';
+import { AuthWrapper } from '../../AuthWrapper/AuthWrapper';
 import { CHANGE_PASSWORD_FIELDS } from './changePasswordFields';
 
 interface ApiErrorResponse {
@@ -17,7 +17,7 @@ interface ApiErrorResponse {
 	message?: string;
 }
 
-const ChangePassword = () => {
+export const ChangePassword = () => {
 	const router = useRouter();
 
 	const { mutate, isPending } = useMutation({
@@ -92,5 +92,3 @@ const ChangePassword = () => {
 		</AuthWrapper>
 	);
 };
-
-export default ChangePassword;

@@ -12,6 +12,9 @@ export const MONITOR_COLUMNS: ColumnDef<FullMonitor>[] = [
 		header: 'Name',
 		accessorKey: 'name',
 		enableSorting: true,
+		meta: {
+			style: { width: '60%' },
+		},
 		cell: (props) => <>{props.getValue()}</>,
 	},
 	{

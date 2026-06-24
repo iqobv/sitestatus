@@ -12,7 +12,7 @@ export const STATUS_PAGES_COLUMNS: ColumnDef<StatusPage>[] = [
 	{
 		header: 'Title',
 		accessorKey: 'title',
-		enableSorting: false,
+		enableSorting: true,
 		meta: {
 			style: { width: '60%' },
 		},
@@ -20,7 +20,7 @@ export const STATUS_PAGES_COLUMNS: ColumnDef<StatusPage>[] = [
 	{
 		header: 'Slug',
 		accessorKey: 'slug',
-		enableSorting: false,
+		enableSorting: true,
 		meta: { disableLink: true, center: true },
 		cell: ({ row }) => {
 			const slug = row.original.slug;

@@ -1,4 +1,4 @@
-import { ResetPassword } from '@/components/auth';
+import { ResetPassword } from '@/components/auth/password/ResetPassword/ResetPassword';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 

@@ -9,7 +9,7 @@ export class AccessTokenGuard extends AuthGuard('jwt') {
 		if (err || !user) {
 			if (err instanceof Error) throw err;
 
-			new UnauthorizedException(ERROR_MESSAGES.AUTH.UNAUTHORIZED);
+			throw new UnauthorizedException(ERROR_MESSAGES.AUTH.UNAUTHORIZED);
 		}
 
 		return user as TUser;

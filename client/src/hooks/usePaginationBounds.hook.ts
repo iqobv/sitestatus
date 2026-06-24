@@ -8,10 +8,7 @@ export const usePaginationBounds = (
 	totalPages?: number,
 ) => {
 	useEffect(() => {
-		if (totalPages === undefined || totalPages === 0) {
-			if (pageIndex !== 0) setPage(0);
-			return;
-		}
+		if (totalPages === undefined || totalPages === 0) return;
 
 		if (pageIndex >= totalPages) {
 			setPage(totalPages - 1);

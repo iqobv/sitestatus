@@ -9,10 +9,10 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { parseAsString, useQueryState } from 'nuqs';
 import { toast } from 'react-toastify';
-import AuthWrapper from '../../AuthWrapper/AuthWrapper';
+import { AuthWrapper } from '../../AuthWrapper/AuthWrapper';
 import { RESET_PASSWORD_FORM_FIELDS } from './resetPasswordFields';
 
-const ResetPassword = () => {
+export const ResetPassword = () => {
 	const router = useRouter();
 
 	const [token] = useQueryState('token', parseAsString);
@@ -68,5 +68,3 @@ const ResetPassword = () => {
 		</AuthWrapper>
 	);
 };
-
-export default ResetPassword;

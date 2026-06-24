@@ -1,26 +1,33 @@
 'use client';
 
 import { getAllNotifications, markAllNotificationAsRead } from '@/api';
-import { Button, Dropdown } from '@/components/ui';
+import {
+	Button,
+	Dropdown,
+	DropdownMenu,
+	DropdownTrigger,
+} from '@/components/ui';
 import { QUERY_KEYS } from '@/config';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { MdNotificationsNone } from 'react-icons/md';
 import styles from './NotificationList.module.scss';
-import { NotificationListItem } from './NotificationListItem';
-import NotificationListLoader from './NotificationListLoader';
+import { NotificationListItem } from './NotificationListItem/NotificationListItem';
+import { NotificationListLoader } from './NotificationListLoader';
 
-const NotificationList = () => {
+export const NotificationList = () => {
 	const queryClient = useQueryClient();
 
 	const { data, isLoading } = useQuery({
-		queryKey: QUERY_KEYS.notification.all,
+		queryKey: QUERY_KEYS.notifications.lists(),
 		queryFn: getAllNotifications,
 	});
 
 	const { mutate: markAllAsRead } = useMutation({
 		mutationFn: markAllNotificationAsRead,
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: QUERY_KEYS.notification.all });
+			queryClient.invalidateQueries({
+				queryKey: QUERY_KEYS.notifications.lists(),
+			});
 		},
 	});
 
@@ -34,7 +41,7 @@ const NotificationList = () => {
 
 	return (
 		<Dropdown onClose={handleOnClose}>
-			<Dropdown.Trigger>
+			<DropdownTrigger>
 				<Button
 					variant="outlined"
 					isIcon
@@ -42,8 +49,8 @@ const NotificationList = () => {
 				>
 					<MdNotificationsNone size={20} />
 				</Button>
-			</Dropdown.Trigger>
-			<Dropdown.Menu>
+			</DropdownTrigger>
+			<DropdownMenu>
 				<div className={styles.list}>
 					{isLoading && <NotificationListLoader />}
 					{data?.notifications.length === 0 && (
@@ -57,9 +64,7 @@ const NotificationList = () => {
 							/>
 						))}
 				</div>
-			</Dropdown.Menu>
+			</DropdownMenu>
 		</Dropdown>
 	);
 };
-
-export default NotificationList;

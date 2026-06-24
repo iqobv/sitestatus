@@ -1,6 +1,6 @@
 'use client';
 
-import MonitorOverallUptimeBar from '@/components/monitors/Monitor/MonitorOverall/MonitorOverallUptimeBar/MonitorOverallUptimeBar';
+import { MonitorOverallUptimeBar } from '@/components/monitors/Monitor/MonitorOverall/MonitorOverallUptimeBar/MonitorOverallUptimeBar';
 import { UptimeStatus } from '@/components/ui';
 import { PublicStatusPageMonitor } from '@/types';
 import styles from './StatusPageMonitor.module.scss';
@@ -9,7 +9,7 @@ interface StatusPageMonitorProps {
 	monitor: PublicStatusPageMonitor;
 }
 
-const StatusPageMonitor = ({ monitor }: StatusPageMonitorProps) => {
+export const StatusPageMonitor = ({ monitor }: StatusPageMonitorProps) => {
 	return (
 		<div className={styles.monitor}>
 			<div className={styles.header}>
@@ -23,5 +23,3 @@ const StatusPageMonitor = ({ monitor }: StatusPageMonitorProps) => {
 		</div>
 	);
 };
-
-export default StatusPageMonitor;

@@ -15,6 +15,8 @@ interface BaseSelectProps {
 	disabled?: boolean;
 	className?: string;
 	error?: string;
+	onScrollEnd?: () => void;
+	isLoading?: boolean;
 }
 
 export interface SingleSelectProps extends BaseSelectProps {

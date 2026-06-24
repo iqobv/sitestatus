@@ -1,7 +1,6 @@
-import React from 'react';
+import { TableLoader } from '@/components/ui';
+import { STATUS_PAGES_COLUMNS } from './statusPagesColumns';
 
-const StatusPagesTableLoader = () => {
-  return <div>StatusPagesTableLoader</div>;
+export const StatusPagesTableLoader = () => {
+	return <TableLoader columns={STATUS_PAGES_COLUMNS} countRows={10} />;
 };
-
-export default StatusPagesTableLoader;

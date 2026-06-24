@@ -1,16 +1,15 @@
 'use client';
 
 import { useId, useState } from 'react';
+import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa6';
+import { Button } from '../Button/Button';
+import { FormLabel } from '../Form/parts/FormLabel/FormLabel';
+import cssStyles from './TextField.module.scss';
 import { TextFieldProps } from './TextField.types';
+import { TextFieldIcon } from './TextFieldIcon/TextFieldIcon';
 import { textFieldVariants } from './textFieldStyles';
 
-import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa6';
-import Button from '../Button/Button';
-import FormLabel from '../Form/parts/FormLabel/FormLabel';
-import cssStyles from './TextField.module.scss';
-import TextFieldIcon from './TextFieldIcon/TextFieldIcon';
-
-export default function TextField({
+export const TextField = ({
 	disabled = false,
 	fullWidth = false,
 	className,
@@ -23,7 +22,7 @@ export default function TextField({
 	leftIconClassName,
 	rightIconClassName,
 	...rest
-}: TextFieldProps) {
+}: TextFieldProps) => {
 	const generatedId = useId();
 	const id = rest.id ?? generatedId;
 	const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -95,9 +94,7 @@ export default function TextField({
 					</TextFieldIcon>
 				)}
 			</div>
-			{error && !disabled && (
-				<p className={cssStyles.errorText}>{error}</p>
-			)}
+			{error && !disabled && <p className={cssStyles.errorText}>{error}</p>}
 		</div>
 	);
-}
+};

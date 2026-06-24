@@ -22,7 +22,7 @@ const iconProps: IconBaseProps = {
 	size: 24,
 };
 
-const SessionDevice = ({ deviceType }: SessionDeviceProps) => {
+export const SessionDevice = ({ deviceType }: SessionDeviceProps) => {
 	const IconComponent = deviceType ? icons[deviceType.toLowerCase()] : null;
 
 	return IconComponent ? (
@@ -31,5 +31,3 @@ const SessionDevice = ({ deviceType }: SessionDeviceProps) => {
 		<MdOutlineDevicesOther {...iconProps} />
 	);
 };
-
-export default SessionDevice;

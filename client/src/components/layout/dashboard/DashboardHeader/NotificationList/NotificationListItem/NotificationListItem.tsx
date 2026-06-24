@@ -12,7 +12,9 @@ interface NotificationListItemProps {
 	notification: Notification;
 }
 
-const NotificationListItem = ({ notification }: NotificationListItemProps) => {
+export const NotificationListItem = ({
+	notification,
+}: NotificationListItemProps) => {
 	const classNames = [styles.item, !notification.isRead && styles.unread]
 		.filter(Boolean)
 		.join(' ');
@@ -34,5 +36,3 @@ const NotificationListItem = ({ notification }: NotificationListItemProps) => {
 		</div>
 	);
 };
-
-export default NotificationListItem;

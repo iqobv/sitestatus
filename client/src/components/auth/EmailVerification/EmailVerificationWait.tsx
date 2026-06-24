@@ -2,7 +2,7 @@
 
 import { resendVerificationEmail } from '@/api';
 import { Button, SectionHeader } from '@/components/ui';
-import { AUTH_PAGES, QUERY_KEYS } from '@/config';
+import { AUTH_PAGES } from '@/config';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { FaExternalLinkAlt } from 'react-icons/fa';
@@ -23,7 +23,6 @@ const EmailVerificationWait = () => {
 
 	const { mutate } = useMutation({
 		mutationFn: () => resendVerificationEmail(email!),
-		mutationKey: QUERY_KEYS.auth.resendVerificationEmail(email || 'unknown'),
 		onSuccess: (data) => {
 			toast.info(data.message);
 		},

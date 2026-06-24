@@ -2,9 +2,9 @@
 
 import { useRouter } from 'next/navigation';
 import { MdOutlineArrowBack } from 'react-icons/md';
-import Button from '../Button/Button';
+import { Button } from '../Button/Button';
 
-const BackButton = () => {
+export const BackButton = () => {
 	const router = useRouter();
 
 	return (
@@ -14,5 +14,3 @@ const BackButton = () => {
 		</Button>
 	);
 };
-
-export default BackButton;

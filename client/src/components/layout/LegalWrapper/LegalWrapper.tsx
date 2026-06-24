@@ -6,7 +6,7 @@ interface LegalWrapperProps {
 	document: string;
 }
 
-const LegalWrapper = ({ document }: LegalWrapperProps) => {
+export const LegalWrapper = ({ document }: LegalWrapperProps) => {
 	return (
 		<div className={styles.wrapper}>
 			<article className={styles.article}>
@@ -15,5 +15,3 @@ const LegalWrapper = ({ document }: LegalWrapperProps) => {
 		</div>
 	);
 };
-
-export default LegalWrapper;

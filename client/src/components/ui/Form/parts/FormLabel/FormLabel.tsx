@@ -8,16 +8,16 @@ interface FormLabelProps extends ComponentProps<'label'> {
 	isRequired?: boolean;
 }
 
-export default function FormLabel({
+export const FormLabel = ({
 	id,
 	children,
 	isRequired,
 	...rest
-}: FormLabelProps) {
+}: FormLabelProps) => {
 	return (
 		<label htmlFor={id} className={styles.label} {...rest}>
 			<div>{children}</div>
 			{isRequired && <span className={styles.required}>*</span>}
 		</label>
 	);
-}
+};

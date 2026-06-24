@@ -1,10 +1,10 @@
 'use client';
 
-import { Modal } from '@/components/ui';
+import { Modal, ModalBody, ModalContent, ModalHeader } from '@/components/ui';
 import { useParams, useRouter } from 'next/navigation';
-import UpdateMonitor from './UpdateMonitor';
+import { UpdateMonitor } from './UpdateMonitor';
 
-const UpdateMonitorFormModal = () => {
+export const UpdateMonitorFormModal = () => {
 	const { id: monitorId } = useParams<{ id: string }>();
 
 	const router = useRouter();
@@ -17,14 +17,12 @@ const UpdateMonitorFormModal = () => {
 				router.back();
 			}}
 		>
-			<Modal.Content>
-				<Modal.Header>Update Monitor</Modal.Header>
-				<Modal.Body>
+			<ModalContent>
+				<ModalHeader>Update Monitor</ModalHeader>
+				<ModalBody>
 					<UpdateMonitor monitorId={monitorId} />
-				</Modal.Body>
-			</Modal.Content>
+				</ModalBody>
+			</ModalContent>
 		</Modal>
 	);
 };
-
-export default UpdateMonitorFormModal;

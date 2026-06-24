@@ -1,7 +1,5 @@
-import { StatusPageFormLoader } from '../StatusPageForm';
+import { StatusPageFormLoader } from '../StatusPageForm/StatusPageFormLoader';
 
-const StatusPageCreateLoader = () => {
+export const StatusPageCreateLoader = () => {
 	return <StatusPageFormLoader />;
 };
-
-export default StatusPageCreateLoader;

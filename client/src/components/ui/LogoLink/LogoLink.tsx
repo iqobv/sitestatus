@@ -1,5 +1,4 @@
-import { Logo } from '@/components/icons';
-import { LogoProps } from '@/components/icons/Logo';
+import { Logo, LogoProps } from '@/components/icons/Logo';
 import Link from 'next/link';
 import styles from './LogoLink.module.scss';
 
@@ -10,7 +9,12 @@ interface LogoLinkProps {
 	onClick?: () => void;
 }
 
-const LogoLink = ({ href, logoProps, className, onClick }: LogoLinkProps) => {
+export const LogoLink = ({
+	href,
+	logoProps,
+	className,
+	onClick,
+}: LogoLinkProps) => {
 	return (
 		<Link
 			href={href}
@@ -29,5 +33,3 @@ const LogoLink = ({ href, logoProps, className, onClick }: LogoLinkProps) => {
 		</Link>
 	);
 };
-
-export default LogoLink;

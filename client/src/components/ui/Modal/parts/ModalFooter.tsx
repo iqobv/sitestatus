@@ -7,8 +7,6 @@ interface ModalFooterProps {
 	className?: string;
 }
 
-const ModalFooter = ({ children, className }: ModalFooterProps) => {
+export const ModalFooter = ({ children, className }: ModalFooterProps) => {
 	return <div className={className}>{children}</div>;
 };
-
-export default ModalFooter;

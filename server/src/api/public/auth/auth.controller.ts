@@ -179,6 +179,9 @@ export class AuthController {
 	])
 	@Get('me')
 	public async getProfile(@Authorized('id') userId: string) {
+		if (!userId)
+			throw new UnauthorizedException(ERROR_MESSAGES.AUTH.UNAUTHORIZED);
+
 		return await this.userService.findById(userId);
 	}
 

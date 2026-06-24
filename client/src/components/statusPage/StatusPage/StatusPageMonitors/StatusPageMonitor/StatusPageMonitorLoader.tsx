@@ -1,7 +1,5 @@
 import { SkeletonLoader } from '@/components/ui';
 
-const StatusPageMonitorLoader = () => {
+export const StatusPageMonitorLoader = () => {
 	return <SkeletonLoader height={90} />;
 };
-
-export default StatusPageMonitorLoader;

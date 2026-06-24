@@ -1,7 +1,7 @@
-import StatusPageDetailsHeaderLoader from './StatusPageDetailsHeader/StatusPageDetailsHeaderLoader';
-import StatusPageDetailsUpdateLoader from './StatusPageDetailsUpdate/StatusPageDetailsUpdateLoader';
+import { StatusPageDetailsHeaderLoader } from './StatusPageDetailsHeader/StatusPageDetailsHeaderLoader';
+import { StatusPageDetailsUpdateLoader } from './StatusPageDetailsUpdate/StatusPageDetailsUpdateLoader';
 
-const StatusPageDetailsLoader = () => {
+export const StatusPageDetailsLoader = () => {
 	return (
 		<div>
 			<StatusPageDetailsHeaderLoader />
@@ -9,5 +9,3 @@ const StatusPageDetailsLoader = () => {
 		</div>
 	);
 };
-
-export default StatusPageDetailsLoader;

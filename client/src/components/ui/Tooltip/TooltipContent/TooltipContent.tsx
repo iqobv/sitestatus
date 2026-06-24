@@ -14,7 +14,10 @@ interface TooltipContentProps {
 	className?: string;
 }
 
-const TooltipContent = ({ children, className }: TooltipContentProps) => {
+export const TooltipContent = ({
+	children,
+	className,
+}: TooltipContentProps) => {
 	const {
 		isOpen,
 		arrowRef,
@@ -59,5 +62,3 @@ const TooltipContent = ({ children, className }: TooltipContentProps) => {
 		</AnimatePresence>
 	);
 };
-
-export default TooltipContent;

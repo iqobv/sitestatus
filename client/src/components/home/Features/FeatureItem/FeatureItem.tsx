@@ -5,7 +5,7 @@ interface FeatureItemProps {
 	feature: FeatureItemType;
 }
 
-const FeatureItem = ({ feature }: FeatureItemProps) => {
+export const FeatureItem = ({ feature }: FeatureItemProps) => {
 	return (
 		<div key={feature.title} className={styles.feature}>
 			<feature.icon size={30} color="var(--features-card-icon-color)" />
@@ -16,5 +16,3 @@ const FeatureItem = ({ feature }: FeatureItemProps) => {
 		</div>
 	);
 };
-
-export default FeatureItem;

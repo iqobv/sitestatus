@@ -8,8 +8,6 @@ interface ModalBodyProps {
 	className?: string;
 }
 
-const ModalBody = ({ children, className }: ModalBodyProps) => {
+export const ModalBody = ({ children, className }: ModalBodyProps) => {
 	return <div className={`${styles.body} ${className || ''}`}>{children}</div>;
 };
-
-export default ModalBody;

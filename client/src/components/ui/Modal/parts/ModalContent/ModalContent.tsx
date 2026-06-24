@@ -4,11 +4,11 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { MdClose } from 'react-icons/md';
-import Button from '../../../Button/Button';
+import { Button } from '../../../Button/Button';
 import { useModalContext } from '../../ModalContext';
 import styles from './ModalContent.module.scss';
 
-const ModalContent = ({ children }: { children: ReactNode }) => {
+export const ModalContent = ({ children }: { children: ReactNode }) => {
 	const overlayRef = useRef<HTMLDivElement>(null);
 	const [mounted, setMounted] = useState<boolean>(false);
 	const { open, onClose } = useModalContext('Modal.Content');
@@ -95,5 +95,3 @@ const ModalContent = ({ children }: { children: ReactNode }) => {
 		document.body,
 	);
 };
-
-export default ModalContent;

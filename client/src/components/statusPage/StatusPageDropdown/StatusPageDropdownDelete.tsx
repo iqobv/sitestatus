@@ -1,7 +1,7 @@
 'use client';
 
 import { deleteStatusPage } from '@/api';
-import { ConfirmAction, Dropdown } from '@/components/ui';
+import { ConfirmAction, DropdownItem } from '@/components/ui';
 import { PRIVATE_PAGES, QUERY_KEYS } from '@/config';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -14,7 +14,7 @@ interface StatusPageDropdownDeleteProps {
 	redirectOnDelete?: boolean;
 }
 
-const StatusPageDropdownDelete = ({
+export const StatusPageDropdownDelete = ({
 	id,
 	redirectOnDelete,
 }: StatusPageDropdownDeleteProps) => {
@@ -24,7 +24,9 @@ const StatusPageDropdownDelete = ({
 	const { mutate } = useMutation({
 		mutationFn: () => deleteStatusPage(id),
 		onSuccess: (data) => {
-			queryClient.invalidateQueries({ queryKey: QUERY_KEYS.statusPage.all });
+			queryClient.invalidateQueries({
+				queryKey: QUERY_KEYS.statusPages.lists(),
+			});
 			toast.success(data.message || 'Status page deleted successfully');
 			if (redirectOnDelete) {
 				router.push(PRIVATE_PAGES.STATUS_PAGES.ALL);
@@ -38,13 +40,11 @@ const StatusPageDropdownDelete = ({
 			description="Are you sure you want to delete this status page? This action cannot be undone."
 			confirmButtonText="Delete"
 			trigger={
-				<Dropdown.Item closeOnClick={false} isDelete>
+				<DropdownItem closeOnClick={false} isDelete>
 					<MdDelete {...iconProps} /> Delete
-				</Dropdown.Item>
+				</DropdownItem>
 			}
 			onConfirm={() => mutate()}
 		/>
 	);
 };
-
-export default StatusPageDropdownDelete;

@@ -11,7 +11,7 @@ export const useTerminateMutations = () => {
 	const terminateSessionMutation = useMutation({
 		mutationFn: (sessionId: string) => terminateSpecificSession(sessionId),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: QUERY_KEYS.session.all });
+			queryClient.invalidateQueries({ queryKey: QUERY_KEYS.sessions.lists() });
 			toast.success('Session has been terminated successfully');
 		},
 		onError: (e) => {
@@ -27,7 +27,7 @@ export const useTerminateMutations = () => {
 	const terminateAllOtherSessionsMutation = useMutation({
 		mutationFn: terminateAllOtherSessions,
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: QUERY_KEYS.session.all });
+			queryClient.invalidateQueries({ queryKey: QUERY_KEYS.sessions.lists() });
 			toast.success('All other sessions have been terminated successfully');
 		},
 		onError: (e) => {

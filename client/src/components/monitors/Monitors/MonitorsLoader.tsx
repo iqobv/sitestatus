@@ -1,11 +1,3 @@
-import MonitorsTableLoader from './MonitorsTable/MonitorsTableLoader';
+import { MonitorsTableLoader } from './MonitorsTable/MonitorsTableLoader';
 
-const MonitorsLoader = () => {
-	return (
-		<>
-			<MonitorsTableLoader />
-		</>
-	);
-};
-
-export default MonitorsLoader;
+export const MonitorsLoader = () => <MonitorsTableLoader />;

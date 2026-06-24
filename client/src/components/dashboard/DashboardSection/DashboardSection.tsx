@@ -38,13 +38,17 @@ export const DashboardSection = ({
 					title={title}
 					description={description}
 					padding={0}
-					titleComponent="h2"
+					titleProps={{
+						variant: 'h2',
+					}}
+					{...(href && {
+						rightSlot: (
+							<Button href={href} variant="secondary">
+								View All
+							</Button>
+						),
+					})}
 				/>
-				{href && (
-					<Button href={href} variant="secondary">
-						View All
-					</Button>
-				)}
 			</div>
 			<Sepator />
 			<div className={styles.content}>

@@ -10,9 +10,9 @@ interface MonitorRefreshTimerProps {
 	monitor: MonitorWithRegions;
 }
 
-const MonitorRefreshTimer = ({ monitor }: MonitorRefreshTimerProps) => {
+export const MonitorRefreshTimer = ({ monitor }: MonitorRefreshTimerProps) => {
 	const { timer, handleRefresh } = useUpdateTimer({
-		queryKey: QUERY_KEYS.monitors.byId(monitor.id),
+		queryKey: QUERY_KEYS.monitors.detail(monitor.id),
 		isActive: monitor.isActive,
 		initialTime: 60,
 	});
@@ -30,5 +30,3 @@ const MonitorRefreshTimer = ({ monitor }: MonitorRefreshTimerProps) => {
 		</div>
 	);
 };
-
-export default MonitorRefreshTimer;

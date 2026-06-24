@@ -1,7 +1,9 @@
-import { MonitorsLoader } from '@/components/monitors';
+import { MonitorsTableLoader } from '@/components/monitors/Monitors/MonitorsTable/MonitorsTableLoader';
+import { ProjectHeaderLoader } from '../ProjectHeader/ProjectHeaderLoader';
 
-const ProjectLoader = () => {
-	return <MonitorsLoader />;
-};
-
-export default ProjectLoader;
+export const ProjectLoader = () => (
+	<>
+		<ProjectHeaderLoader />
+		<MonitorsTableLoader />
+	</>
+);

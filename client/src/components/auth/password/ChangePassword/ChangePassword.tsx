@@ -1,7 +1,7 @@
 'use client';
 
 import { changePassword } from '@/api';
-import { Form, TextField } from '@/components/ui';
+import { Form, FormField, FormSubmit, TextField } from '@/components/ui';
 import { PRIVATE_PAGES } from '@/config';
 import { ChangePasswordDto } from '@/dto';
 import { changePasswordSchema } from '@/schemas';
@@ -71,7 +71,7 @@ const ChangePassword = () => {
 								if (rest.type === 'textarea') return null;
 
 								return (
-									<Form.Field key={name} name={name}>
+									<FormField key={name} name={name}>
 										<TextField
 											leftIcon={LeftIcon ? <LeftIcon /> : undefined}
 											rightIcon={RightIcon ? <RightIcon /> : undefined}
@@ -79,13 +79,13 @@ const ChangePassword = () => {
 											error={error}
 											{...rest}
 										/>
-									</Form.Field>
+									</FormField>
 								);
 							},
 						)}
-						<Form.Submit buttonProps={{ fullWidth: true, loading: isPending }}>
+						<FormSubmit buttonProps={{ fullWidth: true, loading: isPending }}>
 							Change Password
-						</Form.Submit>
+						</FormSubmit>
 					</>
 				)}
 			</Form>

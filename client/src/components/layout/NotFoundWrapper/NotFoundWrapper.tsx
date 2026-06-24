@@ -8,7 +8,7 @@ interface NotFoundWrapperProps {
 	href?: string;
 }
 
-const NotFoundWrapper = ({
+export const NotFoundWrapper = ({
 	title,
 	description,
 	href = PUBLIC_PAGES.HOME,
@@ -26,5 +26,3 @@ const NotFoundWrapper = ({
 		</div>
 	);
 };
-
-export default NotFoundWrapper;

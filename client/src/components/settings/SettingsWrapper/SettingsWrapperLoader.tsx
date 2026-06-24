@@ -12,7 +12,7 @@ const SettingsListLoader = ({ count = 4 }: SettingsWrapperLoaderProps) => {
 	));
 };
 
-const SettingsWrapperLoader = ({
+export const SettingsWrapperLoader = ({
 	count,
 	children,
 }: SettingsWrapperLoaderProps) => {
@@ -26,5 +26,3 @@ const SettingsWrapperLoader = ({
 		</div>
 	);
 };
-
-export default SettingsWrapperLoader;

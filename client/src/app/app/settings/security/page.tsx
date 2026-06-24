@@ -1,4 +1,4 @@
-import { Security } from '@/components/settings';
+import { Security } from '@/components/settings/Security/Security';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

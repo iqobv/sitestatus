@@ -2,11 +2,11 @@
 
 import { ChangeEvent, useEffect, useId, useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
-import { FormLabel } from '../Form/parts';
+import { FormLabel } from '../Form/parts/FormLabel/FormLabel';
 import styles from './Textarea.module.scss';
 import { TextareaProps } from './Textarea.types';
 
-const Textarea = ({
+export const Textarea = ({
 	minRows = 1,
 	maxRows = 3,
 	maxLength,
@@ -65,5 +65,3 @@ const Textarea = ({
 		</div>
 	);
 };
-
-export default Textarea;

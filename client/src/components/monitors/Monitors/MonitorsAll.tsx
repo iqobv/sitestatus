@@ -2,17 +2,14 @@
 
 import { getAllMonitors } from '@/api';
 import { QUERY_KEYS } from '@/config';
-import { keepPreviousData } from '@tanstack/react-query';
-import Monitors from './Monitors';
+import { Monitors } from './Monitors';
 
-const MonitorsAll = () => {
+export const MonitorsAll = () => {
 	return (
 		<Monitors
-			queryKey={QUERY_KEYS.monitors.list}
-			queryFn={() => getAllMonitors()}
-			placeholderData={keepPreviousData}
+			queryKeyBase={QUERY_KEYS.monitors.lists()}
+			queryKeyFactory={(params) => QUERY_KEYS.monitors.list(params)}
+			fetcher={getAllMonitors}
 		/>
 	);
 };
-
-export default MonitorsAll;

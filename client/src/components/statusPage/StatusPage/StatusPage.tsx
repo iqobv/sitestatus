@@ -2,10 +2,10 @@
 
 import { useParams } from 'next/navigation';
 import styles from './StatusPage.module.scss';
-import StatusPageHeader from './StatusPageHeader/StatusPageHeader';
-import StatusPageMonitors from './StatusPageMonitors/StatusPageMonitors';
+import { StatusPageHeader } from './StatusPageHeader/StatusPageHeader';
+import { StatusPageMonitors } from './StatusPageMonitors/StatusPageMonitors';
 
-const StatusPage = () => {
+export const StatusPage = () => {
 	const { slug } = useParams<{ slug: string }>();
 
 	return (
@@ -15,5 +15,3 @@ const StatusPage = () => {
 		</div>
 	);
 };
-
-export default StatusPage;

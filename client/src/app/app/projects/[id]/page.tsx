@@ -1,6 +1,9 @@
 import { getServerAllMonitorsByProjectId, getServerProjectById } from '@/api';
-import { Project, ProjectHeader } from '@/components/projects';
+import { monitorFiltersSearchParamsCache } from '@/components/monitors/Monitors/monitor.searchParams';
+import { Project } from '@/components/projects/Project/Project';
 import { QUERY_KEYS } from '@/config';
+import { monitorsQuerySchema } from '@/schemas/monitor/monitorsQuery.schema';
+import { SearchParams } from '@/types/searchParams.types';
 import {
 	dehydrate,
 	HydrationBoundary,
@@ -12,6 +15,7 @@ import { cache } from 'react';
 
 interface ProjectPageProps {
 	params: Promise<{ id: string }>;
+	searchParams: SearchParams;
 }
 
 const getCachedProject = cache(async (id: string) => {
@@ -36,29 +40,35 @@ export async function generateMetadata({
 	}
 }
 
-export default async function ProjectPage({ params }: ProjectPageProps) {
+export default async function ProjectPage({
+	params,
+	searchParams,
+}: ProjectPageProps) {
 	const { id } = await params;
+	const resolvedSearchParams = await searchParams;
 
 	try {
 		const project = await getCachedProject(id);
 
 		if (!project) notFound();
 
+		const filters = monitorFiltersSearchParamsCache.parse(resolvedSearchParams);
+		const validatedParams = monitorsQuerySchema.parse(filters);
+
 		const queryClient = new QueryClient();
 
 		await queryClient.prefetchQuery({
-			queryKey: QUERY_KEYS.project.byId(id),
+			queryKey: QUERY_KEYS.projects.detail(id),
 			queryFn: () => getCachedProject(id),
 		});
 
 		await queryClient.prefetchQuery({
-			queryKey: QUERY_KEYS.monitors.allByProjectId(id),
-			queryFn: () => getServerAllMonitorsByProjectId(id),
+			queryKey: QUERY_KEYS.monitors.byProject(id, validatedParams),
+			queryFn: () => getServerAllMonitorsByProjectId(id, validatedParams),
 		});
 
 		return (
 			<HydrationBoundary state={dehydrate(queryClient)}>
-				<ProjectHeader />
 				<Project />
 			</HydrationBoundary>
 		);

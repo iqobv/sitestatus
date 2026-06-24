@@ -1,8 +1,8 @@
 import { SkeletonLoader } from '@/components/ui';
 import styles from './MonitorIncident.module.scss';
-import MonitorIncidentTimelineLoader from './MonitorIncidentTimeline/MonitorIncidentTimelineLoader';
+import { MonitorIncidentTimelineLoader } from './MonitorIncidentTimeline/MonitorIncidentTimelineLoader';
 
-const MonitorIncidentLoader = () => {
+export const MonitorIncidentLoader = () => {
 	return (
 		<div className={styles.incidentDetails}>
 			<SkeletonLoader height={82} />
@@ -15,5 +15,3 @@ const MonitorIncidentLoader = () => {
 		</div>
 	);
 };
-
-export default MonitorIncidentLoader;

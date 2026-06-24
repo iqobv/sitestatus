@@ -1,6 +1,6 @@
 'use client';
 
-import SidebarLink from '../SidebarLink/SidebarLink';
+import { SidebarLink } from '../SidebarLink/SidebarLink';
 import styles from './SidebarLinks.module.scss';
 import { SIDEBAR_LINKS } from './sidebarLinksItems';
 
@@ -8,7 +8,7 @@ interface SidebarLinksProps {
 	onClick?: () => void;
 }
 
-const SidebarLinks = ({ onClick }: SidebarLinksProps) => {
+export const SidebarLinks = ({ onClick }: SidebarLinksProps) => {
 	return (
 		<div className={styles.links}>
 			{SIDEBAR_LINKS.map((link) => (
@@ -17,5 +17,3 @@ const SidebarLinks = ({ onClick }: SidebarLinksProps) => {
 		</div>
 	);
 };
-
-export default SidebarLinks;

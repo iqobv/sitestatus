@@ -1,10 +1,13 @@
 'use client';
 
-import Dropdown from '../Dropdown';
+import { Dropdown } from '../Dropdown/Dropdown';
+import { DropdownItem } from '../Dropdown/DropdownItem';
+import { DropdownMenu } from '../Dropdown/DropdownMenu';
+import { DropdownTrigger } from '../Dropdown/DropdownTrigger';
 import styles from './Select.module.scss';
 import { OptionValue, SelectProps } from './Select.types';
 
-const Select = ({
+export const Select = ({
 	options,
 	value,
 	placeholder = 'Select an option',
@@ -14,6 +17,8 @@ const Select = ({
 	error = '',
 	onChange,
 	multiple,
+	isLoading = false,
+	onScrollEnd,
 }: SelectProps) => {
 	const getDisplayLabel = (): string => {
 		if (multiple && Array.isArray(value)) {
@@ -49,12 +54,23 @@ const Select = ({
 		return value === optionValue;
 	};
 
+	const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+		const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+		if (
+			scrollHeight - scrollTop <= clientHeight + 10 &&
+			onScrollEnd &&
+			!isLoading
+		) {
+			onScrollEnd();
+		}
+	};
+
 	return (
 		<div className={styles.selectContainer}>
 			<label className={styles.select}>
 				{label && <p className={styles.selectLabel}>{label}</p>}
 				<Dropdown>
-					<Dropdown.Trigger>
+					<DropdownTrigger>
 						<button
 							type="button"
 							className={`${styles.trigger} ${error ? styles.error : ''} ${className}`.trim()}
@@ -63,13 +79,13 @@ const Select = ({
 							<span className={styles.valueContainer}>{getDisplayLabel()}</span>
 							<span className={styles.chevron}>▼</span>
 						</button>
-					</Dropdown.Trigger>
-					<Dropdown.Menu menuWidth="trigger">
+					</DropdownTrigger>
+					<DropdownMenu menuWidth="trigger" onScroll={handleScroll}>
 						{options.map((option) => {
 							const Icon = option.icon;
 
 							return (
-								<Dropdown.Item
+								<DropdownItem
 									key={String(option.value)}
 									onClick={() => handleOptionClick(option.value)}
 									className={isSelected(option.value) ? styles.selected : ''}
@@ -85,15 +101,13 @@ const Select = ({
 										/>
 									)}
 									{option.label}
-								</Dropdown.Item>
+								</DropdownItem>
 							);
 						})}
-					</Dropdown.Menu>
+					</DropdownMenu>
 				</Dropdown>
 			</label>
 			{error && <p className="error-message">{error}</p>}
 		</div>
 	);
 };
-
-export default Select;

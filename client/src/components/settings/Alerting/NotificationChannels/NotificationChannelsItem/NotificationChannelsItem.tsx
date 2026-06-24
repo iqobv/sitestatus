@@ -1,20 +1,20 @@
 'use client';
 
-import SettingsCard from '@/components/settings/SettingsCard/SettingsCard';
+import { SettingsCard } from '@/components/settings/SettingsCard/SettingsCard';
 import { TextField } from '@/components/ui';
 import { ChannelStatus, NotificationChannel } from '@/types';
 import { capitalize } from '@/utils';
 import styles from './NotificationChannelsItem.module.scss';
-import NotificationChannelsItemDelete from './NotificationChannelsItemDelete';
-import NotificationChannelsItemEdit from './NotificationChannelsItemEdit';
-import NotificationChannelsItemResend from './NotificationChannelsItemResend';
+import { NotificationChannelsItemDelete } from './NotificationChannelsItemDelete';
+import { NotificationChannelsItemEdit } from './NotificationChannelsItemEdit';
+import { NotificationChannelsItemResend } from './NotificationChannelsItemResend';
 import { NOTIFICATION_CHANNEL_ITEM_LABELS } from './notificationChannelsItemTypes';
 
 interface NotificationChannelsItemProps {
 	channel: NotificationChannel;
 }
 
-const NotificationChannelsItem = ({
+export const NotificationChannelsItem = ({
 	channel,
 }: NotificationChannelsItemProps) => {
 	const channelTypeLabels = NOTIFICATION_CHANNEL_ITEM_LABELS[channel.type];

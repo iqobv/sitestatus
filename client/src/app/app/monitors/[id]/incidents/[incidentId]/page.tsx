@@ -1,4 +1,4 @@
-import { MonitorIncident } from '@/components/monitors';
+import { MonitorIncident } from '@/components/monitors/Monitor/MonitorIncident/MonitorIncident';
 import { BackButton, SectionHeader } from '@/components/ui';
 import { Metadata } from 'next';
 

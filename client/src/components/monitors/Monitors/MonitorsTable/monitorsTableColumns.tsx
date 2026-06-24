@@ -7,11 +7,11 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 
 dayjs.extend(relativeTime);
 
-export const COLUMNS: ColumnDef<FullMonitor>[] = [
+export const MONITOR_COLUMNS: ColumnDef<FullMonitor>[] = [
 	{
 		header: 'Name',
 		accessorKey: 'name',
-		enableSorting: false,
+		enableSorting: true,
 		cell: (props) => <>{props.getValue()}</>,
 	},
 	{

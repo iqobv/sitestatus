@@ -2,7 +2,7 @@
 
 import { MonitorAnalytics } from '@/types';
 import { Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
-import MonitorCard from '../MonitorCard/MonitorCard';
+import { MonitorCard } from '../MonitorCard/MonitorCard';
 import { useMonitorResponseChart } from './useMonitorResponseChart.hook';
 
 interface MonitorResponseChartProps {
@@ -18,7 +18,9 @@ const REGION_COLORS = [
 	'#06b6d4',
 ];
 
-const MonitorResponseChart = ({ monitor }: MonitorResponseChartProps) => {
+export const MonitorResponseChart = ({
+	monitor,
+}: MonitorResponseChartProps) => {
 	const { data: logs } = monitor;
 
 	const { chartData, regions, dtf, toggleRegion, hiddenRegions } =
@@ -87,5 +89,3 @@ const MonitorResponseChart = ({ monitor }: MonitorResponseChartProps) => {
 		</MonitorCard>
 	);
 };
-
-export default MonitorResponseChart;

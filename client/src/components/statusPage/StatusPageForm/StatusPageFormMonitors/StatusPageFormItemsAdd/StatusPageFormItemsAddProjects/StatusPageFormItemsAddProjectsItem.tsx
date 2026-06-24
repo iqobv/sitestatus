@@ -11,7 +11,7 @@ interface StatusPageFormItemsAddProjectsItemProps extends StatusPageFormItemsAdd
 	project: ProjectWithMonitors;
 }
 
-const StatusPageFormItemsAddProjectsItem = ({
+export const StatusPageFormItemsAddProjectsItem = ({
 	project,
 	fields,
 	handleAddMonitors,
@@ -52,5 +52,3 @@ const StatusPageFormItemsAddProjectsItem = ({
 		</div>
 	);
 };
-
-export default StatusPageFormItemsAddProjectsItem;

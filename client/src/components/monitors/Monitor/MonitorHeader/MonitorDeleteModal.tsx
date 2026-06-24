@@ -1,7 +1,17 @@
 'use client';
 
 import { deleteMonitor } from '@/api';
-import { Button, Dropdown, Modal } from '@/components/ui';
+import {
+	Button,
+	DropdownItem,
+	Modal,
+	ModalBody,
+	ModalClose,
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
+	ModalTrigger,
+} from '@/components/ui';
 import { PRIVATE_PAGES, QUERY_KEYS } from '@/config';
 import { QueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -13,7 +23,7 @@ interface MonitorDeleteModalProps {
 	id: string;
 }
 
-const MonitorDeleteModal = ({ id }: MonitorDeleteModalProps) => {
+export const MonitorDeleteModal = ({ id }: MonitorDeleteModalProps) => {
 	const queryClient = new QueryClient();
 	const router = useRouter();
 
@@ -21,39 +31,37 @@ const MonitorDeleteModal = ({ id }: MonitorDeleteModalProps) => {
 		monitorId: id,
 		mutationFn: deleteMonitor,
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: QUERY_KEYS.monitors.list });
+			queryClient.invalidateQueries({ queryKey: QUERY_KEYS.monitors.lists() });
 			router.push(PRIVATE_PAGES.DASHBOARD);
 		},
 	});
 
 	return (
 		<Modal>
-			<Modal.Trigger>
-				<Dropdown.Item asChild isDelete closeOnClick={false}>
+			<ModalTrigger>
+				<DropdownItem asChild isDelete closeOnClick={false}>
 					<button className={`${styles.dropdownItem} ${styles.delete}`}>
 						<MdOutlineDelete size={20} />
 						Delete
 					</button>
-				</Dropdown.Item>
-			</Modal.Trigger>
-			<Modal.Content>
-				<Modal.Header>Delete Monitor</Modal.Header>
-				<Modal.Body>
+				</DropdownItem>
+			</ModalTrigger>
+			<ModalContent>
+				<ModalHeader>Delete Monitor</ModalHeader>
+				<ModalBody>
 					<p>Are you sure you want to delete this monitor?</p>
-				</Modal.Body>
-				<Modal.Footer className={styles.monitorDeleteFooter}>
-					<Modal.Close>
+				</ModalBody>
+				<ModalFooter className={styles.monitorDeleteFooter}>
+					<ModalClose>
 						<Button variant="contained">Cancel</Button>
-					</Modal.Close>
-					<Modal.Close>
+					</ModalClose>
+					<ModalClose>
 						<Button variant="danger" onClick={() => mutate()}>
 							Delete
 						</Button>
-					</Modal.Close>
-				</Modal.Footer>
-			</Modal.Content>
+					</ModalClose>
+				</ModalFooter>
+			</ModalContent>
 		</Modal>
 	);
 };
-
-export default MonitorDeleteModal;

@@ -1,7 +1,7 @@
 import { PRIVATE_PAGES } from '@/config';
 import { Dashboard } from '@/types/dashboard/dashboard.types';
 import { MdMonitor } from 'react-icons/md';
-import MonitorIncidentStatus from '../monitors/Monitor/MonitorIncidents/MonitorIncidentStatus/MonitorIncidentStatus';
+import { MonitorIncidentStatus } from '../monitors/Monitor/MonitorIncidents/MonitorIncidentStatus/MonitorIncidentStatus';
 import { DashboardSectionProps } from './DashboardSection/DashboardSection';
 
 export const DASHBOARD_CARDS = (data: Dashboard): DashboardSectionProps[] => [

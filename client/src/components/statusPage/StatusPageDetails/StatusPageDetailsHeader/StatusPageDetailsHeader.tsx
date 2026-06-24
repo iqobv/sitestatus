@@ -4,14 +4,16 @@ import { Button, SectionHeader } from '@/components/ui';
 import { PUBLIC_PAGES } from '@/config';
 import { FullStatusPage } from '@/types';
 import { LuExternalLink } from 'react-icons/lu';
-import { StatusPageDropdown } from '../../StatusPageDropdown';
+import { StatusPageDropdown } from '../../StatusPageDropdown/StatusPageDropdown';
 import styles from './StatusPageDetailsHeader.module.scss';
 
 interface StatusPageDetailsHeaderProps {
 	data: FullStatusPage;
 }
 
-const StatusPageDetailsHeader = ({ data }: StatusPageDetailsHeaderProps) => {
+export const StatusPageDetailsHeader = ({
+	data,
+}: StatusPageDetailsHeaderProps) => {
 	return (
 		<div className={styles.header}>
 			<SectionHeader
@@ -44,5 +46,3 @@ const StatusPageDetailsHeader = ({ data }: StatusPageDetailsHeaderProps) => {
 		</div>
 	);
 };
-
-export default StatusPageDetailsHeader;

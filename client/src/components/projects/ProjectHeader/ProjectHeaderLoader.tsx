@@ -1,25 +1,21 @@
-import { SkeletonLoader } from '@/components/ui';
+import {
+	IconButtonLoader,
+	SectionHeader,
+	SkeletonLoader,
+} from '@/components/ui';
 import styles from './ProjectHeader.module.scss';
 
-const ProjectHeaderLoader = () => {
+export const ProjectHeaderLoader = () => {
 	return (
-		<div className={styles.header} style={{ padding: '20px 0' }}>
-			<SkeletonLoader height={68} width={170} />
-			<div className={styles.headerActions}>
-				<SkeletonLoader
-					height={46}
-					width={200}
-					containerClassName={styles.desktopButton}
-				/>
-				<SkeletonLoader
-					height={46}
-					width={46}
-					containerClassName={styles.mobileButton}
-				/>
-				<SkeletonLoader height={46} width={46} />
-			</div>
-		</div>
+		<SectionHeader
+			title={<SkeletonLoader width={160} height={48} />}
+			description={<SkeletonLoader width={160} height={24} />}
+			rightSlot={
+				<div className={styles.headerActions}>
+					<IconButtonLoader width={200} />
+					<IconButtonLoader withText={false} />
+				</div>
+			}
+		/>
 	);
 };
-
-export default ProjectHeaderLoader;

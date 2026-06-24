@@ -3,7 +3,7 @@
 import { GoogleAnalytics } from '@next/third-parties/google';
 import Script from 'next/script';
 
-const GoogleAnalyticsHandler = () => {
+export const GoogleAnalyticsHandler = () => {
 	const gaId = process.env.NEXT_PUBLIC_GA_ID as string;
 
 	return (
@@ -45,5 +45,3 @@ const GoogleAnalyticsHandler = () => {
 		</>
 	);
 };
-
-export default GoogleAnalyticsHandler;

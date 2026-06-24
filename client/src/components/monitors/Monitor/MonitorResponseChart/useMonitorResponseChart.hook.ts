@@ -16,7 +16,7 @@ export const useMonitorResponseChart = (logs: AnalyticsData[]) => {
 	const [hiddenRegions, setHiddenRegions] = useState<string[]>([]);
 
 	const { data: regionData } = useQuery({
-		queryKey: QUERY_KEYS.region.list,
+		queryKey: QUERY_KEYS.regions.lists(),
 		queryFn: getAllRegions,
 	});
 

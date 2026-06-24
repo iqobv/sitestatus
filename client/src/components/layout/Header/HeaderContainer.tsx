@@ -6,7 +6,7 @@ interface HeaderContainerProps {
 	containerClassName?: string;
 }
 
-const HeaderContainer = ({
+export const HeaderContainer = ({
 	children,
 	headerClassName,
 	containerClassName,
@@ -19,5 +19,3 @@ const HeaderContainer = ({
 		</header>
 	);
 };
-
-export default HeaderContainer;

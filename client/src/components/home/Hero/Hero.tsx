@@ -2,7 +2,7 @@ import { Button } from '@/components/ui';
 import { AUTH_PAGES } from '@/config';
 import styles from './Hero.module.scss';
 
-const Hero = () => {
+export const Hero = () => {
 	return (
 		<div className={styles.hero}>
 			<div className={`${styles.content} container`}>
@@ -22,5 +22,3 @@ const Hero = () => {
 		</div>
 	);
 };
-
-export default Hero;

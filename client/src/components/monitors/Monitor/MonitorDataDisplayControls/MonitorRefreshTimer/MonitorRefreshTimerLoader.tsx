@@ -3,7 +3,7 @@
 import { SkeletonLoader } from '@/components/ui';
 import styles from './MonitorRefreshTimer.module.scss';
 
-const MonitorRefreshTimerLoader = () => {
+export const MonitorRefreshTimerLoader = () => {
 	return (
 		<div className={styles.timer}>
 			<SkeletonLoader width={135} height={18} />
@@ -11,5 +11,3 @@ const MonitorRefreshTimerLoader = () => {
 		</div>
 	);
 };
-
-export default MonitorRefreshTimerLoader;

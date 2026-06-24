@@ -1,9 +1,9 @@
 import { SectionHeader } from '@/components/ui';
-import FeatureItem from './FeatureItem/FeatureItem';
+import { FeatureItem } from './FeatureItem/FeatureItem';
 import styles from './Features.module.scss';
 import { FEATURES } from './featuresItems';
 
-const Features = () => {
+export const Features = () => {
 	return (
 		<div className={styles.wrapper} id="features">
 			<div className={`${styles.features} container`}>
@@ -14,8 +14,10 @@ const Features = () => {
 							<span>Built for Developers</span>
 						</>
 					}
-					titleClassName={styles.title}
-					titleComponent="h2"
+					titleProps={{
+						variant: 'h2',
+						className: styles.title,
+					}}
 				/>
 				<div className={styles.list}>
 					{FEATURES.map((feature) => (
@@ -26,5 +28,3 @@ const Features = () => {
 		</div>
 	);
 };
-
-export default Features;

@@ -1,8 +1,8 @@
-import ValueCard from './ValueCard/ValueCard';
+import { ValueCard } from './ValueCard/ValueCard';
 import styles from './Values.module.scss';
 import { CORE_VALUES } from './valuesCards';
 
-const Values = () => {
+export const Values = () => {
 	return (
 		<div className={`${styles.values} container`}>
 			{CORE_VALUES.map((card, index) => (
@@ -11,5 +11,3 @@ const Values = () => {
 		</div>
 	);
 };
-
-export default Values;

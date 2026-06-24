@@ -5,8 +5,6 @@ const cards = Array.from({ length: 3 }).map((_, i) => (
 	<SkeletonLoader key={i} height={95} />
 ));
 
-const MonitorOverallLoader = () => {
+export const MonitorOverallLoader = () => {
 	return <div className={styles.overall}>{cards}</div>;
 };
-
-export default MonitorOverallLoader;

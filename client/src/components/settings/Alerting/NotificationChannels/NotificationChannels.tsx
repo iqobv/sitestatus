@@ -4,14 +4,14 @@ import { getAllNotificationChannels } from '@/api';
 import { SectionHeader } from '@/components/ui';
 import { QUERY_KEYS } from '@/config';
 import { useQuery } from '@tanstack/react-query';
-import CreateNotificationChannel from '../CreateNotificationChannel';
+import { CreateNotificationChannel } from '../CreateNotificationChannel';
 import styles from './NotificationChannels.module.scss';
-import NotificationChannelsItem from './NotificationChannelsItem/NotificationChannelsItem';
-import NotificationChannelsLoader from './NotificationChannelsLoader';
+import { NotificationChannelsItem } from './NotificationChannelsItem/NotificationChannelsItem';
+import { NotificationChannelsLoader } from './NotificationChannelsLoader';
 
-const NotificationChannels = () => {
+export const NotificationChannels = () => {
 	const { data, isLoading } = useQuery({
-		queryKey: QUERY_KEYS.notificationChannel.all,
+		queryKey: QUERY_KEYS.notificationChannels.lists(),
 		queryFn: getAllNotificationChannels,
 	});
 
@@ -24,7 +24,9 @@ const NotificationChannels = () => {
 						<CreateNotificationChannel />
 					</div>
 				}
-				titleComponent="h3"
+				titleProps={{
+					variant: 'h3',
+				}}
 			/>
 			{isLoading && <NotificationChannelsLoader />}
 			{data && data.length > 0 && (
@@ -37,5 +39,3 @@ const NotificationChannels = () => {
 		</div>
 	);
 };
-
-export default NotificationChannels;

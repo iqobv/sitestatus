@@ -1,5 +1,5 @@
 import { getUserStatusPages } from '@/api';
-import { StatusPages } from '@/components/statusPage';
+import { StatusPages } from '@/components/statusPage/StatusPages/StatusPages';
 import { QUERY_KEYS } from '@/config';
 import {
 	dehydrate,
@@ -11,7 +11,7 @@ export default function StatusPagesPage() {
 	const queryClient = new QueryClient();
 
 	queryClient.prefetchQuery({
-		queryKey: QUERY_KEYS.statusPage.all,
+		queryKey: QUERY_KEYS.statusPages.lists(),
 		queryFn: getUserStatusPages,
 	});
 

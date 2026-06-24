@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './Sepator.module.scss';
 import { SepatorProps } from './Sepator.types';
 
-const Sepator = ({
+export const Sepator = ({
 	orientation = 'horizontal',
 	thickness = 1,
 	margin = 0,
@@ -22,5 +22,3 @@ const Sepator = ({
 		/>
 	);
 };
-
-export default Sepator;

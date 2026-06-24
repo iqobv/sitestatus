@@ -7,19 +7,19 @@ import { updateMonitorSchema } from '@/schemas';
 import { MonitorWithRegionsIds } from '@/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-import MonitorForm from '../MonitorForm/MonitorForm';
+import { MonitorForm } from '../MonitorForm/MonitorForm';
 import { UPDATE_MONITOR_FIELDS } from './updateMonitorFields';
-import UpdateMonitorLoader from './UpdateMonitorLoader';
+import { UpdateMonitorLoader } from './UpdateMonitorLoader';
 
 interface UpdateMonitorProps {
 	monitorId: string;
 }
 
-const UpdateMonitor = ({ monitorId }: UpdateMonitorProps) => {
+export const UpdateMonitor = ({ monitorId }: UpdateMonitorProps) => {
 	const queryClient = useQueryClient();
 
 	const { data, isLoading } = useQuery({
-		queryKey: QUERY_KEYS.monitors.byId(monitorId),
+		queryKey: QUERY_KEYS.monitors.detail(monitorId),
 		queryFn: () => getMonitorById(monitorId),
 		enabled: !!monitorId,
 	});
@@ -28,10 +28,10 @@ const UpdateMonitor = ({ monitorId }: UpdateMonitorProps) => {
 		mutationFn: (data: UpdateMonitorDto) => updateMonitor(monitorId, data),
 		onSuccess: () => {
 			queryClient.invalidateQueries({
-				queryKey: QUERY_KEYS.monitors.byId(monitorId),
+				queryKey: QUERY_KEYS.monitors.detail(monitorId),
 			});
 			queryClient.invalidateQueries({
-				queryKey: QUERY_KEYS.monitors.list,
+				queryKey: QUERY_KEYS.monitors.lists(),
 			});
 			toast.success('Monitor updated successfully');
 		},
@@ -69,5 +69,3 @@ const UpdateMonitor = ({ monitorId }: UpdateMonitorProps) => {
 		</div>
 	);
 };
-
-export default UpdateMonitor;

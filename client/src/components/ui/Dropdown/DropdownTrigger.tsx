@@ -11,7 +11,7 @@ interface DropdownTriggerProps {
 	>;
 }
 
-const DropdownTrigger = ({ children }: DropdownTriggerProps) => {
+export const DropdownTrigger = ({ children }: DropdownTriggerProps) => {
 	const { getReferenceProps, setReference, isOpen } = useDropdown();
 
 	const childrenRef = (children as unknown as { ref?: React.Ref<HTMLElement> })
@@ -30,5 +30,3 @@ const DropdownTrigger = ({ children }: DropdownTriggerProps) => {
 		ref: React.Ref<HTMLElement>;
 	});
 };
-
-export default DropdownTrigger;

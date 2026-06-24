@@ -1,12 +1,23 @@
-import ProjectItemLoader from './ProjectItem/ProjectItemLoader';
-import styles from './Projects.module.scss';
+import {
+	IconButtonLoader,
+	SectionHeader,
+	SkeletonLoader,
+} from '@/components/ui';
+import { ProjectsTableLoader } from './ProjectsTable/ProjectsTableLoader';
 
-const projects = Array.from({ length: 4 }, (_, i) => (
-	<ProjectItemLoader key={i} />
-));
-
-const ProjectsLoader = () => {
-	return <div className={styles.list}>{projects}</div>;
+export const ProjectsLoader = () => {
+	return (
+		<>
+			<SectionHeader
+				title={<SkeletonLoader height="2.875rem" width={160} />}
+				titleProps={{
+					variant: 'h1',
+					as: 'div',
+				}}
+				description={<SkeletonLoader height="1.75rem" width={180} />}
+				rightSlot={<IconButtonLoader width={178} />}
+			/>
+			<ProjectsTableLoader />
+		</>
+	);
 };
-
-export default ProjectsLoader;

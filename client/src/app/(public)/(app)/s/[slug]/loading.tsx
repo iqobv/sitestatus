@@ -1,4 +1,4 @@
-import { StatusPageLoader } from '@/components/statusPage';
+import { StatusPageLoader } from '@/components/statusPage/StatusPage/StatusPageLoader';
 
 export default function Loading() {
 	return (

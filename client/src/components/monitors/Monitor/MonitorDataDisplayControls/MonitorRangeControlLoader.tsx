@@ -1,8 +1,8 @@
-import MonitorRangeButtonsLoader from './MonitorRangeButtons/MonitorRangeButtonsLoader';
+import { MonitorRangeButtonsLoader } from './MonitorRangeButtons/MonitorRangeButtonsLoader';
 import styles from './MonitorRangeControl.module.scss';
-import MonitorRefreshTimerLoader from './MonitorRefreshTimer/MonitorRefreshTimerLoader';
+import { MonitorRefreshTimerLoader } from './MonitorRefreshTimer/MonitorRefreshTimerLoader';
 
-const MonitorRangeControlLoader = () => {
+export const MonitorRangeControlLoader = () => {
 	return (
 		<div className={styles.rangeControl}>
 			<MonitorRangeButtonsLoader />
@@ -10,5 +10,3 @@ const MonitorRangeControlLoader = () => {
 		</div>
 	);
 };
-
-export default MonitorRangeControlLoader;

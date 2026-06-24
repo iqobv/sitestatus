@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Form, TextField } from '@/components/ui';
+import { Button, FormField, TextField } from '@/components/ui';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { MdDeleteOutline, MdOutlineDragIndicator } from 'react-icons/md';
@@ -13,7 +13,7 @@ interface StatusPageFormMonitorsItemProps {
 	onRemove: (index: number) => void;
 }
 
-const StatusPageFormMonitorsItem = ({
+export const StatusPageFormMonitorsItem = ({
 	id,
 	index,
 	initName,
@@ -33,9 +33,9 @@ const StatusPageFormMonitorsItem = ({
 				<MdOutlineDragIndicator size={20} />
 			</div>
 			<div className={styles.inputWrapper}>
-				<Form.Field name={`monitors.${index}.displayName`}>
+				<FormField name={`monitors.${index}.displayName`}>
 					<TextField className={styles.textField} placeholder={initName} />
-				</Form.Field>
+				</FormField>
 			</div>
 			<Button
 				type="button"
@@ -50,5 +50,3 @@ const StatusPageFormMonitorsItem = ({
 		</div>
 	);
 };
-
-export default StatusPageFormMonitorsItem;

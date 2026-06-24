@@ -2,13 +2,13 @@
 
 import { MonitorTimeline } from '@/types';
 import styles from './MonitorOverallUptimeBar.module.scss';
-import MonitorOverallUptimeBarItem from './MonitorOverallUptimeBarItem';
+import { MonitorOverallUptimeBarItem } from './MonitorOverallUptimeBarItem';
 
 interface MonitorOverallUptimeBarProps {
 	timeline: MonitorTimeline[];
 }
 
-const MonitorOverallUptimeBar = ({
+export const MonitorOverallUptimeBar = ({
 	timeline,
 }: MonitorOverallUptimeBarProps) => {
 	return (
@@ -19,5 +19,3 @@ const MonitorOverallUptimeBar = ({
 		</div>
 	);
 };
-
-export default MonitorOverallUptimeBar;

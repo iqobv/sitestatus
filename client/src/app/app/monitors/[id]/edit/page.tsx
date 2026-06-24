@@ -1,4 +1,4 @@
-import { UpdateMonitor } from '@/components/monitors';
+import { UpdateMonitor } from '@/components/monitors/UpdateMonitor/UpdateMonitor';
 import { BackButton, SectionHeader } from '@/components/ui';
 
 interface EditMonitorPageProps {

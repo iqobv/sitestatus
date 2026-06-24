@@ -7,17 +7,19 @@ import { useTransformSecondsToHours } from '@/hooks';
 import { Incident } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import { getCoreRowModel } from '@tanstack/react-table';
-import MonitorIncidentsLoader from '../MonitorIncidentsLoader';
-import MonitorIncidentStatus from '../MonitorIncidentStatus/MonitorIncidentStatus';
+import { MonitorIncidentsLoader } from '../MonitorIncidentsLoader';
+import { MonitorIncidentStatus } from '../MonitorIncidentStatus/MonitorIncidentStatus';
 import styles from './MonitorIncidentsTable.module.scss';
 
 interface MonitorIncidentsTableProps {
 	incidents: Incident[];
 }
 
-const MonitorIncidentsTable = ({ incidents }: MonitorIncidentsTableProps) => {
+export const MonitorIncidentsTable = ({
+	incidents,
+}: MonitorIncidentsTableProps) => {
 	const { data: regions, isLoading } = useQuery({
-		queryKey: QUERY_KEYS.region.list,
+		queryKey: QUERY_KEYS.regions.lists(),
 		queryFn: getAllRegions,
 	});
 
@@ -116,5 +118,3 @@ const MonitorIncidentsTable = ({ incidents }: MonitorIncidentsTableProps) => {
 		/>
 	);
 };
-
-export default MonitorIncidentsTable;

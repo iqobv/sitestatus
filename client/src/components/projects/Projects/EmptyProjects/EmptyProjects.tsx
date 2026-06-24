@@ -4,7 +4,7 @@ import { Button } from '@/components/ui';
 import { PRIVATE_PAGES } from '@/config';
 import styles from './EmptyProjects.module.scss';
 
-const EmptyProjects = () => {
+export const EmptyProjects = () => {
 	return (
 		<div className={styles.empty}>
 			<p className={styles.message}>You don't have any projects yet.</p>
@@ -12,5 +12,3 @@ const EmptyProjects = () => {
 		</div>
 	);
 };
-
-export default EmptyProjects;

@@ -9,7 +9,7 @@ interface TableRowData {
 	isSkeleton?: boolean;
 }
 
-const TableBody = <D extends RowData>() => {
+export const TableBody = <D extends RowData>() => {
 	const { table, getRowHref } = useTableContext();
 	const columnsCount = table.getAllColumns().length;
 
@@ -88,5 +88,3 @@ const TableBody = <D extends RowData>() => {
 		</tbody>
 	);
 };
-
-export default TableBody;

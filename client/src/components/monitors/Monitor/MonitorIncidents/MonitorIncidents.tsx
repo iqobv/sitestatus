@@ -1,14 +1,14 @@
 'use client';
 
 import type { Incident } from '@/types';
-import MonitorCard from '../MonitorCard/MonitorCard';
-import MonitorIncidentsTable from './MonitorIncidentsTable/MonitorIncidentsTable';
+import { MonitorCard } from '../MonitorCard/MonitorCard';
+import { MonitorIncidentsTable } from './MonitorIncidentsTable/MonitorIncidentsTable';
 
 interface MonitorIncidentsProps {
 	incidents: Incident[];
 }
 
-const MonitorIncidents = ({ incidents }: MonitorIncidentsProps) => {
+export const MonitorIncidents = ({ incidents }: MonitorIncidentsProps) => {
 	return (
 		<MonitorCard cardTitle="Incidents">
 			{incidents.length === 0 && <p>No incidents to display.</p>}
@@ -16,5 +16,3 @@ const MonitorIncidents = ({ incidents }: MonitorIncidentsProps) => {
 		</MonitorCard>
 	);
 };
-
-export default MonitorIncidents;

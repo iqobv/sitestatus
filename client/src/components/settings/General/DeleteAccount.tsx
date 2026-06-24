@@ -7,7 +7,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 
-const DeleteAccount = () => {
+export const DeleteAccount = () => {
 	const router = useRouter();
 
 	const { user } = useAuth();
@@ -41,5 +41,3 @@ const DeleteAccount = () => {
 		/>
 	);
 };
-
-export default DeleteAccount;

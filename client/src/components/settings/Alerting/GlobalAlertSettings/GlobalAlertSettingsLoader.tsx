@@ -1,7 +1,5 @@
 import { SkeletonLoader } from '@/components/ui';
 
-const GlobalAlertSettingsLoader = () => {
+export const GlobalAlertSettingsLoader = () => {
 	return <SkeletonLoader height={280} />;
 };
-
-export default GlobalAlertSettingsLoader;

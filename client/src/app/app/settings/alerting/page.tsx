@@ -1,4 +1,4 @@
-import { Alerting } from '@/components/settings';
+import { Alerting } from '@/components/settings/Alerting/Alerting';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

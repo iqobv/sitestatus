@@ -1,11 +1,11 @@
 import styles from './Monitor.module.scss';
-import MonitorAnalyticsLoader from './MonitorAnalyticsLoader';
-import MonitorRangeControlLoader from './MonitorDataDisplayControls/MonitorRangeControlLoader';
-import MonitorHeaderLoader from './MonitorHeader/MonitorHeaderLoader';
-import MonitorOverallLoader from './MonitorOverall/MonitorOverallLoader';
-import MonitorRegionControlLoader from './MonitorRegionControl/MonitorRegionControlLoader';
+import { MonitorAnalyticsLoader } from './MonitorAnalyticsLoader';
+import { MonitorRangeControlLoader } from './MonitorDataDisplayControls/MonitorRangeControlLoader';
+import { MonitorHeaderLoader } from './MonitorHeader/MonitorHeaderLoader';
+import { MonitorOverallLoader } from './MonitorOverall/MonitorOverallLoader';
+import { MonitorRegionControlLoader } from './MonitorRegionControl/MonitorRegionControlLoader';
 
-const MonitorLoader = () => {
+export const MonitorLoader = () => {
 	return (
 		<div className={styles.content}>
 			<MonitorHeaderLoader />
@@ -16,5 +16,3 @@ const MonitorLoader = () => {
 		</div>
 	);
 };
-
-export default MonitorLoader;

@@ -1,10 +1,10 @@
 'use client';
 
-import { forgotPassword } from '@/api';
+import { forgotPassword } from '@/api/auth/forgotPassword.api';
 import { Form, FormField, FormSubmit, TextField } from '@/components/ui';
-import { AUTH_PAGES } from '@/config';
-import { EmailDto } from '@/dto';
-import { emailSchema } from '@/schemas';
+import { AUTH_PAGES } from '@/config/authPages.config';
+import { EmailDto } from '@/dto/auth.dto';
+import { emailSchema } from '@/schemas/auth/email.schema';
 import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
 import { MdOutlineEmail } from 'react-icons/md';

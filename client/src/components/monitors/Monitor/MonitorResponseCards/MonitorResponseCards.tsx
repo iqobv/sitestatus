@@ -1,6 +1,6 @@
 'use client';
 
-import { MonitorResponseStatistics } from '@/types';
+import { MonitorResponseStatistics } from '@/types/monitors/monitorResponseStatistics.types';
 import { MonitorCard } from '../MonitorCard/MonitorCard';
 import styles from './MonitorResponseCards.module.scss';
 import { MONITOR_RESPONSE_CARDS_ITEMS } from './monitorResponseCardsItems';

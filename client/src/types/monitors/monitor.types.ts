@@ -1,6 +1,6 @@
 import { PaginatedData } from '../api/paginatedData.types';
 import { DefaultFields } from '../defaultFields.types';
-import { BaseRegion } from '../region';
+import { BaseRegion } from '../region/baseRegion.types';
 import { MonitorStatus } from './monitorStatus.types';
 import { MonitorTimeline } from './monitoTimeline.types';
 

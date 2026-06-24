@@ -1,8 +1,8 @@
 'use client';
 
-import { getAllNotificationChannels } from '@/api';
+import { getAllNotificationChannels } from '@/api/notificationChannel/getAllNotificationChannel.api';
 import { SectionHeader } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { useQuery } from '@tanstack/react-query';
 import { CreateNotificationChannel } from '../CreateNotificationChannel';
 import styles from './NotificationChannels.module.scss';

@@ -1,6 +1,7 @@
 'use client';
 
-import { IncidentDetails, Region } from '@/types';
+import { IncidentDetails } from '@/types/incident/incidentDetails.types';
+import { Region } from '@/types/region/region.types';
 
 interface UseTransformDataProps {
 	incidentData: IncidentDetails;

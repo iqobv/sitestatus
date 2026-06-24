@@ -1,4 +1,4 @@
-import { PublicStatusPageMonitor } from '@/types';
+import { PublicStatusPageMonitor } from '@/types/statusPage/publicStatusPage.types';
 import { apiClient } from '../axios';
 
 export const getStatusPageMonitorsBySlug = async (slug: string) =>

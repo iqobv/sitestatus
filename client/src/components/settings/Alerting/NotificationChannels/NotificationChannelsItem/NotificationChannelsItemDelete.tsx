@@ -1,6 +1,6 @@
-import { deleteNotificationChannel } from '@/api';
+import { deleteNotificationChannel } from '@/api/notificationChannel/deleteNotificationChannel.api';
 import { Button, ConfirmAction } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 

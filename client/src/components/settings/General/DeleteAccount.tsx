@@ -1,8 +1,8 @@
 'use client';
 
-import { deleteAccount } from '@/api';
+import { deleteAccount } from '@/api/auth/deleteAccount.api';
 import { Button, ConfirmAction } from '@/components/ui';
-import { useAuth } from '@/hooks';
+import { useAuth } from '@/hooks/useAuth.hook';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';

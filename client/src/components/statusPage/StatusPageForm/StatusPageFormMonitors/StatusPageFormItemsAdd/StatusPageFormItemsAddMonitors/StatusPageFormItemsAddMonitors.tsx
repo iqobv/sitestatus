@@ -1,8 +1,8 @@
 'use client';
 
-import { getAllMonitors } from '@/api';
+import { getAllMonitors } from '@/api/monitor/getAllMonitors.api';
 import { Button, Pagination } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { PaginationQueryDto } from '@/dto/ui.dto';
 import { useLocalPagination } from '@/hooks/useLocalPagination.hook';
 import { useQuery } from '@tanstack/react-query';

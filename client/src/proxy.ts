@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { AUTH_PAGES, PRIVATE_PAGES, SUBDOMAINS } from './config';
-import { appendCorsHeaders, getValidatedOrigin } from './utils';
+import { AUTH_PAGES } from './config/authPages.config';
+import { PRIVATE_PAGES } from './config/privatePages.config';
+import { SUBDOMAINS } from './config/subdomains.config';
+import { appendCorsHeaders, getValidatedOrigin } from './utils/cors.util';
 
 export async function proxy(request: NextRequest) {
 	const origin = getValidatedOrigin(request);

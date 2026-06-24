@@ -1,6 +1,6 @@
 'use client';
 
-import { upsertAlertSettings } from '@/api';
+import { upsertAlertSettings } from '@/api/alertSettings/upsertAlertSettings.api';
 import {
 	Button,
 	Checkbox,
@@ -18,10 +18,10 @@ import {
 	ModalTrigger,
 	TextField,
 } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
-import { UpsertAlertSettingsDto } from '@/dto';
-import { upsertAlertSettingsSchema } from '@/schemas';
-import { AlertSettings } from '@/types';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { UpsertAlertSettingsDto } from '@/dto/alertSettings.dto';
+import { upsertAlertSettingsSchema } from '@/schemas/alertSettings/upsertAlertSettings.schema';
+import { AlertSettings } from '@/types/notificationChannel/alertSettings.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { GLOBAL_ALERT_SETTINGS_FIELDS } from './globalAlertSettingsFields';

@@ -7,8 +7,8 @@ import {
 	DropdownMenu,
 	DropdownTrigger,
 } from '@/components/ui';
-import { PRIVATE_PAGES } from '@/config';
-import { StatusPage } from '@/types';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
+import { StatusPage } from '@/types/statusPage/statusPage.types';
 import Link from 'next/link';
 import { IconBaseProps } from 'react-icons';
 import { MdEdit, MdMoreVert } from 'react-icons/md';

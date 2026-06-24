@@ -1,5 +1,5 @@
-import { UpdateMonitorDto } from '@/dto';
-import { Field } from '@/types';
+import { UpdateMonitorDto } from '@/dto/monitor.dto';
+import { Field } from '@/types/ui/field.types';
 
 export const UPDATE_MONITOR_FIELDS: Field<UpdateMonitorDto>[] = [
 	{

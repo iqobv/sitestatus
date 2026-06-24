@@ -1,7 +1,7 @@
 'use client';
 
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui';
-import { MonitorTimeline } from '@/types';
+import { MonitorTimeline } from '@/types/monitors/monitoTimeline.types';
 import React from 'react';
 import styles from './MonitorOverallUptimeBar.module.scss';
 

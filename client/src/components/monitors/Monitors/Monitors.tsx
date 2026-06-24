@@ -1,10 +1,10 @@
 'use client';
 
 import { Button } from '@/components/ui';
-import { PRIVATE_PAGES } from '@/config';
-import { MonitorsQueryDto } from '@/dto';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
+import { MonitorsQueryDto } from '@/dto/monitor.dto';
 import { monitorsQuerySchema } from '@/schemas/monitor/monitorsQuery.schema';
-import { PaginatedMonitors } from '@/types';
+import { PaginatedMonitors } from '@/types/monitors/monitor.types';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { MonitorRefresh } from './MonitorRefresh/MonitorRefresh';

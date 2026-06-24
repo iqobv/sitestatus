@@ -1,5 +1,5 @@
-import { UpsertAlertSettingsDto } from '@/dto';
-import { Field } from '@/types';
+import { UpsertAlertSettingsDto } from '@/dto/alertSettings.dto';
+import { Field } from '@/types/ui/field.types';
 
 export const GLOBAL_ALERT_SETTINGS_FIELDS: Field<UpsertAlertSettingsDto>[] = [
 	{

@@ -2,7 +2,8 @@
 
 import { Logo } from '@/components/icons/Logo';
 import { Button } from '@/components/ui';
-import { CROSS_DOMAIN_ROUTES, PUBLIC_PAGES } from '@/config';
+import { CROSS_DOMAIN_ROUTES } from '@/config/navigation.config';
+import { PUBLIC_PAGES } from '@/config/publicPages.config';
 import Link from 'next/link';
 import { HeaderContainer } from '../HeaderContainer';
 import styles from './HeaderMain.module.scss';

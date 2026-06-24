@@ -1,4 +1,4 @@
-import { MonitorsQueryDto } from '@/dto';
+import { MonitorsQueryDto } from '@/dto/monitor.dto';
 import { SortOrder } from '@/types/api/sortOrder.types';
 import { MonitorSortBy } from '@/types/monitors/monitorSortBy.types';
 import { StrictParsersMap } from '@/types/parserMap.types';

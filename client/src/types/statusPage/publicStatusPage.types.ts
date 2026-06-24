@@ -1,4 +1,5 @@
-import { MonitorStatus, MonitorTimeline } from '../monitors';
+import { MonitorStatus } from '../monitors/monitorStatus.types';
+import { MonitorTimeline } from '../monitors/monitoTimeline.types';
 
 export interface PublicStatusPage {
 	id: string;

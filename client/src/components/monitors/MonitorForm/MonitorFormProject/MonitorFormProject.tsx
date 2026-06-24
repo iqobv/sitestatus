@@ -1,9 +1,9 @@
 'use client';
 
-import { getAllProjects } from '@/api';
+import { getAllProjects } from '@/api/project/getAllProjects.api';
 import { Select } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
-import { BaseProjectMonitorDto } from '@/dto';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { BaseProjectMonitorDto } from '@/dto/monitor.dto';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { Controller, useFormContext } from 'react-hook-form';
 

@@ -1,5 +1,5 @@
-import { MonitorsQueryDto } from '@/dto';
-import { PaginatedMonitors } from '@/types';
+import { MonitorsQueryDto } from '@/dto/monitor.dto';
+import { PaginatedMonitors } from '@/types/monitors/monitor.types';
 import { apiClient, apiServer } from '../axios';
 
 export const getAllMonitors = async (params: MonitorsQueryDto) =>

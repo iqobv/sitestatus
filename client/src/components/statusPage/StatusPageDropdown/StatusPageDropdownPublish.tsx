@@ -1,9 +1,9 @@
 'use client';
 
-import { updateStatusPage } from '@/api';
+import { updateStatusPage } from '@/api/statusPage/updateStatusPage.api';
 import { DropdownItem } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
-import { StatusPage } from '@/types';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { StatusPage } from '@/types/statusPage/statusPage.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { MdPublic } from 'react-icons/md';
 import { toast } from 'react-toastify';

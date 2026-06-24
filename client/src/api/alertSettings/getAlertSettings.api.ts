@@ -1,4 +1,4 @@
-import { AlertSettings } from '@/types';
+import { AlertSettings } from '@/types/notificationChannel/alertSettings.types';
 import { apiClient } from '../axios';
 
 interface GetAlertSettingsHierarchyQuery {

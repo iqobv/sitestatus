@@ -1,7 +1,7 @@
 'use client';
 
-import { getAllProjectsWithMonitors } from '@/api';
-import { QUERY_KEYS } from '@/config';
+import { getAllProjectsWithMonitors } from '@/api/project/getAllProjectsWithMonitors.api';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { useQuery } from '@tanstack/react-query';
 import { StatusPageFormItemsAddProps } from '../StatusPageFormItemsAdd';
 import styles from '../StatusPageFormItemsAdd.module.scss';

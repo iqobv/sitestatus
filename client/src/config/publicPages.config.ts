@@ -1,4 +1,4 @@
-import { getAbsoluteUrl } from '@/utils';
+import { getAbsoluteUrl } from '@/utils/getAbsolutePath.util';
 import { SUBDOMAINS } from './subdomains.config';
 
 export const PUBLIC_PAGES = {

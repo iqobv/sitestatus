@@ -1,10 +1,10 @@
 'use client';
 
-import { changePassword } from '@/api';
+import { changePassword } from '@/api/auth/changePassword.api';
 import { Form, FormField, FormSubmit, TextField } from '@/components/ui';
-import { PRIVATE_PAGES } from '@/config';
-import { ChangePasswordDto } from '@/dto';
-import { changePasswordSchema } from '@/schemas';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
+import { ChangePasswordDto } from '@/dto/auth.dto';
+import { changePasswordSchema } from '@/schemas/auth/changePassword.schema';
 import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
@@ -64,9 +64,10 @@ export const ChangePassword = () => {
 					<>
 						{CHANGE_PASSWORD_FIELDS.map(
 							({ name, leftIcon, rightIcon, isRequired, ...rest }) => {
+								const fieldName = name as keyof ChangePasswordDto;
 								const LeftIcon = leftIcon;
 								const RightIcon = rightIcon;
-								const error = errors[name]?.message as string | undefined;
+								const error = errors[fieldName]?.message as string | undefined;
 
 								if (rest.type === 'textarea') return null;
 

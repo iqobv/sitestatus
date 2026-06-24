@@ -1,10 +1,8 @@
-import {
-	baseStatusPageSchema,
-	createStatusPageSchema,
-	statusPageMonitorSchema,
-	updateStatusPageSchema,
-} from '@/schemas';
+import { baseStatusPageSchema } from '@/schemas/statusPage/baseStatusPage.schema';
+import { createStatusPageSchema } from '@/schemas/statusPage/createStatusPage.schema';
+import { statusPageMonitorSchema } from '@/schemas/statusPage/statusPageMonitor.schema';
 import { statusPagesQuerySchema } from '@/schemas/statusPage/statusPagesQuery.schema';
+import { updateStatusPageSchema } from '@/schemas/statusPage/updateStatusPage.schema';
 import z from 'zod';
 
 export type BaseStatusPageDto = z.infer<typeof baseStatusPageSchema>;

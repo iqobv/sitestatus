@@ -1,5 +1,5 @@
 import { NotFoundWrapper } from '@/components/layout/NotFoundWrapper/NotFoundWrapper';
-import { PRIVATE_PAGES } from '@/config';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

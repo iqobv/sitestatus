@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui';
-import { PUBLIC_PAGES } from '@/config';
+import { PUBLIC_PAGES } from '@/config/publicPages.config';
 import styles from './NotFoundWrapper.module.scss';
 
 interface NotFoundWrapperProps {

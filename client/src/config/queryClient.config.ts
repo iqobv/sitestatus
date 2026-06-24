@@ -1,4 +1,6 @@
-import { MonitorsQueryDto, ProjectsQueryDto, StatusPagesQueryDto } from '@/dto';
+import { MonitorsQueryDto } from '@/dto/monitor.dto';
+import { ProjectsQueryDto } from '@/dto/project.dto';
+import { StatusPagesQueryDto } from '@/dto/statusPage.dto';
 import { PaginationQueryDto } from '@/dto/ui.dto';
 
 export const QUERY_KEYS = {

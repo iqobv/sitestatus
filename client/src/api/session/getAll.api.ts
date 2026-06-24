@@ -1,4 +1,4 @@
-import { AllSessions } from '@/types';
+import { AllSessions } from '@/types/session/allSession.types';
 import { apiClient, apiServer } from '../axios';
 
 export const getAllSessions = async () =>

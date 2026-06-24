@@ -1,5 +1,5 @@
 import { LogoLink } from '@/components/ui';
-import { PUBLIC_PAGES } from '@/config';
+import { PUBLIC_PAGES } from '@/config/publicPages.config';
 import styles from './LegalHeader.module.scss';
 
 export const LegalHeader = () => {

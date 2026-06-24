@@ -1,6 +1,6 @@
-import { getServerStatusPageById } from '@/api';
+import { getServerStatusPageById } from '@/api/statusPage/getStatusPageById.api';
 import { StatusPageDetails } from '@/components/statusPage/StatusPageDetails/StatusPageDetails';
-import { QUERY_KEYS } from '@/config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import {
 	dehydrate,
 	HydrationBoundary,

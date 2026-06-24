@@ -1,4 +1,4 @@
-import { FullStatusPage } from '@/types';
+import { FullStatusPage } from '@/types/statusPage/statusPage.types';
 import { apiClient, apiServer } from '../axios';
 
 export const getStatusPageById = async (id: string) =>

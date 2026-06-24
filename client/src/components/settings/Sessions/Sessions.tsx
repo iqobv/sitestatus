@@ -1,8 +1,8 @@
 'use client';
 
-import { getAllSessions } from '@/api';
+import { getAllSessions } from '@/api/session/getAll.api';
 import { SectionHeader } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { useQuery } from '@tanstack/react-query';
 import { SettingsWrapper } from '../SettingsWrapper/SettingsWrapper';
 import { SessionCard } from './SessionCard/SessionCard';

@@ -1,8 +1,9 @@
 'use client';
 
-import { getMonitorAnalytics, getMonitorByIdFull } from '@/api';
-import { QUERY_KEYS } from '@/config';
-import { monitorRangeParser } from '@/parsers';
+import { getMonitorByIdFull } from '@/api/monitor/getMonitorById.api';
+import { getMonitorAnalytics } from '@/api/monitor/monitorAnalytics.api';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { monitorRangeParser } from '@/parsers/monitorRange.parser';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { parseAsString, useQueryStates } from 'nuqs';
 import styles from './Monitor.module.scss';

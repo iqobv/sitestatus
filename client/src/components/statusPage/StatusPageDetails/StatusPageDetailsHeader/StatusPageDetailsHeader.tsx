@@ -1,8 +1,8 @@
 'use client';
 
 import { Button, SectionHeader } from '@/components/ui';
-import { PUBLIC_PAGES } from '@/config';
-import { FullStatusPage } from '@/types';
+import { PUBLIC_PAGES } from '@/config/publicPages.config';
+import { FullStatusPage } from '@/types/statusPage/statusPage.types';
 import { LuExternalLink } from 'react-icons/lu';
 import { StatusPageDropdown } from '../../StatusPageDropdown/StatusPageDropdown';
 import styles from './StatusPageDetailsHeader.module.scss';

@@ -1,9 +1,9 @@
 'use client';
 
 import { Button } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
-import { useUpdateTimer } from '@/hooks';
-import { MonitorWithRegions } from '@/types';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { useUpdateTimer } from '@/hooks/useUpdateTimer.hook';
+import { MonitorWithRegions } from '@/types/monitors/monitor.types';
 import styles from './MonitorRefreshTimer.module.scss';
 
 interface MonitorRefreshTimerProps {

@@ -7,9 +7,9 @@ import {
 	ModalBody,
 	ModalHeader,
 } from '@/components/ui';
-import { UpsertAlertSettingsDto } from '@/dto';
-import { upsertAlertSettingsSchema } from '@/schemas';
-import { capitalize } from '@/utils';
+import { UpsertAlertSettingsDto } from '@/dto/alertSettings.dto';
+import { upsertAlertSettingsSchema } from '@/schemas/alertSettings/upsertAlertSettings.schema';
+import { capitalize } from '@/utils/capitalize.util';
 import { AlertSettingsFormChannels } from './AlertSettingsFormChannels';
 import { AlertSettingsFormFields } from './AlertSettingsFormFields';
 import { AlertSettingsFormFooter } from './AlertSettingsFormFooter';

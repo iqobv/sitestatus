@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui';
-import { Notification } from '@/types';
+import { Notification } from '@/types/notification/notification.types';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import styles from './NotificationListItem.module.scss';

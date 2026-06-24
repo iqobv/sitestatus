@@ -1,4 +1,4 @@
-import { Region } from '@/types/region';
+import { Region } from '@/types/region/region.types';
 import { apiClient, apiServer } from '../axios';
 
 export const getAllRegions = async () =>

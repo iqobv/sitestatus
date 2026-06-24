@@ -1,8 +1,8 @@
 'use client';
 
-import { getStatusPageBySlug } from '@/api';
+import { getStatusPageBySlug } from '@/api/statusPage/getStatusPageBySlug.api';
 import { SectionHeader } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { useQuery } from '@tanstack/react-query';
 import { notFound } from 'next/navigation';
 import styles from './StatusPageHeader.module.scss';

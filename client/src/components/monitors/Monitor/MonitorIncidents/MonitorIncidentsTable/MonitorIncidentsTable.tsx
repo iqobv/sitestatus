@@ -1,10 +1,11 @@
 'use client';
 
-import { getAllRegions } from '@/api';
+import { getAllRegions } from '@/api/region/region.api';
 import { Button, Table } from '@/components/ui';
-import { PRIVATE_PAGES, QUERY_KEYS } from '@/config';
-import { useTransformSecondsToHours } from '@/hooks';
-import { Incident } from '@/types';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { useTransformSecondsToHours } from '@/hooks/useTransformSecondsToHours.hook';
+import { Incident } from '@/types/incident/incident.types';
 import { useQuery } from '@tanstack/react-query';
 import { getCoreRowModel } from '@tanstack/react-table';
 import { MonitorIncidentsLoader } from '../MonitorIncidentsLoader';

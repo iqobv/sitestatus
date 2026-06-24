@@ -1,9 +1,10 @@
 'use client';
 
-import { getProjectById, updateProject } from '@/api';
-import { QUERY_KEYS } from '@/config';
-import { UpdateProjectDto } from '@/dto';
-import { updateProjectSchema } from '@/schemas';
+import { getProjectById } from '@/api/project/getProjectById.api';
+import { updateProject } from '@/api/project/updateProject.api';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { UpdateProjectDto } from '@/dto/project.dto';
+import { updateProjectSchema } from '@/schemas/project/updateProject.schema';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { useMemo } from 'react';

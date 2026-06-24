@@ -1,7 +1,7 @@
-import { Incident } from '../incident';
-import { BaseMonitor } from '../monitors';
-import { Project } from '../project';
-import { StatusPage } from '../statusPage';
+import { Incident } from '../incident/incident.types';
+import { BaseMonitor } from '../monitors/monitor.types';
+import { Project } from '../project/project.types';
+import { StatusPage } from '../statusPage/statusPage.types';
 
 export interface DashboardIncident extends Incident {
 	monitor: BaseMonitor | null;

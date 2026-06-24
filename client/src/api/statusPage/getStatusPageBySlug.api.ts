@@ -1,4 +1,4 @@
-import { PublicStatusPage } from '@/types';
+import { PublicStatusPage } from '@/types/statusPage/publicStatusPage.types';
 import { apiClient, apiServer } from '../axios';
 
 export const getStatusPageBySlug = async (slug: string) =>

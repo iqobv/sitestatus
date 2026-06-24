@@ -1,8 +1,9 @@
 'use client';
 
-import { getServerProjectById } from '@/api';
+import { getServerProjectById } from '@/api/project/getProjectById.api';
 import { IconButton, SectionHeader } from '@/components/ui';
-import { PRIVATE_PAGES, QUERY_KEYS } from '@/config';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { FiPlus } from 'react-icons/fi';

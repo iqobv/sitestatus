@@ -1,7 +1,7 @@
 'use client';
 
-import { AUTH_PAGES } from '@/config';
-import { useUserStore } from '@/store';
+import { AUTH_PAGES } from '@/config/authPages.config';
+import { useUserStore } from '@/store/user.store';
 import {
 	MutationCache,
 	QueryCache,
@@ -12,9 +12,9 @@ import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 import { PropsWithChildren, useState } from 'react';
 
-export function TanstackQueryProvider({
+export const TanstackQueryProvider = ({
 	children,
-}: PropsWithChildren<unknown>) {
+}: PropsWithChildren<unknown>) => {
 	const router = useRouter();
 
 	const [client] = useState(
@@ -67,4 +67,4 @@ export function TanstackQueryProvider({
 	);
 
 	return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
-}
+};

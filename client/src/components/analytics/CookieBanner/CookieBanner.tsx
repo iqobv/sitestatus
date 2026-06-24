@@ -1,6 +1,6 @@
 'use client';
 
-import { LEGAL_PAGES } from '@/config';
+import { LEGAL_PAGES } from '@/config/legalPage.config';
 import CookieConsent from 'react-cookie-consent';
 import styles from './CookieBanner.module.scss';
 

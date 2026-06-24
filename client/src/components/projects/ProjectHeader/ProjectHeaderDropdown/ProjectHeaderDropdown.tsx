@@ -7,8 +7,8 @@ import {
 	DropdownMenu,
 	DropdownTrigger,
 } from '@/components/ui';
-import { PRIVATE_PAGES } from '@/config';
-import { Project } from '@/types/project';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
+import { Project } from '@/types/project/project.types';
 import Link from 'next/link';
 import { MdMoreVert, MdOutlineDelete, MdOutlineEdit } from 'react-icons/md';
 import styles from './ProjectHeaderDropdown.module.scss';

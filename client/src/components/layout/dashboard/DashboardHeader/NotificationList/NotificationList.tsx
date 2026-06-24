@@ -1,13 +1,14 @@
 'use client';
 
-import { getAllNotifications, markAllNotificationAsRead } from '@/api';
+import { getAllNotifications } from '@/api/notification/getAllNotifications.api';
+import { markAllNotificationAsRead } from '@/api/notification/markAllNotificationAsRead.api';
 import {
 	Button,
 	Dropdown,
 	DropdownMenu,
 	DropdownTrigger,
 } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { MdNotificationsNone } from 'react-icons/md';
 import styles from './NotificationList.module.scss';

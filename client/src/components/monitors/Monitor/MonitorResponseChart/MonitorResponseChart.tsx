@@ -1,6 +1,6 @@
 'use client';
 
-import { MonitorAnalytics } from '@/types';
+import { MonitorAnalytics } from '@/types/monitors/monitorAnalytics.types';
 import { Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { MonitorCard } from '../MonitorCard/MonitorCard';
 import { useMonitorResponseChart } from './useMonitorResponseChart.hook';

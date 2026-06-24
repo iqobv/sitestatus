@@ -1,7 +1,7 @@
 'use client';
 
-import { getStatusPageMonitorsBySlug } from '@/api';
-import { QUERY_KEYS } from '@/config';
+import { getStatusPageMonitorsBySlug } from '@/api/statusPage/getStatusPageMonitorsBySlug.api';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { useQuery } from '@tanstack/react-query';
 import { notFound } from 'next/navigation';
 import { StatusPageMonitor } from './StatusPageMonitor/StatusPageMonitor';

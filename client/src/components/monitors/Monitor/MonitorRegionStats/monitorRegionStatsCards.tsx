@@ -1,4 +1,5 @@
-import { MonitorAnalytics, MonitorCard } from '@/types';
+import { MonitorAnalytics } from '@/types/monitors/monitorAnalytics.types';
+import { MonitorCard } from '@/types/ui/monitorCard.types';
 
 export const MONITOR_REGIONS_STATS_CARDS: MonitorCard<MonitorAnalytics>[] = [
 	{

@@ -1,4 +1,4 @@
-import { IncidentDetails } from '@/types';
+import { IncidentDetails } from '@/types/incident/incidentDetails.types';
 import { apiClient } from '../axios';
 
 export const getIncidentDetails = async (

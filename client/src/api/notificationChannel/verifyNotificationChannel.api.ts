@@ -1,4 +1,4 @@
-import { ApiMessageResponse } from '@/types';
+import { ApiMessageResponse } from '@/types/api/messageResponse.api';
 import { apiServer } from '../axios';
 
 export const verifyNotificationChannel = async (token: string) =>

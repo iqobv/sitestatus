@@ -1,4 +1,6 @@
-import { LEGAL_PAGES, PRIVATE_PAGES, PUBLIC_PAGES } from '@/config';
+import { LEGAL_PAGES } from '@/config/legalPage.config';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
+import { PUBLIC_PAGES } from '@/config/publicPages.config';
 import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {

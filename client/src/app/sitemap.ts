@@ -1,4 +1,5 @@
-import { LEGAL_PAGES, PUBLIC_PAGES } from '@/config';
+import { LEGAL_PAGES } from '@/config/legalPage.config';
+import { PUBLIC_PAGES } from '@/config/publicPages.config';
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {

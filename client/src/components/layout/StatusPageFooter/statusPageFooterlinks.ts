@@ -1,4 +1,4 @@
-import { LEGAL_PAGES } from '@/config';
+import { LEGAL_PAGES } from '@/config/legalPage.config';
 
 interface LinkItem {
 	label: string;

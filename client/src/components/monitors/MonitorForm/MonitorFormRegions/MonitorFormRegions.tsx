@@ -1,9 +1,9 @@
 'use client';
 
-import { getAllRegions } from '@/api';
+import { getAllRegions } from '@/api/region/region.api';
 import { Checkbox, SectionHeader } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
-import { BaseRegionsMonitorDto } from '@/dto';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { BaseRegionsMonitorDto } from '@/dto/monitor.dto';
 import { useQuery } from '@tanstack/react-query';
 import { useFormContext } from 'react-hook-form';
 import styles from './MonitorFormRegions.module.scss';

@@ -1,6 +1,6 @@
 'use client';
 
-import { resendVerificationEmail } from '@/api';
+import { resendVerificationEmail } from '@/api/auth/email.api';
 import { Button } from '@/components/ui';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';

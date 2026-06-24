@@ -1,6 +1,6 @@
 'use client';
 
-import { BaseRegion } from '@/types/region';
+import { BaseRegion } from '@/types/region/baseRegion.types';
 import { parseAsString, useQueryState } from 'nuqs';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import styles from './MonitorRegionControl.module.scss';

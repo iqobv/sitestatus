@@ -1,8 +1,8 @@
 'use client';
 
-import { resendVerificationEmail } from '@/api';
+import { resendVerificationEmail } from '@/api/auth/email.api';
 import { Button, SectionHeader } from '@/components/ui';
-import { AUTH_PAGES } from '@/config';
+import { AUTH_PAGES } from '@/config/authPages.config';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { FaExternalLinkAlt } from 'react-icons/fa';

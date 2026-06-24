@@ -1,18 +1,18 @@
 'use client';
 
-import { User } from '@/types';
+import { User } from '@/types/user/user.types';
 import { NuqsAdapter } from 'nuqs/adapters/next';
-import AuthProvider from './AuthProvider';
+import { AuthProvider } from './AuthProvider';
 import { TanstackQueryProvider } from './TanstackQueryProvider';
-import ThemeProvider from './ThemeProvider';
-import ToastProvider from './ToastProvider';
+import { ThemeProvider } from './ThemeProvider';
+import { ToastProvider } from './ToastProvider';
 
 interface MainProviderProps {
 	children: React.ReactNode;
 	user: User | null;
 }
 
-export default function MainProvider({ children, user }: MainProviderProps) {
+export const MainProvider = ({ children, user }: MainProviderProps) => {
 	return (
 		<NuqsAdapter>
 			<TanstackQueryProvider>
@@ -24,4 +24,4 @@ export default function MainProvider({ children, user }: MainProviderProps) {
 			</TanstackQueryProvider>
 		</NuqsAdapter>
 	);
-}
+};

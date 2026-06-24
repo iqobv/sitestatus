@@ -1,8 +1,9 @@
 'use client';
 
-import { getAllRegions, getIncidentDetails } from '@/api';
-import { QUERY_KEYS } from '@/config';
-import { useTransformSecondsToHours } from '@/hooks';
+import { getIncidentDetails } from '@/api/incident/incidentDetails.api';
+import { getAllRegions } from '@/api/region/region.api';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { useTransformSecondsToHours } from '@/hooks/useTransformSecondsToHours.hook';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { MonitorCard } from '../MonitorCard/MonitorCard';

@@ -1,6 +1,6 @@
 'use client';
 
-import { MonitorWithRegions } from '@/types';
+import { MonitorWithRegions } from '@/types/monitors/monitor.types';
 import { MonitorRangeButtons } from './MonitorRangeButtons/MonitorRangeButtons';
 import styles from './MonitorRangeControl.module.scss';
 import { MonitorRefreshTimer } from './MonitorRefreshTimer/MonitorRefreshTimer';

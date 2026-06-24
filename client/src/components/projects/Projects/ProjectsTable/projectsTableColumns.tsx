@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui';
-import { PRIVATE_PAGES } from '@/config';
-import { Project } from '@/types';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
+import { Project } from '@/types/project/project.types';
 import { ColumnDef } from '@tanstack/react-table';
 
 export const PROJECTS_TABLE_COLUMNS: ColumnDef<Project>[] = [

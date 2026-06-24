@@ -1,5 +1,5 @@
-import { ChangePasswordDto } from '@/dto';
-import { Field } from '@/types';
+import { ChangePasswordDto } from '@/dto/auth.dto';
+import { Field } from '@/types/ui/field.types';
 import { MdOutlineKey } from 'react-icons/md';
 
 export const CHANGE_PASSWORD_FIELDS: Field<ChangePasswordDto>[] = [

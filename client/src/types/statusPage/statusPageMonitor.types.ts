@@ -1,5 +1,5 @@
 import { DefaultFields } from '../defaultFields.types';
-import { BaseMonitor } from '../monitors';
+import { BaseMonitor } from '../monitors/monitor.types';
 
 export interface StatusPageMonitor extends DefaultFields {
 	displayName: string | null;

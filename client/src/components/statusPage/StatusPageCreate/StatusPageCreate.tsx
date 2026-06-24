@@ -1,9 +1,10 @@
 'use client';
 
-import { createStatusPage } from '@/api';
-import { PRIVATE_PAGES, QUERY_KEYS } from '@/config';
-import { CreateStatusPageDto } from '@/dto';
-import { createStatusPageSchema } from '@/schemas';
+import { createStatusPage } from '@/api/statusPage/createStatusPage.api';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { CreateStatusPageDto } from '@/dto/statusPage.dto';
+import { createStatusPageSchema } from '@/schemas/statusPage/createStatusPage.schema';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { useRouter } from 'next/navigation';

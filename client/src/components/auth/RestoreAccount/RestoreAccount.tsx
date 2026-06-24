@@ -1,7 +1,7 @@
 'use client';
 
-import { restoreAccount } from '@/api';
-import { AUTH_PAGES } from '@/config';
+import { restoreAccount } from '@/api/auth/restoreAccount.api';
+import { AUTH_PAGES } from '@/config/authPages.config';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { parseAsString, useQueryState } from 'nuqs';

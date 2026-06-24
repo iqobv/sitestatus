@@ -1,5 +1,5 @@
-import { RegisterFormDto } from '@/dto';
-import { Field } from '@/types';
+import { RegisterFormDto } from '@/dto/auth.dto';
+import { Field } from '@/types/ui/field.types';
 import { MdOutlineEmail, MdOutlineKey } from 'react-icons/md';
 
 export const REGISTER_FIELDS: Field<RegisterFormDto>[] = [

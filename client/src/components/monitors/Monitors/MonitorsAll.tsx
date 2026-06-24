@@ -1,8 +1,8 @@
 'use client';
 
-import { getAllMonitors } from '@/api';
+import { getAllMonitors } from '@/api/monitor/getAllMonitors.api';
 import { IconButton, SectionHeader } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { FiPlus } from 'react-icons/fi';
 import { Monitors } from './Monitors';
 

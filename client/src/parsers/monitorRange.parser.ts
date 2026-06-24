@@ -1,5 +1,8 @@
-import { RANGE_TO_URL_MAP, URL_TO_RANGE_MAP } from '@/constants';
-import { RangeNumericValue } from '@/types';
+import {
+	RANGE_TO_URL_MAP,
+	URL_TO_RANGE_MAP,
+} from '@/constants/monitorRanges.constants';
+import { RangeNumericValue } from '@/types/monitors/monitorRange.types';
 import { createParser } from 'nuqs';
 
 export const monitorRangeParser = createParser({

@@ -1,5 +1,5 @@
-import { verifyNotificationChannel } from '@/api';
-import { PRIVATE_PAGES } from '@/config';
+import { verifyNotificationChannel } from '@/api/notificationChannel/verifyNotificationChannel.api';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
 import { redirect, RedirectType } from 'next/navigation';
 
 export async function GET(request: Request) {

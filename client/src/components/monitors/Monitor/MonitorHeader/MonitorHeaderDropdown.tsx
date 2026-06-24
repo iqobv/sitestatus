@@ -7,8 +7,8 @@ import {
 	DropdownMenu,
 	DropdownTrigger,
 } from '@/components/ui';
-import { PRIVATE_PAGES } from '@/config';
-import { MonitorWithRegions } from '@/types';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
+import { MonitorWithRegions } from '@/types/monitors/monitor.types';
 import Link from 'next/link';
 import { MdMoreVert, MdOutlineEdit } from 'react-icons/md';
 import { MonitorDeleteModal } from './MonitorDeleteModal';

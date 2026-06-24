@@ -1,4 +1,4 @@
-import { ChannelType } from '@/types';
+import { ChannelType } from '@/types/notificationChannel/channelEnums.types';
 import z from 'zod';
 import { baseNotificationChannelSchema } from './notificationBase.schema';
 

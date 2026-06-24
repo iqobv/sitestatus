@@ -1,5 +1,5 @@
 import { getServerMonitorByIdFull } from '@/api';
-import { Monitor } from '@/components/monitors';
+import { Monitor } from '@/components/monitors/Monitor/Monitor';
 import { QUERY_KEYS } from '@/config';
 import {
 	dehydrate,
@@ -47,7 +47,7 @@ export default async function MonitorPage({ params }: MonitorPageProps) {
 		const queryClient = new QueryClient();
 
 		await queryClient.prefetchQuery({
-			queryKey: QUERY_KEYS.monitors.byIdFull(id),
+			queryKey: QUERY_KEYS.monitors.detailFull(id),
 			queryFn: () => getCachedMonitor(id),
 		});
 

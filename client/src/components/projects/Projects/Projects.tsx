@@ -2,31 +2,35 @@
 
 import { getAllProjects } from '@/api';
 import { QUERY_KEYS } from '@/config';
+import { projectsQuerySchema } from '@/schemas/project/projectsQuery.schema';
 import { useQuery } from '@tanstack/react-query';
-import EmptyProjects from './EmptyProjects/EmptyProjects';
-import ProjectItem from './ProjectItem/ProjectItem';
-import styles from './Projects.module.scss';
-import ProjectsLoader from './ProjectsLoader';
+import { useMemo } from 'react';
+import { EmptyProjects } from './EmptyProjects/EmptyProjects';
+import { ProjectsTable } from './ProjectsTable/ProjectsTable';
+import { ProjectsTableLoader } from './ProjectsTable/ProjectsTableLoader';
+import { useProjectFilters } from './useProjectFilters.hook';
 
-const Projects = () => {
+export const Projects = () => {
+	const [filters] = useProjectFilters();
+
+	const validatedParams = useMemo(
+		() => projectsQuerySchema.parse(filters),
+		[filters],
+	);
+
 	const { data, isLoading } = useQuery({
-		queryFn: getAllProjects,
-		queryKey: QUERY_KEYS.project.all,
+		queryKey: QUERY_KEYS.projects.list(validatedParams),
+		queryFn: () => getAllProjects(validatedParams),
 	});
 
+	if (isLoading) return <ProjectsTableLoader />;
+	if (data && data.meta.total === 0) return <EmptyProjects />;
+
 	return (
-		<div>
-			{isLoading && <ProjectsLoader />}
-			{data?.length === 0 && <EmptyProjects />}
-			{data && data.length > 0 && (
-				<div className={styles.list}>
-					{data.map((project) => (
-						<ProjectItem key={project.id} project={project} />
-					))}
-				</div>
+		<>
+			{data && data.meta.total > 0 && (
+				<ProjectsTable projects={data.data} totalPages={data.meta.totalPages} />
 			)}
-		</div>
+		</>
 	);
 };
-
-export default Projects;

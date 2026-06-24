@@ -1,4 +1,4 @@
-import { EditProject } from '@/components/projects';
+import EditProject from '@/components/projects/ProjectForms/EditProject/EditProject';
 import { BackButton, SectionHeader } from '@/components/ui';
 import { Metadata } from 'next';
 

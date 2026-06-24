@@ -8,7 +8,7 @@ import { useQueryState } from 'nuqs';
 import styles from './MonitorRangeButtons.module.scss';
 import { MONITOR_RANGE_BUTTONS_ITEMS } from './monitorRangeButtonsItems';
 
-const MonitorRangeButtons = () => {
+export const MonitorRangeButtons = () => {
 	const [range, setRange] = useQueryState(
 		'range',
 		monitorRangeParser.withDefault(1),
@@ -33,5 +33,3 @@ const MonitorRangeButtons = () => {
 		</ButtonGroup>
 	);
 };
-
-export default MonitorRangeButtons;

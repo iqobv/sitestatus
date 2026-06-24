@@ -6,7 +6,7 @@ import { useTheme } from 'next-themes';
 import { useEffect, useMemo, useState } from 'react';
 import { THEME_ICONS } from './themeIcons';
 
-const ThemeSwitcher = () => {
+export const ThemeSwitcher = () => {
 	const [mounted, setMounted] = useState(false);
 	const { theme, setTheme, themes } = useTheme();
 
@@ -34,5 +34,3 @@ const ThemeSwitcher = () => {
 		/>
 	);
 };
-
-export default ThemeSwitcher;

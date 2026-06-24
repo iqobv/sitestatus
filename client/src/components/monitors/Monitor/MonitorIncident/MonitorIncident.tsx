@@ -5,27 +5,27 @@ import { QUERY_KEYS } from '@/config';
 import { useTransformSecondsToHours } from '@/hooks';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
-import MonitorCard from '../MonitorCard/MonitorCard';
-import MonitorIncidentStatus from '../MonitorIncidents/MonitorIncidentStatus/MonitorIncidentStatus';
+import { MonitorCard } from '../MonitorCard/MonitorCard';
+import { MonitorIncidentStatus } from '../MonitorIncidents/MonitorIncidentStatus/MonitorIncidentStatus';
 import styles from './MonitorIncident.module.scss';
-import MonitorIncidentLoader from './MonitorIncidentLoader';
-import MonitorIncidentTimeline from './MonitorIncidentTimeline/MonitorIncidentTimeline';
+import { MonitorIncidentLoader } from './MonitorIncidentLoader';
+import { MonitorIncidentTimeline } from './MonitorIncidentTimeline/MonitorIncidentTimeline';
 import { useTransformData } from './useTransformData.hook';
 
-const MonitorIncident = () => {
+export const MonitorIncident = () => {
 	const { id: monitorId, incidentId } = useParams<{
 		id: string;
 		incidentId: string;
 	}>();
 
 	const { data, isLoading } = useQuery({
-		queryKey: QUERY_KEYS.monitors.incidentDetails(monitorId, incidentId),
+		queryKey: QUERY_KEYS.monitors.incident(monitorId, incidentId),
 		queryFn: () => getIncidentDetails(monitorId, incidentId),
 		enabled: !!monitorId && !!incidentId,
 	});
 
 	const { data: regionsData, isLoading: isRegionsLoading } = useQuery({
-		queryKey: QUERY_KEYS.region.list,
+		queryKey: QUERY_KEYS.regions.lists(),
 		queryFn: getAllRegions,
 	});
 
@@ -65,5 +65,3 @@ const MonitorIncident = () => {
 		</div>
 	);
 };
-
-export default MonitorIncident;

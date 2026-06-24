@@ -5,11 +5,11 @@ import { BREAKPOINTS } from '@/constants';
 import { useEffect, useState } from 'react';
 import { TbLayoutSidebarRightCollapse } from 'react-icons/tb';
 import styles from './Sidebar.module.scss';
-import SidebarBody from './SidebarBody/SidebarBody';
-import SidebarFooter from './SidebarFooter/SidebarFooter';
-import SidebarHeader from './SidebarHeader/SidebarHeader';
+import { SidebarBody } from './SidebarBody/SidebarBody';
+import { SidebarFooter } from './SidebarFooter/SidebarFooter';
+import { SidebarHeader } from './SidebarHeader/SidebarHeader';
 
-const Sidebar = () => {
+export const Sidebar = () => {
 	const [expanded, setExpanded] = useState(false);
 	const [isMobile, setIsMobile] = useState(true);
 
@@ -67,5 +67,3 @@ const Sidebar = () => {
 		</>
 	);
 };
-
-export default Sidebar;

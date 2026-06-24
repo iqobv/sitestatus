@@ -10,7 +10,7 @@ const buttons = Array.from({ length: 2 }).map((_, i) => (
 	<SkeletonLoader key={i} width={i === 0 ? 94 : 150} height={44} />
 ));
 
-const EditProjectLoader = () => {
+export const EditProjectLoader = () => {
 	return (
 		<div className={styles.editProjectLoader}>
 			{fields}
@@ -18,5 +18,3 @@ const EditProjectLoader = () => {
 		</div>
 	);
 };
-
-export default EditProjectLoader;

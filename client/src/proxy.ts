@@ -33,6 +33,7 @@ export async function proxy(request: NextRequest) {
 					headers: {
 						Cookie: `refreshToken=${refreshToken}`,
 					},
+					cache: 'no-store',
 				},
 			);
 

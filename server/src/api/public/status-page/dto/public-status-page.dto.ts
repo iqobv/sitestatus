@@ -1,4 +1,4 @@
-import { MonitorTimelineDto } from '@api/public/monitor/dto';
+import { MonitorTimelineDto } from '@api/public/monitor/dto/monitor-timeline.dto';
 import { SiteStatus } from '@generated/turso/enums';
 import { ApiProperty } from '@nestjs/swagger';
 

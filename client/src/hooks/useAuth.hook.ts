@@ -52,7 +52,6 @@ export const useAuth = () => {
 
 	const { mutate: logout } = useMutation({
 		mutationFn: () => apiLogout(),
-		mutationKey: QUERY_KEYS.auth.logout,
 		onMutate: () => {
 			setIsLoading(true);
 			storeLogout();

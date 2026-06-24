@@ -1,10 +1,10 @@
 'use client';
 
-import SettingsWrapper from '../SettingsWrapper/SettingsWrapper';
-import { GlobalAlertSettings } from './GlobalAlertSettings';
-import { NotificationChannels } from './NotificationChannels';
+import { SettingsWrapper } from '../SettingsWrapper/SettingsWrapper';
+import { GlobalAlertSettings } from './GlobalAlertSettings/GlobalAlertSettings';
+import { NotificationChannels } from './NotificationChannels/NotificationChannels';
 
-const Alerting = () => {
+export const Alerting = () => {
 	return (
 		<SettingsWrapper title="Alerting">
 			<GlobalAlertSettings />
@@ -12,5 +12,3 @@ const Alerting = () => {
 		</SettingsWrapper>
 	);
 };
-
-export default Alerting;

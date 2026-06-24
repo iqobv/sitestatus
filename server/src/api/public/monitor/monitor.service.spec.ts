@@ -29,6 +29,7 @@ describe('MonitorService', () => {
 		userId: 'userId',
 		createdAt: new Date(),
 		updatedAt: new Date(),
+		deletedAt: null,
 	};
 
 	const monitorWithPingResults = {

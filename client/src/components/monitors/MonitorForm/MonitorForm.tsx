@@ -1,13 +1,21 @@
 'use client';
 
-import { Checkbox, Form, TextField } from '@/components/ui';
+import {
+	Checkbox,
+	Form,
+	FormActions,
+	FormField,
+	FormReset,
+	FormSubmit,
+	TextField,
+} from '@/components/ui';
 import { FieldValues } from 'react-hook-form';
-import { MonitorFormProps } from './MonitorForm.types';
-import MonitorFormProject from './MonitorFormProject/MonitorFormProject';
-import MonitorFormRegions from './MonitorFormRegions/MonitorFormRegions';
 import styles from './MonitorForm.module.scss';
+import { MonitorFormProps } from './MonitorForm.types';
+import { MonitorFormProject } from './MonitorFormProject/MonitorFormProject';
+import { MonitorFormRegions } from './MonitorFormRegions/MonitorFormRegions';
 
-const MonitorForm = <D extends FieldValues, R extends { id: string }>({
+export const MonitorForm = <D extends FieldValues, R extends { id: string }>({
 	fields,
 	buttonLabel = 'Create Monitor',
 	isLoading = false,
@@ -19,29 +27,27 @@ const MonitorForm = <D extends FieldValues, R extends { id: string }>({
 				const Icon = leftIcon;
 
 				return (
-					<Form.Field key={name} name={name}>
+					<FormField key={name} name={name}>
 						{type === 'checkbox' ? (
 							<Checkbox label={rest.label} />
 						) : (
 							<TextField leftIcon={Icon ? <Icon /> : undefined} {...rest} />
 						)}
-					</Form.Field>
+					</FormField>
 				);
 			})}
 			<MonitorFormRegions />
 			<MonitorFormProject />
-			<Form.Actions>
-				<Form.Reset buttonProps={{ variant: 'secondary' }}>Cancel</Form.Reset>
-				<Form.Submit
+			<FormActions>
+				<FormReset buttonProps={{ variant: 'secondary' }}>Cancel</FormReset>
+				<FormSubmit
 					buttonProps={{
 						loading: isLoading,
 					}}
 				>
 					{buttonLabel}
-				</Form.Submit>
-			</Form.Actions>
+				</FormSubmit>
+			</FormActions>
 		</Form>
 	);
 };
-
-export default MonitorForm;

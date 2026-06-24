@@ -1,7 +1,7 @@
 'use client';
 
 import { updateMonitorActiveStatus } from '@/api';
-import { Dropdown } from '@/components/ui';
+import { DropdownItem } from '@/components/ui';
 import { QUERY_KEYS } from '@/config';
 import { MonitorWithRegions } from '@/types';
 import { useQueryClient } from '@tanstack/react-query';
@@ -13,7 +13,7 @@ interface MonitorDropdownUpdateActiveStatusProps {
 	monitor: MonitorWithRegions;
 }
 
-const MonitorDropdownUpdateActiveStatus = ({
+export const MonitorDropdownUpdateActiveStatus = ({
 	monitor,
 }: MonitorDropdownUpdateActiveStatusProps) => {
 	const queryClient = useQueryClient();
@@ -23,7 +23,7 @@ const MonitorDropdownUpdateActiveStatus = ({
 		mutationFn: updateMonitorActiveStatus,
 		onSuccess: () => {
 			queryClient.invalidateQueries({
-				queryKey: QUERY_KEYS.monitors.byIdFull(monitor.id),
+				queryKey: QUERY_KEYS.monitors.detailFull(monitor.id),
 			});
 		},
 	});
@@ -31,7 +31,7 @@ const MonitorDropdownUpdateActiveStatus = ({
 	const handleUpdate = () => mutate();
 
 	return (
-		<Dropdown.Item asChild>
+		<DropdownItem asChild>
 			<button onClick={handleUpdate} className={styles.dropdownItem}>
 				{monitor.isActive ? (
 					<>
@@ -43,8 +43,6 @@ const MonitorDropdownUpdateActiveStatus = ({
 					</>
 				)}
 			</button>
-		</Dropdown.Item>
+		</DropdownItem>
 	);
 };
-
-export default MonitorDropdownUpdateActiveStatus;

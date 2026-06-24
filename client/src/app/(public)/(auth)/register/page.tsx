@@ -1,6 +1,6 @@
-import { Register } from '@/components/auth';
+import { Register } from '@/components/auth/Register/Register';
 import { Metadata } from 'next';
-import styles from '../authPage.module.scss'
+import styles from '../authPage.module.scss';
 
 export const metadata: Metadata = {
 	title: 'Sign Up',

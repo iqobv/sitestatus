@@ -15,7 +15,7 @@ interface IndicatorStyles {
 	width: string;
 }
 
-const MonitorRegionControl = ({
+export const MonitorRegionControl = ({
 	regions,
 	isLoading,
 }: MonitorRegionControlProps) => {
@@ -89,5 +89,3 @@ const MonitorRegionControl = ({
 		</div>
 	);
 };
-
-export default MonitorRegionControl;

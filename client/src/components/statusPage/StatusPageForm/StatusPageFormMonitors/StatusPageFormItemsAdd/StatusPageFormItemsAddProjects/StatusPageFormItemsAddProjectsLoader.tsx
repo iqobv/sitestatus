@@ -11,8 +11,6 @@ const items = Array.from({ length: 5 }).map((_, i) => (
 	</div>
 ));
 
-const StatusPageFormItemsAddProjectsLoader = () => {
+export const StatusPageFormItemsAddProjectsLoader = () => {
 	return <div className={styles.list}>{items}</div>;
 };
-
-export default StatusPageFormItemsAddProjectsLoader;

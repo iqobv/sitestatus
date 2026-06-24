@@ -1,10 +1,10 @@
 'use client';
 
-import SettingsCard from '../SettingsCard/SettingsCard';
-import SettingsWrapper from '../SettingsWrapper/SettingsWrapper';
+import { SettingsCard } from '../SettingsCard/SettingsCard';
+import { SettingsWrapper } from '../SettingsWrapper/SettingsWrapper';
 import { SECURITY_SETTINGS_ITEMS } from './securityItems';
 
-const Security = () => {
+export const Security = () => {
 	return (
 		<SettingsWrapper title="Security">
 			{SECURITY_SETTINGS_ITEMS.map((item, index) => (
@@ -13,5 +13,3 @@ const Security = () => {
 		</SettingsWrapper>
 	);
 };
-
-export default Security;

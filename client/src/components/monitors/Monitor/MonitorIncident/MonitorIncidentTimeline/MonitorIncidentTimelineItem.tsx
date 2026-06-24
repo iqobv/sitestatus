@@ -9,7 +9,7 @@ interface MonitorIncidentTimelineItemProps {
 	timestamp: Date;
 }
 
-const MonitorIncidentTimelineItem = ({
+export const MonitorIncidentTimelineItem = ({
 	children,
 	icon: Icon,
 	timestamp,
@@ -24,5 +24,3 @@ const MonitorIncidentTimelineItem = ({
 		</div>
 	);
 };
-
-export default MonitorIncidentTimelineItem;

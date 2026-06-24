@@ -8,7 +8,7 @@ interface ButtonWrapperProps {
 	onClick?: () => void;
 }
 
-const ButtonWrapper = ({ children, onClick }: ButtonWrapperProps) => {
+export const ButtonWrapper = ({ children, onClick }: ButtonWrapperProps) => {
 	return (
 		<Button
 			className={styles['button-wrapper']}
@@ -20,5 +20,3 @@ const ButtonWrapper = ({ children, onClick }: ButtonWrapperProps) => {
 		</Button>
 	);
 };
-
-export default ButtonWrapper;

@@ -15,9 +15,9 @@ import {
 } from 'react-hook-form';
 import { ZodType } from 'zod';
 import styles from './AuthForm.module.scss';
-import AuthFormGlobalError from './AuthFormGlobalError/AuthFormGlobalError';
-import UserDeletedError from './UserDeletedError/UserDeletedError';
-import VerifyEmailButton from './VerifyEmailButton/VerifyEmailButton';
+import { AuthFormGlobalError } from './AuthFormGlobalError/AuthFormGlobalError';
+import { UserDeletedError } from './UserDeletedError/UserDeletedError';
+import { VerifyEmailButton } from './VerifyEmailButton/VerifyEmailButton';
 
 interface AuthFormProps<T extends FieldValues, R> {
 	fields: Field<T>[];
@@ -34,7 +34,7 @@ interface AuthFormProps<T extends FieldValues, R> {
 	) => React.ReactNode;
 }
 
-const AuthForm = <T extends FieldValues, R>({
+export const AuthForm = <T extends FieldValues, R>({
 	fields,
 	mutationFn,
 	buttonLabel,
@@ -140,5 +140,3 @@ const AuthForm = <T extends FieldValues, R>({
 		</form>
 	);
 };
-
-export default AuthForm;

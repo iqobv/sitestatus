@@ -1,4 +1,4 @@
-import { SettingsTabs } from '@/components/layout';
+import { SettingsTabs } from '@/components/layout/settings/SettingsTabs/SettingsTabs';
 import styles from './settingsLayout.module.scss';
 
 export default function SettingsLayout({

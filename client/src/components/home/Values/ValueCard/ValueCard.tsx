@@ -5,7 +5,7 @@ interface ValueCardProps {
 	card: CoreValue;
 }
 
-const ValueCard = ({ card }: ValueCardProps) => {
+export const ValueCard = ({ card }: ValueCardProps) => {
 	const Icon = card.icon;
 
 	return (
@@ -20,5 +20,3 @@ const ValueCard = ({ card }: ValueCardProps) => {
 		</div>
 	);
 };
-
-export default ValueCard;

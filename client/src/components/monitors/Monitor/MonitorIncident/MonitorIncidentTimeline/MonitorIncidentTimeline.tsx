@@ -7,17 +7,17 @@ import {
 	MdErrorOutline,
 	MdOutlineNotificationsActive,
 } from 'react-icons/md';
-import MonitorCard from '../../MonitorCard/MonitorCard';
-import styles from './MonitorIncidentTimeline.module.scss';
-import MonitorIncidentTimelineItem from './MonitorIncidentTimelineItem';
+import { MonitorCard } from '../../MonitorCard/MonitorCard';
 import { useTransformData } from '../useTransformData.hook';
+import styles from './MonitorIncidentTimeline.module.scss';
+import { MonitorIncidentTimelineItem } from './MonitorIncidentTimelineItem';
 
 interface MonitorIncidentTimelineProps {
 	incidentData: IncidentDetails;
 	regionsData: Region[];
 }
 
-const RegionName = ({
+export const RegionName = ({
 	incidentData,
 	regionsData,
 }: MonitorIncidentTimelineProps) => {
@@ -33,7 +33,7 @@ const RegionName = ({
 	);
 };
 
-const MonitorIncidentTimeline = ({
+export const MonitorIncidentTimeline = ({
 	incidentData,
 	regionsData,
 }: MonitorIncidentTimelineProps) => {
@@ -87,5 +87,3 @@ const MonitorIncidentTimeline = ({
 		</MonitorCard>
 	);
 };
-
-export default MonitorIncidentTimeline;

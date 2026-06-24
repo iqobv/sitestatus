@@ -4,7 +4,7 @@ import React from 'react';
 import styles from './SettingsCard.module.scss';
 import { SettingsCardProps } from './SettingsCard.types';
 
-const SettingsCard = ({
+export const SettingsCard = ({
 	title,
 	description,
 	action,
@@ -30,5 +30,3 @@ const SettingsCard = ({
 		</div>
 	);
 };
-
-export default SettingsCard;

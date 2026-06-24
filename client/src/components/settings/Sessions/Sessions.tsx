@@ -4,15 +4,19 @@ import { getAllSessions } from '@/api';
 import { SectionHeader } from '@/components/ui';
 import { QUERY_KEYS } from '@/config';
 import { useQuery } from '@tanstack/react-query';
-import SettingsWrapper from '../SettingsWrapper/SettingsWrapper';
-import SessionCard from './SessionCard/SessionCard';
+import { SettingsWrapper } from '../SettingsWrapper/SettingsWrapper';
+import { SessionCard } from './SessionCard/SessionCard';
 import styles from './Sessions.module.scss';
+import { SessionsLoader } from './SessionsLoader';
 
-const Sessions = () => {
+export const Sessions = () => {
 	const { data, isLoading } = useQuery({
-		queryKey: QUERY_KEYS.session.all,
+		queryKey: QUERY_KEYS.sessions.lists(),
 		queryFn: getAllSessions,
 	});
+
+	if (isLoading) return <SessionsLoader />;
+	if (!data) return null;
 
 	return (
 		<SettingsWrapper title="Sessions">
@@ -20,7 +24,12 @@ const Sessions = () => {
 				{data && (
 					<>
 						<div className={styles.currentSession}>
-							<SectionHeader title="Current Session" titleComponent="h3" />
+							<SectionHeader
+								title="Current Session"
+								titleProps={{
+									variant: 'h3',
+								}}
+							/>
 							<SessionCard
 								session={data.currentSession}
 								isCurrentSession
@@ -29,7 +38,12 @@ const Sessions = () => {
 						</div>
 						{data.otherSessions.length > 0 && (
 							<div className={styles.sessions}>
-								<SectionHeader title="Other Sessions" titleComponent="h3" />
+								<SectionHeader
+									title="Other Sessions"
+									titleProps={{
+										variant: 'h3',
+									}}
+								/>
 								{data.otherSessions.map((s) => (
 									<SessionCard key={s.id} session={s} />
 								))}

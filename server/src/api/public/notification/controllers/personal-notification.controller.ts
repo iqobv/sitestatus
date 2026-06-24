@@ -1,28 +1,26 @@
 import { UserRole } from '@generated/postgres/enums';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
-import { Auth } from '@libs/decorators';
-import { createCustomMessageDto } from '@libs/utils';
+import {
+	ApiErrorResponse,
+	ApiSuccessResponse,
+} from '@libs/decorators/api-response.decorator';
+import { Auth } from '@libs/decorators/auth.decorator';
 import {
 	Body,
 	Controller,
 	Delete,
 	Get,
+	HttpStatus,
 	Param,
 	ParseUUIDPipe,
 	Patch,
 	Post,
 } from '@nestjs/common';
-import {
-	ApiNotFoundResponse,
-	ApiOkResponse,
-	ApiOperation,
-} from '@nestjs/swagger';
-import {
-	CreatePersonalNotificationDto,
-	PersonalNotificationDto,
-	UpdatePersonalNotificationDto,
-} from '../dto';
-import { PersonalNotificationService } from '../services';
+import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { CreatePersonalNotificationDto } from '../dto/create-personal-notification.dto';
+import { PersonalNotificationDto } from '../dto/personal-notification.dto';
+import { UpdatePersonalNotificationDto } from '../dto/update-personal-notification.dto';
+import { PersonalNotificationService } from '../services/personal-notification.service';
 
 @Auth(UserRole.ADMIN)
 @Controller('notifications/personal')
@@ -42,11 +40,10 @@ export class PersonalNotificationController {
 
 	@ApiOperation({ summary: 'Get a personal notification by ID' })
 	@ApiOkResponse({ type: PersonalNotificationDto })
-	@ApiNotFoundResponse({
-		type: createCustomMessageDto(
-			ERROR_MESSAGES.NOTIFICATION.PERSONAL_NOT_FOUND,
-		),
-	})
+	@ApiErrorResponse(
+		HttpStatus.NOT_FOUND,
+		ERROR_MESSAGES.NOTIFICATION.PERSONAL_NOT_FOUND,
+	)
 	@Get(':id')
 	async getPersonalNotificationById(@Param('id', ParseUUIDPipe) id: string) {
 		return await this.personalNotificationService.getPersonalNotificationById(
@@ -56,11 +53,10 @@ export class PersonalNotificationController {
 
 	@ApiOperation({ summary: 'Update a personal notification' })
 	@ApiOkResponse({ type: PersonalNotificationDto })
-	@ApiNotFoundResponse({
-		type: createCustomMessageDto(
-			ERROR_MESSAGES.NOTIFICATION.PERSONAL_NOT_FOUND,
-		),
-	})
+	@ApiErrorResponse(
+		HttpStatus.NOT_FOUND,
+		ERROR_MESSAGES.NOTIFICATION.PERSONAL_NOT_FOUND,
+	)
 	@Patch(':id')
 	async updatePersonalNotification(
 		@Param('id', ParseUUIDPipe) id: string,
@@ -73,12 +69,14 @@ export class PersonalNotificationController {
 	}
 
 	@ApiOperation({ summary: 'Delete a personal notification' })
-	@ApiOkResponse({
-		type: createCustomMessageDto(SUCCESS_MESSAGES.NOTIFICATION.GLOBAL_DELETED),
-	})
-	@ApiNotFoundResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.NOTIFICATION.GLOBAL_NOT_FOUND),
-	})
+	@ApiSuccessResponse(
+		HttpStatus.OK,
+		SUCCESS_MESSAGES.NOTIFICATION.PERSONAL_DELETED,
+	)
+	@ApiErrorResponse(
+		HttpStatus.NOT_FOUND,
+		ERROR_MESSAGES.NOTIFICATION.PERSONAL_NOT_FOUND,
+	)
 	@Delete(':id')
 	async deletePersonalNotification(@Param('id', ParseUUIDPipe) id: string) {
 		return await this.personalNotificationService.deletePersonalNotification(

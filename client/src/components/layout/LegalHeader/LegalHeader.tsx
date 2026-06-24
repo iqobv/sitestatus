@@ -2,9 +2,7 @@ import { LogoLink } from '@/components/ui';
 import { PUBLIC_PAGES } from '@/config';
 import styles from './LegalHeader.module.scss';
 
-interface LegalHeaderProps {}
-
-const LegalHeader = ({}: LegalHeaderProps) => {
+export const LegalHeader = () => {
 	return (
 		<header className={styles.header}>
 			<div className={styles.container}>
@@ -13,5 +11,3 @@ const LegalHeader = ({}: LegalHeaderProps) => {
 		</header>
 	);
 };
-
-export default LegalHeader;

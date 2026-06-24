@@ -9,7 +9,7 @@ interface NotificationChannelsItemResendProps {
 	id: string;
 }
 
-const NotificationChannelsItemResend = ({
+export const NotificationChannelsItemResend = ({
 	id,
 }: NotificationChannelsItemResendProps) => {
 	const { mutate, isPending } = useMutation({
@@ -28,5 +28,3 @@ const NotificationChannelsItemResend = ({
 		</Button>
 	);
 };
-
-export default NotificationChannelsItemResend;

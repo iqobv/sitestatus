@@ -13,11 +13,9 @@ import {
 	NotFoundException,
 } from '@nestjs/common';
 import { TokenService } from '../token/token.service';
-import {
-	CreateNotificationChannelDto,
-	InternalCreateNotificationChannelDto,
-	UpdateNotificationChannelDto,
-} from './dto';
+import { CreateNotificationChannelDto } from './dto/create-notification-channel.dto';
+import { InternalCreateNotificationChannelDto } from './dto/internal-create-notification-channel.dto';
+import { UpdateNotificationChannelDto } from './dto/update-notification-channel.dto';
 
 @Injectable()
 export class NotificationChannelService {

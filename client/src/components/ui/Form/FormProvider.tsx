@@ -5,7 +5,7 @@ import { BaseSyntheticEvent } from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import { FormProps } from './Form.types';
 
-const Form = <D extends FieldValues = FieldValues>({
+export const Form = <D extends FieldValues = FieldValues>({
 	children,
 	schema,
 	onSubmit,
@@ -36,5 +36,3 @@ const Form = <D extends FieldValues = FieldValues>({
 		</FormProvider>
 	);
 };
-
-export default Form;

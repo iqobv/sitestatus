@@ -1,5 +1,5 @@
 import { AlertSettingsService } from '@api/public/alert-settings/alert-settings.service';
-import { PersonalNotificationService } from '@api/public/notification/services';
+import { PersonalNotificationService } from '@api/public/notification/services/personal-notification.service';
 import {
 	ProcessErrorArgs,
 	ServiceBusClient,
@@ -9,7 +9,10 @@ import {
 } from '@azure/service-bus';
 import { ChannelType, NotificationChannel } from '@generated/postgres/client';
 import { SiteStatus } from '@generated/turso/enums';
-import { IncidentAlertDto, RegionInfoDto } from '@infra/mail/dto';
+import {
+	IncidentAlertDto,
+	RegionInfoDto,
+} from '@infra/mail/dto/incident-alert.dto';
 import { MailService } from '@infra/mail/mail.service';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
@@ -19,7 +22,7 @@ import {
 	OnModuleDestroy,
 	OnModuleInit,
 } from '@nestjs/common';
-import { IncedentPayloadDto } from '../monitor-engine/dto';
+import { IncedentPayloadDto } from '../monitor-engine/dto/incedent-payload.dto';
 import { MonitorCacheService } from '../monitor-engine/services/monitor-cache.service';
 
 @Injectable()
@@ -38,14 +41,14 @@ export class AlertWorkerService implements OnModuleInit, OnModuleDestroy {
 		private readonly personalNotificationService: PersonalNotificationService,
 	) {}
 
-	public onModuleInit() {
+	public onModuleInit(): void {
 		const queueName = 'incidents';
 		this.receiver = this.sbClient.createReceiver(queueName);
 		this.sender = this.sbClient.createSender(queueName);
 		this.receiveMessages();
 	}
 
-	public async onModuleDestroy() {
+	public async onModuleDestroy(): Promise<void> {
 		if (this.receiver) {
 			await this.receiver.close();
 		}
@@ -54,7 +57,7 @@ export class AlertWorkerService implements OnModuleInit, OnModuleDestroy {
 		}
 	}
 
-	private receiveMessages() {
+	private receiveMessages(): void {
 		if (!this.receiver) return;
 
 		this.receiver.subscribe(
@@ -91,7 +94,7 @@ export class AlertWorkerService implements OnModuleInit, OnModuleDestroy {
 		);
 	}
 
-	private async proccessIncident(body: IncedentPayloadDto) {
+	private async proccessIncident(body: IncedentPayloadDto): Promise<void> {
 		const incident = await this.tursoPrismaService.monitorIncident.findUnique({
 			where: { id: body.incidentId },
 		});
@@ -236,7 +239,7 @@ export class AlertWorkerService implements OnModuleInit, OnModuleDestroy {
 	private async sendAlert(
 		channel: NotificationChannel,
 		incident: IncidentAlertDto,
-	) {
+	): Promise<void> {
 		if (channel.type === ChannelType.EMAIL) {
 			await this.mailService.sendIncidentAlert(channel.value, incident);
 		}

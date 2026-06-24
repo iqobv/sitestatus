@@ -1,19 +1,23 @@
-import { Roles } from '@api/public/auth/decorators';
-import { AccessTokenGuard, RolesGuard } from '@api/public/auth/guards';
+import { Roles } from '@api/public/auth/decorators/roles.decorator';
+import { AccessTokenGuard } from '@api/public/auth/guards/access-token.guard';
+import { RolesGuard } from '@api/public/auth/guards/roles.guard';
 import { UserRole } from '@generated/postgres/enums';
-import { applyDecorators, UseGuards } from '@nestjs/common';
-import { ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ERROR_MESSAGES } from '@libs/constants';
+import { applyDecorators, HttpStatus, UseGuards } from '@nestjs/common';
+import { ApiErrorResponse } from './api-response.decorator';
+
+const errorMessage = ApiErrorResponse(
+	HttpStatus.UNAUTHORIZED,
+	ERROR_MESSAGES.AUTH.UNAUTHORIZED,
+);
 
 export function Auth(...roles: UserRole[]) {
 	if (roles.length > 0) {
 		return applyDecorators(
 			Roles(...roles),
 			UseGuards(AccessTokenGuard, RolesGuard),
-			ApiUnauthorizedResponse({ description: 'Unauthorized' }),
+			errorMessage,
 		);
 	}
-	return applyDecorators(
-		UseGuards(AccessTokenGuard),
-		ApiUnauthorizedResponse({ description: 'Unauthorized' }),
-	);
+	return applyDecorators(UseGuards(AccessTokenGuard), errorMessage);
 }

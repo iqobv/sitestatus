@@ -1,12 +1,10 @@
-import { Heading, Section, Text } from '@react-email/components';
+import { Button, Heading, Section, Text } from '@react-email/components';
 import React from 'react';
 import { BaseEmailProps } from './base-email-props.types';
-import { Button, Footer, Wrapper } from './components';
+import { Footer } from './components/footer';
+import { Wrapper } from './components/wrapper';
 
-export default function VerificationEmailTemplate({
-	url,
-	iconUrl,
-}: BaseEmailProps) {
+export const VerificationEmailTemplate = ({ url, iconUrl }: BaseEmailProps) => {
 	return (
 		<Wrapper
 			iconUrl={iconUrl}
@@ -25,4 +23,4 @@ export default function VerificationEmailTemplate({
 			<Footer expiresIn="24 hours" />
 		</Wrapper>
 	);
-}
+};

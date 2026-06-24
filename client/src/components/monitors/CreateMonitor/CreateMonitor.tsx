@@ -9,10 +9,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useQueryState } from 'nuqs';
 import { toast } from 'react-toastify';
-import MonitorForm from '../MonitorForm/MonitorForm';
+import { MonitorForm } from '../MonitorForm/MonitorForm';
 import { CREATE_MONITOR_FIELDS } from './createMonitorFields';
 
-const CreateMonitor = () => {
+export const CreateMonitor = () => {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
@@ -22,7 +22,7 @@ const CreateMonitor = () => {
 		mutationFn: (data: CreateMonitorDto) => createMonitor(data),
 		onSuccess: (data) => {
 			queryClient.invalidateQueries({
-				queryKey: QUERY_KEYS.monitors.list,
+				queryKey: QUERY_KEYS.monitors.lists(),
 			});
 			router.push(PRIVATE_PAGES.MONITORS.ONE(data.id));
 		},
@@ -48,5 +48,3 @@ const CreateMonitor = () => {
 		/>
 	);
 };
-
-export default CreateMonitor;

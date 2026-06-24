@@ -20,7 +20,7 @@ interface DropdownItemProps {
 	isDelete?: boolean;
 }
 
-const DropdownItem = ({
+export const DropdownItem = ({
 	children,
 	onClick,
 	disabled = false,
@@ -92,5 +92,3 @@ const DropdownItem = ({
 		</button>
 	);
 };
-
-export default DropdownItem;

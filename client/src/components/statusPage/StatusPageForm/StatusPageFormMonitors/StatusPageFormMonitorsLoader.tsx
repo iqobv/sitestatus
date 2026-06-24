@@ -5,7 +5,7 @@ const items = Array.from({ length: 3 }).map((_, i) => (
 	<SkeletonLoader key={i} height={86} />
 ));
 
-const StatusPageFormMonitorsLoader = () => {
+export const StatusPageFormMonitorsLoader = () => {
 	return (
 		<div className={styles.monitorsWrapper}>
 			<SkeletonLoader width={150} height={28} />
@@ -14,5 +14,3 @@ const StatusPageFormMonitorsLoader = () => {
 		</div>
 	);
 };
-
-export default StatusPageFormMonitorsLoader;

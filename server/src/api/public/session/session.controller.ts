@@ -1,14 +1,14 @@
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
-import { Auth, Authorized, Cookie } from '@libs/decorators';
-import { createCustomMessageDto } from '@libs/utils';
-import { Controller, Delete, Get, Param } from '@nestjs/common';
 import {
-	ApiForbiddenResponse,
-	ApiNotFoundResponse,
-	ApiOkResponse,
-	ApiOperation,
-} from '@nestjs/swagger';
-import { AllSessionsDto } from './dto';
+	ApiErrorResponse,
+	ApiSuccessResponse,
+} from '@libs/decorators/api-response.decorator';
+import { Auth } from '@libs/decorators/auth.decorator';
+import { Authorized } from '@libs/decorators/authorized.decorator';
+import { Cookie } from '@libs/decorators/cookie.decorator';
+import { Controller, Delete, Get, HttpStatus, Param } from '@nestjs/common';
+import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { AllSessionsDto } from './dto/all-sessions.dto';
 import { SessionService } from './session.service';
 
 @Auth()
@@ -20,10 +20,8 @@ export class SessionController {
 	@ApiOperation({
 		summary: 'Get all active sessions for the authenticated user',
 	})
-	@ApiNotFoundResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.SESSIONS.SESSION_NOT_FOUND),
-	})
 	@ApiOkResponse({ type: AllSessionsDto })
+	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.SESSIONS.NOT_FOUND)
 	async getSessions(
 		@Authorized('id') userId: string,
 		@Cookie('refreshToken') refreshToken: string,
@@ -35,15 +33,9 @@ export class SessionController {
 	@ApiOperation({
 		summary: 'Terminate a specific session for the authenticated user',
 	})
-	@ApiNotFoundResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.SESSIONS.SESSION_NOT_FOUND),
-	})
-	@ApiForbiddenResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.SESSIONS.ACCESS_DENIED),
-	})
-	@ApiOkResponse({
-		type: createCustomMessageDto(SUCCESS_MESSAGES.SESSION.SESSION_DELETED),
-	})
+	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.SESSION.DELETED)
+	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.SESSIONS.NOT_FOUND)
+	@ApiErrorResponse(HttpStatus.FORBIDDEN, ERROR_MESSAGES.SESSIONS.ACCESS_DENIED)
 	async terminateSession(
 		@Param('id') sessionId: string,
 		@Authorized('id') userId: string,
@@ -56,14 +48,11 @@ export class SessionController {
 		summary:
 			'Terminate all other sessions except the current one for the authenticated user',
 	})
-	@ApiNotFoundResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.SESSIONS.SESSION_NOT_FOUND),
-	})
-	@ApiOkResponse({
-		type: createCustomMessageDto(
-			SUCCESS_MESSAGES.SESSION.ALL_OTHER_SESSIONS_DELETED,
-		),
-	})
+	@ApiSuccessResponse(
+		HttpStatus.OK,
+		SUCCESS_MESSAGES.SESSION.ALL_OTHER_SESSIONS_DELETED,
+	)
+	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.SESSIONS.NOT_FOUND)
 	async terminateAllOtherSessions(
 		@Authorized('id') userId: string,
 		@Cookie('refreshToken') refreshToken: string,

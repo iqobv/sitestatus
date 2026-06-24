@@ -1,4 +1,4 @@
-import { NotFoundWrapper } from '@/components/layout';
+import { NotFoundWrapper } from '@/components/layout/NotFoundWrapper/NotFoundWrapper';
 import { PRIVATE_PAGES } from '@/config';
 import { Metadata } from 'next';
 

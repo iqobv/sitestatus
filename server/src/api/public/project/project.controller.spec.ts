@@ -2,7 +2,8 @@ import { Project } from '@generated/postgres/client';
 import { SUCCESS_MESSAGES } from '@libs/constants';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { CreateProjectDto, UpdateProjectDto } from './dto';
+import { CreateProjectDto } from './dto/create-project.dto';
+import { UpdateProjectDto } from './dto/update-project.dto';
 import { ProjectController } from './project.controller';
 import { ProjectService } from './project.service';
 
@@ -130,7 +131,7 @@ describe('ProjectController', () => {
 
 	describe('Delete Project', () => {
 		it('should call service.deleteProject and return success message', async () => {
-			const response = SUCCESS_MESSAGES.PROJECT.PROJECT_DELETED;
+			const response = SUCCESS_MESSAGES.PROJECT.DELETED;
 			service.deleteProject.mockResolvedValue(response);
 
 			const result = await controller.deleteProject(id, ownerId);

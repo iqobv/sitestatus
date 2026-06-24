@@ -9,7 +9,7 @@ interface CheckboxProps extends ComponentPropsWithRef<'input'> {
 	isBordered?: boolean;
 }
 
-const Checkbox = ({
+export const Checkbox = ({
 	label,
 	error,
 	ref,
@@ -40,5 +40,3 @@ const Checkbox = ({
 		</div>
 	);
 };
-
-export default Checkbox;

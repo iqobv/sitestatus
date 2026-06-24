@@ -45,7 +45,7 @@ export class TaskDispatcherService implements OnModuleDestroy {
 		return sender;
 	}
 
-	private async dispatchTasks() {
+	private async dispatchTasks(): Promise<void> {
 		const now = new Date();
 
 		const monitors = this.monitorCache.getMonitors();
@@ -116,7 +116,7 @@ export class TaskDispatcherService implements OnModuleDestroy {
 	}
 
 	@Interval(10000)
-	async handleDispatchTasks() {
+	public async handleDispatchTasks(): Promise<void> {
 		await this.dispatchTasks();
 	}
 }

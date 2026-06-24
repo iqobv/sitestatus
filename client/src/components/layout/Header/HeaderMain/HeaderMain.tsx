@@ -1,13 +1,13 @@
 'use client';
 
-import { Logo } from '@/components/icons';
+import { Logo } from '@/components/icons/Logo';
 import { Button } from '@/components/ui';
 import { CROSS_DOMAIN_ROUTES, PUBLIC_PAGES } from '@/config';
 import Link from 'next/link';
-import HeaderContainer from '../HeaderContainer';
+import { HeaderContainer } from '../HeaderContainer';
 import styles from './HeaderMain.module.scss';
 
-const HeaderMain = () => {
+export const HeaderMain = () => {
 	return (
 		<HeaderContainer
 			headerClassName={styles.header}
@@ -29,5 +29,3 @@ const HeaderMain = () => {
 		</HeaderContainer>
 	);
 };
-
-export default HeaderMain;

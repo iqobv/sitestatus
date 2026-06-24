@@ -7,11 +7,11 @@ import { RegisterFormDto } from '@/dto';
 import { registerSchema } from '@/schemas';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import AuthForm from '../AuthForm/AuthForm';
-import AuthWrapper from '../AuthWrapper/AuthWrapper';
+import { AuthForm } from '../AuthForm/AuthForm';
+import { AuthWrapper } from '../AuthWrapper/AuthWrapper';
 import { REGISTER_FIELDS } from './registerFields';
 
-const Register = () => {
+export const Register = () => {
 	const router = useRouter();
 
 	return (
@@ -67,5 +67,3 @@ const Register = () => {
 		</AuthWrapper>
 	);
 };
-
-export default Register;

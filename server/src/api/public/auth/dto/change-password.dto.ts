@@ -1,4 +1,4 @@
-import { IsPassword } from '@libs/validators';
+import { IsPassword } from '@libs/validators/is-password.validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 

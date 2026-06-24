@@ -1,8 +1,13 @@
-import Button from '../Button/Button';
+import { Button } from '../Button/Button';
 import styles from './IconButton.module.scss';
 import { IconButtonProps } from './IconButton.types';
 
-const IconButton = ({ buttonProps, Icon, href, children }: IconButtonProps) => {
+export const IconButton = ({
+	buttonProps,
+	Icon,
+	href,
+	children,
+}: IconButtonProps) => {
 	const buttonClassNames = [styles.button, buttonProps?.className]
 		.filter(Boolean)
 		.join(' ');
@@ -10,9 +15,7 @@ const IconButton = ({ buttonProps, Icon, href, children }: IconButtonProps) => {
 	return (
 		<Button className={buttonClassNames} href={href} {...buttonProps}>
 			<Icon size={20} />
-			<p className={styles.text}>{children}</p>
+			<div className={styles.text}>{children}</div>
 		</Button>
 	);
 };
-
-export default IconButton;

@@ -5,8 +5,6 @@ const cards = Array.from({ length: 3 }, (_, i) => (
 	<SkeletonLoader key={i} height={82} />
 ));
 
-const MonitorResponseCardsLoader = () => {
+export const MonitorResponseCardsLoader = () => {
 	return <div className={styles.responseCards}>{cards}</div>;
 };
-
-export default MonitorResponseCardsLoader;

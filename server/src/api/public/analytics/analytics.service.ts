@@ -2,15 +2,15 @@ import { StatPeriod } from '@generated/turso/enums';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
 import { ERROR_MESSAGES } from '@libs/constants';
-import { CalculateLogs } from '@libs/types';
-import {
-	calculateErrorRate,
-	calculateP95,
-	calculateResponseTime,
-	calculateUptime,
-} from '@libs/utils';
+import { CalculateLogs } from '@libs/types/calculate-logs.types';
+import { calculateErrorRate } from '@libs/utils/calculates/calculate-error-rate.util';
+import { calculateP95 } from '@libs/utils/calculates/calculate-p95.util';
+import { calculateResponseTime } from '@libs/utils/calculates/calculate-response-time.util';
+import { calculateUptime } from '@libs/utils/calculates/calculate-uptime.util';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { AnalyticsQueryDto } from './dto';
+import { AnalyticsQueryDto } from './dto/analytics-query.dto';
+import { AnalyticsStatisticsDto } from './dto/analytics-statistics.dto';
+import { AnalyticsDto } from './dto/analytics.dto';
 
 @Injectable()
 export class AnalyticsService {
@@ -19,8 +19,19 @@ export class AnalyticsService {
 		private readonly tursoPrismaService: TursoPrismaService,
 	) {}
 
-	async getAnalyticsByMonitorId(monitorId: string, query: AnalyticsQueryDto) {
+	public async getAnalyticsByMonitorId(
+		userId: string,
+		monitorId: string,
+		query: AnalyticsQueryDto,
+	): Promise<AnalyticsDto> {
 		const { daysRange = 1, region = 'global' } = query;
+
+		const monitor = await this.prismaService.monitor.findFirst({
+			where: { id: monitorId, userId },
+			select: { id: true },
+		});
+
+		if (!monitor) throw new NotFoundException(ERROR_MESSAGES.MONITOR.NOT_FOUND);
 
 		const now = new Date();
 		const startDate = new Date(now);
@@ -34,7 +45,7 @@ export class AnalyticsService {
 			});
 
 			if (!foundRegion)
-				throw new NotFoundException(ERROR_MESSAGES.REGION.REGION_NOT_FOUND);
+				throw new NotFoundException(ERROR_MESSAGES.REGION.NOT_FOUND);
 
 			regionId = foundRegion.id;
 		}
@@ -42,18 +53,6 @@ export class AnalyticsService {
 		const incidents = await this.tursoPrismaService.monitorIncident.findMany({
 			where: { monitorId, regionId },
 			orderBy: { createdAt: 'desc' },
-			select: {
-				id: true,
-				monitorId: true,
-				regionId: true,
-				statusCode: true,
-				createdAt: true,
-				errorMessage: true,
-				resolved: true,
-				resolvedAt: true,
-				alertSentAt: true,
-				alertTriggered: true,
-			},
 		});
 
 		if (daysRange <= 1) {
@@ -109,7 +108,7 @@ export class AnalyticsService {
 		};
 	}
 
-	private calculateStatistics(logs: CalculateLogs) {
+	private calculateStatistics(logs: CalculateLogs): AnalyticsStatisticsDto {
 		const p95 = calculateP95(logs);
 		const uptime = calculateUptime(logs);
 		const errorRate = calculateErrorRate(logs);

@@ -1,17 +1,15 @@
-import { Prisma, User } from '@generated/postgres/client';
+import { Prisma } from '@generated/postgres/client';
 import { TokenType } from '@generated/postgres/enums';
 import { MailService } from '@infra/mail/mail.service';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
-import { ClientInfoDto } from '@libs/dto';
-import { userSelect } from '@libs/prisma';
-import { JwtPayload } from '@libs/types';
-import {
-	comparePassword,
-	hashPassword,
-	hashToken,
-	withField,
-} from '@libs/utils';
+import { ClientInfoDto } from '@libs/dto/client-info.dto';
+import { userSelect } from '@libs/prisma/user-select.prisma';
+import { JwtPayload } from '@libs/types/jwt-payload.types';
+import { MessageResponse } from '@libs/types/messages/message-detail.types';
+import { withField } from '@libs/utils/error-with-field.util';
+import { hashToken } from '@libs/utils/hashToken.util';
+import { comparePassword, hashPassword } from '@libs/utils/password.util';
 import {
 	BadRequestException,
 	Injectable,
@@ -23,9 +21,14 @@ import crypto from 'crypto';
 import { SessionService } from '../session/session.service';
 import { TokenService } from '../token/token.service';
 import { UserProviderService } from '../user-provider/user-provider.service';
-import { CreateUserDto } from '../user/dto';
+import { CreateUserDto } from '../user/dto/create-user.dto';
+import { UserDto } from '../user/dto/user.dto';
 import { UserService } from '../user/user.service';
-import { ChangePasswordDto, LoginDto, OAuthDto, ResetPasswordDto } from './dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
+import { LoginDto } from './dto/login.dto';
+import { OAuthDto } from './dto/o-auth.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
+import { TokensDto } from './dto/tokens.dto';
 
 @Injectable()
 export class AuthService {
@@ -40,7 +43,7 @@ export class AuthService {
 		private readonly userProviderService: UserProviderService,
 	) {}
 
-	async register(dto: CreateUserDto) {
+	public async register(dto: CreateUserDto): Promise<MessageResponse> {
 		return await this.prismaService.$transaction(async (tx) => {
 			const user = await this.userService.create(dto, tx);
 
@@ -60,12 +63,17 @@ export class AuthService {
 
 			return {
 				...SUCCESS_MESSAGES.AUTH.REGISTER_SUCCESS,
-				email: user.email,
+				meta: {
+					email: user.email,
+				},
 			};
 		});
 	}
 
-	async login(dto: LoginDto, clientInfo: ClientInfoDto) {
+	public async login(
+		dto: LoginDto,
+		clientInfo: ClientInfoDto,
+	): Promise<TokensDto> {
 		const { email, password } = dto;
 
 		const user = await this.userService.findByEmail(email, true);
@@ -84,7 +92,7 @@ export class AuthService {
 		return await this.generateAndSaveTokens(user, clientInfo);
 	}
 
-	async logout(rawRefreshToken: string, userId: string) {
+	public async logout(rawRefreshToken: string, userId: string): Promise<void> {
 		const hashedToken = hashToken(rawRefreshToken);
 
 		const session = await this.prismaService.session.findUnique({
@@ -96,7 +104,10 @@ export class AuthService {
 		}
 	}
 
-	async validateUser(email: string, password: string) {
+	public async validateUser(
+		email: string,
+		password: string,
+	): Promise<UserDto | null> {
 		const user = await this.userService.findByEmail(email, true);
 
 		if (!user) return null;
@@ -111,24 +122,31 @@ export class AuthService {
 		return user;
 	}
 
-	async verifyEmail(token: string, clientInfo: ClientInfoDto) {
-		const user = await this.tokenService.verifyAndConsumeToken(
-			token,
-			TokenType.EMAIL_VERIFICATION,
-		);
+	public async verifyEmail(
+		token: string,
+		clientInfo: ClientInfoDto,
+	): Promise<TokensDto> {
+		return await this.prismaService.$transaction(async (tx) => {
+			const user = await this.tokenService.verifyAndConsumeToken(
+				token,
+				TokenType.EMAIL_VERIFICATION,
+				tx,
+			);
 
-		await this.prismaService.user.update({
-			where: { id: user.id },
-			data: { emailVerified: true },
-			select: userSelect,
+			if (user.emailVerified)
+				throw new BadRequestException(ERROR_MESSAGES.AUTH.ALREADY_VERIFIED);
+
+			await tx.user.update({
+				where: { id: user.id },
+				data: { emailVerified: true },
+				select: userSelect,
+			});
+
+			return await this.generateAndSaveTokens(user, clientInfo, tx);
 		});
-
-		const tokens = await this.generateAndSaveTokens(user, clientInfo);
-
-		return { ...SUCCESS_MESSAGES.AUTH.EMAIL_VERIFIED, user, tokens };
 	}
 
-	async resendVerification(email: string) {
+	public async resendVerification(email: string): Promise<void> {
 		const user = await this.userService.findByEmail(email, false);
 
 		if (!user) return;
@@ -146,11 +164,9 @@ export class AuthService {
 		});
 
 		await this.mailService.sendVerificationEmail(user.email, token);
-
-		return SUCCESS_MESSAGES.AUTH.RESEND_VERIFICATION_EMAIL;
 	}
 
-	async forgotPassword(email: string) {
+	public async forgotPassword(email: string): Promise<void> {
 		const user = await this.userService.findByEmail(email, true);
 
 		if (!user || !user.password) return;
@@ -167,7 +183,7 @@ export class AuthService {
 		await this.mailService.sendPasswordResetEmail(user.email, token);
 	}
 
-	async resetPassword(dto: ResetPasswordDto) {
+	public async resetPassword(dto: ResetPasswordDto): Promise<void> {
 		const user = await this.tokenService.verifyAndConsumeToken(
 			dto.token,
 			TokenType.RESET_PASSWORD,
@@ -180,16 +196,18 @@ export class AuthService {
 		});
 
 		await this.prismaService.session.deleteMany({ where: { userId: user.id } });
-
-		return SUCCESS_MESSAGES.AUTH.CHANGE_PASSWORD;
 	}
 
-	async changePassword(userId: string, dto: ChangePasswordDto) {
+	public async changePassword(
+		userId: string,
+		dto: ChangePasswordDto,
+	): Promise<void> {
 		const user = await this.prismaService.user.findUnique({
 			where: { id: userId },
 		});
 
-		if (!user || !user.password) throw new UnauthorizedException();
+		if (!user || !user.password)
+			throw new UnauthorizedException(ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS);
 
 		const isMatch = await comparePassword(dto.oldPassword, user.password);
 
@@ -204,11 +222,12 @@ export class AuthService {
 			where: { id: userId },
 			data: { password: hashedPassword },
 		});
-
-		return SUCCESS_MESSAGES.AUTH.CHANGE_PASSWORD;
 	}
 
-	async refreshTokens(rawRefreshToken: string, clientInfo: ClientInfoDto) {
+	public async refreshTokens(
+		rawRefreshToken: string,
+		clientInfo: ClientInfoDto,
+	): Promise<TokensDto> {
 		const hashedToken = hashToken(rawRefreshToken);
 
 		const session = await this.prismaService.session.findUnique({
@@ -260,7 +279,10 @@ export class AuthService {
 		return { accessToken, refreshToken: newRawRefreshToken };
 	}
 
-	async validateOAuthLogin(dto: OAuthDto, clientInfo: ClientInfoDto) {
+	public async validateOAuthLogin(
+		dto: OAuthDto,
+		clientInfo: ClientInfoDto,
+	): Promise<TokensDto> {
 		const { provider, providerId, email } = dto;
 
 		return await this.prismaService.$transaction(async (tx) => {
@@ -279,7 +301,12 @@ export class AuthService {
 				);
 			}
 
-			let user = await this.userService.findByEmail(email, true, false, tx);
+			let user: UserDto | null = await this.userService.findByEmail(
+				email,
+				false,
+				false,
+				tx,
+			);
 
 			if (!user) {
 				user = await this.userService.create({ email }, tx);
@@ -298,7 +325,7 @@ export class AuthService {
 		});
 	}
 
-	async generateRestoreAccountToken(email: string) {
+	public async generateRestoreAccountToken(email: string): Promise<void> {
 		const user = await this.userService.findByEmail(email, true, true);
 
 		if (!user) return;
@@ -310,11 +337,12 @@ export class AuthService {
 		});
 
 		await this.mailService.sendRestoreAccountEmail(user.email, token);
-
-		return SUCCESS_MESSAGES.AUTH.SEND_RESTORE_ACCOUNT_EMAIL;
 	}
 
-	async restoreAccount(token: string, clientInfo: ClientInfoDto) {
+	public async restoreAccount(
+		token: string,
+		clientInfo: ClientInfoDto,
+	): Promise<TokensDto> {
 		return await this.prismaService.$transaction(async (tx) => {
 			const user = await this.tokenService.verifyAndConsumeToken(
 				token,
@@ -334,10 +362,10 @@ export class AuthService {
 	}
 
 	private async generateAndSaveTokens(
-		user: User,
+		user: UserDto,
 		clientInfo: ClientInfoDto,
 		tx?: Prisma.TransactionClient,
-	) {
+	): Promise<TokensDto> {
 		const rawRefreshToken = crypto.randomBytes(32).toString('hex');
 		const refreshTokenHash = hashToken(rawRefreshToken);
 

@@ -1,10 +1,5 @@
-import { ProjectHeaderLoader, ProjectLoader } from '@/components/projects';
+import { ProjectLoader } from '@/components/projects/Project/ProjectLoader';
 
 export default function Loading() {
-	return (
-		<>
-			<ProjectHeaderLoader />
-			<ProjectLoader />
-		</>
-	);
+	return <ProjectLoader />;
 }

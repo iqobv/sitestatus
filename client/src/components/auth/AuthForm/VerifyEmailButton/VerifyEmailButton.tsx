@@ -2,7 +2,6 @@
 
 import { resendVerificationEmail } from '@/api';
 import { Button } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import styles from './VerifyEmailButton.module.scss';
@@ -11,10 +10,9 @@ interface VerifyEmailButtonProps {
 	email: string;
 }
 
-const VerifyEmailButton = ({ email }: VerifyEmailButtonProps) => {
+export const VerifyEmailButton = ({ email }: VerifyEmailButtonProps) => {
 	const { mutate } = useMutation({
 		mutationFn: () => resendVerificationEmail(email),
-		mutationKey: QUERY_KEYS.auth.resendVerificationEmail(email),
 		onSuccess: (data) => {
 			toast.info(data.message);
 		},
@@ -29,5 +27,3 @@ const VerifyEmailButton = ({ email }: VerifyEmailButtonProps) => {
 		</div>
 	);
 };
-
-export default VerifyEmailButton;

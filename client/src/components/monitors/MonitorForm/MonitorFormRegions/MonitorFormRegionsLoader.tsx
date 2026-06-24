@@ -1,7 +1,5 @@
 import { SkeletonLoader } from '@/components/ui';
 
-const MonitorFormRegionsLoader = () => {
+export const MonitorFormRegionsLoader = () => {
 	return <SkeletonLoader height={150} />;
 };
-
-export default MonitorFormRegionsLoader;

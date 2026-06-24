@@ -1,107 +1,94 @@
-import { RegionDto } from '@api/public/region/dto';
+import { RegionDto } from '@api/public/region/dto/region.dto';
+import { UserRole } from '@generated/postgres/enums';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
-import { Auth } from '@libs/decorators';
-import { createCustomMessageDto } from '@libs/utils';
+import {
+	ApiErrorResponse,
+	ApiSuccessResponse,
+} from '@libs/decorators/api-response.decorator';
+import { Auth } from '@libs/decorators/auth.decorator';
+import { MessageResponse } from '@libs/types/messages/message-detail.types';
 import {
 	Body,
 	Controller,
 	Delete,
 	Get,
+	HttpStatus,
 	Param,
 	ParseUUIDPipe,
 	Patch,
 	Post,
 } from '@nestjs/common';
-import {
-	ApiConflictResponse,
-	ApiNotFoundResponse,
-	ApiOkResponse,
-	ApiOperation,
-	ApiTags,
-} from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AdminRegionService } from './admin-region.service';
-import { CreateRegionDto, UpdateRegionDto } from './dto';
+import { CreateRegionDto } from './dto/create-region.dto';
+import { UpdateRegionDto } from './dto/update-region.dto';
 
+@Auth(UserRole.ADMIN)
 @ApiTags('Admin Regions')
 @Controller('admin/regions')
 export class AdminRegionController {
 	constructor(private readonly adminRegionService: AdminRegionService) {}
 
-	@Auth('ADMIN')
 	@ApiOperation({
 		summary: 'Create a new region',
 		description: 'Creates a new region with the provided details',
 	})
-	@ApiConflictResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.REGION.REGION_ALREADY_EXISTS),
-	})
+	@ApiErrorResponse(HttpStatus.CONFLICT, ERROR_MESSAGES.REGION.ALREADY_EXISTS)
 	@ApiOkResponse({ type: RegionDto })
 	@Post()
-	async createRegion(@Body() dto: CreateRegionDto) {
+	public async createRegion(@Body() dto: CreateRegionDto): Promise<RegionDto> {
 		return await this.adminRegionService.createRegion(dto);
 	}
 
-	@Auth('ADMIN')
 	@ApiOperation({
 		summary: 'Get region by key',
 		description: 'Retrieves a region by its unique key',
 	})
-	@ApiNotFoundResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.REGION.REGION_NOT_FOUND),
-	})
 	@ApiOkResponse({ type: RegionDto })
+	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.REGION.NOT_FOUND)
 	@Get('key/:key')
-	async getRegionByKey(@Param('key') key: string) {
+	public async getRegionByKey(@Param('key') key: string): Promise<RegionDto> {
 		return await this.adminRegionService.getRegionByKey(key);
 	}
 
-	@Auth('ADMIN')
 	@ApiOperation({
 		summary: 'Get region by ID',
 		description: 'Retrieves a region by its unique ID',
 	})
 	@ApiOkResponse({ type: RegionDto })
-	@ApiNotFoundResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.REGION.REGION_NOT_FOUND),
-	})
+	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.REGION.NOT_FOUND)
 	@Get('id/:id')
-	async getRegionById(@Param('id', ParseUUIDPipe) id: string) {
+	public async getRegionById(
+		@Param('id', ParseUUIDPipe) id: string,
+	): Promise<RegionDto> {
 		return await this.adminRegionService.getRegionById(id);
 	}
 
-	@Auth('ADMIN')
 	@ApiOperation({
 		summary: 'Update region by ID',
 		description: 'Updates a region by its unique ID',
 	})
 	@ApiOkResponse({ type: RegionDto })
-	@ApiNotFoundResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.REGION.REGION_NOT_FOUND),
-	})
-	@ApiConflictResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.REGION.REGION_ALREADY_EXISTS),
-	})
+	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.REGION.NOT_FOUND)
+	@ApiErrorResponse(HttpStatus.CONFLICT, ERROR_MESSAGES.REGION.ALREADY_EXISTS)
 	@Patch(':id')
-	async updateRegion(
+	public async updateRegion(
 		@Param('id', ParseUUIDPipe) id: string,
 		@Body() dto: UpdateRegionDto,
-	) {
+	): Promise<RegionDto> {
 		return await this.adminRegionService.updateRegion(id, dto);
 	}
 
-	@Auth('ADMIN')
 	@ApiOperation({
 		summary: 'Delete region by ID',
 		description: 'Deletes a region by its unique ID',
 	})
-	@ApiOkResponse({
-		type: createCustomMessageDto(SUCCESS_MESSAGES.REGION.REGION_DELETED),
-	})
-	@ApiNotFoundResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.REGION.REGION_NOT_FOUND),
-	})
+	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.REGION.DELETED)
+	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.REGION.NOT_FOUND)
 	@Delete(':id')
-	async deleteRegion(@Param('id', ParseUUIDPipe) id: string) {
+	public async deleteRegion(
+		@Param('id', ParseUUIDPipe) id: string,
+	): Promise<MessageResponse> {
 		return await this.adminRegionService.deleteRegion(id);
 	}
 }

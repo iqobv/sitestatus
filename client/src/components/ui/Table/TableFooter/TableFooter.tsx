@@ -4,21 +4,15 @@ import { flexRender } from '@tanstack/react-table';
 import { useTableContext } from '../TableContext';
 import styles from './TableFooter.module.scss';
 
-const TableFooter = () => {
+export const TableFooter = () => {
 	const { table } = useTableContext();
 
 	return (
 		<tfoot className={styles.tableFooter}>
 			{table.getFooterGroups().map((footerGroup) => (
-				<tr
-					key={footerGroup.id}
-					className={styles.row}
-				>
+				<tr key={footerGroup.id} className={styles.row}>
 					{footerGroup.headers.map((header) => (
-						<th
-							key={header.id}
-							colSpan={header.colSpan}
-						>
+						<th key={header.id} colSpan={header.colSpan}>
 							{header.isPlaceholder
 								? null
 								: flexRender(
@@ -32,5 +26,3 @@ const TableFooter = () => {
 		</tfoot>
 	);
 };
-
-export default TableFooter;

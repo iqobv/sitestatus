@@ -6,13 +6,17 @@ interface SettingsWrapperProps {
 	title: React.ReactNode;
 }
 
-const SettingsWrapper = ({ children, title }: SettingsWrapperProps) => {
+export const SettingsWrapper = ({ children, title }: SettingsWrapperProps) => {
 	return (
 		<div className={styles.wrapper}>
-			<SectionHeader title={title} titleComponent="h2" padding={0} />
+			<SectionHeader
+				title={title}
+				titleProps={{
+					variant: 'h2',
+				}}
+				padding={0}
+			/>
 			<div className={styles.content}>{children}</div>
 		</div>
 	);
 };
-
-export default SettingsWrapper;

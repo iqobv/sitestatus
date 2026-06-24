@@ -7,10 +7,10 @@ import { isAxiosError } from 'axios';
 import { BaseSyntheticEvent } from 'react';
 import { FieldValues, Path, UseFormReturn } from 'react-hook-form';
 import { ProjectFormProps } from './ProjectForm.types';
-import ProjectFormActions from './ProjectFormActions';
-import ProjectFormField from './ProjectFormField';
+import { ProjectFormActions } from './ProjectFormActions';
+import { ProjectFormField } from './ProjectFormField';
 
-const ProjectForm = <D extends FieldValues>({
+export const ProjectForm = <D extends FieldValues>({
 	mutationOptions,
 	fields,
 	isEdit = false,
@@ -63,5 +63,3 @@ const ProjectForm = <D extends FieldValues>({
 		</Form>
 	);
 };
-
-export default ProjectForm;

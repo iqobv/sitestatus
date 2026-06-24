@@ -2,7 +2,11 @@ import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
 import { ERROR_MESSAGES } from '@libs/constants';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { IncidentTimelineDto, IncidentTimelineType } from './dto';
+import { IncidentDetailsDto } from './dto/incident-details.dto';
+import {
+	IncidentTimelineDto,
+	IncidentTimelineType,
+} from './dto/incident-timeline.dto';
 
 @Injectable()
 export class IncidentService {
@@ -11,24 +15,23 @@ export class IncidentService {
 		private readonly tursoPrismaService: TursoPrismaService,
 	) {}
 
-	async getIncidentDetails(
+	public async getIncidentDetails(
 		monitorId: string,
 		incidentId: string,
 		userId: string,
-	) {
+	): Promise<IncidentDetailsDto> {
 		const monitor = await this.pgPrismaService.monitor.findUnique({
 			where: { id: monitorId, userId },
 		});
 
-		if (!monitor)
-			throw new NotFoundException(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND);
+		if (!monitor) throw new NotFoundException(ERROR_MESSAGES.MONITOR.NOT_FOUND);
 
 		const incident = await this.tursoPrismaService.monitorIncident.findUnique({
 			where: { id: incidentId, monitorId },
 		});
 
 		if (!incident)
-			throw new NotFoundException(ERROR_MESSAGES.INCIDENT.INCIDENT_NOT_FOUND);
+			throw new NotFoundException(ERROR_MESSAGES.INCIDENT.NOT_FOUND);
 
 		const incidentTimeline: IncidentTimelineDto[] = [
 			{

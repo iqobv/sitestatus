@@ -1,13 +1,19 @@
 'use client';
 
-import { Checkbox, Form, Modal } from '@/components/ui';
+import {
+	Checkbox,
+	Form,
+	FormField,
+	ModalBody,
+	ModalHeader,
+} from '@/components/ui';
 import { UpsertAlertSettingsDto } from '@/dto';
 import { upsertAlertSettingsSchema } from '@/schemas';
 import { capitalize } from '@/utils';
-import AlertSettingsFormChannels from './AlertSettingsFormChannels';
-import AlertSettingsFormFields from './AlertSettingsFormFields';
-import AlertSettingsFormFooter from './AlertSettingsFormFooter';
-import AlertSettingsFormGlobal from './AlertSettingsFormGlobal';
+import { AlertSettingsFormChannels } from './AlertSettingsFormChannels';
+import { AlertSettingsFormFields } from './AlertSettingsFormFields';
+import { AlertSettingsFormFooter } from './AlertSettingsFormFooter';
+import { AlertSettingsFormGlobal } from './AlertSettingsFormGlobal';
 import { useAlertSettingsForm } from './useAlertSettingsForm.hook';
 
 export type SettingType = 'monitor' | 'project';
@@ -17,7 +23,7 @@ export interface AlertSettingsFormProps {
 	type: SettingType;
 }
 
-const AlertSettingsForm = ({ id, type }: AlertSettingsFormProps) => {
+export const AlertSettingsForm = ({ id, type }: AlertSettingsFormProps) => {
 	const {
 		currentSettings,
 		notificationChannels,
@@ -61,8 +67,8 @@ const AlertSettingsForm = ({ id, type }: AlertSettingsFormProps) => {
 				>
 					{({ formState: { errors } }) => (
 						<>
-							<Modal.Header>{capitalize(type)} Alert Settings</Modal.Header>
-							<Modal.Body>
+							<ModalHeader>{capitalize(type)} Alert Settings</ModalHeader>
+							<ModalBody>
 								{isGlobalSettings && (
 									<AlertSettingsFormGlobal
 										type={type}
@@ -70,13 +76,13 @@ const AlertSettingsForm = ({ id, type }: AlertSettingsFormProps) => {
 										setOverrideSettings={setOverrideSettings}
 									/>
 								)}
-								<Form.Field name="isEnabled">
+								<FormField name="isEnabled">
 									<Checkbox
 										label="Enable Alerts"
 										error={errors.isEnabled?.message as string}
 										disabled={isGlobalSettings && !overrideSettings}
 									/>
-								</Form.Field>
+								</FormField>
 								<AlertSettingsFormFields
 									errors={errors}
 									isGlobalSettings={isGlobalSettings}
@@ -89,7 +95,7 @@ const AlertSettingsForm = ({ id, type }: AlertSettingsFormProps) => {
 										overrideSettings={overrideSettings}
 									/>
 								)}
-							</Modal.Body>
+							</ModalBody>
 							<AlertSettingsFormFooter isPending={isPending} />
 						</>
 					)}
@@ -98,5 +104,3 @@ const AlertSettingsForm = ({ id, type }: AlertSettingsFormProps) => {
 		</>
 	);
 };
-
-export default AlertSettingsForm;

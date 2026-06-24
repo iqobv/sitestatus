@@ -4,9 +4,9 @@ import { IconButton } from '@/components/ui';
 import { PRIVATE_PAGES } from '@/config';
 import { FiPlus } from 'react-icons/fi';
 import styles from './DashboardHeader.module.scss';
-import { NotificationList } from './NotificationList';
+import { NotificationList } from './NotificationList/NotificationList';
 
-const DashboardHeader = () => {
+export const DashboardHeader = () => {
 	return (
 		<header className={styles.header}>
 			<div className={styles.content}>
@@ -20,5 +20,3 @@ const DashboardHeader = () => {
 		</header>
 	);
 };
-
-export default DashboardHeader;

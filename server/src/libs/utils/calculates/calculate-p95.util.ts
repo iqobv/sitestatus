@@ -1,8 +1,6 @@
-import {
-	AnalyticsRawDataDto,
-	AnalyticsStatLogDto,
-} from '@api/public/analytics/dto';
-import { CalculateLog, CalculateLogs } from '@libs/types';
+import { AnalyticsRawDataDto } from '@api/public/analytics/dto/analytics-raw-log.dto';
+import { AnalyticsStatLogDto } from '@api/public/analytics/dto/analytics-stat-log.dto';
+import { CalculateLog, CalculateLogs } from '@libs/types/calculate-logs.types';
 
 export const calculateP95 = (logs: CalculateLogs): number => {
 	const totalLogs = logs.length;

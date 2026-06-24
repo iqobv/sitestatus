@@ -9,11 +9,11 @@ import { loginSchema } from '@/schemas';
 import { User } from '@/types';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import AuthForm from '../AuthForm/AuthForm';
-import AuthWrapper from '../AuthWrapper/AuthWrapper';
+import { AuthForm } from '../AuthForm/AuthForm';
+import { AuthWrapper } from '../AuthWrapper/AuthWrapper';
 import { LOGIN_FIELDS } from './loginFields';
 
-const Login = () => {
+export const Login = () => {
 	const { login } = useAuth();
 	const router = useRouter();
 
@@ -63,5 +63,3 @@ const Login = () => {
 		</AuthWrapper>
 	);
 };
-
-export default Login;

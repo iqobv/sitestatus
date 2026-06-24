@@ -8,12 +8,10 @@ interface SidebarHeaderProps {
 	onClick?: () => void;
 }
 
-const SidebarHeader = ({ onClick }: SidebarHeaderProps) => {
+export const SidebarHeader = ({ onClick }: SidebarHeaderProps) => {
 	return (
 		<div className={styles.header}>
 			<LogoLink href={PRIVATE_PAGES.DASHBOARD} onClick={onClick} />
 		</div>
 	);
 };
-
-export default SidebarHeader;

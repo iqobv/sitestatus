@@ -9,16 +9,16 @@ import {
 } from '@tanstack/react-table';
 import { useMemo } from 'react';
 import styles from './Table.module.scss';
-import TableBody from './TableBody/TableBody';
+import { TableBody } from './TableBody/TableBody';
 import { TableContext, TableContextType } from './TableContext';
-import TableFooter from './TableFooter/TableFooter';
-import TableHeader from './TableHeader/TableHeader';
+import { TableFooter } from './TableFooter/TableFooter';
+import { TableHeader } from './TableHeader/TableHeader';
 
 export interface CustomTableProps<T extends RowData> extends TableOptions<T> {
 	getRowHref?: (row: T) => string | undefined;
 }
 
-const Table = <T extends RowData>(props: CustomTableProps<T>) => {
+export const Table = <T extends RowData>(props: CustomTableProps<T>) => {
 	const options = useMemo(
 		() => ({
 			...props,
@@ -52,5 +52,3 @@ const Table = <T extends RowData>(props: CustomTableProps<T>) => {
 		</TableContext.Provider>
 	);
 };
-
-export default Table;

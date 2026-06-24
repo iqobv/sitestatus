@@ -15,13 +15,15 @@ interface DropdownMenuProps {
 	ariaLabel?: string;
 	menuWidth?: 'fit-content' | 'max-content' | 'trigger';
 	zIndex?: number;
+	onScroll?: (event: React.UIEvent<HTMLDivElement>) => void;
 }
 
-const DropdownMenu = ({
+export const DropdownMenu = ({
 	children,
 	ariaLabel,
 	menuWidth = 'fit-content',
 	zIndex = 2000,
+	onScroll,
 }: DropdownMenuProps) => {
 	const {
 		isOpen,
@@ -58,6 +60,7 @@ const DropdownMenu = ({
 								style={{
 									width: finalWidth,
 								}}
+								onScroll={onScroll}
 								aria-label={ariaLabel}
 								initial={{ opacity: 0, y: -8, scale: 0.95 }}
 								animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -75,5 +78,3 @@ const DropdownMenu = ({
 		</AnimatePresence>
 	);
 };
-
-export default DropdownMenu;

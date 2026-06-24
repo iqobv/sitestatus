@@ -11,7 +11,7 @@ export class CleanupService {
 	) {}
 
 	@Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
-	private async cleanupDeletedMonitors() {
+	private async cleanupDeletedMonitors(): Promise<void> {
 		const thirtyDaysAgo = new Date();
 		thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
@@ -58,7 +58,7 @@ export class CleanupService {
 	}
 
 	@Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
-	private async cleanupDeletedProjects() {
+	private async cleanupDeletedProjects(): Promise<void> {
 		const thirtyDaysAgo = new Date();
 		thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
@@ -72,7 +72,7 @@ export class CleanupService {
 	}
 
 	@Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
-	private async cleanUpDeletedUsers() {
+	private async cleanUpDeletedUsers(): Promise<void> {
 		const thirtyDaysAgo = new Date();
 		thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 

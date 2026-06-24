@@ -1,6 +1,6 @@
 'use client';
 
-import { Tooltip } from '@/components/ui';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui';
 import { MonitorTimeline } from '@/types';
 import React from 'react';
 import styles from './MonitorOverallUptimeBar.module.scss';
@@ -9,7 +9,7 @@ interface MonitorOverallUptimeBarItemProps {
 	entry: MonitorTimeline;
 }
 
-const MonitorOverallUptimeBarItem = ({
+export const MonitorOverallUptimeBarItem = ({
 	entry,
 }: MonitorOverallUptimeBarItemProps) => {
 	const dtf = new Intl.DateTimeFormat(undefined, {
@@ -22,7 +22,7 @@ const MonitorOverallUptimeBarItem = ({
 
 	return (
 		<Tooltip>
-			<Tooltip.Trigger>
+			<TooltipTrigger>
 				<div
 					className={styles.uptimeBarItem}
 					style={
@@ -32,13 +32,11 @@ const MonitorOverallUptimeBarItem = ({
 						} as React.CSSProperties
 					}
 				/>
-			</Tooltip.Trigger>
-			<Tooltip.Content className={styles.tooltip}>
+			</TooltipTrigger>
+			<TooltipContent className={styles.tooltip}>
 				<p>{dtf.format(new Date(entry.timestamp))}</p>
 				<p className={styles.tooltipStatus}>{entry.status.toLowerCase()}</p>
-			</Tooltip.Content>
+			</TooltipContent>
 		</Tooltip>
 	);
 };
-
-export default MonitorOverallUptimeBarItem;

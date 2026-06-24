@@ -1,4 +1,4 @@
-import { General } from '@/components/settings';
+import { General } from '@/components/settings/General/General';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

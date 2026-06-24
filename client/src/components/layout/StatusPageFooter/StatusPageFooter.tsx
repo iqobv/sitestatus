@@ -4,7 +4,7 @@ import Link from 'next/link';
 import styles from './StatusPageFooter.module.scss';
 import { STATUS_PAGE_FOOTER_LINKS } from './statusPageFooterlinks';
 
-const StatusPageFooter = () => {
+export const StatusPageFooter = () => {
 	return (
 		<div className={`${styles.footer} container`}>
 			<div className={styles.content}>
@@ -33,5 +33,3 @@ const StatusPageFooter = () => {
 		</div>
 	);
 };
-
-export default StatusPageFooter;

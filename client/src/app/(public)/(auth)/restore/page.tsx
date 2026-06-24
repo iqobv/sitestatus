@@ -1,4 +1,4 @@
-import { RestoreAccount } from '@/components/auth';
+import { RestoreAccount } from '@/components/auth/RestoreAccount/RestoreAccount';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 

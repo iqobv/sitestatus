@@ -9,7 +9,7 @@ interface MonitorIncidentStatusProps {
 	showText?: boolean;
 }
 
-const MonitorIncidentStatus = ({
+export const MonitorIncidentStatus = ({
 	isResolved,
 	showText = true,
 }: MonitorIncidentStatusProps) => {
@@ -34,5 +34,3 @@ const MonitorIncidentStatus = ({
 		</div>
 	);
 };
-
-export default MonitorIncidentStatus;

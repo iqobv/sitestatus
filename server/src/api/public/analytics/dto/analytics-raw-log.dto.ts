@@ -2,7 +2,11 @@ import { SiteStatus } from '@generated/turso/enums';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class AnalyticsRawDataDto {
-	@ApiProperty({ example: SiteStatus.UP, enum: SiteStatus })
+	@ApiProperty({
+		example: SiteStatus.UP,
+		enum: SiteStatus,
+		enumName: 'SiteStatus',
+	})
 	status: SiteStatus;
 
 	@ApiProperty({ example: 143 })

@@ -1,18 +1,24 @@
 'use client';
 
 import { getAllMonitors } from '@/api';
+import { IconButton, SectionHeader } from '@/components/ui';
 import { QUERY_KEYS } from '@/config';
-import { keepPreviousData } from '@tanstack/react-query';
-import Monitors from './Monitors';
+import { FiPlus } from 'react-icons/fi';
+import { Monitors } from './Monitors';
 
-const MonitorsAll = () => {
+export const MonitorsAll = () => {
 	return (
-		<Monitors
-			queryKey={QUERY_KEYS.monitors.list}
-			queryFn={() => getAllMonitors()}
-			placeholderData={keepPreviousData}
-		/>
+		<>
+			<SectionHeader
+				title="Monitors"
+				description="View and manage your monitors"
+				rightSlot={<IconButton Icon={FiPlus}>Add New Monitor</IconButton>}
+			/>
+			<Monitors
+				queryKeyBase={QUERY_KEYS.monitors.lists()}
+				queryKeyFactory={(params) => QUERY_KEYS.monitors.list(params)}
+				fetcher={getAllMonitors}
+			/>
+		</>
 	);
 };
-
-export default MonitorsAll;

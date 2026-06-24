@@ -1,10 +1,11 @@
-import { extractClientInfo, setAuthCookies } from '@libs/utils';
+import { extractClientInfo } from '@libs/utils/client-info.util';
+import { setAuthCookies } from '@libs/utils/cookie.util';
 import { Controller, forwardRef, Get, Inject, Req, Res } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { Request, Response } from 'express';
 import { AuthService } from '../../auth.service';
-import { GithubAuth } from '../../decorators';
-import { OAuthDto } from '../dto';
+import { GithubAuth } from '../../decorators/github-auth.decorator';
+import { OAuthDto } from '../../dto/o-auth.dto';
 
 @Controller('oauth/github')
 export class GithubController {
@@ -16,14 +17,14 @@ export class GithubController {
 
 	@Get()
 	@GithubAuth()
-	async githubAuth() {}
+	public async githubAuth(): Promise<void> {}
 
 	@Get('callback')
 	@GithubAuth()
-	async githubAuthRedirect(
+	public async githubAuthRedirect(
 		@Req() req: Request,
 		@Res({ passthrough: true }) res: Response,
-	) {
+	): Promise<void> {
 		const clientInfo = extractClientInfo(req);
 		const user = req.user as unknown as OAuthDto;
 

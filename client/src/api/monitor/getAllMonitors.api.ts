@@ -1,16 +1,35 @@
-import { FullMonitor } from '@/types';
+import { MonitorsQueryDto } from '@/dto';
+import { PaginatedMonitors } from '@/types';
 import { apiClient, apiServer } from '../axios';
 
-export const getAllMonitors = async () =>
-	(await apiClient.get<FullMonitor[]>(`/v1/monitors`)).data;
+export const getAllMonitors = async (params: MonitorsQueryDto) =>
+	(await apiClient.get<PaginatedMonitors>(`/v1/monitors`, { params })).data;
 
-export const getServerAllMonitors = async () =>
-	(await apiServer.get<FullMonitor[]>(`/v1/monitors`)).data;
+export const getServerAllMonitors = async (params: MonitorsQueryDto) =>
+	(await apiServer.get<PaginatedMonitors>(`/v1/monitors`, { params })).data;
 
-export const getAllMonitorsByProjectId = async (projectId: string) =>
-	(await apiClient.get<FullMonitor[]>(`/v1/monitors/projects/${projectId}`))
-		.data;
+export const getAllMonitorsByProjectId = async (
+	projectId: string,
+	params: MonitorsQueryDto,
+) =>
+	(
+		await apiClient.get<PaginatedMonitors>(
+			`/v1/monitors/projects/${projectId}`,
+			{
+				params,
+			},
+		)
+	).data;
 
-export const getServerAllMonitorsByProjectId = async (projectId: string) =>
-	(await apiServer.get<FullMonitor[]>(`/v1/monitors/projects/${projectId}`))
-		.data;
+export const getServerAllMonitorsByProjectId = async (
+	projectId: string,
+	params: MonitorsQueryDto,
+) =>
+	(
+		await apiServer.get<PaginatedMonitors>(
+			`/v1/monitors/projects/${projectId}`,
+			{
+				params,
+			},
+		)
+	).data;

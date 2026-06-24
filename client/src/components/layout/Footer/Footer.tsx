@@ -1,11 +1,11 @@
-import { Logo } from '@/components/icons';
+import { Logo } from '@/components/icons/Logo';
 import { Sepator } from '@/components/ui';
 import Link from 'next/link';
 import { FaGithub } from 'react-icons/fa6';
 import styles from './Footer.module.scss';
 import { FOOTER_ITEMS } from './footerItems';
 
-const Footer = () => {
+export const Footer = () => {
 	return (
 		<footer className={styles.footer}>
 			<div className={'container'}>
@@ -55,5 +55,3 @@ const Footer = () => {
 		</footer>
 	);
 };
-
-export default Footer;

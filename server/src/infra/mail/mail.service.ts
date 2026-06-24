@@ -1,20 +1,19 @@
-import { getMailerConfig } from '@config';
+import { getMailerConfig } from '@config/mailer.config';
 import { SiteStatus } from '@generated/turso/enums';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { render } from '@react-email/components';
 import type { SendMailOptions, SentMessageInfo } from 'nodemailer';
 import { createElement } from 'react';
-import { IncidentAlertDto, SendEmailDto } from './dto';
-import {
-	EmailNotificationChannelVerifyTemplate,
-	MonitorDownTemplate,
-	MonitorUpTemplate,
-	ResetPasswordTemplate,
-	RestoreAccountTemplate,
-	VerificationEmailTemplate,
-} from './templates';
+import { IncidentAlertDto } from './dto/incident-alert.dto';
+import { SendEmailDto } from './dto/send-email.dto';
 import { BaseEmailProps } from './templates/base-email-props.types';
+import { EmailNotificationChannelVerifyTemplate } from './templates/email-notification-channel-verify.template';
+import { MonitorDownTemplate } from './templates/monitor-down.template';
+import { MonitorUpTemplate } from './templates/monitor-up.template';
+import { ResetPasswordTemplate } from './templates/reset-password.template';
+import { RestoreAccountTemplate } from './templates/restore-account.template';
+import { VerificationEmailTemplate } from './templates/verification-email.template';
 
 @Injectable()
 export class MailService {

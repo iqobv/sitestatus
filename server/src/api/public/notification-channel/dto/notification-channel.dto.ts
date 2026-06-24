@@ -1,5 +1,5 @@
 import { ChannelStatus, ChannelType } from '@generated/postgres/enums';
-import { DefaultFieldsDto } from '@libs/dto';
+import { DefaultFieldsDto } from '@libs/dto/default-fields.dto';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class NotificationChannelDto extends DefaultFieldsDto {

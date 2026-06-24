@@ -1,8 +1,20 @@
+import { StatusPagesQueryDto } from '@/dto';
 import { StatusPage } from '@/types';
+import { PaginatedData } from '@/types/api/paginatedData.types';
 import { apiClient, apiServer } from '../axios';
 
-export const getUserStatusPages = async () =>
-	(await apiClient.get<StatusPage[]>(`/v1/status-pages/me`)).data;
+type GetUserStatusPagesResponse = PaginatedData<StatusPage>;
 
-export const getServerUserStatusPages = async () =>
-	(await apiServer.get<StatusPage[]>(`/v1/status-pages/me`)).data;
+export const getUserStatusPages = async (params: StatusPagesQueryDto) =>
+	(
+		await apiClient.get<GetUserStatusPagesResponse>(`/v1/status-pages/me`, {
+			params,
+		})
+	).data;
+
+export const getServerUserStatusPages = async (params: StatusPagesQueryDto) =>
+	(
+		await apiServer.get<GetUserStatusPagesResponse>(`/v1/status-pages/me`, {
+			params,
+		})
+	).data;

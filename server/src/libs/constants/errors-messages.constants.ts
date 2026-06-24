@@ -1,4 +1,4 @@
-import { createErrorDomain } from '../utils';
+import { createMessageDomain } from '@libs/utils/message-creator.util';
 import {
 	ALERT_ERROR_MESSAGES,
 	AUTH_ERROR_MESSAGES,
@@ -15,16 +15,22 @@ import {
 } from './error-messages';
 
 export const ERROR_MESSAGES = {
-	ALERT: createErrorDomain(ALERT_ERROR_MESSAGES),
-	AUTH: createErrorDomain(AUTH_ERROR_MESSAGES),
-	INCIDENT: createErrorDomain(INCIDENT_ERROR_MESSAGES),
-	MONITOR: createErrorDomain(MONITOR_ERROR_MESSAGES),
-	NOTIFICATION_CHANNEL: createErrorDomain(NOTIFICATION_CHANNEL_ERROR_MESSAGES),
-	NOTIFICATION: createErrorDomain(NOTIFICATION_ERROR_MESSAGES),
-	PROJECT: createErrorDomain(PROJECT_ERROR_MESSAGES),
-	REGION: createErrorDomain(REGION_ERROR_MESSAGES),
-	SESSIONS: createErrorDomain(SESSION_ERROR_MESSAGES),
-	STATUS_PAGE: createErrorDomain(STATUS_PAGE_ERROR_MESSAGES),
-	TOKEN: createErrorDomain(TOKEN_ERROR_MESSAGES),
-	USER: createErrorDomain(USER_ERROR_MESSAGES),
-} as const;
+	ALERT: createMessageDomain(ALERT_ERROR_MESSAGES, 'ALERT'),
+	AUTH: createMessageDomain(AUTH_ERROR_MESSAGES, 'AUTH'),
+	INCIDENT: createMessageDomain(INCIDENT_ERROR_MESSAGES, 'INCIDENT'),
+	MONITOR: createMessageDomain(MONITOR_ERROR_MESSAGES, 'MONITOR'),
+	NOTIFICATION_CHANNEL: createMessageDomain(
+		NOTIFICATION_CHANNEL_ERROR_MESSAGES,
+		'NOTIFICATION_CHANNEL',
+	),
+	NOTIFICATION: createMessageDomain(
+		NOTIFICATION_ERROR_MESSAGES,
+		'NOTIFICATION',
+	),
+	PROJECT: createMessageDomain(PROJECT_ERROR_MESSAGES, 'PROJECT'),
+	REGION: createMessageDomain(REGION_ERROR_MESSAGES, 'REGION'),
+	SESSIONS: createMessageDomain(SESSION_ERROR_MESSAGES, 'SESSION'),
+	STATUS_PAGE: createMessageDomain(STATUS_PAGE_ERROR_MESSAGES, 'STATUS_PAGE'),
+	TOKEN: createMessageDomain(TOKEN_ERROR_MESSAGES, 'TOKEN'),
+	USER: createMessageDomain(USER_ERROR_MESSAGES, 'USER'),
+};

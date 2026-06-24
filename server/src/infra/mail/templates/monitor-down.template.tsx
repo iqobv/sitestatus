@@ -1,14 +1,15 @@
-import { Heading, Section, Text } from '@react-email/components';
+import { Button, Heading, Section, Text } from '@react-email/components';
 import React from 'react';
-import { IncidentAlertDto } from '../dto';
+import { IncidentAlertDto } from '../dto/incident-alert.dto';
 import { BaseEmailProps } from './base-email-props.types';
-import { Button, Footer, Wrapper } from './components';
+import { Footer } from './components/footer';
+import { Wrapper } from './components/wrapper';
 
 interface MonitorDownTemplateProps extends BaseEmailProps {
 	incident: IncidentAlertDto;
 }
 
-const MonitorDownTemplate = ({
+export const MonitorDownTemplate = ({
 	iconUrl,
 	url,
 	incident,
@@ -44,5 +45,3 @@ const MonitorDownTemplate = ({
 		</Wrapper>
 	);
 };
-
-export default MonitorDownTemplate;

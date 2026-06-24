@@ -4,7 +4,7 @@ import { capitalize } from '@/utils';
 import styles from './UptimeStatus.module.scss';
 import { UptimeStatusProps } from './UptimeStatus.types';
 
-const UptimeStatus = ({
+export const UptimeStatus = ({
 	status,
 	showText = true,
 	textClassName,
@@ -20,5 +20,3 @@ const UptimeStatus = ({
 		</div>
 	);
 };
-
-export default UptimeStatus;

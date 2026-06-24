@@ -1,4 +1,4 @@
-import { CreateMonitor } from '@/components/monitors';
+import { CreateMonitor } from '@/components/monitors/CreateMonitor/CreateMonitor';
 import { BackButton, SectionHeader } from '@/components/ui';
 import { Metadata } from 'next';
 import { Suspense } from 'react';

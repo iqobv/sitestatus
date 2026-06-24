@@ -29,7 +29,7 @@ export const useAlertSettingsForm = ({ id, type }: AlertSettingsFormProps) => {
 	});
 
 	const { data: notificationChannels } = useQuery({
-		queryKey: QUERY_KEYS.notificationChannel.all,
+		queryKey: QUERY_KEYS.notificationChannels.lists(),
 		queryFn: getAllNotificationChannels,
 	});
 

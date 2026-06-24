@@ -1,4 +1,4 @@
-import { LegalWrapper } from '@/components/layout';
+import { LegalWrapper } from '@/components/layout/LegalWrapper/LegalWrapper';
 import { getLegalDocument } from '@/utils/legal.util';
 import { Metadata } from 'next';
 

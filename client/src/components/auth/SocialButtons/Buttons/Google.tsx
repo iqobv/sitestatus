@@ -1,10 +1,10 @@
 'use client';
 
 import { FaGoogle } from 'react-icons/fa6';
-import ButtonWrapper from '../ButtonWrapper/ButtonWrapper';
+import { ButtonWrapper } from '../ButtonWrapper/ButtonWrapper';
 import { useLoginWindow } from '../useLoginWindow';
 
-const Google = () => {
+export const Google = () => {
 	const { handleOpen } = useLoginWindow('/v1/oauth/google');
 
 	return (
@@ -14,5 +14,3 @@ const Google = () => {
 		</ButtonWrapper>
 	);
 };
-
-export default Google;

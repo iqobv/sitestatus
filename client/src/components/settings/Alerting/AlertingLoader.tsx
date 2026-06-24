@@ -1,8 +1,8 @@
-import SettingsWrapperLoader from '../SettingsWrapper/SettingsWrapperLoader';
-import { GlobalAlertSettingsLoader } from './GlobalAlertSettings';
-import { NotificationChannelsLoader } from './NotificationChannels';
+import { SettingsWrapperLoader } from '../SettingsWrapper/SettingsWrapperLoader';
+import { GlobalAlertSettingsLoader } from './GlobalAlertSettings/GlobalAlertSettingsLoader';
+import { NotificationChannelsLoader } from './NotificationChannels/NotificationChannelsLoader';
 
-const AlertingLoader = () => {
+export const AlertingLoader = () => {
 	return (
 		<SettingsWrapperLoader count={0}>
 			<GlobalAlertSettingsLoader />
@@ -10,5 +10,3 @@ const AlertingLoader = () => {
 		</SettingsWrapperLoader>
 	);
 };
-
-export default AlertingLoader;

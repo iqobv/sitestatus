@@ -5,7 +5,7 @@ interface LogoProps {
 	logoUrl: string;
 }
 
-const Logo = ({ logoUrl }: LogoProps) => {
+export const Logo = ({ logoUrl }: LogoProps) => {
 	return (
 		<Section className="py-1 w-full">
 			<Row>
@@ -41,5 +41,3 @@ const Logo = ({ logoUrl }: LogoProps) => {
 		</Section>
 	);
 };
-
-export default Logo;

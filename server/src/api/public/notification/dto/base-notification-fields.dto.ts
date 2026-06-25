@@ -13,6 +13,7 @@ export class BaseNotificationFieldsDto {
 	@ApiProperty({
 		example: NotificationType.INCIDENT,
 		enum: NotificationType,
+		enumName: 'NotificationType',
 	})
 	@IsEnum(NotificationType)
 	@IsNotEmpty()

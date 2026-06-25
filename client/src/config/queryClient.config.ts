@@ -70,6 +70,7 @@ export const QUERY_KEYS = {
 	notifications: {
 		all: ['notifications'] as const,
 		lists: () => ['notifications', 'list'] as const,
+		infinite: () => ['notifications', 'infinite'] as const,
 	},
 	dashboard: {
 		base: ['dashboard'] as const,

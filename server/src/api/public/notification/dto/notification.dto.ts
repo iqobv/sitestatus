@@ -34,4 +34,7 @@ export class UserNotificationsDto {
 
 	@ApiProperty({ example: 5 })
 	countUnread: number;
+
+	@ApiProperty({ example: true })
+	hasNextPage: boolean;
 }

@@ -1,4 +1,4 @@
-import { DefaultFieldsDto } from '@libs/dto';
+import { DefaultFieldsDto } from '@libs/dto/default-fields.dto';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class IncidentDto extends DefaultFieldsDto {
@@ -9,7 +9,7 @@ export class IncidentDto extends DefaultFieldsDto {
 	regionId: string;
 
 	@ApiProperty({ example: 'log-1' })
-	triggerLogId: string;
+	triggerLogId: string | null;
 
 	@ApiProperty({ example: 'Error message' })
 	errorMessage: string | null;

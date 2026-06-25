@@ -1,9 +1,9 @@
 'use client';
 
-import { updateStatusPage } from '@/api';
-import { Dropdown } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
-import { StatusPage } from '@/types';
+import { updateStatusPage } from '@/api/statusPage/updateStatusPage.api';
+import { DropdownItem } from '@/components/ui';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { StatusPage } from '@/types/statusPage/statusPage.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { MdPublic } from 'react-icons/md';
 import { toast } from 'react-toastify';
@@ -14,7 +14,7 @@ interface StatusPageDropdownPublishProps {
 	refetchByIdOnSuccess?: boolean;
 }
 
-const StatusPageDropdownPublish = ({
+export const StatusPageDropdownPublish = ({
 	data,
 	refetchByIdOnSuccess,
 }: StatusPageDropdownPublishProps) => {
@@ -30,10 +30,12 @@ const StatusPageDropdownPublish = ({
 				toast.success('Status page unpublished successfully');
 			}
 
-			queryClient.invalidateQueries({ queryKey: QUERY_KEYS.statusPage.all });
+			queryClient.invalidateQueries({
+				queryKey: QUERY_KEYS.statusPages.lists(),
+			});
 			if (refetchByIdOnSuccess) {
 				queryClient.invalidateQueries({
-					queryKey: QUERY_KEYS.statusPage.byId(data.id),
+					queryKey: QUERY_KEYS.statusPages.detail(data.id),
 				});
 			}
 		},
@@ -45,11 +47,9 @@ const StatusPageDropdownPublish = ({
 	});
 
 	return (
-		<Dropdown.Item onClick={() => mutate()}>
+		<DropdownItem onClick={() => mutate()}>
 			<MdPublic {...iconProps} />
 			{data.isPublished ? 'Unpublish' : 'Publish'}
-		</Dropdown.Item>
+		</DropdownItem>
 	);
 };
-
-export default StatusPageDropdownPublish;

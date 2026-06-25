@@ -9,7 +9,7 @@ interface AccordionItemProps extends AccordionItemPropsType {
 	isOpen?: boolean;
 }
 
-const AccordionItem = ({
+export const AccordionItem = ({
 	title,
 	content,
 	isOpen = false,
@@ -27,5 +27,3 @@ const AccordionItem = ({
 		</div>
 	);
 };
-
-export default AccordionItem;

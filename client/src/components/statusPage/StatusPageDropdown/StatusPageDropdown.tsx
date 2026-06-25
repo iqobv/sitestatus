@@ -1,13 +1,19 @@
 'use client';
 
-import { Button, Dropdown } from '@/components/ui';
-import { PRIVATE_PAGES } from '@/config';
-import { StatusPage } from '@/types';
+import {
+	Button,
+	Dropdown,
+	DropdownItem,
+	DropdownMenu,
+	DropdownTrigger,
+} from '@/components/ui';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
+import { StatusPage } from '@/types/statusPage/statusPage.types';
 import Link from 'next/link';
 import { IconBaseProps } from 'react-icons';
 import { MdEdit, MdMoreVert } from 'react-icons/md';
-import StatusPageDropdownDelete from './StatusPageDropdownDelete';
-import StatusPageDropdownPublish from './StatusPageDropdownPublish';
+import { StatusPageDropdownDelete } from './StatusPageDropdownDelete';
+import { StatusPageDropdownPublish } from './StatusPageDropdownPublish';
 
 interface StatusPageDropdownProps {
 	statusPage: StatusPage;
@@ -20,7 +26,7 @@ export const iconProps: IconBaseProps = {
 	size: 20,
 };
 
-const StatusPageDropdown = ({
+export const StatusPageDropdown = ({
 	statusPage,
 	showEdit = true,
 	redirectOnDelete = false,
@@ -28,18 +34,18 @@ const StatusPageDropdown = ({
 }: StatusPageDropdownProps) => {
 	return (
 		<Dropdown>
-			<Dropdown.Trigger>
+			<DropdownTrigger>
 				<Button size="sm" isIcon variant="text">
 					<MdMoreVert size={20} />
 				</Button>
-			</Dropdown.Trigger>
-			<Dropdown.Menu menuWidth="max-content" zIndex={1000}>
+			</DropdownTrigger>
+			<DropdownMenu menuWidth="max-content" zIndex={1000}>
 				{showEdit && (
-					<Dropdown.Item asChild>
+					<DropdownItem asChild>
 						<Link href={PRIVATE_PAGES.STATUS_PAGES.ID(statusPage.id)}>
 							<MdEdit {...iconProps} /> Edit
 						</Link>
-					</Dropdown.Item>
+					</DropdownItem>
 				)}
 				<StatusPageDropdownPublish
 					data={statusPage}
@@ -49,9 +55,7 @@ const StatusPageDropdown = ({
 					id={statusPage.id}
 					redirectOnDelete={redirectOnDelete}
 				/>
-			</Dropdown.Menu>
+			</DropdownMenu>
 		</Dropdown>
 	);
 };
-
-export default StatusPageDropdown;

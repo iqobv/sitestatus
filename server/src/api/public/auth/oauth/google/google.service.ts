@@ -1,5 +1,5 @@
 import { ERROR_MESSAGES } from '@libs/constants';
-import { ClientInfoDto } from '@libs/dto';
+import { ClientInfoDto } from '@libs/dto/client-info.dto';
 import {
 	forwardRef,
 	Inject,
@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { OAuth2Client } from 'google-auth-library';
 import { AuthService } from '../../auth.service';
+import { TokensDto } from '../../dto/tokens.dto';
 
 @Injectable()
 export class GoogleService {
@@ -20,7 +21,10 @@ export class GoogleService {
 		this.googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 	}
 
-	async verifyOneTapToken(credential: string, clientInfo: ClientInfoDto) {
+	public async verifyOneTapToken(
+		credential: string,
+		clientInfo: ClientInfoDto,
+	): Promise<TokensDto> {
 		try {
 			const ticket = await this.googleClient.verifyIdToken({
 				idToken: credential,
@@ -35,7 +39,7 @@ export class GoogleService {
 				);
 			}
 
-			return this.authService.validateOAuthLogin(
+			return await this.authService.validateOAuthLogin(
 				{
 					provider: 'google',
 					providerId: payload.sub,

@@ -1,5 +1,5 @@
-import { CreateMonitorDto } from '@/dto';
-import { Field } from '@/types';
+import { CreateMonitorDto } from '@/dto/monitor.dto';
+import { Field } from '@/types/ui/field.types';
 
 export const CREATE_MONITOR_FIELDS: Field<CreateMonitorDto>[] = [
 	{

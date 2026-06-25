@@ -3,16 +3,22 @@
 import {
 	Checkbox,
 	Form,
+	FormActions,
+	FormField,
 	FormProps,
+	FormSubmit,
 	Textarea,
 	TextField,
 } from '@/components/ui';
-import { StatusPageMonitorDto, UpdateStatusPageDto } from '@/dto';
-import { Field } from '@/types';
+import {
+	StatusPageMonitorDto,
+	UpdateStatusPageDto,
+} from '@/dto/statusPage.dto';
+import { Field } from '@/types/ui/field.types';
 import { Control, FieldValues, Path, useWatch } from 'react-hook-form';
 import { SlugAutoGenerator } from './SlugAutoGenerator';
 import styles from './StatusPageForm.module.scss';
-import StatusPageFormMonitors from './StatusPageFormMonitors/StatusPageFormMonitors';
+import { StatusPageFormMonitors } from './StatusPageFormMonitors/StatusPageFormMonitors';
 
 interface StatusPageFormProps<D extends FieldValues> extends Omit<
 	FormProps<D>,
@@ -33,7 +39,7 @@ export interface StatusPageFormDto extends Omit<
 	monitors: StatusPageMonitor[];
 }
 
-const StatusPageForm = <D extends FieldValues>({
+export const StatusPageForm = <D extends FieldValues>({
 	fields,
 	...props
 }: StatusPageFormProps<D>) => {
@@ -53,11 +59,11 @@ const StatusPageForm = <D extends FieldValues>({
 								target={'slug' as Path<D>}
 								autoSync={isAutoSync}
 							/>
-							<Form.Field name="isAutoSync">
+							<FormField name="isAutoSync">
 								<Checkbox label="Auto Sync Slug" />
-							</Form.Field>
+							</FormField>
 							{fields.map((field) => (
-								<Form.Field<D> name={field.name} key={field.name}>
+								<FormField<D> name={field.name} key={field.name}>
 									{field.type === 'textarea' ? (
 										<Textarea
 											label={field.label}
@@ -72,16 +78,16 @@ const StatusPageForm = <D extends FieldValues>({
 											placeholder={field.placeholder}
 										/>
 									)}
-								</Form.Field>
+								</FormField>
 							))}
 							<StatusPageFormMonitors
 								control={
 									methods.control as unknown as Control<StatusPageFormDto>
 								}
 							/>
-							<Form.Actions className={styles.formActions}>
-								<Form.Submit disabledOnEmpty>Save</Form.Submit>
-							</Form.Actions>
+							<FormActions className={styles.formActions}>
+								<FormSubmit disabledOnEmpty>Save</FormSubmit>
+							</FormActions>
 						</>
 					);
 				}}
@@ -89,5 +95,3 @@ const StatusPageForm = <D extends FieldValues>({
 		</div>
 	);
 };
-
-export default StatusPageForm;

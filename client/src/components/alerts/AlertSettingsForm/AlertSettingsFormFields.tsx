@@ -1,8 +1,8 @@
 'use client';
 
 import { GLOBAL_ALERT_SETTINGS_FIELDS } from '@/components/settings/Alerting/GlobalAlertSettings/globalAlertSettingsFields';
-import { Checkbox, Form, TextField } from '@/components/ui';
-import { UpsertAlertSettingsDto } from '@/dto';
+import { Checkbox, FormField, TextField } from '@/components/ui';
+import { UpsertAlertSettingsDto } from '@/dto/alertSettings.dto';
 import { FieldErrors } from 'react-hook-form';
 
 interface AlertSettingsFormFieldsProps {
@@ -11,7 +11,7 @@ interface AlertSettingsFormFieldsProps {
 	overrideSettings: boolean;
 }
 
-const AlertSettingsFormFields = ({
+export const AlertSettingsFormFields = ({
 	errors,
 	isGlobalSettings,
 	overrideSettings,
@@ -19,7 +19,7 @@ const AlertSettingsFormFields = ({
 	return (
 		<>
 			{GLOBAL_ALERT_SETTINGS_FIELDS.map((f) => (
-				<Form.Field key={f.name} name={f.name as keyof UpsertAlertSettingsDto}>
+				<FormField key={f.name} name={f.name as keyof UpsertAlertSettingsDto}>
 					{({ field }) => {
 						const errorMessage =
 							(errors[f.name as keyof typeof errors]?.message as string) ?? '';
@@ -47,10 +47,8 @@ const AlertSettingsFormFields = ({
 							/>
 						);
 					}}
-				</Form.Field>
+				</FormField>
 			))}
 		</>
 	);
 };
-
-export default AlertSettingsFormFields;

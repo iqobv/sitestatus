@@ -1,14 +1,14 @@
 'use client';
 
-import { restoreAccount } from '@/api';
-import { AUTH_PAGES } from '@/config';
+import { restoreAccount } from '@/api/auth/restoreAccount.api';
+import { AUTH_PAGES } from '@/config/authPages.config';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { parseAsString, useQueryState } from 'nuqs';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 
-const RestoreAccount = () => {
+export const RestoreAccount = () => {
 	const router = useRouter();
 
 	const [token, setToken] = useQueryState('token', parseAsString);
@@ -42,5 +42,3 @@ const RestoreAccount = () => {
 		</div>
 	);
 };
-
-export default RestoreAccount;

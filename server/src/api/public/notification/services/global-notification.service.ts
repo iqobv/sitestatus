@@ -3,10 +3,8 @@ import { GlobalNotificationReadCreateManyInput } from '@generated/postgres/model
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import {
-	CreateGlobalNotificationDto,
-	UpdateGlobalNotificationDto,
-} from '../dto';
+import { CreateGlobalNotificationDto } from '../dto/create-global-notification.dto';
+import { UpdateGlobalNotificationDto } from '../dto/update-global-notification.dto';
 
 @Injectable()
 export class GlobalNotificationService {

@@ -1,7 +1,7 @@
 import { SectionHeader, SkeletonLoader } from '@/components/ui';
 import styles from './MonitorHeader.module.scss';
 
-const MonitorHeaderLoader = () => {
+export const MonitorHeaderLoader = () => {
 	return (
 		<div className={styles.header}>
 			<SectionHeader
@@ -12,5 +12,3 @@ const MonitorHeaderLoader = () => {
 		</div>
 	);
 };
-
-export default MonitorHeaderLoader;

@@ -1,10 +1,9 @@
 import { LogoLink } from '@/components/ui';
-import { PUBLIC_PAGES } from '@/config';
-import Link from 'next/link';
+import { PUBLIC_PAGES } from '@/config/publicPages.config';
 import styles from './StatusPageFooter.module.scss';
 import { STATUS_PAGE_FOOTER_LINKS } from './statusPageFooterlinks';
 
-const StatusPageFooter = () => {
+export const StatusPageFooter = () => {
 	return (
 		<div className={`${styles.footer} container`}>
 			<div className={styles.content}>
@@ -21,9 +20,9 @@ const StatusPageFooter = () => {
 				</div>
 				<div className={styles.links}>
 					{STATUS_PAGE_FOOTER_LINKS.map((link, index) => (
-						<Link key={index} href={link.href} className={styles.link}>
+						<a key={index} href={link.href} className={styles.link}>
 							{link.label}
-						</Link>
+						</a>
 					))}
 				</div>
 			</div>
@@ -33,5 +32,3 @@ const StatusPageFooter = () => {
 		</div>
 	);
 };
-
-export default StatusPageFooter;

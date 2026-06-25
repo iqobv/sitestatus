@@ -30,7 +30,7 @@ export const useTooltip = (): TooltipContextType => {
 	return context;
 };
 
-const TooltipProvider = ({
+export const Tooltip = ({
 	children,
 	placement = 'top',
 }: TooltipProviderProps) => {
@@ -77,5 +77,3 @@ const TooltipProvider = ({
 		</TooltipContext.Provider>
 	);
 };
-
-export default TooltipProvider;

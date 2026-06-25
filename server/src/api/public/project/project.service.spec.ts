@@ -3,7 +3,8 @@ import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { SUCCESS_MESSAGES } from '@libs/constants';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { CreateProjectDto, UpdateProjectDto } from './dto';
+import { CreateProjectDto } from './dto/create-project.dto';
+import { UpdateProjectDto } from './dto/update-project.dto';
 import { ProjectService } from './project.service';
 
 type PrismaMock = {
@@ -208,7 +209,7 @@ describe('ProjectService', () => {
 			expect(prisma.project.delete).toHaveBeenCalledWith({
 				where: { id },
 			});
-			expect(result).toEqual(SUCCESS_MESSAGES.PROJECT.PROJECT_DELETED);
+			expect(result).toEqual(SUCCESS_MESSAGES.PROJECT.DELETED);
 		});
 
 		it('should throw NotFoundException if the project is not found', async () => {

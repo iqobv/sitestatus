@@ -1,7 +1,11 @@
-import React from 'react';
+import { NotificationListItemLoader } from './NotificationListItem/NotificationListItemLoader';
 
-const NotificationListLoader = () => {
-  return <div>NotificationListLoader</div>;
+export const NotificationListLoader = () => {
+	return (
+		<>
+			{Array.from({ length: 5 }).map((_, i) => (
+				<NotificationListItemLoader key={i} />
+			))}
+		</>
+	);
 };
-
-export default NotificationListLoader;

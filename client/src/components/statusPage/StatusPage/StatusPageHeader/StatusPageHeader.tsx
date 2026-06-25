@@ -1,20 +1,20 @@
 'use client';
 
-import { getStatusPageBySlug } from '@/api';
+import { getStatusPageBySlug } from '@/api/statusPage/getStatusPageBySlug.api';
 import { SectionHeader } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { useQuery } from '@tanstack/react-query';
 import { notFound } from 'next/navigation';
 import styles from './StatusPageHeader.module.scss';
-import StatusPageHeaderLoader from './StatusPageHeaderLoader';
+import { StatusPageHeaderLoader } from './StatusPageHeaderLoader';
 
 interface StatusPageHeaderProps {
 	slug: string;
 }
 
-const StatusPageHeader = ({ slug }: StatusPageHeaderProps) => {
+export const StatusPageHeader = ({ slug }: StatusPageHeaderProps) => {
 	const { data, isLoading, error } = useQuery({
-		queryKey: QUERY_KEYS.statusPage.bySlug(slug),
+		queryKey: QUERY_KEYS.statusPages.detailBySlug(slug),
 		queryFn: () => getStatusPageBySlug(slug),
 		enabled: !!slug,
 	});
@@ -33,5 +33,3 @@ const StatusPageHeader = ({ slug }: StatusPageHeaderProps) => {
 		</div>
 	);
 };
-
-export default StatusPageHeader;

@@ -6,10 +6,8 @@ interface EmailVerificationWrapperProps {
 	children: React.ReactNode;
 }
 
-const EmailVerificationWrapper = ({
+export const EmailVerificationWrapper = ({
 	children,
 }: EmailVerificationWrapperProps) => {
 	return <div className={`${styles.wrapper} container`}>{children}</div>;
 };
-
-export default EmailVerificationWrapper;

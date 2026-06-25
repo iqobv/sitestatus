@@ -1,4 +1,4 @@
-import { NotFoundWrapper } from '@/components/layout';
+import { NotFoundWrapper } from '@/components/layout/NotFoundWrapper/NotFoundWrapper';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

@@ -9,7 +9,7 @@ interface TextFieldIconProps {
 
 import styles from './TextFieldIcon.module.scss';
 
-const TextFieldIcon = ({
+export const TextFieldIcon = ({
 	id,
 	className,
 	children,
@@ -20,5 +20,3 @@ const TextFieldIcon = ({
 		</label>
 	);
 };
-
-export default TextFieldIcon;

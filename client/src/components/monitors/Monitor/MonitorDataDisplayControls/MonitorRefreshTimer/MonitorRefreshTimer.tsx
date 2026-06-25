@@ -1,18 +1,18 @@
 'use client';
 
 import { Button } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
-import { useUpdateTimer } from '@/hooks';
-import { MonitorWithRegions } from '@/types';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { useUpdateTimer } from '@/hooks/useUpdateTimer.hook';
+import { MonitorWithRegions } from '@/types/monitors/monitor.types';
 import styles from './MonitorRefreshTimer.module.scss';
 
 interface MonitorRefreshTimerProps {
 	monitor: MonitorWithRegions;
 }
 
-const MonitorRefreshTimer = ({ monitor }: MonitorRefreshTimerProps) => {
+export const MonitorRefreshTimer = ({ monitor }: MonitorRefreshTimerProps) => {
 	const { timer, handleRefresh } = useUpdateTimer({
-		queryKey: QUERY_KEYS.monitors.byId(monitor.id),
+		queryKey: QUERY_KEYS.monitors.detail(monitor.id),
 		isActive: monitor.isActive,
 		initialTime: 60,
 	});
@@ -30,5 +30,3 @@ const MonitorRefreshTimer = ({ monitor }: MonitorRefreshTimerProps) => {
 		</div>
 	);
 };
-
-export default MonitorRefreshTimer;

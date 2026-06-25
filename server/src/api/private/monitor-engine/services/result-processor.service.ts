@@ -9,7 +9,7 @@ import {
 	OnModuleDestroy,
 	OnModuleInit,
 } from '@nestjs/common';
-import { PingResultDto } from '../dto';
+import { PingResultDto } from '../dto/ping-result.dto';
 import { EngineDbService } from './engine-db.service';
 
 @Injectable()
@@ -23,7 +23,7 @@ export class ResultProcessorService implements OnModuleInit, OnModuleDestroy {
 		private readonly engineDbService: EngineDbService,
 	) {}
 
-	public onModuleInit() {
+	public onModuleInit(): void {
 		this.receiver = this.sbClient.createReceiver('monitor-results');
 		this.isRunning = true;
 		this.processBatchesContinuously().catch((error: unknown) => {
@@ -31,14 +31,14 @@ export class ResultProcessorService implements OnModuleInit, OnModuleDestroy {
 		});
 	}
 
-	public async onModuleDestroy() {
+	public async onModuleDestroy(): Promise<void> {
 		this.isRunning = false;
 		if (this.receiver) {
 			await this.receiver.close();
 		}
 	}
 
-	private async processBatchesContinuously() {
+	private async processBatchesContinuously(): Promise<void> {
 		while (this.isRunning && this.receiver) {
 			let messages: ServiceBusReceivedMessage[] = [];
 
@@ -77,7 +77,7 @@ export class ResultProcessorService implements OnModuleInit, OnModuleDestroy {
 		}
 	}
 
-	private delay(ms: number) {
+	private delay(ms: number): Promise<void> {
 		return new Promise((resolve) => setTimeout(resolve, ms));
 	}
 }

@@ -1,6 +1,6 @@
-import { DefaultFieldsDto } from '@libs/dto';
+import { DefaultFieldsDto } from '@libs/dto/default-fields.dto';
 import { ApiProperty } from '@nestjs/swagger';
-import { FullStatusPageMonitorWithMonitorDto } from './status-page-monitor.dto';
+import { FullStatusPageMonitorDto } from './status-page-monitor.dto';
 
 export class StatusPageDto extends DefaultFieldsDto {
 	@ApiProperty({ example: 'user-1' })
@@ -26,6 +26,6 @@ export class StatusPageDto extends DefaultFieldsDto {
 }
 
 export class FullStatusPageDto extends StatusPageDto {
-	@ApiProperty({ type: [FullStatusPageMonitorWithMonitorDto] })
-	monitors: FullStatusPageMonitorWithMonitorDto[];
+	@ApiProperty({ type: [FullStatusPageMonitorDto] })
+	monitors: FullStatusPageMonitorDto[];
 }

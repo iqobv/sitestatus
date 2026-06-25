@@ -1,19 +1,19 @@
 'use client';
 
-import { getAllProjectsWithMonitors } from '@/api';
-import { QUERY_KEYS } from '@/config';
+import { getAllProjectsWithMonitors } from '@/api/project/getAllProjectsWithMonitors.api';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { useQuery } from '@tanstack/react-query';
 import { StatusPageFormItemsAddProps } from '../StatusPageFormItemsAdd';
 import styles from '../StatusPageFormItemsAdd.module.scss';
-import StatusPageFormItemsAddProjectsItem from './StatusPageFormItemsAddProjectsItem';
-import StatusPageFormItemsAddProjectsLoader from './StatusPageFormItemsAddProjectsLoader';
+import { StatusPageFormItemsAddProjectsItem } from './StatusPageFormItemsAddProjectsItem';
+import { StatusPageFormItemsAddProjectsLoader } from './StatusPageFormItemsAddProjectsLoader';
 
-const StatusPageFormItemsAddProjects = ({
+export const StatusPageFormItemsAddProjects = ({
 	fields,
 	handleAddMonitors,
 }: StatusPageFormItemsAddProps) => {
 	const { data, isLoading } = useQuery({
-		queryKey: QUERY_KEYS.project.allWithMonitors,
+		queryKey: QUERY_KEYS.projects.listWithMonitors(),
 		queryFn: getAllProjectsWithMonitors,
 	});
 
@@ -33,5 +33,3 @@ const StatusPageFormItemsAddProjects = ({
 		</div>
 	);
 };
-
-export default StatusPageFormItemsAddProjects;

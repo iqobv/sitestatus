@@ -1,9 +1,10 @@
-import { Heading, Section, Text } from '@react-email/components';
+import { Button, Heading, Section, Text } from '@react-email/components';
 import React from 'react';
 import { BaseEmailProps } from './base-email-props.types';
-import { Button, Footer, Wrapper } from './components';
+import { Footer } from './components/footer';
+import { Wrapper } from './components/wrapper';
 
-const EmailNotificationChannelVerifyTemplate = ({
+export const EmailNotificationChannelVerifyTemplate = ({
 	url,
 	iconUrl,
 }: BaseEmailProps) => {
@@ -26,5 +27,3 @@ const EmailNotificationChannelVerifyTemplate = ({
 		</Wrapper>
 	);
 };
-
-export default EmailNotificationChannelVerifyTemplate;

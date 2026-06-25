@@ -1,5 +1,5 @@
-import { CreateNotificationChannelDto } from '@/dto';
-import { ApiMessageResponse } from '@/types';
+import { CreateNotificationChannelDto } from '@/dto/notificationChannel.dto';
+import { ApiMessageResponse } from '@/types/api/messageResponse.api';
 import { apiClient } from '../axios';
 
 export const createNotificationChannel = async (

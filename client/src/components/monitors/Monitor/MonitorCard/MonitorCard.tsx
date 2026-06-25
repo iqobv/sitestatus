@@ -1,6 +1,6 @@
 'use client';
 
-import { Tooltip } from '@/components/ui';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui';
 import { MdInfoOutline } from 'react-icons/md';
 import styles from './MonitorCard.module.scss';
 
@@ -11,7 +11,7 @@ interface MonitorCardProps {
 	tooltip?: string;
 }
 
-const MonitorCard = ({
+export const MonitorCard = ({
 	children,
 	cardTitle,
 	className,
@@ -23,10 +23,10 @@ const MonitorCard = ({
 				<p className={`${styles.title}`}>{cardTitle}</p>
 				{tooltip && (
 					<Tooltip>
-						<Tooltip.Trigger>
+						<TooltipTrigger>
 							<MdInfoOutline />
-						</Tooltip.Trigger>
-						<Tooltip.Content>{tooltip}</Tooltip.Content>
+						</TooltipTrigger>
+						<TooltipContent>{tooltip}</TooltipContent>
 					</Tooltip>
 				)}
 			</div>
@@ -34,5 +34,3 @@ const MonitorCard = ({
 		</div>
 	);
 };
-
-export default MonitorCard;

@@ -4,9 +4,9 @@ import Link from 'next/link';
 import React from 'react';
 import { buttonVariants } from './butonStyles';
 import { ButtonProps } from './Button.types';
-import ButtonContent from './ButtonContent/ButtonContent';
+import { ButtonContent } from './ButtonContent/ButtonContent';
 
-export default function Button({
+export const Button = ({
 	children,
 	variant = 'contained',
 	className = '',
@@ -24,8 +24,9 @@ export default function Button({
 	contentClassName = '',
 	isActive,
 	ref,
+	asNative = false,
 	...rest
-}: ButtonProps) {
+}: ButtonProps) => {
 	const isLink = !!href && !disabled && !loading;
 
 	const styles = buttonVariants({
@@ -43,8 +44,10 @@ export default function Button({
 	};
 
 	if (isLink) {
+		const Component = asNative ? 'a' : Link;
+
 		return (
-			<Link
+			<Component
 				href={href}
 				className={`${styles} ${className || ''}`}
 				style={style}
@@ -57,7 +60,7 @@ export default function Button({
 				>)}
 			>
 				<ButtonContent {...buttonContentProps}>{children}</ButtonContent>
-			</Link>
+			</Component>
 		);
 	}
 
@@ -75,4 +78,4 @@ export default function Button({
 			<ButtonContent {...buttonContentProps}>{children}</ButtonContent>
 		</button>
 	);
-}
+};

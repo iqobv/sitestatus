@@ -1,6 +1,6 @@
 'use client';
 
-import { Form } from '@/components/ui';
+import { FormActions, FormReset, FormSubmit } from '@/components/ui';
 
 interface ProjectFormActionsProps {
 	isEdit: boolean;
@@ -8,23 +8,21 @@ interface ProjectFormActionsProps {
 	buttonLabel: string;
 }
 
-const ProjectFormActions = ({
+export const ProjectFormActions = ({
 	isEdit,
 	isPending,
 	buttonLabel,
 }: ProjectFormActionsProps) => {
 	return (
-		<Form.Actions justifyContent="flex-end">
+		<FormActions justifyContent="flex-end">
 			{isEdit && (
-				<Form.Reset buttonProps={{ variant: 'secondary' }} disabledOnEmpty>
+				<FormReset buttonProps={{ variant: 'secondary' }} disabledOnEmpty>
 					Cancel
-				</Form.Reset>
+				</FormReset>
 			)}
-			<Form.Submit buttonProps={{ loading: isPending }} disabledOnEmpty>
+			<FormSubmit buttonProps={{ loading: isPending }} disabledOnEmpty>
 				{buttonLabel}
-			</Form.Submit>
-		</Form.Actions>
+			</FormSubmit>
+		</FormActions>
 	);
 };
-
-export default ProjectFormActions;

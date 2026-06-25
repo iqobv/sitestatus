@@ -23,7 +23,5 @@ export const getMailerConfig = (
 			user,
 			pass,
 		},
-		logger: true,
-		debug: true,
 	});
 };

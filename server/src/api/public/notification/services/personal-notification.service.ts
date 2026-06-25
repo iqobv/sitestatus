@@ -2,10 +2,8 @@ import { Prisma } from '@generated/postgres/client';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import {
-	CreatePersonalNotificationDto,
-	UpdatePersonalNotificationDto,
-} from '../dto';
+import { CreatePersonalNotificationDto } from '../dto/create-personal-notification.dto';
+import { UpdatePersonalNotificationDto } from '../dto/update-personal-notification.dto';
 
 @Injectable()
 export class PersonalNotificationService {

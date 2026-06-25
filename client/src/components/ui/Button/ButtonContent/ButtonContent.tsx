@@ -1,6 +1,6 @@
 'use client';
 
-import Loader from '../../Loader/Loader';
+import { Loader } from '../../Loader/Loader';
 import styles from './ButtonContent.module.scss';
 
 interface ButtonContentProps {
@@ -9,7 +9,7 @@ interface ButtonContentProps {
 	className?: string;
 }
 
-const ButtonContent = ({
+export const ButtonContent = ({
 	children,
 	loading,
 	className,
@@ -33,5 +33,3 @@ const ButtonContent = ({
 		</div>
 	);
 };
-
-export default ButtonContent;

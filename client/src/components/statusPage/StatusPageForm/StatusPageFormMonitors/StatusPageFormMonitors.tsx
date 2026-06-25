@@ -1,7 +1,7 @@
 'use client';
 
 import { SectionHeader } from '@/components/ui';
-import { BaseMonitor } from '@/types';
+import { BaseMonitor } from '@/types/monitors/monitor.types';
 import {
 	closestCenter,
 	DndContext,
@@ -22,15 +22,17 @@ import {
 } from '@dnd-kit/sortable';
 import { Control, useFieldArray } from 'react-hook-form';
 import { StatusPageFormDto } from '../StatusPageForm';
-import StatusPageFormItemsAdd from './StatusPageFormItemsAdd/StatusPageFormItemsAdd';
+import { StatusPageFormItemsAdd } from './StatusPageFormItemsAdd/StatusPageFormItemsAdd';
 import styles from './StatusPageFormMonitors.module.scss';
-import StatusPageFormMonitorsItem from './StatusPageFormMonitorsItem/StatusPageFormMonitorsItem';
+import { StatusPageFormMonitorsItem } from './StatusPageFormMonitorsItem/StatusPageFormMonitorsItem';
 
 interface StatusPageFormMonitorsProps {
 	control: Control<StatusPageFormDto>;
 }
 
-const StatusPageFormMonitors = ({ control }: StatusPageFormMonitorsProps) => {
+export const StatusPageFormMonitors = ({
+	control,
+}: StatusPageFormMonitorsProps) => {
 	const { fields, append, remove, move } = useFieldArray({
 		control,
 		name: 'monitors',
@@ -72,7 +74,13 @@ const StatusPageFormMonitors = ({ control }: StatusPageFormMonitorsProps) => {
 
 	return (
 		<div className={styles.monitorsWrapper}>
-			<SectionHeader title="Monitors" titleComponent="h2" padding={0} />
+			<SectionHeader
+				title="Monitors"
+				titleProps={{
+					variant: 'h2',
+				}}
+				padding={0}
+			/>
 			<DndContext
 				sensors={sensors}
 				collisionDetection={closestCenter}
@@ -103,5 +111,3 @@ const StatusPageFormMonitors = ({ control }: StatusPageFormMonitorsProps) => {
 		</div>
 	);
 };
-
-export default StatusPageFormMonitors;

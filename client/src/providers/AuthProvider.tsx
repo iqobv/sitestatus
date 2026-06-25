@@ -1,7 +1,7 @@
 'use client';
 
-import { useAuth } from '@/hooks';
-import { User } from '@/types';
+import { useAuth } from '@/hooks/useAuth.hook';
+import { User } from '@/types/user/user.types';
 import { useEffect } from 'react';
 
 interface AuthProviderProps {
@@ -9,7 +9,7 @@ interface AuthProviderProps {
 	user: User | null;
 }
 
-export default function AuthProvider({ children, user }: AuthProviderProps) {
+export const AuthProvider = ({ children, user }: AuthProviderProps) => {
 	const { login, setIsLoading } = useAuth();
 
 	useEffect(() => {
@@ -22,4 +22,4 @@ export default function AuthProvider({ children, user }: AuthProviderProps) {
 	}, [login, user, setIsLoading]);
 
 	return <>{children}</>;
-}
+};

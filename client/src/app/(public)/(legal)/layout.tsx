@@ -1,4 +1,5 @@
-import { Footer, LegalHeader } from '@/components/layout';
+import { Footer } from '@/components/layout/Footer/Footer';
+import { LegalHeader } from '@/components/layout/LegalHeader/LegalHeader';
 
 export default function LegalLayout({
 	children,

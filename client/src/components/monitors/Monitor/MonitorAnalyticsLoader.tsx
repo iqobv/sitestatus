@@ -1,9 +1,9 @@
-import MonitorIncidentsLoader from './MonitorIncidents/MonitorIncidentsLoader';
-import MonitorRegionStatsLoader from './MonitorRegionStats/MonitorRegionStatsLoader';
-import MonitorResponseCardsLoader from './MonitorResponseCards/MonitorResponseCardsLoader';
-import MonitorResponseChartLoader from './MonitorResponseChart/MonitorResponseChartLoader';
+import { MonitorIncidentsLoader } from './MonitorIncidents/MonitorIncidentsLoader';
+import { MonitorRegionStatsLoader } from './MonitorRegionStats/MonitorRegionStatsLoader';
+import { MonitorResponseCardsLoader } from './MonitorResponseCards/MonitorResponseCardsLoader';
+import { MonitorResponseChartLoader } from './MonitorResponseChart/MonitorResponseChartLoader';
 
-const MonitorAnalyticsLoader = () => {
+export const MonitorAnalyticsLoader = () => {
 	return (
 		<>
 			<MonitorRegionStatsLoader />
@@ -13,5 +13,3 @@ const MonitorAnalyticsLoader = () => {
 		</>
 	);
 };
-
-export default MonitorAnalyticsLoader;

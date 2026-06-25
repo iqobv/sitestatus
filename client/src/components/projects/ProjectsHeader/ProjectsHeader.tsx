@@ -1,9 +1,9 @@
 import { Button, SectionHeader } from '@/components/ui';
-import { PRIVATE_PAGES } from '@/config';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
 import { FiPlus } from 'react-icons/fi';
 import styles from './ProjectsHeader.module.scss';
 
-const ProjectsHeader = () => {
+export const ProjectsHeader = () => {
 	return (
 		<div className={styles.header}>
 			<SectionHeader
@@ -20,5 +20,3 @@ const ProjectsHeader = () => {
 		</div>
 	);
 };
-
-export default ProjectsHeader;

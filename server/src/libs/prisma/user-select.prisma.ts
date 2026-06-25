@@ -1,10 +1,11 @@
 import { Prisma } from '@generated/postgres/client';
 
-export const userSelect: Prisma.UserSelect = {
+export const userSelect = {
 	id: true,
 	email: true,
-	createdAt: true,
 	role: true,
-	deletedAt: true,
 	emailVerified: true,
-};
+	createdAt: true,
+	updatedAt: true,
+	deletedAt: true,
+} satisfies Prisma.UserSelect;

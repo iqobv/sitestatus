@@ -1,13 +1,17 @@
-type Component = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p';
+import { CSSProperties } from 'react';
+import { TypographyProps } from '../Typography/Typography.types';
+
+type ElementProps = Partial<Omit<TypographyProps, 'children'>>;
 
 export interface SectionHeaderProps {
-	title?: string | React.ReactNode;
-	description?: string | React.ReactNode;
-	titleComponent?: Component;
-	descriptionComponent?: Component;
+	title: React.ReactNode;
+	description?: React.ReactNode;
 	containerClassName?: string;
-	titleClassName?: string;
-	descriptionClassName?: string;
 	padding?: number;
 	gap?: number;
+	titleProps?: ElementProps;
+	descriptionProps?: ElementProps;
+	textAlign?: CSSProperties['textAlign'];
+	leftSlot?: React.ReactNode;
+	rightSlot?: React.ReactNode;
 }

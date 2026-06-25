@@ -1,9 +1,7 @@
-import {
-	AnalyticsRawDataDto,
-	AnalyticsStatisticsResponseDto,
-	AnalyticsStatLogDto,
-} from '@api/public/analytics/dto';
-import { CalculateLog, CalculateLogs } from '@libs/types';
+import { AnalyticsRawDataDto } from '@api/public/analytics/dto/analytics-raw-log.dto';
+import { AnalyticsStatLogDto } from '@api/public/analytics/dto/analytics-stat-log.dto';
+import { AnalyticsStatisticsResponseDto } from '@api/public/analytics/dto/analytics-statistics-response.dto';
+import { CalculateLog, CalculateLogs } from '@libs/types/calculate-logs.types';
 
 export const calculateResponseTime = (
 	logs: CalculateLogs,

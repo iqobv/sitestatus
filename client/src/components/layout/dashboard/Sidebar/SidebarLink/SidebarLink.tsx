@@ -2,15 +2,15 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import type { SidebarLink } from '../SidebarLinks/sidebarLinksItems';
+import type { SidebarLink as SidebarLinkType } from '../SidebarLinks/sidebarLinksItems';
 import styles from './SidebarLink.module.scss';
 
 interface SidebarLinkProps {
-	link: SidebarLink;
+	link: SidebarLinkType;
 	onClick?: () => void;
 }
 
-const SidebarLink = ({
+export const SidebarLink = ({
 	link,
 	onClick,
 }: SidebarLinkProps & { onClick?: () => void }) => {
@@ -32,5 +32,3 @@ const SidebarLink = ({
 		</Link>
 	);
 };
-
-export default SidebarLink;

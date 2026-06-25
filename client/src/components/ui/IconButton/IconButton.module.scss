@@ -18,3 +18,17 @@
 		display: inline;
 	}
 }
+
+.loaderContainer {
+	--default-size: 2.875rem;
+
+	display: block;
+	height: var(--height);
+	width: var(--default-size);
+
+	@include respond-to(md) {
+		&.text {
+			width: var(--width);
+		}
+	}
+}

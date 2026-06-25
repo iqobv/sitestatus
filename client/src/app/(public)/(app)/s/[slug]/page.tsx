@@ -1,6 +1,6 @@
-import { getServerStatusPageBySlug } from '@/api';
-import { StatusPage as StatusPageComponent } from '@/components/statusPage';
-import { QUERY_KEYS } from '@/config';
+import { getServerStatusPageBySlug } from '@/api/statusPage/getStatusPageBySlug.api';
+import { StatusPage as StatusPageComponent } from '@/components/statusPage/StatusPage/StatusPage';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import {
 	dehydrate,
 	HydrationBoundary,
@@ -46,7 +46,7 @@ export default async function StatusPage({ params }: StatusPageProps) {
 		const queryClient = new QueryClient();
 
 		await queryClient.prefetchQuery({
-			queryKey: QUERY_KEYS.statusPage.bySlug(slug),
+			queryKey: QUERY_KEYS.statusPages.detailBySlug(slug),
 			queryFn: () => getCachedStatusPage(slug),
 		});
 

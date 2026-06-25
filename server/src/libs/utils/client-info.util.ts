@@ -1,4 +1,4 @@
-import { ClientInfoDto } from '@libs/dto';
+import { ClientInfoDto } from '@libs/dto/client-info.dto';
 import type { Request } from 'express';
 
 export const extractClientInfo = (req: Request): ClientInfoDto => {

@@ -1,6 +1,6 @@
 {
 	"name": "client",
-	"version": "0.2.1",
+	"version": "0.3.0",
 	"private": true,
 	"scripts": {
 		"dev": "next dev",
@@ -49,6 +49,7 @@
 		"@types/react-dom": "^19",
 		"eslint": "^10",
 		"eslint-config-next": "16.2.2",
+		"eslint-config-prettier": "^10.1.8",
 		"typescript": "^6"
 	},
 	"overrides": {

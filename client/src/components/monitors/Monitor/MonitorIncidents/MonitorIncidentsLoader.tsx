@@ -1,7 +1,5 @@
 import { SkeletonLoader } from '@/components/ui';
 
-const MonitorIncidentsLoader = () => {
+export const MonitorIncidentsLoader = () => {
 	return <SkeletonLoader height={280} />;
 };
-
-export default MonitorIncidentsLoader;

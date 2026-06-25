@@ -1,7 +1,7 @@
 'use client';
 
-import { MonitorResponseStatistics } from '@/types';
-import MonitorCard from '../MonitorCard/MonitorCard';
+import { MonitorResponseStatistics } from '@/types/monitors/monitorResponseStatistics.types';
+import { MonitorCard } from '../MonitorCard/MonitorCard';
 import styles from './MonitorResponseCards.module.scss';
 import { MONITOR_RESPONSE_CARDS_ITEMS } from './monitorResponseCardsItems';
 
@@ -9,7 +9,7 @@ interface MonitorResponseCardsProps {
 	responseStatistics: MonitorResponseStatistics;
 }
 
-const MonitorResponseCards = ({
+export const MonitorResponseCards = ({
 	responseStatistics,
 }: MonitorResponseCardsProps) => {
 	return (
@@ -22,5 +22,3 @@ const MonitorResponseCards = ({
 		</div>
 	);
 };
-
-export default MonitorResponseCards;

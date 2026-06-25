@@ -1,28 +1,30 @@
-import { ERROR_MESSAGES } from '@libs/constants';
-import { Auth, Authorized } from '@libs/decorators';
-import { createCustomMessageDto } from '@libs/utils';
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
+import {
+	ApiErrorResponse,
+	ApiSuccessResponse,
+} from '@libs/decorators/api-response.decorator';
+import { Auth } from '@libs/decorators/auth.decorator';
+import { Authorized } from '@libs/decorators/authorized.decorator';
+import { MessageResponse } from '@libs/types/messages/message-detail.types';
 import {
 	Body,
 	Controller,
 	Delete,
 	Get,
+	HttpStatus,
 	Param,
 	ParseUUIDPipe,
 	Post,
 	Query,
 } from '@nestjs/common';
-import {
-	ApiNotFoundResponse,
-	ApiOkResponse,
-	ApiOperation,
-	ApiTags,
-} from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AlertSettingsService } from './alert-settings.service';
 import {
 	AlertSettingsDto,
-	CreateAlertSettingsDto,
-	GetHierarchyQueryDto,
-} from './dto';
+	FullAlertSettingsDto,
+} from './dto/alert-settings.dto';
+import { CreateAlertSettingsDto } from './dto/create-alert-settings.dto';
+import { GetHierarchyQueryDto } from './dto/get-hierarchy-query.dto';
 
 @Auth()
 @ApiTags('Alert Settings')
@@ -33,24 +35,22 @@ export class AlertSettingsController {
 	@ApiOperation({
 		summary: 'Create or update alert settings for a monitor or project',
 	})
-	@ApiOkResponse({ example: AlertSettingsDto })
+	@ApiOkResponse({ type: AlertSettingsDto })
 	@Post()
-	async createAlertSettings(
+	public async createAlertSettings(
 		@Authorized('id') userId: string,
 		@Body() dto: CreateAlertSettingsDto,
-	) {
+	): Promise<AlertSettingsDto> {
 		return await this.alertSettingsService.upsertSettings(userId, dto);
 	}
 
 	@ApiOperation({ summary: 'Get effective alert settings for a monitor' })
-	@ApiOkResponse({ example: AlertSettingsDto })
-	@ApiNotFoundResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND),
-	})
+	@ApiOkResponse({ type: FullAlertSettingsDto })
+	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.MONITOR.NOT_FOUND)
 	@Get('effective/:monitorId')
-	async getEffectiveSettings(
+	public async getEffectiveSettings(
 		@Param('monitorId', ParseUUIDPipe) monitorId: string,
-	) {
+	): Promise<FullAlertSettingsDto | null> {
 		return await this.alertSettingsService.getEffectiveSettings(monitorId);
 	}
 
@@ -60,10 +60,10 @@ export class AlertSettingsController {
 	})
 	@ApiOkResponse({ example: [AlertSettingsDto] })
 	@Get('hierarchy')
-	async getSettingsHierarchy(
+	public async getSettingsHierarchy(
 		@Authorized('id') userId: string,
 		@Query() query: GetHierarchyQueryDto,
-	) {
+	): Promise<AlertSettingsDto[]> {
 		return await this.alertSettingsService.getSettingsHierarchy(
 			userId,
 			query.projectId,
@@ -72,14 +72,13 @@ export class AlertSettingsController {
 	}
 
 	@ApiOperation({ summary: 'Delete alert settings by ID' })
-	@ApiNotFoundResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND),
-	})
+	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.ALERT.DELETED)
+	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.ALERT.NOT_FOUND)
 	@Delete(':id')
-	async deleteSetting(
+	public async deleteSetting(
 		@Authorized('id') userId: string,
 		@Param('id', ParseUUIDPipe) id: string,
-	): Promise<void> {
-		await this.alertSettingsService.deleteAlertSettings(userId, id);
+	): Promise<MessageResponse> {
+		return await this.alertSettingsService.deleteAlertSettings(userId, id);
 	}
 }

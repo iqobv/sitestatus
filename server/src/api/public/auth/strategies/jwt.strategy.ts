@@ -1,6 +1,6 @@
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { ERROR_MESSAGES } from '@libs/constants';
-import { JwtPayload } from '@libs/types';
+import { JwtPayload } from '@libs/types/jwt-payload.types';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
@@ -24,15 +24,13 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 		});
 	}
 
-	async validate(payload: JwtPayload) {
+	public async validate(payload: JwtPayload): Promise<JwtPayload> {
 		const session = await this.prismaService.session.findUnique({
 			where: { id: payload.sessionId },
 		});
 
 		if (!session) {
-			throw new UnauthorizedException(
-				ERROR_MESSAGES.SESSIONS.SESSION_NOT_FOUND,
-			);
+			throw new UnauthorizedException(ERROR_MESSAGES.SESSIONS.NOT_FOUND);
 		}
 
 		return payload;

@@ -1,4 +1,4 @@
-import { getAbsoluteUrl } from '@/utils';
+import { getAbsoluteUrl } from '@/utils/getAbsolutePath.util';
 import { AUTH_PAGES } from './authPages.config';
 import { PRIVATE_PAGES } from './privatePages.config';
 import { SUBDOMAINS } from './subdomains.config';

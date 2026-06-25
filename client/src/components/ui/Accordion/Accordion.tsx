@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import styles from './Accordion.module.scss';
 import { AccordionProps } from './Accordion.types';
-import AccordionItem from './AccordionItem/AccordionItem';
+import { AccordionItem } from './AccordionItem/AccordionItem';
 
-const Accordion = ({
+export const Accordion = ({
 	multiple,
 	items,
 	defaultOpenIndexes,
@@ -58,5 +58,3 @@ const Accordion = ({
 		</div>
 	);
 };
-
-export default Accordion;

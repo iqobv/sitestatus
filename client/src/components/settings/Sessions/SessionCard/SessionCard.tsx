@@ -1,10 +1,10 @@
 'use client';
 
 import { Button } from '@/components/ui';
-import { Session } from '@/types';
-import { capitalize } from '@/utils';
+import { Session } from '@/types/session/session.types';
+import { capitalize } from '@/utils/capitalize.util';
 import styles from './SessionCard.module.scss';
-import SessionDevice from './SessionDevice';
+import { SessionDevice } from './SessionDevice';
 import { useTerminateMutations } from './useTerminateMutataions.hook';
 
 interface SessionCardProps {
@@ -13,7 +13,7 @@ interface SessionCardProps {
 	showTerminateAllButton?: boolean;
 }
 
-const SessionCard = ({
+export const SessionCard = ({
 	session,
 	isCurrentSession = false,
 	showTerminateAllButton = false,
@@ -62,5 +62,3 @@ const SessionCard = ({
 		</div>
 	);
 };
-
-export default SessionCard;

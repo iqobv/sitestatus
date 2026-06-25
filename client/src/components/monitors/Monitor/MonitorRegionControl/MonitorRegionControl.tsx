@@ -1,6 +1,6 @@
 'use client';
 
-import { BaseRegion } from '@/types/region';
+import { BaseRegion } from '@/types/region/baseRegion.types';
 import { parseAsString, useQueryState } from 'nuqs';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import styles from './MonitorRegionControl.module.scss';
@@ -15,7 +15,7 @@ interface IndicatorStyles {
 	width: string;
 }
 
-const MonitorRegionControl = ({
+export const MonitorRegionControl = ({
 	regions,
 	isLoading,
 }: MonitorRegionControlProps) => {
@@ -89,5 +89,3 @@ const MonitorRegionControl = ({
 		</div>
 	);
 };
-
-export default MonitorRegionControl;

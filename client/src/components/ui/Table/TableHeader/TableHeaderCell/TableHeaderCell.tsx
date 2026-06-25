@@ -8,7 +8,7 @@ interface TableHeaderCellProps<T> {
 	header: Header<T, unknown>;
 }
 
-const TableHeaderCell = <T,>({ header }: TableHeaderCellProps<T>) => {
+export const TableHeaderCell = <T,>({ header }: TableHeaderCellProps<T>) => {
 	const meta = header.column.columnDef.meta;
 	const columnSize = header.getSize();
 
@@ -50,5 +50,3 @@ const TableHeaderCell = <T,>({ header }: TableHeaderCellProps<T>) => {
 		</th>
 	);
 };
-
-export default TableHeaderCell;

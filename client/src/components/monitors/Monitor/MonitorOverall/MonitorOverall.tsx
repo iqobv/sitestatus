@@ -1,9 +1,9 @@
 'use client';
 
-import { MonitorWithRegions } from '@/types';
+import { MonitorWithRegions } from '@/types/monitors/monitor.types';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import MonitorCard from '../MonitorCard/MonitorCard';
+import { MonitorCard } from '../MonitorCard/MonitorCard';
 import styles from './MonitorOverall.module.scss';
 import { OVERALL_MONITOR_CARDS_ITEMS } from './monitorOverallCards';
 
@@ -13,7 +13,7 @@ interface MonitorOverallProps {
 	monitor: MonitorWithRegions;
 }
 
-const MonitorOverall = ({ monitor }: MonitorOverallProps) => {
+export const MonitorOverall = ({ monitor }: MonitorOverallProps) => {
 	return (
 		<div className={styles.overall}>
 			{OVERALL_MONITOR_CARDS_ITEMS.map(({ title, render }, index) => (
@@ -24,5 +24,3 @@ const MonitorOverall = ({ monitor }: MonitorOverallProps) => {
 		</div>
 	);
 };
-
-export default MonitorOverall;

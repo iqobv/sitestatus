@@ -27,7 +27,7 @@ interface FormFieldProps<T extends FieldValues> {
 	isController?: boolean;
 }
 
-const FormField = <T extends FieldValues>({
+export const FormField = <T extends FieldValues>({
 	name,
 	children,
 	isController = false,
@@ -96,5 +96,3 @@ const FormField = <T extends FieldValues>({
 
 	return <div className={styles.formField}>{renderChildren(children)}</div>;
 };
-
-export default FormField;

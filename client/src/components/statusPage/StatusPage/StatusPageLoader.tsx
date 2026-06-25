@@ -1,8 +1,8 @@
 import styles from './StatusPage.module.scss';
-import StatusPageHeaderLoader from './StatusPageHeader/StatusPageHeaderLoader';
-import StatusPageMonitorsLoader from './StatusPageMonitors/StatusPageMonitorsLoader';
+import { StatusPageHeaderLoader } from './StatusPageHeader/StatusPageHeaderLoader';
+import { StatusPageMonitorsLoader } from './StatusPageMonitors/StatusPageMonitorsLoader';
 
-const StatusPageLoader = () => {
+export const StatusPageLoader = () => {
 	return (
 		<div className={styles.statusPage}>
 			<StatusPageHeaderLoader />
@@ -10,5 +10,3 @@ const StatusPageLoader = () => {
 		</div>
 	);
 };
-
-export default StatusPageLoader;

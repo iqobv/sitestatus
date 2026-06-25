@@ -13,11 +13,9 @@ import {
 	NotFoundException,
 } from '@nestjs/common';
 import { TokenService } from '../token/token.service';
-import {
-	CreateNotificationChannelDto,
-	InternalCreateNotificationChannelDto,
-	UpdateNotificationChannelDto,
-} from './dto';
+import { CreateNotificationChannelDto } from './dto/create-notification-channel.dto';
+import { InternalCreateNotificationChannelDto } from './dto/internal-create-notification-channel.dto';
+import { UpdateNotificationChannelDto } from './dto/update-notification-channel.dto';
 
 @Injectable()
 export class NotificationChannelService {
@@ -219,7 +217,7 @@ export class NotificationChannelService {
 		);
 	}
 
-	async verifyNotificationChannel(userId: string, token: string) {
+	async verifyNotificationChannel(token: string) {
 		await this.prismaService.$transaction(async (tx) => {
 			const tokenData = await this.tokenService.verifyAndConsumeToken(
 				token,
@@ -235,7 +233,7 @@ export class NotificationChannelService {
 			await tx.notificationChannel.update({
 				where: {
 					id: tokenData.channel.id,
-					userId,
+					userId: tokenData.id,
 					type: tokenData.channel.type,
 				},
 				data: {

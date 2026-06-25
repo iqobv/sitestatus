@@ -1,8 +1,14 @@
-import { Project } from '@/types/project';
+import { ProjectsQueryDto } from '@/dto/project.dto';
+import { PaginatedData } from '@/types/api/paginatedData.types';
+import { Project } from '@/types/project/project.types';
 import { apiClient, apiServer } from '../axios';
 
-export const getAllProjects = async () =>
-	(await apiClient.get<Project[]>('/v1/projects')).data;
+type GetAllProjectsResponse = PaginatedData<Project>;
 
-export const getServerAllProjects = async () =>
-	(await apiServer.get<Project[]>(`/v1/projects`)).data;
+export const getAllProjects = async (params: ProjectsQueryDto) =>
+	(await apiClient.get<GetAllProjectsResponse>('/v1/projects', { params }))
+		.data;
+
+export const getServerAllProjects = async (params: ProjectsQueryDto) =>
+	(await apiServer.get<GetAllProjectsResponse>(`/v1/projects`, { params }))
+		.data;

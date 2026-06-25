@@ -1,8 +1,11 @@
 import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { CACHE_EMIT_EVENTS } from '../constants';
-import type { MonitorUpdatePayload, RegionCachePayload } from '../interfaces';
+import { CACHE_EMIT_EVENTS } from '../constants/emit-events.constants';
+import type {
+	MonitorUpdatePayload,
+	RegionCachePayload,
+} from '../interfaces/cache-storage.interface';
 import { MonitorCacheService } from '../services/monitor-cache.service';
 
 @Injectable()
@@ -13,7 +16,7 @@ export class CacheListener {
 	) {}
 
 	@OnEvent(CACHE_EMIT_EVENTS.MONITOR.UPDATED)
-	handleMonitorUpdated(payload: MonitorUpdatePayload) {
+	public handleMonitorUpdated(payload: MonitorUpdatePayload): void {
 		const { isActive, isNew = false, ...cacheData } = payload;
 
 		if (isActive) {
@@ -24,7 +27,7 @@ export class CacheListener {
 	}
 
 	@OnEvent(CACHE_EMIT_EVENTS.MONITOR.DELETED)
-	async handleMonitorDeleted(id: string) {
+	public async handleMonitorDeleted(id: string): Promise<void> {
 		this.cacheService.removeMonitor(id);
 
 		try {
@@ -37,7 +40,7 @@ export class CacheListener {
 	}
 
 	@OnEvent(CACHE_EMIT_EVENTS.REGION.UPDATED)
-	handleRegionUpdated(region: RegionCachePayload) {
+	public handleRegionUpdated(region: RegionCachePayload): void {
 		if (region.isActive) {
 			this.cacheService.upsertRegion({
 				id: region.id,
@@ -50,7 +53,7 @@ export class CacheListener {
 	}
 
 	@OnEvent(CACHE_EMIT_EVENTS.REGION.DELETED)
-	handleRegionDeleted(id: string) {
+	public handleRegionDeleted(id: string): void {
 		this.cacheService.removeRegion(id);
 	}
 }

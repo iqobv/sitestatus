@@ -1,9 +1,10 @@
-import { Heading, Section, Text } from '@react-email/components';
+import { Button, Heading, Section, Text } from '@react-email/components';
 import React from 'react';
 import { BaseEmailProps } from './base-email-props.types';
-import { Button, Footer, Wrapper } from './components';
+import { Footer } from './components/footer';
+import { Wrapper } from './components/wrapper';
 
-const RestoreAccountTemplate = ({ url, iconUrl }: BaseEmailProps) => {
+export const RestoreAccountTemplate = ({ url, iconUrl }: BaseEmailProps) => {
 	return (
 		<Wrapper
 			iconUrl={iconUrl}
@@ -23,5 +24,3 @@ const RestoreAccountTemplate = ({ url, iconUrl }: BaseEmailProps) => {
 		</Wrapper>
 	);
 };
-
-export default RestoreAccountTemplate;

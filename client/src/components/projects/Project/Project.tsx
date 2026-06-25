@@ -1,9 +1,13 @@
 'use client';
 
-import ProjectMonitors from './ProjectMonitors/ProjectMonitors';
+import { ProjectHeader } from '../ProjectHeader/ProjectHeader';
+import { ProjectMonitors } from './ProjectMonitors/ProjectMonitors';
 
-const Project = () => {
-	return <ProjectMonitors />;
+export const Project = () => {
+	return (
+		<>
+			<ProjectHeader />
+			<ProjectMonitors />
+		</>
+	);
 };
-
-export default Project;

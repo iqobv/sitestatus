@@ -1,16 +1,16 @@
 'use client';
 
-import { resendVerificationEmail } from '@/api';
+import { resendVerificationEmail } from '@/api/auth/email.api';
 import { Button, SectionHeader } from '@/components/ui';
-import { AUTH_PAGES, QUERY_KEYS } from '@/config';
+import { AUTH_PAGES } from '@/config/authPages.config';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import styles from './EmailVerification.module.scss';
-import EmailVerificationWrapper from './EmailVerificationWrapper';
+import { EmailVerificationWrapper } from './EmailVerificationWrapper';
 
-const EmailVerificationWait = () => {
+export const EmailVerificationWait = () => {
 	const [email, setEmail] = useState<string | null>(null);
 	const [timer, setTimer] = useState(0);
 
@@ -23,7 +23,6 @@ const EmailVerificationWait = () => {
 
 	const { mutate } = useMutation({
 		mutationFn: () => resendVerificationEmail(email!),
-		mutationKey: QUERY_KEYS.auth.resendVerificationEmail(email || 'unknown'),
 		onSuccess: (data) => {
 			toast.info(data.message);
 		},
@@ -81,5 +80,3 @@ const EmailVerificationWait = () => {
 		</EmailVerificationWrapper>
 	);
 };
-
-export default EmailVerificationWait;

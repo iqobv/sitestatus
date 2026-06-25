@@ -1,15 +1,15 @@
 'use client';
 
-import { changePassword } from '@/api';
-import { Form, TextField } from '@/components/ui';
-import { PRIVATE_PAGES } from '@/config';
-import { ChangePasswordDto } from '@/dto';
-import { changePasswordSchema } from '@/schemas';
+import { changePassword } from '@/api/auth/changePassword.api';
+import { Form, FormField, FormSubmit, TextField } from '@/components/ui';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
+import { ChangePasswordDto } from '@/dto/auth.dto';
+import { changePasswordSchema } from '@/schemas/auth/changePassword.schema';
 import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
-import AuthWrapper from '../../AuthWrapper/AuthWrapper';
+import { AuthWrapper } from '../../AuthWrapper/AuthWrapper';
 import { CHANGE_PASSWORD_FIELDS } from './changePasswordFields';
 
 interface ApiErrorResponse {
@@ -17,7 +17,7 @@ interface ApiErrorResponse {
 	message?: string;
 }
 
-const ChangePassword = () => {
+export const ChangePassword = () => {
 	const router = useRouter();
 
 	const { mutate, isPending } = useMutation({
@@ -64,14 +64,15 @@ const ChangePassword = () => {
 					<>
 						{CHANGE_PASSWORD_FIELDS.map(
 							({ name, leftIcon, rightIcon, isRequired, ...rest }) => {
+								const fieldName = name as keyof ChangePasswordDto;
 								const LeftIcon = leftIcon;
 								const RightIcon = rightIcon;
-								const error = errors[name]?.message as string | undefined;
+								const error = errors[fieldName]?.message as string | undefined;
 
 								if (rest.type === 'textarea') return null;
 
 								return (
-									<Form.Field key={name} name={name}>
+									<FormField key={name} name={name}>
 										<TextField
 											leftIcon={LeftIcon ? <LeftIcon /> : undefined}
 											rightIcon={RightIcon ? <RightIcon /> : undefined}
@@ -79,18 +80,16 @@ const ChangePassword = () => {
 											error={error}
 											{...rest}
 										/>
-									</Form.Field>
+									</FormField>
 								);
 							},
 						)}
-						<Form.Submit buttonProps={{ fullWidth: true, loading: isPending }}>
+						<FormSubmit buttonProps={{ fullWidth: true, loading: isPending }}>
 							Change Password
-						</Form.Submit>
+						</FormSubmit>
 					</>
 				)}
 			</Form>
 		</AuthWrapper>
 	);
 };
-
-export default ChangePassword;

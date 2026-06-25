@@ -1,30 +1,37 @@
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
-import { Auth, Authorized, IsPublic } from '@libs/decorators';
-import { createCustomMessageDto } from '@libs/utils';
+import {
+	ApiErrorResponse,
+	ApiSuccessResponse,
+} from '@libs/decorators/api-response.decorator';
+import { Auth } from '@libs/decorators/auth.decorator';
+import { Authorized } from '@libs/decorators/authorized.decorator';
+import { IsPublic } from '@libs/decorators/is-public.decorator';
 import {
 	Body,
 	Controller,
 	Delete,
 	Get,
+	HttpStatus,
 	Param,
 	ParseUUIDPipe,
 	Patch,
 	Post,
+	Query,
 } from '@nestjs/common';
 import {
 	ApiCreatedResponse,
-	ApiNotFoundResponse,
 	ApiOkResponse,
 	ApiOperation,
 } from '@nestjs/swagger';
+import { CreateMonitorDto } from './dto/create-monitor.dto';
 import {
 	BaseMonitorDto,
-	CreateMonitorDto,
-	MonitorDto,
 	MonitorWithRegionsDto,
 	MonitorWithRegionsIdsDto,
-	UpdateMonitorDto,
-} from './dto';
+} from './dto/monitor.dto';
+import { QueryMonitorsDto } from './dto/monitors-query.dto';
+import { PaginatedMonitorsDto } from './dto/paginated-monitors.dto';
+import { UpdateMonitorDto } from './dto/update-monitor.dto';
 import { MonitorService } from './services/monitor.service';
 
 @IsPublic()
@@ -45,29 +52,31 @@ export class MonitorController {
 
 	@Auth()
 	@ApiOperation({ summary: 'Get all monitors for the authenticated user' })
-	@ApiOkResponse({ type: [MonitorDto] })
+	@ApiOkResponse({ type: PaginatedMonitorsDto })
 	@Get()
-	async findAll(@Authorized('id') userId: string) {
-		return await this.monitorService.findAll(userId);
+	async findAll(
+		@Authorized('id') userId: string,
+		@Query() query: QueryMonitorsDto,
+	) {
+		return await this.monitorService.findAll(userId, query);
 	}
 
 	@Auth()
-	@ApiOperation({ summary: 'Get all monitors for the authenticated user' })
-	@ApiOkResponse({ type: [MonitorDto] })
+	@ApiOperation({ summary: 'Get all monitors by projectId' })
+	@ApiOkResponse({ type: PaginatedMonitorsDto })
 	@Get('projects/:projectId')
 	async findAllMonitorsByProjectId(
 		@Authorized('id') userId: string,
 		@Param('projectId', ParseUUIDPipe) projectId: string,
+		@Query() query: QueryMonitorsDto,
 	) {
-		return await this.monitorService.findAll(userId, projectId);
+		return await this.monitorService.findAll(userId, query, projectId);
 	}
 
 	@Auth()
 	@ApiOperation({ summary: 'Get full details of a monitor by ID' })
 	@ApiOkResponse({ type: MonitorWithRegionsDto })
-	@ApiNotFoundResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND),
-	})
+	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.MONITOR.NOT_FOUND)
 	@Get('id/:id/full')
 	async findByIdFull(
 		@Authorized('id') userId: string,
@@ -79,9 +88,7 @@ export class MonitorController {
 	@Auth()
 	@ApiOperation({ summary: 'Get a monitor by ID' })
 	@ApiOkResponse({ type: MonitorWithRegionsIdsDto })
-	@ApiNotFoundResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND),
-	})
+	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.MONITOR.NOT_FOUND)
 	@Get('id/:id')
 	async findById(
 		@Authorized('id') userId: string,
@@ -93,9 +100,7 @@ export class MonitorController {
 	@Auth()
 	@ApiOperation({ summary: 'Update monitor by ID' })
 	@ApiOkResponse({ type: BaseMonitorDto })
-	@ApiNotFoundResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND),
-	})
+	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.MONITOR.NOT_FOUND)
 	@Patch(':id')
 	async update(
 		@Param('id', ParseUUIDPipe) id: string,
@@ -108,9 +113,7 @@ export class MonitorController {
 	@Auth()
 	@ApiOperation({ summary: 'Update monitor active status by ID' })
 	@ApiOkResponse({ type: BaseMonitorDto })
-	@ApiNotFoundResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND),
-	})
+	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.MONITOR.NOT_FOUND)
 	@Patch(':id/active-status')
 	async updateActiveStatus(
 		@Param('id', ParseUUIDPipe) id: string,
@@ -121,12 +124,8 @@ export class MonitorController {
 
 	@Auth()
 	@ApiOperation({ summary: 'Remove monitor by ID' })
-	@ApiOkResponse({
-		type: createCustomMessageDto(SUCCESS_MESSAGES.MONITOR.MONITOR_DELETED),
-	})
-	@ApiNotFoundResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.MONITOR.MONITOR_NOT_FOUND),
-	})
+	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.MONITOR.DELETED)
+	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.MONITOR.NOT_FOUND)
 	@Delete(':id')
 	async remove(
 		@Param('id', ParseUUIDPipe) id: string,

@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui';
-import { ProjectWithMonitors } from '@/types';
+import { ProjectWithMonitors } from '@/types/project/project.types';
 import { useState } from 'react';
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
 import { StatusPageFormItemsAddProps } from '../StatusPageFormItemsAdd';
@@ -11,7 +11,7 @@ interface StatusPageFormItemsAddProjectsItemProps extends StatusPageFormItemsAdd
 	project: ProjectWithMonitors;
 }
 
-const StatusPageFormItemsAddProjectsItem = ({
+export const StatusPageFormItemsAddProjectsItem = ({
 	project,
 	fields,
 	handleAddMonitors,
@@ -52,5 +52,3 @@ const StatusPageFormItemsAddProjectsItem = ({
 		</div>
 	);
 };
-
-export default StatusPageFormItemsAddProjectsItem;

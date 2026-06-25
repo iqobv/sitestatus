@@ -1,5 +1,5 @@
-import { MonitorDto } from '@api/public/monitor/dto';
-import { DefaultFieldsDto } from '@libs/dto';
+import { MonitorDto } from '@api/public/monitor/dto/monitor.dto';
+import { DefaultFieldsDto } from '@libs/dto/default-fields.dto';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ProjectDto extends DefaultFieldsDto {
@@ -7,7 +7,7 @@ export class ProjectDto extends DefaultFieldsDto {
 	name: string;
 
 	@ApiProperty({ example: 'A simple project' })
-	description: string;
+	description: string | null;
 }
 
 export class ProjectWithMonitorsDto extends ProjectDto {

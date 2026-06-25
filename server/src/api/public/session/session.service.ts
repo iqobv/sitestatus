@@ -1,7 +1,9 @@
 import { Prisma } from '@generated/postgres/client';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
-import { hashToken, isPrivateIP } from '@libs/utils';
+import { MessageResponse } from '@libs/types/messages/message-detail.types';
+import { hashToken } from '@libs/utils/hashToken.util';
+import { isPrivateIP } from '@libs/utils/is-private.ip.util';
 import { HttpService } from '@nestjs/axios';
 import {
 	ForbiddenException,
@@ -9,7 +11,11 @@ import {
 	NotFoundException,
 } from '@nestjs/common';
 import { UAParser } from 'ua-parser-js';
-import { CreateSessionDto, GeoDataDto, UserAgentDto } from './dto';
+import { AllSessionsDto } from './dto/all-sessions.dto';
+import { CreateSessionDto } from './dto/create-session.dto';
+import { GeoDataDto } from './dto/geo-data.dto';
+import { SessionDto } from './dto/session.dto';
+import { UserAgentDto } from './dto/user-agent.dto';
 
 @Injectable()
 export class SessionService {
@@ -18,7 +24,10 @@ export class SessionService {
 		private readonly httpService: HttpService,
 	) {}
 
-	async createSession(dto: CreateSessionDto, tx?: Prisma.TransactionClient) {
+	public async createSession(
+		dto: CreateSessionDto,
+		tx?: Prisma.TransactionClient,
+	): Promise<SessionDto> {
 		const { clientInfo, expiresAt, refreshTokenHash, userId } = dto;
 		const { ip, userAgent } = clientInfo;
 
@@ -44,11 +53,11 @@ export class SessionService {
 		});
 	}
 
-	async rotateSession(
+	public async rotateSession(
 		sessionId: string,
 		dto: CreateSessionDto,
 		tx?: Prisma.TransactionClient,
-	) {
+	): Promise<SessionDto> {
 		const { clientInfo, expiresAt, refreshTokenHash } = dto;
 		const { ip, userAgent } = clientInfo;
 
@@ -74,19 +83,21 @@ export class SessionService {
 		});
 	}
 
-	async findSessionById(sessionId: string) {
+	public async findSessionById(sessionId: string): Promise<SessionDto> {
 		const session = await this.prismaService.session.findUnique({
 			where: { id: sessionId },
 		});
 
-		if (!session) {
-			throw new NotFoundException(ERROR_MESSAGES.SESSIONS.SESSION_NOT_FOUND);
-		}
+		if (!session)
+			throw new NotFoundException(ERROR_MESSAGES.SESSIONS.NOT_FOUND);
 
 		return session;
 	}
 
-	async getUserSessions(userId: string, refreshToken: string) {
+	public async getUserSessions(
+		userId: string,
+		refreshToken: string,
+	): Promise<AllSessionsDto> {
 		const allSessions = await this.prismaService.session.findMany({
 			where: { userId },
 			orderBy: { createdAt: 'desc' },
@@ -107,7 +118,10 @@ export class SessionService {
 		};
 	}
 
-	async deleteSession(sessionId: string, userId: string) {
+	public async deleteSession(
+		sessionId: string,
+		userId: string,
+	): Promise<MessageResponse> {
 		const session = await this.findSessionById(sessionId);
 
 		if (session.userId !== userId) {
@@ -118,10 +132,13 @@ export class SessionService {
 			where: { id: sessionId },
 		});
 
-		return SUCCESS_MESSAGES.SESSION.SESSION_DELETED;
+		return SUCCESS_MESSAGES.SESSION.DELETED;
 	}
 
-	async deleteAllOtherSessions(userId: string, refreshToken: string) {
+	public async deleteAllOtherSessions(
+		userId: string,
+		refreshToken: string,
+	): Promise<MessageResponse> {
 		const currentSession = await this.getSessionByRefreshToken(
 			userId,
 			refreshToken,
@@ -137,16 +154,18 @@ export class SessionService {
 		return SUCCESS_MESSAGES.SESSION.ALL_OTHER_SESSIONS_DELETED;
 	}
 
-	private async getSessionByRefreshToken(userId: string, refreshToken: string) {
+	private async getSessionByRefreshToken(
+		userId: string,
+		refreshToken: string,
+	): Promise<SessionDto> {
 		const refreshTokenHash = hashToken(refreshToken);
 
 		const session = await this.prismaService.session.findFirst({
 			where: { userId, refreshToken: refreshTokenHash },
 		});
 
-		if (!session) {
-			throw new NotFoundException(ERROR_MESSAGES.SESSIONS.SESSION_NOT_FOUND);
-		}
+		if (!session)
+			throw new NotFoundException(ERROR_MESSAGES.SESSIONS.NOT_FOUND);
 
 		const { refreshToken: _rt, userAgent: _ua, ...rest } = session;
 
@@ -165,7 +184,7 @@ export class SessionService {
 		};
 	}
 
-	private async getGeoInfo(ip: string) {
+	private async getGeoInfo(ip: string): Promise<GeoDataDto | null> {
 		try {
 			const response = await this.httpService.axiosRef.get<GeoDataDto>(
 				`http://ip-api.com/json/${ip}?fields=countryCode,city,query`,

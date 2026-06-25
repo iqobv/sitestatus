@@ -1,13 +1,13 @@
 import { SectionHeader } from '@/components/ui';
-import { MonitorWithRegions } from '@/types';
+import { MonitorWithRegions } from '@/types/monitors/monitor.types';
 import styles from './MonitorHeader.module.scss';
-import MonitorHeaderDropdown from './MonitorHeaderDropdown';
+import { MonitorHeaderDropdown } from './MonitorHeaderDropdown';
 
 interface MonitorHeaderProps {
 	monitor: MonitorWithRegions;
 }
 
-const MonitorHeader = ({ monitor }: MonitorHeaderProps) => {
+export const MonitorHeader = ({ monitor }: MonitorHeaderProps) => {
 	return (
 		<div className={styles.header}>
 			<SectionHeader
@@ -18,5 +18,3 @@ const MonitorHeader = ({ monitor }: MonitorHeaderProps) => {
 		</div>
 	);
 };
-
-export default MonitorHeader;

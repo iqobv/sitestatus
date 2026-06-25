@@ -1,14 +1,10 @@
 import { Module } from '@nestjs/common';
-import {
-	GlobalNotificationController,
-	NotificationController,
-	PersonalNotificationController,
-} from './controllers';
-import {
-	GlobalNotificationService,
-	NotificationService,
-	PersonalNotificationService,
-} from './services';
+import { GlobalNotificationController } from './controllers/global-notification.controller';
+import { NotificationController } from './controllers/notification.controller';
+import { PersonalNotificationController } from './controllers/personal-notification.controller';
+import { GlobalNotificationService } from './services/global-notification.service';
+import { NotificationService } from './services/notification.service';
+import { PersonalNotificationService } from './services/personal-notification.service';
 
 @Module({
 	controllers: [

@@ -1,9 +1,12 @@
 'use client';
 
-import { getProfile as apiGetProfile, logout as apiLogout } from '@/api';
-import { QUERY_KEYS } from '@/config';
-import { useUserStore } from '@/store';
-import { User } from '@/types';
+import {
+	getProfile as apiGetProfile,
+	logout as apiLogout,
+} from '@/api/auth/auth.api';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { useUserStore } from '@/store/user.store';
+import { User } from '@/types/user/user.types';
 import { useMutation } from '@tanstack/react-query';
 
 export const useAuth = () => {
@@ -52,7 +55,6 @@ export const useAuth = () => {
 
 	const { mutate: logout } = useMutation({
 		mutationFn: () => apiLogout(),
-		mutationKey: QUERY_KEYS.auth.logout,
 		onMutate: () => {
 			setIsLoading(true);
 			storeLogout();

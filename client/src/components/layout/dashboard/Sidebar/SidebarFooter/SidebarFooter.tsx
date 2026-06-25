@@ -1,17 +1,17 @@
 'use client';
 
 import { Button } from '@/components/ui';
-import { PRIVATE_PAGES } from '@/config';
-import { useAuth } from '@/hooks';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
+import { useAuth } from '@/hooks/useAuth.hook';
 import { MdLogout, MdOutlineSettings } from 'react-icons/md';
-import SidebarLink from '../SidebarLink/SidebarLink';
+import { SidebarLink } from '../SidebarLink/SidebarLink';
 import styles from './SidebarFooter.module.scss';
 
 interface SidebarFooterProps {
 	onClick: () => void;
 }
 
-const SidebarFooter = ({ onClick }: SidebarFooterProps) => {
+export const SidebarFooter = ({ onClick }: SidebarFooterProps) => {
 	const { isAuthenticated, isLoading, logout } = useAuth();
 
 	return (
@@ -34,5 +34,3 @@ const SidebarFooter = ({ onClick }: SidebarFooterProps) => {
 		</div>
 	);
 };
-
-export default SidebarFooter;

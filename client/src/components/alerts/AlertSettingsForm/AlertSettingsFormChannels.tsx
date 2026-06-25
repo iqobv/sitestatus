@@ -1,7 +1,7 @@
 'use client';
 
-import { Form, Select } from '@/components/ui';
-import { NotificationChannel } from '@/types';
+import { FormField, Select } from '@/components/ui';
+import { NotificationChannel } from '@/types/notificationChannel/notificationChannel.types';
 
 interface AlertSettingsFormChannelsProps {
 	notificationChannels: NotificationChannel[];
@@ -9,13 +9,13 @@ interface AlertSettingsFormChannelsProps {
 	overrideSettings: boolean;
 }
 
-const AlertSettingsFormChannels = ({
+export const AlertSettingsFormChannels = ({
 	notificationChannels,
 	isGlobalSettings,
 	overrideSettings,
 }: AlertSettingsFormChannelsProps) => {
 	return (
-		<Form.Field isController name="channelIds">
+		<FormField isController name="channelIds">
 			{({ field }) => (
 				<Select
 					label="Notification Channels"
@@ -32,8 +32,6 @@ const AlertSettingsFormChannels = ({
 					disabled={isGlobalSettings && !overrideSettings}
 				/>
 			)}
-		</Form.Field>
+		</FormField>
 	);
 };
-
-export default AlertSettingsFormChannels;

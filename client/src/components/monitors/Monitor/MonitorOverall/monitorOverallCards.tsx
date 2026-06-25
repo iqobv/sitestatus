@@ -1,7 +1,8 @@
-import { MonitorCard, MonitorWithRegions } from '@/types';
+import { MonitorWithRegions } from '@/types/monitors/monitor.types';
+import { MonitorCard } from '@/types/ui/monitorCard.types';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import MonitorOverallUptimeBar from './MonitorOverallUptimeBar/MonitorOverallUptimeBar';
+import { MonitorOverallUptimeBar } from './MonitorOverallUptimeBar/MonitorOverallUptimeBar';
 
 dayjs.extend(relativeTime);
 

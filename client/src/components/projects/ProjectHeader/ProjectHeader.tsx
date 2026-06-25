@@ -1,20 +1,21 @@
 'use client';
 
-import { getServerProjectById } from '@/api';
-import { Button, SectionHeader } from '@/components/ui';
-import { PRIVATE_PAGES, QUERY_KEYS } from '@/config';
+import { getServerProjectById } from '@/api/project/getProjectById.api';
+import { IconButton, SectionHeader } from '@/components/ui';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { FiPlus } from 'react-icons/fi';
 import styles from './ProjectHeader.module.scss';
-import ProjectHeaderDropdown from './ProjectHeaderDropdown/ProjectHeaderDropdown';
-import ProjectHeaderLoader from './ProjectHeaderLoader';
+import { ProjectHeaderDropdown } from './ProjectHeaderDropdown/ProjectHeaderDropdown';
+import { ProjectHeaderLoader } from './ProjectHeaderLoader';
 
-const ProjectHeader = () => {
+export const ProjectHeader = () => {
 	const { id } = useParams<{ id: string }>();
 
 	const { data, isLoading } = useQuery({
-		queryKey: QUERY_KEYS.project.byId(id),
+		queryKey: QUERY_KEYS.projects.detail(id),
 		queryFn: () => getServerProjectById(id),
 	});
 
@@ -22,23 +23,20 @@ const ProjectHeader = () => {
 	if (!data) return null;
 
 	return (
-		<div className={styles.header}>
-			<SectionHeader
-				title={data.name || 'Project'}
-				description={data.description || 'No description available'}
-			/>
-			<div className={styles.headerActions}>
-				<Button
-					className={styles.headerButton}
-					href={`${PRIVATE_PAGES.MONITORS.NEW}?projectId=${data.id}`}
-				>
-					<FiPlus size={20} />
-					<p className={styles.headerButtonText}>Add New Monitor</p>
-				</Button>
-				<ProjectHeaderDropdown projectData={data} />
-			</div>
-		</div>
+		<SectionHeader
+			title={data.name || 'Project'}
+			description={data.description || 'No description available'}
+			rightSlot={
+				<div className={styles.headerActions}>
+					<IconButton
+						Icon={FiPlus}
+						href={`${PRIVATE_PAGES.MONITORS.NEW}?projectId=${data.id}`}
+					>
+						Add New Monitor
+					</IconButton>
+					<ProjectHeaderDropdown projectData={data} />
+				</div>
+			}
+		/>
 	);
 };
-
-export default ProjectHeader;

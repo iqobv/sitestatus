@@ -1,5 +1,5 @@
-import { EmailDto } from '@/dto';
-import { ApiMessageResponse } from '@/types';
+import { EmailDto } from '@/dto/auth.dto';
+import { ApiMessageResponse } from '@/types/api/messageResponse.api';
 import { apiClient } from '../axios';
 
 export const forgotPassword = async (dto: EmailDto) =>

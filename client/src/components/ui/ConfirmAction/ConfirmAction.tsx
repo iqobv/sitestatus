@@ -1,18 +1,18 @@
 'use client';
 
-import Modal from '../Modal/Modal';
+import { Modal } from '../Modal/Modal';
+import { ModalContent } from '../Modal/parts/ModalContent/ModalContent';
+import { ModalTrigger } from '../Modal/parts/ModalTrigger';
 import { ConfirmActionProps } from './ConfirmAction.types';
-import ConfirmActionBody from './ConfirmActionBody';
+import { ConfirmActionBody } from './ConfirmActionBody';
 
-const ConfirmAction = ({ trigger, ...props }: ConfirmActionProps) => {
+export const ConfirmAction = ({ trigger, ...props }: ConfirmActionProps) => {
 	return (
 		<Modal>
-			<Modal.Trigger>{trigger}</Modal.Trigger>
-			<Modal.Content>
+			<ModalTrigger>{trigger}</ModalTrigger>
+			<ModalContent>
 				<ConfirmActionBody {...props} />
-			</Modal.Content>
+			</ModalContent>
 		</Modal>
 	);
 };
-
-export default ConfirmAction;

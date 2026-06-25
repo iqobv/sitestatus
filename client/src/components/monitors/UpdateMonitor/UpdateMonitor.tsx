@@ -1,25 +1,26 @@
 'use client';
 
-import { getMonitorById, updateMonitor } from '@/api';
-import { QUERY_KEYS } from '@/config';
-import { UpdateMonitorDto } from '@/dto';
-import { updateMonitorSchema } from '@/schemas';
-import { MonitorWithRegionsIds } from '@/types';
+import { getMonitorById } from '@/api/monitor/getMonitorById.api';
+import { updateMonitor } from '@/api/monitor/updateMonitor.api';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { UpdateMonitorDto } from '@/dto/monitor.dto';
+import { updateMonitorSchema } from '@/schemas/monitor/updateMonitor.schema';
+import { MonitorWithRegionsIds } from '@/types/monitors/monitor.types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-import MonitorForm from '../MonitorForm/MonitorForm';
+import { MonitorForm } from '../MonitorForm/MonitorForm';
 import { UPDATE_MONITOR_FIELDS } from './updateMonitorFields';
-import UpdateMonitorLoader from './UpdateMonitorLoader';
+import { UpdateMonitorLoader } from './UpdateMonitorLoader';
 
 interface UpdateMonitorProps {
 	monitorId: string;
 }
 
-const UpdateMonitor = ({ monitorId }: UpdateMonitorProps) => {
+export const UpdateMonitor = ({ monitorId }: UpdateMonitorProps) => {
 	const queryClient = useQueryClient();
 
 	const { data, isLoading } = useQuery({
-		queryKey: QUERY_KEYS.monitors.byId(monitorId),
+		queryKey: QUERY_KEYS.monitors.detail(monitorId),
 		queryFn: () => getMonitorById(monitorId),
 		enabled: !!monitorId,
 	});
@@ -28,10 +29,10 @@ const UpdateMonitor = ({ monitorId }: UpdateMonitorProps) => {
 		mutationFn: (data: UpdateMonitorDto) => updateMonitor(monitorId, data),
 		onSuccess: () => {
 			queryClient.invalidateQueries({
-				queryKey: QUERY_KEYS.monitors.byId(monitorId),
+				queryKey: QUERY_KEYS.monitors.detail(monitorId),
 			});
 			queryClient.invalidateQueries({
-				queryKey: QUERY_KEYS.monitors.list,
+				queryKey: QUERY_KEYS.monitors.lists(),
 			});
 			toast.success('Monitor updated successfully');
 		},
@@ -69,5 +70,3 @@ const UpdateMonitor = ({ monitorId }: UpdateMonitorProps) => {
 		</div>
 	);
 };
-
-export default UpdateMonitor;

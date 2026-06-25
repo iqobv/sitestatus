@@ -1,10 +1,10 @@
 'use client';
 
 import { TextField } from '@/components/ui';
-import { User } from '@/types';
+import { User } from '@/types/user/user.types';
 import { SettingsCardProps } from '../SettingsCard/SettingsCard.types';
-import DeleteAccount from './DeleteAccount';
-import ThemeSwitcher from './ThemeSwitcher';
+import { DeleteAccount } from './DeleteAccount';
+import { ThemeSwitcher } from './ThemeSwitcher';
 
 export const GENERAL_SETTINGS_ITEMS = (
 	user?: User | null,

@@ -3,13 +3,13 @@
 import styles from './Loader.module.scss';
 import { LoaderProps } from './Loader.types';
 
-export default function Loader({
+export const Loader = ({
 	size = 30,
 	thickness = 6,
 	containerClassName,
 	loaderClassName,
 	disablePadding = false,
-}: LoaderProps) {
+}: LoaderProps) => {
 	return (
 		<div
 			className={`${styles.container} ${
@@ -26,4 +26,4 @@ export default function Loader({
 			/>
 		</div>
 	);
-}
+};

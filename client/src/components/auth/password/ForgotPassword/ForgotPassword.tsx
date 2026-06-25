@@ -1,18 +1,18 @@
 'use client';
 
-import { forgotPassword } from '@/api';
-import { Form, TextField } from '@/components/ui';
-import { AUTH_PAGES } from '@/config';
-import { EmailDto } from '@/dto';
-import { emailSchema } from '@/schemas';
+import { forgotPassword } from '@/api/auth/forgotPassword.api';
+import { Form, FormField, FormSubmit, TextField } from '@/components/ui';
+import { AUTH_PAGES } from '@/config/authPages.config';
+import { EmailDto } from '@/dto/auth.dto';
+import { emailSchema } from '@/schemas/auth/email.schema';
 import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
 import { MdOutlineEmail } from 'react-icons/md';
 import { toast } from 'react-toastify';
-import AuthWrapper from '../../AuthWrapper/AuthWrapper';
+import { AuthWrapper } from '../../AuthWrapper/AuthWrapper';
 import styles from './ForgotPassword.module.scss';
 
-const ForgotPassword = () => {
+export const ForgotPassword = () => {
 	const { mutate, isPending } = useMutation({
 		mutationFn: (data: EmailDto) => forgotPassword(data),
 		onSuccess: (data) => {
@@ -35,7 +35,7 @@ const ForgotPassword = () => {
 				schema={emailSchema}
 				defaultValues={{ email: '' }}
 			>
-				<Form.Field name="email">
+				<FormField name="email">
 					<TextField
 						type="email"
 						label="Email"
@@ -43,8 +43,8 @@ const ForgotPassword = () => {
 						autoComplete="email"
 						leftIcon={<MdOutlineEmail size={20} />}
 					/>
-				</Form.Field>
-				<Form.Submit
+				</FormField>
+				<FormSubmit
 					disabledOnEmpty
 					className={styles.submit}
 					buttonProps={{
@@ -53,7 +53,7 @@ const ForgotPassword = () => {
 					}}
 				>
 					Send Reset Link
-				</Form.Submit>
+				</FormSubmit>
 			</Form>
 			<div className={styles.returnLogin}>
 				Return to{' '}
@@ -64,5 +64,3 @@ const ForgotPassword = () => {
 		</AuthWrapper>
 	);
 };
-
-export default ForgotPassword;

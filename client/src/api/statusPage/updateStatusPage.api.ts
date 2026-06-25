@@ -1,5 +1,5 @@
-import { UpdateStatusPageDto } from '@/dto';
-import { FullStatusPage } from '@/types';
+import { UpdateStatusPageDto } from '@/dto/statusPage.dto';
+import { FullStatusPage } from '@/types/statusPage/statusPage.types';
 import { apiClient } from '../axios';
 
 export const updateStatusPage = async (id: string, dto: UpdateStatusPageDto) =>

@@ -1,6 +1,6 @@
 'use client';
 
-import { sendGenerateRestoreTokenEmail } from '@/api';
+import { sendGenerateRestoreTokenEmail } from '@/api/auth/restoreAccount.api';
 import { Button } from '@/components/ui';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -11,7 +11,7 @@ interface UserDeletedErrorProps {
 	email: string;
 }
 
-const UserDeletedError = ({ email }: UserDeletedErrorProps) => {
+export const UserDeletedError = ({ email }: UserDeletedErrorProps) => {
 	const [isClicked, setIsClicked] = useState(false);
 
 	const { mutate, isPending } = useMutation({
@@ -45,5 +45,3 @@ const UserDeletedError = ({ email }: UserDeletedErrorProps) => {
 		</div>
 	);
 };
-
-export default UserDeletedError;

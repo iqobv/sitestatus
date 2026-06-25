@@ -1,5 +1,5 @@
-import { CreateProjectDto } from '@/dto';
-import { Field } from '@/types';
+import { CreateProjectDto } from '@/dto/project.dto';
+import { Field } from '@/types/ui/field.types';
 
 export const CREATE_PROJECT_FIELDS: Field<CreateProjectDto>[] = [
 	{

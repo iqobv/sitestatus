@@ -1,4 +1,4 @@
-import { createErrorDomain } from '../utils';
+import { createMessageDomain } from '@libs/utils/message-creator.util';
 import {
 	ALERT_SUCCESS_MESSAGES,
 	AUTH_SUCCESS_MESSAGES,
@@ -13,16 +13,20 @@ import {
 } from './success-messages';
 
 export const SUCCESS_MESSAGES = {
-	ALERT: createErrorDomain(ALERT_SUCCESS_MESSAGES),
-	AUTH: createErrorDomain(AUTH_SUCCESS_MESSAGES),
-	MONITOR: createErrorDomain(MONITOR_SUCCESS_MESSAGES),
-	NOTIFICATION_CHANNEL: createErrorDomain(
+	ALERT: createMessageDomain(ALERT_SUCCESS_MESSAGES, 'ALERT'),
+	AUTH: createMessageDomain(AUTH_SUCCESS_MESSAGES, 'AUTH'),
+	MONITOR: createMessageDomain(MONITOR_SUCCESS_MESSAGES, 'MONITOR'),
+	NOTIFICATION_CHANNEL: createMessageDomain(
 		NOTIFICATION_CHANNEL_SUCCESS_MESSAGES,
+		'NOTIFICATION_CHANNEL',
 	),
-	NOTIFICATION: createErrorDomain(NOTIFICATION_SUCCESS_MESSAGES),
-	PROJECT: createErrorDomain(PROJECT_SUCCESS_MESSAGES),
-	REGION: createErrorDomain(REGION_SUCCESS_MESSAGES),
-	SESSION: createErrorDomain(SESSION_SUCCESS_MESSAGES),
-	STATUS_PAGE: createErrorDomain(STATUS_PAGE_SUCCESS_MESSAGES),
-	USER: createErrorDomain(USER_SUCCESS_MESSAGES),
-} as const;
+	NOTIFICATION: createMessageDomain(
+		NOTIFICATION_SUCCESS_MESSAGES,
+		'NOTIFICATION',
+	),
+	PROJECT: createMessageDomain(PROJECT_SUCCESS_MESSAGES, 'PROJECT'),
+	REGION: createMessageDomain(REGION_SUCCESS_MESSAGES, 'REGION'),
+	SESSION: createMessageDomain(SESSION_SUCCESS_MESSAGES, 'SESSION'),
+	STATUS_PAGE: createMessageDomain(STATUS_PAGE_SUCCESS_MESSAGES, 'STATUS_PAGE'),
+	USER: createMessageDomain(USER_SUCCESS_MESSAGES, 'USER'),
+};

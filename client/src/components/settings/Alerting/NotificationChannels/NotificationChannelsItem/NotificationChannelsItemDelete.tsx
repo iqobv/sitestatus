@@ -1,6 +1,6 @@
-import { deleteNotificationChannel } from '@/api';
+import { deleteNotificationChannel } from '@/api/notificationChannel/deleteNotificationChannel.api';
 import { Button, ConfirmAction } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
@@ -8,7 +8,7 @@ interface NotificationChannelsItemDeleteProps {
 	id: string;
 }
 
-const NotificationChannelsItemDelete = ({
+export const NotificationChannelsItemDelete = ({
 	id,
 }: NotificationChannelsItemDeleteProps) => {
 	const queryClient = useQueryClient();
@@ -17,7 +17,7 @@ const NotificationChannelsItemDelete = ({
 		mutationFn: () => deleteNotificationChannel(id),
 		onSuccess: () => {
 			queryClient.invalidateQueries({
-				queryKey: QUERY_KEYS.notificationChannel.all,
+				queryKey: QUERY_KEYS.notificationChannels.lists(),
 			});
 		},
 		onError: (e) => {
@@ -34,5 +34,3 @@ const NotificationChannelsItemDelete = ({
 		/>
 	);
 };
-
-export default NotificationChannelsItemDelete;

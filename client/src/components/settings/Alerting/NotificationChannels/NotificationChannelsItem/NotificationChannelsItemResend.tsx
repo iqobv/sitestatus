@@ -1,6 +1,6 @@
 'use client';
 
-import { resendVerificationNotificationChannel } from '@/api';
+import { resendVerificationNotificationChannel } from '@/api/notificationChannel/resendVerificationNotificationChannel.api';
 import { Button } from '@/components/ui';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
@@ -9,7 +9,7 @@ interface NotificationChannelsItemResendProps {
 	id: string;
 }
 
-const NotificationChannelsItemResend = ({
+export const NotificationChannelsItemResend = ({
 	id,
 }: NotificationChannelsItemResendProps) => {
 	const { mutate, isPending } = useMutation({
@@ -28,5 +28,3 @@ const NotificationChannelsItemResend = ({
 		</Button>
 	);
 };
-
-export default NotificationChannelsItemResend;

@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui';
-import { useUpdateTimer } from '@/hooks';
+import { useUpdateTimer } from '@/hooks/useUpdateTimer.hook';
 import { QueryKey } from '@tanstack/react-query';
 import styles from './MonitorRefresh.module.scss';
 
@@ -9,7 +9,7 @@ interface MonitorRefreshProps {
 	queryKey: QueryKey;
 }
 
-const MonitorRefresh = ({ queryKey }: MonitorRefreshProps) => {
+export const MonitorRefresh = ({ queryKey }: MonitorRefreshProps) => {
 	const { handleRefresh, timer } = useUpdateTimer({
 		queryKey,
 		isActive: true,
@@ -24,5 +24,3 @@ const MonitorRefresh = ({ queryKey }: MonitorRefreshProps) => {
 		</div>
 	);
 };
-
-export default MonitorRefresh;

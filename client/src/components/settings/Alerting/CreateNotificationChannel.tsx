@@ -1,12 +1,28 @@
 'use client';
 
-import { createNotificationChannel } from '@/api';
-import { Button, Form, Modal, Select, TextField } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
-import { CreateNotificationChannelDto } from '@/dto';
-import { createNotificationChannelSchema } from '@/schemas';
-import { ChannelType } from '@/types';
-import { capitalize } from '@/utils';
+import { createNotificationChannel } from '@/api/notificationChannel/createNotificationChannel.api';
+import {
+	Button,
+	Form,
+	FormActions,
+	FormField,
+	FormLabel,
+	FormSubmit,
+	Modal,
+	ModalBody,
+	ModalClose,
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
+	ModalTrigger,
+	Select,
+	TextField,
+} from '@/components/ui';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { CreateNotificationChannelDto } from '@/dto/notificationChannel.dto';
+import { createNotificationChannelSchema } from '@/schemas/notificationChannel/createNotificationChannel.schema';
+import { ChannelType } from '@/types/notificationChannel/channelEnums.types';
+import { capitalize } from '@/utils/capitalize.util';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Controller } from 'react-hook-form';
 import { FiPlus } from 'react-icons/fi';
@@ -14,7 +30,7 @@ import { toast } from 'react-toastify';
 import styles from './Alerting.module.scss';
 import { NOTIFICATION_CHANNEL_ITEM_LABELS } from './NotificationChannels/NotificationChannelsItem/notificationChannelsItemTypes';
 
-const CreateNotificationChannel = () => {
+export const CreateNotificationChannel = () => {
 	const queryClient = useQueryClient();
 
 	const { mutate } = useMutation({
@@ -22,7 +38,7 @@ const CreateNotificationChannel = () => {
 			createNotificationChannel(dto),
 		onSuccess: (data) => {
 			queryClient.invalidateQueries({
-				queryKey: QUERY_KEYS.notificationChannel.all,
+				queryKey: QUERY_KEYS.notificationChannels.lists(),
 			});
 			toast.success(
 				data.message || 'Notification channel created successfully',
@@ -35,14 +51,13 @@ const CreateNotificationChannel = () => {
 
 	return (
 		<Modal>
-			<Modal.Trigger>
+			<ModalTrigger>
 				<Button className={styles.addButton}>
 					<FiPlus size={20} />
 					<p className={styles.text}>Add New Channel</p>
 				</Button>
-			</Modal.Trigger>
-
-			<Modal.Content>
+			</ModalTrigger>
+			<ModalContent>
 				<Form<CreateNotificationChannelDto>
 					schema={createNotificationChannelSchema}
 					onSubmit={(data) => mutate(data)}
@@ -59,9 +74,9 @@ const CreateNotificationChannel = () => {
 
 						return (
 							<>
-								<Modal.Header>Create Notification Channel</Modal.Header>
-								<Modal.Body>
-									<Form.Field name="type">
+								<ModalHeader>Create Notification Channel</ModalHeader>
+								<ModalBody>
+									<FormField name="type">
 										<Controller
 											name="type"
 											control={control}
@@ -87,43 +102,41 @@ const CreateNotificationChannel = () => {
 												/>
 											)}
 										/>
-									</Form.Field>
+									</FormField>
 									{selectedType && (
 										<>
-											<Form.Field name="name">
-												<Form.Label>{channelTypeLabels.nameLabel}</Form.Label>
+											<FormField name="name">
+												<FormLabel>{channelTypeLabels.nameLabel}</FormLabel>
 												<TextField
 													placeholder={channelTypeLabels.namePlaceholder}
 												/>
-											</Form.Field>
-											<Form.Field name="value">
-												<Form.Label>{channelTypeLabels.valueLabel}</Form.Label>
+											</FormField>
+											<FormField name="value">
+												<FormLabel>{channelTypeLabels.valueLabel}</FormLabel>
 												<TextField
 													placeholder={channelTypeLabels.valuePlaceholder}
 												/>
-											</Form.Field>
+											</FormField>
 										</>
 									)}
-								</Modal.Body>
-								<Modal.Footer>
-									<Form.Actions justifyContent="end">
-										<Modal.Close>
+								</ModalBody>
+								<ModalFooter>
+									<FormActions justifyContent="end">
+										<ModalClose>
 											<Button variant="outlined">Cancel</Button>
-										</Modal.Close>
-										<Modal.Close>
-											<Form.Submit disabledOnEmpty disabled={!selectedType}>
+										</ModalClose>
+										<ModalClose>
+											<FormSubmit disabledOnEmpty disabled={!selectedType}>
 												Create
-											</Form.Submit>
-										</Modal.Close>
-									</Form.Actions>
-								</Modal.Footer>
+											</FormSubmit>
+										</ModalClose>
+									</FormActions>
+								</ModalFooter>
 							</>
 						);
 					}}
 				</Form>
-			</Modal.Content>
+			</ModalContent>
 		</Modal>
 	);
 };
-
-export default CreateNotificationChannel;

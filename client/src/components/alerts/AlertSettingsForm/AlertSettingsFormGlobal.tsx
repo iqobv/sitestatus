@@ -9,7 +9,7 @@ interface AlertSettingsFormGlobalProps {
 	setOverrideSettings: (value: boolean) => void;
 }
 
-const AlertSettingsFormGlobal = ({
+export const AlertSettingsFormGlobal = ({
 	type,
 	overrideSettings,
 	setOverrideSettings,
@@ -29,5 +29,3 @@ const AlertSettingsFormGlobal = ({
 		</div>
 	);
 };
-
-export default AlertSettingsFormGlobal;

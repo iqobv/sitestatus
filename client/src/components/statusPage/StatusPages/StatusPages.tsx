@@ -1,8 +1,8 @@
 import styles from './StatusPages.module.scss';
-import StatusPagesHeader from './StatusPagesHeader/StatusPagesHeader';
-import StatusPagesTable from './StatusPagesTable/StatusPagesTable';
+import { StatusPagesHeader } from './StatusPagesHeader/StatusPagesHeader';
+import { StatusPagesTable } from './StatusPagesTable/StatusPagesTable';
 
-const StatusPages = () => {
+export const StatusPages = () => {
 	return (
 		<div className={styles.statusPages}>
 			<StatusPagesHeader />
@@ -10,5 +10,3 @@ const StatusPages = () => {
 		</div>
 	);
 };
-
-export default StatusPages;

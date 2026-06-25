@@ -1,11 +1,27 @@
 'use client';
 
-import { upsertAlertSettings } from '@/api';
-import { Button, Checkbox, Form, Modal, TextField } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
-import { UpsertAlertSettingsDto } from '@/dto';
-import { upsertAlertSettingsSchema } from '@/schemas';
-import { AlertSettings } from '@/types';
+import { upsertAlertSettings } from '@/api/alertSettings/upsertAlertSettings.api';
+import {
+	Button,
+	Checkbox,
+	Form,
+	FormActions,
+	FormField,
+	FormReset,
+	FormSubmit,
+	Modal,
+	ModalBody,
+	ModalClose,
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
+	ModalTrigger,
+	TextField,
+} from '@/components/ui';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { UpsertAlertSettingsDto } from '@/dto/alertSettings.dto';
+import { upsertAlertSettingsSchema } from '@/schemas/alertSettings/upsertAlertSettings.schema';
+import { AlertSettings } from '@/types/notificationChannel/alertSettings.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { GLOBAL_ALERT_SETTINGS_FIELDS } from './globalAlertSettingsFields';
@@ -14,7 +30,9 @@ interface GlobalAlertSettingsEditProps {
 	data: AlertSettings;
 }
 
-const GlobalAlertSettingsEdit = ({ data }: GlobalAlertSettingsEditProps) => {
+export const GlobalAlertSettingsEdit = ({
+	data,
+}: GlobalAlertSettingsEditProps) => {
 	const queryClient = useQueryClient();
 
 	const { mutate, isPending } = useMutation({
@@ -32,12 +50,12 @@ const GlobalAlertSettingsEdit = ({ data }: GlobalAlertSettingsEditProps) => {
 
 	return (
 		<Modal>
-			<Modal.Trigger>
+			<ModalTrigger>
 				<Button variant="outlined" disabled={isPending}>
 					Edit
 				</Button>
-			</Modal.Trigger>
-			<Modal.Content>
+			</ModalTrigger>
+			<ModalContent>
 				<Form<UpsertAlertSettingsDto>
 					schema={upsertAlertSettingsSchema}
 					defaultValues={{
@@ -54,10 +72,10 @@ const GlobalAlertSettingsEdit = ({ data }: GlobalAlertSettingsEditProps) => {
 					{({ formState: { errors } }) => {
 						return (
 							<>
-								<Modal.Header>Edit Global Alert Settings</Modal.Header>
-								<Modal.Body>
+								<ModalHeader>Edit Global Alert Settings</ModalHeader>
+								<ModalBody>
 									{GLOBAL_ALERT_SETTINGS_FIELDS.map((f) => (
-										<Form.Field
+										<FormField
 											key={f.name}
 											name={f.name as keyof UpsertAlertSettingsDto}
 										>
@@ -87,26 +105,24 @@ const GlobalAlertSettingsEdit = ({ data }: GlobalAlertSettingsEditProps) => {
 													/>
 												);
 											}}
-										</Form.Field>
+										</FormField>
 									))}
-								</Modal.Body>
-								<Modal.Footer>
-									<Form.Actions justifyContent="flex-end">
-										<Modal.Close>
-											<Form.Reset buttonProps={{ variant: 'outlined' }}>
+								</ModalBody>
+								<ModalFooter>
+									<FormActions justifyContent="flex-end">
+										<ModalClose>
+											<FormReset buttonProps={{ variant: 'outlined' }}>
 												Cancel
-											</Form.Reset>
-										</Modal.Close>
-										<Form.Submit disabledOnEmpty>Save</Form.Submit>
-									</Form.Actions>
-								</Modal.Footer>
+											</FormReset>
+										</ModalClose>
+										<FormSubmit disabledOnEmpty>Save</FormSubmit>
+									</FormActions>
+								</ModalFooter>
 							</>
 						);
 					}}
 				</Form>
-			</Modal.Content>
+			</ModalContent>
 		</Modal>
 	);
 };
-
-export default GlobalAlertSettingsEdit;

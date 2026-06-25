@@ -51,7 +51,7 @@ describe('UserController', () => {
 			const updateSpy = jest
 				.spyOn(service, 'update')
 				.mockResolvedValueOnce(
-					user as unknown as Awaited<ReturnType<UserService['update']>>,
+					user,
 				);
 
 			await controller.update(userId, updateDto);

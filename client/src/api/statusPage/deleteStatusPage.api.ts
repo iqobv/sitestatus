@@ -1,4 +1,4 @@
-import { ApiMessageResponse } from '@/types';
+import { ApiMessageResponse } from '@/types/api/messageResponse.api';
 import { apiClient } from '../axios';
 
 export const deleteStatusPage = async (id: string) =>

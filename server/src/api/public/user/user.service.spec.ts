@@ -1,7 +1,7 @@
 import { UserRole } from '@generated/postgres/enums';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
-import { userSelect } from '@libs/prisma';
-import { hashPassword } from '@libs/utils';
+import { userSelect } from '@libs/prisma/user-select.prisma';
+import { hashPassword } from '@libs/utils/password.util';
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
 
@@ -169,7 +169,7 @@ describe('UserService', () => {
 			const findByIdSpy = jest
 				.spyOn(service, 'findById')
 				.mockResolvedValue(
-					user as unknown as Awaited<ReturnType<UserService['findById']>>,
+					user,
 				);
 			prisma.user.findUnique.mockResolvedValue(null);
 			prisma.user.update.mockResolvedValue(updatedUser);
@@ -201,7 +201,7 @@ describe('UserService', () => {
 			const findByIdSpy = jest
 				.spyOn(service, 'findById')
 				.mockResolvedValue(
-					user as unknown as Awaited<ReturnType<UserService['findById']>>,
+					user,
 				);
 			prisma.user.findUnique.mockResolvedValue(existingUser);
 

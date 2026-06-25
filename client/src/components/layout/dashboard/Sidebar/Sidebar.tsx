@@ -1,20 +1,20 @@
 'use client';
 
 import { Button } from '@/components/ui';
-import { BREAKPOINTS } from '@/constants';
+import { Breakpoint } from '@/types/ui/breakpoint.types';
 import { useEffect, useState } from 'react';
 import { TbLayoutSidebarRightCollapse } from 'react-icons/tb';
 import styles from './Sidebar.module.scss';
-import SidebarBody from './SidebarBody/SidebarBody';
-import SidebarFooter from './SidebarFooter/SidebarFooter';
-import SidebarHeader from './SidebarHeader/SidebarHeader';
+import { SidebarBody } from './SidebarBody/SidebarBody';
+import { SidebarFooter } from './SidebarFooter/SidebarFooter';
+import { SidebarHeader } from './SidebarHeader/SidebarHeader';
 
-const Sidebar = () => {
+export const Sidebar = () => {
 	const [expanded, setExpanded] = useState(false);
 	const [isMobile, setIsMobile] = useState(true);
 
 	useEffect(() => {
-		const xxlBreakpoint = BREAKPOINTS.xxl;
+		const xxlBreakpoint = Breakpoint.xxl;
 
 		const handleResize = () => {
 			if (window.innerWidth >= xxlBreakpoint) {
@@ -67,5 +67,3 @@ const Sidebar = () => {
 		</>
 	);
 };
-
-export default Sidebar;

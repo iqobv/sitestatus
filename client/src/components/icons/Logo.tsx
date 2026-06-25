@@ -4,7 +4,10 @@ export interface LogoProps extends React.SVGProps<SVGSVGElement> {
 	logoColor?: string;
 }
 
-const Logo = ({ logoColor = 'var(--color-logo)', ...props }: LogoProps) => {
+export const Logo = ({
+	logoColor = 'var(--color-logo)',
+	...props
+}: LogoProps) => {
 	return (
 		<svg
 			version="1.1"
@@ -33,5 +36,3 @@ const Logo = ({ logoColor = 'var(--color-logo)', ...props }: LogoProps) => {
 		</svg>
 	);
 };
-
-export default Logo;

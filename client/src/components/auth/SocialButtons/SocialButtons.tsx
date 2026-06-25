@@ -1,10 +1,10 @@
 'use client';
 
-import Github from './Buttons/Github';
-import Google from './Buttons/Google';
+import { Github } from './Buttons/Github';
+import { Google } from './Buttons/Google';
 import styles from './SocialButtons.module.scss';
 
-const SocialButtons = () => {
+export const SocialButtons = () => {
 	return (
 		<div className={styles.buttons}>
 			<div className={styles.list}>
@@ -15,5 +15,3 @@ const SocialButtons = () => {
 		</div>
 	);
 };
-
-export default SocialButtons;

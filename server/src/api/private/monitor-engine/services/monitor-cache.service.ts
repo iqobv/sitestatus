@@ -1,7 +1,11 @@
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { MonitorCache, MonitorCachePayload, RegionCache } from '../interfaces';
+import {
+	MonitorCache,
+	MonitorCachePayload,
+	RegionCache,
+} from '../interfaces/cache-storage.interface';
 
 @Injectable()
 export class MonitorCacheService implements OnModuleInit {
@@ -13,11 +17,11 @@ export class MonitorCacheService implements OnModuleInit {
 		private readonly tursoPrismaService: TursoPrismaService,
 	) {}
 
-	async onModuleInit() {
+	public async onModuleInit(): Promise<void> {
 		await Promise.all([this.loadRegions(), this.loadMonitors()]);
 	}
 
-	private async loadRegions() {
+	private async loadRegions(): Promise<void> {
 		const dbRegions = await this.prismaService.region.findMany({
 			where: { isActive: true },
 			select: { id: true, key: true, name: true },
@@ -28,7 +32,7 @@ export class MonitorCacheService implements OnModuleInit {
 		});
 	}
 
-	private async loadMonitors() {
+	private async loadMonitors(): Promise<void> {
 		const [dbMonitors, monitorStates] = await Promise.all([
 			this.prismaService.monitor.findMany({
 				where: { isActive: true },
@@ -67,11 +71,14 @@ export class MonitorCacheService implements OnModuleInit {
 		});
 	}
 
-	getMonitors() {
+	public getMonitors(): MonitorCache[] {
 		return Array.from(this.monitors.values());
 	}
 
-	upsertMonitor(data: MonitorCachePayload, isNew: boolean = false) {
+	public upsertMonitor(
+		data: MonitorCachePayload,
+		isNew: boolean = false,
+	): void {
 		const existing = this.monitors.get(data.id);
 
 		this.monitors.set(data.id, {
@@ -84,36 +91,36 @@ export class MonitorCacheService implements OnModuleInit {
 		});
 	}
 
-	updateMonitorNextCheck(id: string, nextCheckAt: number) {
+	public updateMonitorNextCheck(id: string, nextCheckAt: number): void {
 		const monitor = this.monitors.get(id);
 		if (monitor) {
 			this.monitors.set(id, { ...monitor, nextCheckAt });
 		}
 	}
 
-	removeMonitor(id: string) {
+	public removeMonitor(id: string): void {
 		this.monitors.delete(id);
 	}
 
-	getRegions() {
+	public getRegions(): RegionCache[] {
 		return Array.from(this.regions.values());
 	}
 
-	getRegionByKey(key: string) {
+	public getRegionByKey(key: string): RegionCache | undefined {
 		return Array.from(this.regions.values()).find(
 			(region) => region.key === key,
 		);
 	}
 
-	getRegionById(id: string) {
+	public getRegionById(id: string): RegionCache | undefined {
 		return this.regions.get(id);
 	}
 
-	upsertRegion(region: RegionCache) {
+	public upsertRegion(region: RegionCache): void {
 		this.regions.set(region.id, region);
 	}
 
-	removeRegion(id: string) {
+	public removeRegion(id: string): void {
 		this.regions.delete(id);
 	}
 }

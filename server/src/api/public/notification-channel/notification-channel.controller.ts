@@ -1,6 +1,10 @@
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
-import { Auth, Authorized } from '@libs/decorators';
-import { createCustomMessageDto } from '@libs/utils';
+import {
+	ApiErrorResponse,
+	ApiSuccessResponse,
+} from '@libs/decorators/api-response.decorator';
+import { Auth } from '@libs/decorators/auth.decorator';
+import { Authorized } from '@libs/decorators/authorized.decorator';
 import {
 	Body,
 	Controller,
@@ -13,21 +17,13 @@ import {
 	Post,
 	Query,
 } from '@nestjs/common';
-import {
-	ApiBadRequestResponse,
-	ApiConflictResponse,
-	ApiCreatedResponse,
-	ApiNotFoundResponse,
-	ApiOkResponse,
-	ApiOperation,
-} from '@nestjs/swagger';
-import {
-	CreateNotificationChannelDto,
-	NotificationChannelDto,
-	UpdateNotificationChannelDto,
-} from './dto';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { CreateNotificationChannelDto } from './dto/create-notification-channel.dto';
+import { NotificationChannelDto } from './dto/notification-channel.dto';
+import { UpdateNotificationChannelDto } from './dto/update-notification-channel.dto';
 import { NotificationChannelService } from './notification-channel.service';
 
+@ApiTags('Notification Channels')
 @Controller('notification-channels')
 export class NotificationChannelController {
 	constructor(
@@ -36,16 +32,14 @@ export class NotificationChannelController {
 
 	@Auth()
 	@ApiOperation({ summary: 'Create a new notification channel' })
-	@ApiConflictResponse({
-		type: createCustomMessageDto(
-			ERROR_MESSAGES.NOTIFICATION_CHANNEL.ALREADY_EXISTS,
-		),
-	})
-	@ApiCreatedResponse({
-		type: createCustomMessageDto(
-			SUCCESS_MESSAGES.NOTIFICATION_CHANNEL.VERIFICATION_EMAIL_SENT,
-		),
-	})
+	@ApiSuccessResponse(
+		HttpStatus.CREATED,
+		SUCCESS_MESSAGES.NOTIFICATION_CHANNEL.VERIFICATION_EMAIL_SENT,
+	)
+	@ApiErrorResponse(
+		HttpStatus.CONFLICT,
+		ERROR_MESSAGES.NOTIFICATION_CHANNEL.ALREADY_EXISTS,
+	)
 	@Post()
 	async createNotificationChannel(
 		@Authorized('id') userId: string,
@@ -69,27 +63,20 @@ export class NotificationChannelController {
 		);
 	}
 
-	@Auth()
 	@Post('verify')
 	@ApiOperation({ summary: 'Verify a notification channel using a token' })
-	@ApiOkResponse({
-		type: createCustomMessageDto(
-			SUCCESS_MESSAGES.NOTIFICATION_CHANNEL.VERIFIED,
-		),
-	})
-	@ApiNotFoundResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.NOTIFICATION_CHANNEL.NOT_FOUND),
-	})
-	@ApiBadRequestResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.TOKEN.TOKEN_INVALID),
-	})
+	@ApiSuccessResponse(
+		HttpStatus.OK,
+		SUCCESS_MESSAGES.NOTIFICATION_CHANNEL.VERIFIED,
+	)
+	@ApiErrorResponse(
+		HttpStatus.NOT_FOUND,
+		ERROR_MESSAGES.NOTIFICATION_CHANNEL.NOT_FOUND,
+	)
+	@ApiErrorResponse(HttpStatus.BAD_REQUEST, ERROR_MESSAGES.TOKEN.INVALID)
 	@HttpCode(HttpStatus.OK)
-	async verifyNotificationChannel(
-		@Authorized('id') userId: string,
-		@Query('token') token: string,
-	) {
+	async verifyNotificationChannel(@Query('token') token: string) {
 		return await this.notificationChannelService.verifyNotificationChannel(
-			userId,
 			token,
 		);
 	}
@@ -97,9 +84,10 @@ export class NotificationChannelController {
 	@Auth()
 	@ApiOperation({ summary: 'Update a notification channel' })
 	@ApiOkResponse({ type: NotificationChannelDto })
-	@ApiNotFoundResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.NOTIFICATION_CHANNEL.NOT_FOUND),
-	})
+	@ApiErrorResponse(
+		HttpStatus.NOT_FOUND,
+		ERROR_MESSAGES.NOTIFICATION_CHANNEL.NOT_FOUND,
+	)
 	@Patch(':id')
 	async updateNotificationChannel(
 		@Authorized('id') userId: string,
@@ -118,16 +106,19 @@ export class NotificationChannelController {
 	@ApiOperation({
 		summary: 'Resend verification email for a notification channel',
 	})
-	@ApiOkResponse({
-		type: createCustomMessageDto(
-			SUCCESS_MESSAGES.NOTIFICATION_CHANNEL.VERIFICATION_EMAIL_SENT,
-		),
-	})
-	@ApiNotFoundResponse({
-		type: createCustomMessageDto(ERROR_MESSAGES.NOTIFICATION_CHANNEL.NOT_FOUND),
-	})
+	@ApiSuccessResponse(
+		HttpStatus.OK,
+		SUCCESS_MESSAGES.NOTIFICATION_CHANNEL.VERIFICATION_EMAIL_SENT,
+	)
+	@ApiErrorResponse(
+		HttpStatus.NOT_FOUND,
+		ERROR_MESSAGES.NOTIFICATION_CHANNEL.NOT_FOUND,
+	)
+	@ApiErrorResponse(
+		HttpStatus.CONFLICT,
+		ERROR_MESSAGES.NOTIFICATION_CHANNEL.ALREADY_VERIFIED,
+	)
 	@HttpCode(HttpStatus.OK)
-	@Auth()
 	async resendVerificationEmail(
 		@Authorized('id') userId: string,
 		@Param('id') channelId: string,
@@ -140,14 +131,18 @@ export class NotificationChannelController {
 
 	@Auth()
 	@ApiOperation({ summary: 'Remove a notification channel' })
-	@ApiOkResponse({
-		type: createCustomMessageDto(SUCCESS_MESSAGES.NOTIFICATION_CHANNEL.DELETED),
-	})
-	@ApiConflictResponse({
-		type: createCustomMessageDto(
-			ERROR_MESSAGES.NOTIFICATION_CHANNEL.CANNOT_REMOVE_PRIMARY,
-		),
-	})
+	@ApiSuccessResponse(
+		HttpStatus.OK,
+		SUCCESS_MESSAGES.NOTIFICATION_CHANNEL.DELETED,
+	)
+	@ApiErrorResponse(
+		HttpStatus.CONFLICT,
+		ERROR_MESSAGES.NOTIFICATION_CHANNEL.CANNOT_REMOVE_PRIMARY,
+	)
+	@ApiErrorResponse(
+		HttpStatus.NOT_FOUND,
+		ERROR_MESSAGES.NOTIFICATION_CHANNEL.NOT_FOUND,
+	)
 	@Delete(':id')
 	async removeNotificationChannel(
 		@Authorized('id') userId: string,

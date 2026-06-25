@@ -1,9 +1,9 @@
 'use client';
 
-import { getAllRegions } from '@/api';
-import { QUERY_KEYS } from '@/config';
-import { AnalyticsData } from '@/types';
-import { isRawData } from '@/utils';
+import { getAllRegions } from '@/api/region/region.api';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { AnalyticsData } from '@/types/monitors/monitorAnalytics.types';
+import { isRawData } from '@/utils/isRawData.util';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 
@@ -16,7 +16,7 @@ export const useMonitorResponseChart = (logs: AnalyticsData[]) => {
 	const [hiddenRegions, setHiddenRegions] = useState<string[]>([]);
 
 	const { data: regionData } = useQuery({
-		queryKey: QUERY_KEYS.region.list,
+		queryKey: QUERY_KEYS.regions.lists(),
 		queryFn: getAllRegions,
 	});
 

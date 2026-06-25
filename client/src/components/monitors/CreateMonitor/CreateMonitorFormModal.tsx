@@ -1,10 +1,10 @@
 'use client';
 
-import { Modal } from '@/components/ui';
+import { Modal, ModalBody, ModalContent, ModalHeader } from '@/components/ui';
 import { useRouter } from 'next/navigation';
-import CreateMonitor from './CreateMonitor';
+import { CreateMonitor } from './CreateMonitor';
 
-const CreateMonitorFormModal = () => {
+export const CreateMonitorFormModal = () => {
 	const router = useRouter();
 
 	return (
@@ -15,14 +15,12 @@ const CreateMonitorFormModal = () => {
 				router.back();
 			}}
 		>
-			<Modal.Content>
-				<Modal.Header>Create New Monitor</Modal.Header>
-				<Modal.Body>
+			<ModalContent>
+				<ModalHeader>Create New Monitor</ModalHeader>
+				<ModalBody>
 					<CreateMonitor />
-				</Modal.Body>
-			</Modal.Content>
+				</ModalBody>
+			</ModalContent>
 		</Modal>
 	);
 };
-
-export default CreateMonitorFormModal;

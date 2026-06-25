@@ -1,10 +1,11 @@
-import { Heading, Section, Text } from '@react-email/components';
+import { Button, Heading, Section, Text } from '@react-email/components';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import React from 'react';
-import { IncidentAlertDto } from '../dto';
+import { IncidentAlertDto } from '../dto/incident-alert.dto';
 import { BaseEmailProps } from './base-email-props.types';
-import { Button, Footer, Wrapper } from './components';
+import { Footer } from './components/footer';
+import { Wrapper } from './components/wrapper';
 
 dayjs.extend(duration);
 
@@ -12,7 +13,7 @@ interface MonitorUpTemplateProps extends BaseEmailProps {
 	incident: IncidentAlertDto;
 }
 
-const MonitorUpTemplate = ({
+export const MonitorUpTemplate = ({
 	iconUrl,
 	url,
 	incident,
@@ -60,5 +61,3 @@ const MonitorUpTemplate = ({
 		</Wrapper>
 	);
 };
-
-export default MonitorUpTemplate;

@@ -1,7 +1,7 @@
 'use server';
 
-import { AUTH_PAGES } from '@/config';
-import { ApiErrorResponse } from '@/types';
+import { AUTH_PAGES } from '@/config/authPages.config';
+import { ApiErrorResponse } from '@/types/api/messageResponse.api';
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';

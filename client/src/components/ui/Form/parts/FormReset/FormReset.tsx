@@ -1,6 +1,6 @@
 'use client';
 
-import Button from '@/components/ui/Button/Button';
+import { Button } from '@/components/ui/Button/Button';
 import React, { ComponentPropsWithRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { FormSubmitButtonProps } from '../FormSubmit/FormSubmit';
@@ -10,7 +10,7 @@ export interface FormResetProps extends ComponentPropsWithRef<'button'> {
 	disabledOnEmpty?: boolean;
 }
 
-const FormReset = ({
+export const FormReset = ({
 	children,
 	buttonProps,
 	disabledOnEmpty = false,
@@ -51,5 +51,3 @@ const FormReset = ({
 		</Button>
 	);
 };
-
-export default FormReset;

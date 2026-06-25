@@ -1,8 +1,8 @@
 import { LogoLink } from '@/components/ui';
-import { PUBLIC_PAGES } from '@/config';
+import { PUBLIC_PAGES } from '@/config/publicPages.config';
 import styles from './AuthHeader.module.scss';
 
-const AuthHeader = () => {
+export const AuthHeader = () => {
 	return (
 		<header className={styles.header}>
 			<LogoLink
@@ -13,5 +13,3 @@ const AuthHeader = () => {
 		</header>
 	);
 };
-
-export default AuthHeader;

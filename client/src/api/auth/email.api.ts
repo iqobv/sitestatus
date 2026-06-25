@@ -1,4 +1,5 @@
-import { ApiMessageResponse, LoginResponse } from '@/types';
+import { ApiMessageResponse } from '@/types/api/messageResponse.api';
+import { LoginResponse } from '@/types/auth/login.types';
 import { apiClient } from '../axios';
 
 export const verifyEmail = async (token: string) =>

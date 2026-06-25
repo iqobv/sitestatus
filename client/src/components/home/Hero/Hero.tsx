@@ -1,8 +1,8 @@
 import { Button } from '@/components/ui';
-import { AUTH_PAGES } from '@/config';
+import { CROSS_DOMAIN_ROUTES } from '@/config/navigation.config';
 import styles from './Hero.module.scss';
 
-const Hero = () => {
+export const Hero = () => {
 	return (
 		<div className={styles.hero}>
 			<div className={`${styles.content} container`}>
@@ -16,11 +16,11 @@ const Hero = () => {
 						Global distributed checks, hybrid project grouping, and public
 						status pages. Forever free.
 					</p>
-					<Button href={AUTH_PAGES.REGISTER}>Start Monitoring Now</Button>
+					<Button href={CROSS_DOMAIN_ROUTES.APP_REGISTER} asNative>
+						Start Monitoring Now
+					</Button>
 				</div>
 			</div>
 		</div>
 	);
 };
-
-export default Hero;

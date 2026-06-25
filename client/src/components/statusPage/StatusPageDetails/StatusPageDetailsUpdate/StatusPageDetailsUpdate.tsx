@@ -1,14 +1,15 @@
 'use client';
 
-import { updateStatusPage } from '@/api';
-import { QUERY_KEYS } from '@/config';
-import { UpdateStatusPageDto } from '@/dto';
-import { updateStatusPageSchema } from '@/schemas';
-import { FullStatusPage } from '@/types';
+import { updateStatusPage } from '@/api/statusPage/updateStatusPage.api';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { UpdateStatusPageDto } from '@/dto/statusPage.dto';
+import { updateStatusPageSchema } from '@/schemas/statusPage/updateStatusPage.schema';
+import { FullStatusPage } from '@/types/statusPage/statusPage.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { toast } from 'react-toastify';
-import StatusPageForm, {
+import {
+	StatusPageForm,
 	StatusPageFormDto,
 } from '../../StatusPageForm/StatusPageForm';
 import { UPDATE_STATUS_PAGE_FORM_FIELDS } from './statusPageFormFields';
@@ -17,7 +18,9 @@ interface StatusPageDetailsUpdateProps {
 	data: FullStatusPage;
 }
 
-const StatusPageDetailsUpdate = ({ data }: StatusPageDetailsUpdateProps) => {
+export const StatusPageDetailsUpdate = ({
+	data,
+}: StatusPageDetailsUpdateProps) => {
 	const { id } = useParams<{ id: string }>();
 
 	const queryClient = useQueryClient();
@@ -25,10 +28,10 @@ const StatusPageDetailsUpdate = ({ data }: StatusPageDetailsUpdateProps) => {
 	const { mutate } = useMutation({
 		mutationFn: (data: UpdateStatusPageDto) => updateStatusPage(id, data),
 		onSuccess: (data) => {
-			queryClient.setQueryData(QUERY_KEYS.statusPage.byId(id), data);
+			queryClient.setQueryData(QUERY_KEYS.statusPages.detail(id), data);
 
 			queryClient.invalidateQueries({
-				queryKey: QUERY_KEYS.statusPage.byId(id),
+				queryKey: QUERY_KEYS.statusPages.detail(id),
 			});
 
 			toast.success('Status page updated successfully');
@@ -82,5 +85,3 @@ const StatusPageDetailsUpdate = ({ data }: StatusPageDetailsUpdateProps) => {
 		/>
 	);
 };
-
-export default StatusPageDetailsUpdate;

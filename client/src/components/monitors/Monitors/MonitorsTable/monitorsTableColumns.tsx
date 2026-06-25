@@ -1,17 +1,20 @@
 import { Button, UptimeStatus } from '@/components/ui';
-import { PRIVATE_PAGES } from '@/config';
-import { FullMonitor } from '@/types';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
+import { FullMonitor } from '@/types/monitors/monitor.types';
 import { ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
 dayjs.extend(relativeTime);
 
-export const COLUMNS: ColumnDef<FullMonitor>[] = [
+export const MONITOR_COLUMNS: ColumnDef<FullMonitor>[] = [
 	{
 		header: 'Name',
 		accessorKey: 'name',
-		enableSorting: false,
+		enableSorting: true,
+		meta: {
+			style: { width: '60%' },
+		},
 		cell: (props) => <>{props.getValue()}</>,
 	},
 	{

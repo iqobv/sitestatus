@@ -1,26 +1,30 @@
 'use client';
 
-import { Form, Modal } from '@/components/ui';
+import {
+	FormActions,
+	FormReset,
+	FormSubmit,
+	ModalClose,
+	ModalFooter,
+} from '@/components/ui';
 
 interface AlertSettingsFormFooterProps {
 	isPending: boolean;
 }
 
-const AlertSettingsFormFooter = ({
+export const AlertSettingsFormFooter = ({
 	isPending,
 }: AlertSettingsFormFooterProps) => {
 	return (
-		<Modal.Footer>
-			<Form.Actions justifyContent="flex-end">
-				<Modal.Close>
-					<Form.Reset buttonProps={{ variant: 'outlined' }}>Cancel</Form.Reset>
-				</Modal.Close>
-				<Form.Submit disabledOnEmpty buttonProps={{ loading: isPending }}>
+		<ModalFooter>
+			<FormActions justifyContent="flex-end">
+				<ModalClose>
+					<FormReset buttonProps={{ variant: 'outlined' }}>Cancel</FormReset>
+				</ModalClose>
+				<FormSubmit disabledOnEmpty buttonProps={{ loading: isPending }}>
 					Save
-				</Form.Submit>
-			</Form.Actions>
-		</Modal.Footer>
+				</FormSubmit>
+			</FormActions>
+		</ModalFooter>
 	);
 };
-
-export default AlertSettingsFormFooter;

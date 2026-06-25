@@ -1,4 +1,4 @@
-import { DefaultFieldsDto } from '@libs/dto';
+import { DefaultFieldsDto } from '@libs/dto/default-fields.dto';
 import { ApiProperty, IntersectionType } from '@nestjs/swagger';
 import { CreatePersonalNotificationDto } from './create-personal-notification.dto';
 

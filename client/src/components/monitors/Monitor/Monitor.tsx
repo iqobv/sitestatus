@@ -1,41 +1,42 @@
 'use client';
 
-import { getMonitorAnalytics, getMonitorByIdFull } from '@/api';
-import { QUERY_KEYS } from '@/config';
-import { monitorRangeParser } from '@/parsers';
+import { getMonitorByIdFull } from '@/api/monitor/getMonitorById.api';
+import { getMonitorAnalytics } from '@/api/monitor/monitorAnalytics.api';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { monitorRangeParser } from '@/parsers/monitorRange.parser';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { parseAsString, useQueryStates } from 'nuqs';
 import styles from './Monitor.module.scss';
-import MonitorAnalyticsLoader from './MonitorAnalyticsLoader';
-import MonitorRangeControl from './MonitorDataDisplayControls/MonitorRangeControl';
-import MonitorHeader from './MonitorHeader/MonitorHeader';
-import MonitorIncidents from './MonitorIncidents/MonitorIncidents';
-import MonitorLoader from './MonitorLoader';
-import MonitorOverall from './MonitorOverall/MonitorOverall';
-import MonitorRegionControl from './MonitorRegionControl/MonitorRegionControl';
-import MonitorRegionStats from './MonitorRegionStats/MonitorRegionStats';
-import MonitorResponseCards from './MonitorResponseCards/MonitorResponseCards';
-import MonitorResponseChart from './MonitorResponseChart/MonitorResponseChart';
+import { MonitorAnalyticsLoader } from './MonitorAnalyticsLoader';
+import { MonitorRangeControl } from './MonitorDataDisplayControls/MonitorRangeControl';
+import { MonitorHeader } from './MonitorHeader/MonitorHeader';
+import { MonitorIncidents } from './MonitorIncidents/MonitorIncidents';
+import { MonitorLoader } from './MonitorLoader';
+import { MonitorOverall } from './MonitorOverall/MonitorOverall';
+import { MonitorRegionControl } from './MonitorRegionControl/MonitorRegionControl';
+import { MonitorRegionStats } from './MonitorRegionStats/MonitorRegionStats';
+import { MonitorResponseCards } from './MonitorResponseCards/MonitorResponseCards';
+import { MonitorResponseChart } from './MonitorResponseChart/MonitorResponseChart';
 
 interface MonitorProps {
 	id: string;
 }
 
-const Monitor = ({ id }: MonitorProps) => {
+export const Monitor = ({ id }: MonitorProps) => {
 	const [{ range, region }] = useQueryStates({
 		range: monitorRangeParser.withDefault(1),
 		region: parseAsString.withDefault('global'),
 	});
 
 	const { data: monitor, isLoading } = useQuery({
-		queryKey: QUERY_KEYS.monitors.byIdFull(id),
+		queryKey: QUERY_KEYS.monitors.detailFull(id),
 		queryFn: () => getMonitorByIdFull(id),
 		placeholderData: keepPreviousData,
 	});
 
 	const { data: monitorAnalytics, isLoading: isMonitorAnalyticsLoading } =
 		useQuery({
-			queryKey: QUERY_KEYS.monitors.analtics(id, range, region),
+			queryKey: QUERY_KEYS.monitors.analytics(id, range, region),
 			queryFn: () => getMonitorAnalytics(id, range, region),
 			placeholderData: keepPreviousData,
 		});
@@ -66,5 +67,3 @@ const Monitor = ({ id }: MonitorProps) => {
 		</div>
 	);
 };
-
-export default Monitor;

@@ -1,4 +1,4 @@
-import { StatusPageFooter } from '@/components/layout';
+import { StatusPageFooter } from '@/components/layout/StatusPageFooter/StatusPageFooter';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
 	return (

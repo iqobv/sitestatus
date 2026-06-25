@@ -1,13 +1,20 @@
 'use client';
 
-import { Button, Modal } from '@/components/ui';
-import { BaseMonitor } from '@/types';
+import {
+	Button,
+	Modal,
+	ModalBody,
+	ModalContent,
+	ModalHeader,
+	ModalTrigger,
+} from '@/components/ui';
+import { BaseMonitor } from '@/types/monitors/monitor.types';
 import { useState } from 'react';
 import { FieldArrayWithId } from 'react-hook-form';
 import { StatusPageFormDto } from '../../StatusPageForm';
 import styles from './StatusPageFormItemsAdd.module.scss';
-import StatusPageFormItemsAddMonitors from './StatusPageFormItemsAddMonitors/StatusPageFormItemsAddMonitors';
-import StatusPageFormItemsAddProjects from './StatusPageFormItemsAddProjects/StatusPageFormItemsAddProjects';
+import { StatusPageFormItemsAddMonitors } from './StatusPageFormItemsAddMonitors/StatusPageFormItemsAddMonitors';
+import { StatusPageFormItemsAddProjects } from './StatusPageFormItemsAddProjects/StatusPageFormItemsAddProjects';
 import { STATUS_PAGE_FORM_ADD_TABS } from './statusPageFormItemsAddTabs';
 
 export type Tab = 'monitors' | 'projects';
@@ -28,7 +35,7 @@ export interface StatusPageFormItemsAddProps {
 	handleAddMonitors: (monitors: BaseMonitor | BaseMonitor[]) => void;
 }
 
-const StatusPageFormItemsAdd = ({
+export const StatusPageFormItemsAdd = ({
 	fields,
 	handleAddMonitors,
 }: StatusPageFormItemsAddProps) => {
@@ -40,12 +47,12 @@ const StatusPageFormItemsAdd = ({
 
 	return (
 		<Modal>
-			<Modal.Trigger>
+			<ModalTrigger>
 				<Button variant="secondary">Add Monitor</Button>
-			</Modal.Trigger>
-			<Modal.Content>
-				<Modal.Header>Add Monitor</Modal.Header>
-				<Modal.Body>
+			</ModalTrigger>
+			<ModalContent>
+				<ModalHeader>Add Monitor</ModalHeader>
+				<ModalBody>
 					<div className={styles.tabs}>
 						{STATUS_PAGE_FORM_ADD_TABS.map((tab) => (
 							<Button
@@ -69,10 +76,8 @@ const StatusPageFormItemsAdd = ({
 							handleAddMonitors={handleAddMonitors}
 						/>
 					)}
-				</Modal.Body>
-			</Modal.Content>
+				</ModalBody>
+			</ModalContent>
 		</Modal>
 	);
 };
-
-export default StatusPageFormItemsAdd;

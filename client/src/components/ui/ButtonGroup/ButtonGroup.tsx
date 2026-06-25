@@ -8,7 +8,7 @@ interface ButtonGroupProps {
 	className?: string;
 }
 
-const ButtonGroup = ({
+export const ButtonGroup = ({
 	children,
 	padding = 8,
 	direction = 'horizontal',
@@ -35,5 +35,3 @@ const ButtonGroup = ({
 		</div>
 	);
 };
-
-export default ButtonGroup;

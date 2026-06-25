@@ -1,7 +1,7 @@
 import { Font } from '@react-email/components';
 import React from 'react';
 
-const RobotoFonts = () => {
+export const RobotoFonts = () => {
 	return (
 		<>
 			<style
@@ -42,5 +42,3 @@ const RobotoFonts = () => {
 		</>
 	);
 };
-
-export default RobotoFonts;

@@ -1,20 +1,21 @@
 'use client';
 
-import SettingsCard from '@/components/settings/SettingsCard/SettingsCard';
+import { SettingsCard } from '@/components/settings/SettingsCard/SettingsCard';
 import { TextField } from '@/components/ui';
-import { ChannelStatus, NotificationChannel } from '@/types';
-import { capitalize } from '@/utils';
+import { ChannelStatus } from '@/types/notificationChannel/channelEnums.types';
+import { NotificationChannel } from '@/types/notificationChannel/notificationChannel.types';
+import { capitalize } from '@/utils/capitalize.util';
 import styles from './NotificationChannelsItem.module.scss';
-import NotificationChannelsItemDelete from './NotificationChannelsItemDelete';
-import NotificationChannelsItemEdit from './NotificationChannelsItemEdit';
-import NotificationChannelsItemResend from './NotificationChannelsItemResend';
+import { NotificationChannelsItemDelete } from './NotificationChannelsItemDelete';
+import { NotificationChannelsItemEdit } from './NotificationChannelsItemEdit';
+import { NotificationChannelsItemResend } from './NotificationChannelsItemResend';
 import { NOTIFICATION_CHANNEL_ITEM_LABELS } from './notificationChannelsItemTypes';
 
 interface NotificationChannelsItemProps {
 	channel: NotificationChannel;
 }
 
-const NotificationChannelsItem = ({
+export const NotificationChannelsItem = ({
 	channel,
 }: NotificationChannelsItemProps) => {
 	const channelTypeLabels = NOTIFICATION_CHANNEL_ITEM_LABELS[channel.type];
@@ -65,7 +66,10 @@ const NotificationChannelsItem = ({
 						</>
 					)}
 					{channel.status === ChannelStatus.PENDING && (
-						<NotificationChannelsItemResend id={channel.id} />
+						<>
+							<NotificationChannelsItemResend id={channel.id} />
+							<NotificationChannelsItemDelete id={channel.id} />
+						</>
 					)}
 				</>
 			}

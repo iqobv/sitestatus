@@ -1,5 +1,5 @@
-import { UpdateProjectDto } from '@/dto';
-import { Project } from '@/types/project';
+import { UpdateProjectDto } from '@/dto/project.dto';
+import { Project } from '@/types/project/project.types';
 import { apiClient } from '../axios';
 
 export const editProject = async (id: string, dto: UpdateProjectDto) =>

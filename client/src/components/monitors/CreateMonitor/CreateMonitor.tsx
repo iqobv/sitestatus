@@ -1,18 +1,19 @@
 'use client';
 
-import { createMonitor } from '@/api';
-import { PRIVATE_PAGES, QUERY_KEYS } from '@/config';
-import { CreateMonitorDto } from '@/dto';
-import { createMonitorSchema } from '@/schemas';
-import { BaseMonitor } from '@/types';
+import { createMonitor } from '@/api/monitor/createMonitor.api';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { CreateMonitorDto } from '@/dto/monitor.dto';
+import { createMonitorSchema } from '@/schemas/monitor/createMonitor.schema';
+import { BaseMonitor } from '@/types/monitors/monitor.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useQueryState } from 'nuqs';
 import { toast } from 'react-toastify';
-import MonitorForm from '../MonitorForm/MonitorForm';
+import { MonitorForm } from '../MonitorForm/MonitorForm';
 import { CREATE_MONITOR_FIELDS } from './createMonitorFields';
 
-const CreateMonitor = () => {
+export const CreateMonitor = () => {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
@@ -22,7 +23,7 @@ const CreateMonitor = () => {
 		mutationFn: (data: CreateMonitorDto) => createMonitor(data),
 		onSuccess: (data) => {
 			queryClient.invalidateQueries({
-				queryKey: QUERY_KEYS.monitors.list,
+				queryKey: QUERY_KEYS.monitors.lists(),
 			});
 			router.push(PRIVATE_PAGES.MONITORS.ONE(data.id));
 		},
@@ -48,5 +49,3 @@ const CreateMonitor = () => {
 		/>
 	);
 };
-
-export default CreateMonitor;

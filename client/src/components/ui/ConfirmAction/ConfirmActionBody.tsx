@@ -1,15 +1,19 @@
 'use client';
 
 import { ChangeEvent, useEffect, useState } from 'react';
-import Button from '../Button/Button';
-import Modal from '../Modal/Modal';
-import TextField from '../TextField/TextField';
+import { Button } from '../Button/Button';
+import { Modal } from '../Modal/Modal';
+import { ModalClose } from '../Modal/parts/ModalClose';
+import { TextField } from '../TextField/TextField';
 import styles from './ConfirmAction.module.scss';
 import { ConfirmActionProps } from './ConfirmAction.types';
+import { ModalHeader } from '../Modal/parts/ModalHeader/ModalHeader';
+import { ModalBody } from '../Modal/parts/ModalBody/ModalBody';
+import { ModalFooter } from '../Modal/parts/ModalFooter';
 
 type ConfirmActionBodyProps = Omit<ConfirmActionProps, 'trigger'>;
 
-const ConfirmActionBody = ({
+export const ConfirmActionBody = ({
 	title,
 	description,
 	onConfirm,
@@ -40,9 +44,9 @@ const ConfirmActionBody = ({
 
 	return (
 		<>
-			<Modal.Header>{title}</Modal.Header>
-			<Modal.Body>{description}</Modal.Body>
-			<Modal.Footer className={styles.footer}>
+			<ModalHeader>{title}</ModalHeader>
+			<ModalBody>{description}</ModalBody>
+			<ModalFooter className={styles.footer}>
 				{confirmWithInput && (
 					<TextField
 						label={
@@ -57,12 +61,12 @@ const ConfirmActionBody = ({
 					/>
 				)}
 				<div className={styles.buttons}>
-					<Modal.Close>
+					<ModalClose>
 						<Button variant="outlined" onClick={onCancel}>
 							{cancelButtonText}
 						</Button>
-					</Modal.Close>
-					<Modal.Close>
+					</ModalClose>
+					<ModalClose>
 						<Button
 							variant="danger"
 							onClick={handleConfirm}
@@ -70,11 +74,9 @@ const ConfirmActionBody = ({
 						>
 							{confirmButtonText}
 						</Button>
-					</Modal.Close>
+					</ModalClose>
 				</div>
-			</Modal.Footer>
+			</ModalFooter>
 		</>
 	);
 };
-
-export default ConfirmActionBody;

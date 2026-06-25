@@ -1,14 +1,14 @@
 'use client';
 
 import { Button, ButtonGroup } from '@/components/ui';
-import { URL_TO_RANGE_MAP } from '@/constants';
-import { monitorRangeParser } from '@/parsers';
-import { RangeNumericValue } from '@/types';
+import { URL_TO_RANGE_MAP } from '@/constants/monitorRanges.constants';
+import { monitorRangeParser } from '@/parsers/monitorRange.parser';
+import { RangeNumericValue } from '@/types/monitors/monitorRange.types';
 import { useQueryState } from 'nuqs';
 import styles from './MonitorRangeButtons.module.scss';
 import { MONITOR_RANGE_BUTTONS_ITEMS } from './monitorRangeButtonsItems';
 
-const MonitorRangeButtons = () => {
+export const MonitorRangeButtons = () => {
 	const [range, setRange] = useQueryState(
 		'range',
 		monitorRangeParser.withDefault(1),
@@ -33,5 +33,3 @@ const MonitorRangeButtons = () => {
 		</ButtonGroup>
 	);
 };
-
-export default MonitorRangeButtons;

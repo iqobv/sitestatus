@@ -1,12 +1,12 @@
 import { Link, Section, Text } from '@react-email/components';
 import React from 'react';
-import Divider from './divider';
+import { Divider } from './divider';
 
 interface FooterProps {
 	expiresIn?: string;
 }
 
-const Footer = ({ expiresIn }: FooterProps) => {
+export const Footer = ({ expiresIn }: FooterProps) => {
 	return (
 		<Section className="py-1 font-[14px]">
 			{expiresIn && (
@@ -42,5 +42,3 @@ const Footer = ({ expiresIn }: FooterProps) => {
 		</Section>
 	);
 };
-
-export default Footer;

@@ -1,6 +1,6 @@
 'use client';
 
-import Button from '@/components/ui/Button/Button';
+import { Button } from '@/components/ui/Button/Button';
 import { ButtonBaseProps } from '@/components/ui/Button/Button.types';
 import React, { ComponentPropsWithRef } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -15,7 +15,7 @@ export interface FormSubmitProps extends ComponentPropsWithRef<'button'> {
 	disabledOnEmpty?: boolean;
 }
 
-const FormSubmit = ({
+export const FormSubmit = ({
 	children,
 	buttonProps,
 	disabledOnEmpty = false,
@@ -55,5 +55,3 @@ const FormSubmit = ({
 		</Button>
 	);
 };
-
-export default FormSubmit;

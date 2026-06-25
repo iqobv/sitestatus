@@ -1,11 +1,11 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import SettingsTab from './SettingsTab/SettingsTab';
+import { SettingsTab } from './SettingsTab/SettingsTab';
 import styles from './SettingsTabs.module.scss';
 import { SETTINGS_TABS_ITEMS } from './settingsTabsItems';
 
-const SettingsTabs = () => {
+export const SettingsTabs = () => {
 	const pathname = usePathname();
 
 	return (
@@ -20,5 +20,3 @@ const SettingsTabs = () => {
 		</nav>
 	);
 };
-
-export default SettingsTabs;

@@ -1,11 +1,13 @@
 import { SkeletonLoader } from '@/components/ui';
-import StatusPageFormMonitorsLoader from './StatusPageFormMonitors/StatusPageFormMonitorsLoader';
+import { StatusPageFormMonitorsLoader } from './StatusPageFormMonitors/StatusPageFormMonitorsLoader';
 
 interface StatusPageFormLoaderProps {
 	count?: number;
 }
 
-const StatusPageFormLoader = ({ count = 3 }: StatusPageFormLoaderProps) => {
+export const StatusPageFormLoader = ({
+	count = 3,
+}: StatusPageFormLoaderProps) => {
 	return (
 		<div>
 			<SkeletonLoader height={44} width={150} />
@@ -18,5 +20,3 @@ const StatusPageFormLoader = ({ count = 3 }: StatusPageFormLoaderProps) => {
 		</div>
 	);
 };
-
-export default StatusPageFormLoader;

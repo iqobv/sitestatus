@@ -1,11 +1,11 @@
 'use client';
 
-import { useAuth } from '@/hooks';
-import SettingsCard from '../SettingsCard/SettingsCard';
-import SettingsWrapper from '../SettingsWrapper/SettingsWrapper';
+import { useAuth } from '@/hooks/useAuth.hook';
+import { SettingsCard } from '../SettingsCard/SettingsCard';
+import { SettingsWrapper } from '../SettingsWrapper/SettingsWrapper';
 import { GENERAL_SETTINGS_ITEMS } from './generalSettingsItems';
 
-const General = () => {
+export const General = () => {
 	const { user } = useAuth();
 
 	return (
@@ -16,5 +16,3 @@ const General = () => {
 		</SettingsWrapper>
 	);
 };
-
-export default General;

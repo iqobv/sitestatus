@@ -1,16 +1,16 @@
 'use client';
 
-import { getAlertSettingsHierarchy } from '@/api';
+import { getAlertSettingsHierarchy } from '@/api/alertSettings/getAlertSettings.api';
 import { Checkbox, SectionHeader, TextField } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
 import { useQuery } from '@tanstack/react-query';
-import SettingsCard from '../../SettingsCard/SettingsCard';
+import { SettingsCard } from '../../SettingsCard/SettingsCard';
 import styles from './GlobalAlertSettings.module.scss';
-import GlobalAlertSettingsEdit from './GlobalAlertSettingsEdit';
-import GlobalAlertSettingsLoader from './GlobalAlertSettingsLoader';
+import { GlobalAlertSettingsEdit } from './GlobalAlertSettingsEdit';
+import { GlobalAlertSettingsLoader } from './GlobalAlertSettingsLoader';
 import { GLOBAL_ALERT_SETTINGS_FIELDS } from './globalAlertSettingsFields';
 
-const GlobalAlertSettings = () => {
+export const GlobalAlertSettings = () => {
 	const { data, isLoading } = useQuery({
 		queryKey: QUERY_KEYS.alertSettings.hierarchy('global'),
 		queryFn: () => getAlertSettingsHierarchy(),
@@ -24,7 +24,9 @@ const GlobalAlertSettings = () => {
 						<span>Global Alert Settings</span>
 					</div>
 				}
-				titleComponent="h3"
+				titleProps={{
+					variant: 'h3',
+				}}
 			/>
 			{isLoading && <GlobalAlertSettingsLoader />}
 			{data && data.length > 0 && (
@@ -87,5 +89,3 @@ const GlobalAlertSettings = () => {
 		</div>
 	);
 };
-
-export default GlobalAlertSettings;

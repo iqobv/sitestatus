@@ -1,8 +1,8 @@
 import { Prisma } from '@generated/postgres/client';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
-import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
+import { ERROR_MESSAGES } from '@libs/constants';
 import { userSelect } from '@libs/prisma/user-select.prisma';
-import { hashPassword } from '@libs/utils';
+import { hashPassword } from '@libs/utils/password.util';
 import {
 	ConflictException,
 	Injectable,
@@ -10,7 +10,9 @@ import {
 } from '@nestjs/common';
 import { AlertSettingsService } from '../alert-settings/alert-settings.service';
 import { NotificationChannelService } from '../notification-channel/notification-channel.service';
-import { CreateUserDto, InternalUpdateUserDto, UpdateUserDto } from './dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import { InternalUpdateUserDto, UpdateUserDto } from './dto/update-user.dto';
+import { UserDto, UserWithoutPasswordDto } from './dto/user.dto';
 
 @Injectable()
 export class UserService {
@@ -20,7 +22,10 @@ export class UserService {
 		private readonly alertSettingsService: AlertSettingsService,
 	) {}
 
-	async create(dto: CreateUserDto, tx?: Prisma.TransactionClient) {
+	public async create(
+		dto: CreateUserDto,
+		tx?: Prisma.TransactionClient,
+	): Promise<UserDto> {
 		const { email, password, ...rest } = dto;
 
 		const prisma = tx || this.prismaService;
@@ -60,11 +65,26 @@ export class UserService {
 		return user;
 	}
 
-	async findById(
+	public async findById(
+		id: string,
+		full: true,
+		tx?: Prisma.TransactionClient,
+	): Promise<UserDto>;
+	public async findById(
+		id: string,
+		full?: false,
+		tx?: Prisma.TransactionClient,
+	): Promise<UserWithoutPasswordDto>;
+	public async findById(
+		id: string,
+		full: boolean,
+		tx?: Prisma.TransactionClient,
+	): Promise<UserDto | UserWithoutPasswordDto>;
+	public async findById(
 		id: string,
 		full: boolean = false,
 		tx?: Prisma.TransactionClient,
-	) {
+	): Promise<unknown> {
 		const prisma = tx ?? this.prismaService;
 
 		const fourtheenDaysAgo = new Date();
@@ -81,19 +101,37 @@ export class UserService {
 			},
 		});
 
-		if (!user) throw new NotFoundException(ERROR_MESSAGES.USER.USER_NOT_FOUND);
+		if (!user) throw new NotFoundException(ERROR_MESSAGES.USER.NOT_FOUND);
 		if (user.deletedAt)
-			throw new NotFoundException(ERROR_MESSAGES.USER.USER_DELETED);
+			throw new NotFoundException(ERROR_MESSAGES.USER.DELETED);
 
 		return user;
 	}
 
-	async findByEmail(
+	public async findByEmail(
+		email: string,
+		full: true,
+		isRestoring?: boolean,
+		tx?: Prisma.TransactionClient,
+	): Promise<UserDto | null>;
+	public async findByEmail(
+		email: string,
+		full?: false,
+		isRestoring?: boolean,
+		tx?: Prisma.TransactionClient,
+	): Promise<UserWithoutPasswordDto | null>;
+	public async findByEmail(
+		email: string,
+		full: boolean,
+		isRestoring: boolean,
+		tx?: Prisma.TransactionClient,
+	): Promise<UserDto | UserWithoutPasswordDto | null>;
+	public async findByEmail(
 		email: string,
 		full: boolean = false,
 		isRestoring: boolean = false,
 		tx?: Prisma.TransactionClient,
-	) {
+	): Promise<unknown> {
 		const prisma = tx ?? this.prismaService;
 
 		const user = await prisma.user.findUnique({
@@ -105,23 +143,23 @@ export class UserService {
 
 		if (user.deletedAt) {
 			if (!isRestoring)
-				throw new NotFoundException(ERROR_MESSAGES.USER.USER_DELETED);
+				throw new NotFoundException(ERROR_MESSAGES.USER.DELETED);
 
 			const fourteenDaysAgo = new Date();
 			fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
 
 			if (user.deletedAt < fourteenDaysAgo)
-				throw new NotFoundException(ERROR_MESSAGES.USER.USER_DELETED);
+				throw new NotFoundException(ERROR_MESSAGES.USER.DELETED);
 		}
 
 		return user;
 	}
 
-	async update(
+	public async update(
 		userId: string,
 		dto: UpdateUserDto,
 		tx?: Prisma.TransactionClient,
-	) {
+	): Promise<UserWithoutPasswordDto> {
 		const prisma = tx ?? this.prismaService;
 
 		const { email } = dto;
@@ -141,11 +179,11 @@ export class UserService {
 		return updatedUser;
 	}
 
-	async updateInternal(
+	public async updateInternal(
 		userId: string,
 		dto: InternalUpdateUserDto,
 		tx?: Prisma.TransactionClient,
-	) {
+	): Promise<UserWithoutPasswordDto> {
 		const prisma = tx ?? this.prismaService;
 
 		const { email, emailVerified, role } = dto;
@@ -167,7 +205,7 @@ export class UserService {
 		return updatedUser;
 	}
 
-	async removeAccount(userId: string) {
+	public async removeAccount(userId: string): Promise<void> {
 		const user = await this.findById(userId);
 
 		await this.prismaService.user.update({
@@ -176,11 +214,9 @@ export class UserService {
 		});
 
 		await this.prismaService.session.deleteMany({ where: { userId: user.id } });
-
-		return SUCCESS_MESSAGES.USER.USER_DELETED;
 	}
 
-	async createInitialDataForRegisteredUser() {
+	public async createInitialDataForRegisteredUser(): Promise<void> {
 		return await this.prismaService.$transaction(async (tx) => {
 			const usersWithoutChannels = await tx.user.findMany({
 				where: {
@@ -208,13 +244,15 @@ export class UserService {
 		});
 	}
 
-	private async alreadyExists(email: string, tx?: Prisma.TransactionClient) {
+	private async alreadyExists(
+		email: string,
+		tx?: Prisma.TransactionClient,
+	): Promise<void> {
 		const prisma = tx ?? this.prismaService;
 		const user = await prisma.user.findUnique({
 			where: { email, deletedAt: null },
 		});
 
-		if (user)
-			throw new ConflictException(ERROR_MESSAGES.USER.USER_ALREADY_EXISTS);
+		if (user) throw new ConflictException(ERROR_MESSAGES.USER.ALREADY_EXISTS);
 	}
 }

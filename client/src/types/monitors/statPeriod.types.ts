@@ -1,5 +1,15 @@
-import { ANALYTICS_STAT_PERIOD, STAT_PERIOD } from '@/constants';
+export const StatPeriod = {
+	HOURLY: 'HOURLY',
+	DAILY: 'DAILY',
+	WEEKLY: 'WEEKLY',
+	MONTHLY: 'MONTHLY',
+} as const;
 
-export type StatPeriod = (typeof STAT_PERIOD)[keyof typeof STAT_PERIOD];
+export const AnalyticsStatPeriod = {
+	...StatPeriod,
+	RAW: 'RAW',
+} as const;
+
+export type StatPeriod = (typeof StatPeriod)[keyof typeof StatPeriod];
 export type AnalyticsStatPeriod =
-	(typeof ANALYTICS_STAT_PERIOD)[keyof typeof ANALYTICS_STAT_PERIOD];
+	(typeof AnalyticsStatPeriod)[keyof typeof AnalyticsStatPeriod];

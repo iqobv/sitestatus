@@ -1,18 +1,21 @@
 'use client';
 
-import { createStatusPage } from '@/api';
-import { PRIVATE_PAGES, QUERY_KEYS } from '@/config';
-import { CreateStatusPageDto } from '@/dto';
-import { createStatusPageSchema } from '@/schemas';
+import { createStatusPage } from '@/api/statusPage/createStatusPage.api';
+import { PRIVATE_PAGES } from '@/config/privatePages.config';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { CreateStatusPageDto } from '@/dto/statusPage.dto';
+import { createStatusPageSchema } from '@/schemas/statusPage/createStatusPage.schema';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
-import { StatusPageForm } from '../StatusPageForm';
-import { StatusPageFormDto } from '../StatusPageForm/StatusPageForm';
+import {
+	StatusPageForm,
+	StatusPageFormDto,
+} from '../StatusPageForm/StatusPageForm';
 import { CREATE_STATUS_PAGE_FORM_FIELDS } from './statusPageCreateFields';
 
-const StatusPageCreate = () => {
+export const StatusPageCreate = () => {
 	const queryClient = useQueryClient();
 	const router = useRouter();
 
@@ -47,7 +50,7 @@ const StatusPageCreate = () => {
 				mutate(finalData, {
 					onSuccess: (data) => {
 						queryClient.invalidateQueries({
-							queryKey: QUERY_KEYS.statusPage.all,
+							queryKey: QUERY_KEYS.statusPages.lists(),
 						});
 
 						router.push(PRIVATE_PAGES.STATUS_PAGES.ID(data.id));
@@ -69,5 +72,3 @@ const StatusPageCreate = () => {
 		/>
 	);
 };
-
-export default StatusPageCreate;

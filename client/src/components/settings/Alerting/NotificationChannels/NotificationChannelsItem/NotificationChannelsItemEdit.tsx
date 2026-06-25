@@ -1,19 +1,35 @@
-import { updateNotificationChannel } from '@/api';
-import { Button, Checkbox, Form, Modal, TextField } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
-import { UpdateNotificationChannelDto } from '@/dto';
-import { updateNotificationChannelSchema } from '@/schemas';
-import { NotificationChannel } from '@/types';
+import { updateNotificationChannel } from '@/api/notificationChannel/updateNotificationChannel.api';
+import {
+	Button,
+	Checkbox,
+	Form,
+	FormActions,
+	FormField,
+	FormLabel,
+	FormReset,
+	FormSubmit,
+	Modal,
+	ModalBody,
+	ModalClose,
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
+	ModalTrigger,
+	TextField,
+} from '@/components/ui';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { UpdateNotificationChannelDto } from '@/dto/notificationChannel.dto';
+import { updateNotificationChannelSchema } from '@/schemas/notificationChannel/updateNotificationChannel.types';
+import { NotificationChannel } from '@/types/notificationChannel/notificationChannel.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-import styles from './NotificationChannelsItem.module.scss';
 import { NOTIFICATION_CHANNEL_ITEM_LABELS } from './notificationChannelsItemTypes';
 
 interface NotificationChannelsItemEditProps {
 	channel: NotificationChannel;
 }
 
-const NotificationChannelsItemEdit = ({
+export const NotificationChannelsItemEdit = ({
 	channel,
 }: NotificationChannelsItemEditProps) => {
 	const channelTypeLabels = NOTIFICATION_CHANNEL_ITEM_LABELS[channel.type];
@@ -25,7 +41,7 @@ const NotificationChannelsItemEdit = ({
 			updateNotificationChannel(channel.id, dto),
 		onSuccess: () => {
 			queryClient.invalidateQueries({
-				queryKey: QUERY_KEYS.notificationChannel.all,
+				queryKey: QUERY_KEYS.notificationChannels.lists(),
 			});
 		},
 		onError: (e) => {
@@ -35,10 +51,10 @@ const NotificationChannelsItemEdit = ({
 
 	return (
 		<Modal>
-			<Modal.Trigger>
+			<ModalTrigger>
 				<Button variant="outlined">Edit</Button>
-			</Modal.Trigger>
-			<Modal.Content>
+			</ModalTrigger>
+			<ModalContent>
 				<Form<UpdateNotificationChannelDto>
 					schema={updateNotificationChannelSchema}
 					defaultValues={{
@@ -50,33 +66,31 @@ const NotificationChannelsItemEdit = ({
 						mutate(data);
 					}}
 				>
-					<Modal.Header>Edit Notification Channel: {channel.name}</Modal.Header>
-					<Modal.Body>
-						<Form.Field name="name">
-							<Form.Label>{channelTypeLabels.nameLabel}</Form.Label>
+					<ModalHeader>Edit Notification Channel: {channel.name}</ModalHeader>
+					<ModalBody>
+						<FormField name="name">
+							<FormLabel>{channelTypeLabels.nameLabel}</FormLabel>
 							<TextField placeholder={channelTypeLabels.namePlaceholder} />
-						</Form.Field>
-						<Form.Field name="isActive">
+						</FormField>
+						<FormField name="isActive">
 							<Checkbox label="Is Active" />
-						</Form.Field>
-						<Form.Field name="isPrimary">
+						</FormField>
+						<FormField name="isPrimary">
 							<Checkbox label="Is Primary" />
-						</Form.Field>
-					</Modal.Body>
-					<Modal.Footer>
-						<Form.Actions justifyContent="flex-end">
-							<Modal.Close>
-								<Form.Reset buttonProps={{ variant: 'outlined' }}>
+						</FormField>
+					</ModalBody>
+					<ModalFooter>
+						<FormActions justifyContent="flex-end">
+							<ModalClose>
+								<FormReset buttonProps={{ variant: 'outlined' }}>
 									Cancel
-								</Form.Reset>
-							</Modal.Close>
-							<Form.Submit disabledOnEmpty>Save</Form.Submit>
-						</Form.Actions>
-					</Modal.Footer>
+								</FormReset>
+							</ModalClose>
+							<FormSubmit disabledOnEmpty>Save</FormSubmit>
+						</FormActions>
+					</ModalFooter>
 				</Form>
-			</Modal.Content>
+			</ModalContent>
 		</Modal>
 	);
 };
-
-export default NotificationChannelsItemEdit;

@@ -1,5 +1,5 @@
 import { NotificationType } from '@generated/postgres/enums';
-import { DefaultFieldsDto } from '@libs/dto';
+import { DefaultFieldsDto } from '@libs/dto/default-fields.dto';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class NotificationDto extends DefaultFieldsDto {
@@ -34,4 +34,7 @@ export class UserNotificationsDto {
 
 	@ApiProperty({ example: 5 })
 	countUnread: number;
+
+	@ApiProperty({ example: true })
+	hasNextPage: boolean;
 }

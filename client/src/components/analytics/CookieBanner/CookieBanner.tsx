@@ -1,10 +1,10 @@
 'use client';
 
-import { LEGAL_PAGES } from '@/config';
+import { LEGAL_PAGES } from '@/config/legalPage.config';
 import CookieConsent from 'react-cookie-consent';
 import styles from './CookieBanner.module.scss';
 
-const CookieBanner = () => {
+export const CookieBanner = () => {
 	const cookieDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN;
 
 	const handleConsentUpdate = (isGranted: boolean) => {
@@ -42,5 +42,3 @@ const CookieBanner = () => {
 		</CookieConsent>
 	);
 };
-
-export default CookieBanner;

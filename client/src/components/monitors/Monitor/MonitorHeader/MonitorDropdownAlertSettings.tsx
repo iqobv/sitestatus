@@ -1,15 +1,13 @@
 'use client';
 
-import { AlertSettingsFormModal } from '@/components/alerts';
+import { AlertSettingsFormModal } from '@/components/alerts/AlertSettingsForm/AlertSettingsFormModal';
 
 interface MonitorDropdownAlertSettingsProps {
 	id: string;
 }
 
-const MonitorDropdownAlertSettings = ({
+export const MonitorDropdownAlertSettings = ({
 	id,
 }: MonitorDropdownAlertSettingsProps) => {
 	return <AlertSettingsFormModal id={id} type="monitor" />;
 };
-
-export default MonitorDropdownAlertSettings;

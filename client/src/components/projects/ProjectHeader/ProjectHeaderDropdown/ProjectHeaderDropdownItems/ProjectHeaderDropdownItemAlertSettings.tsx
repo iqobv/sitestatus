@@ -1,15 +1,13 @@
 'use client';
 
-import { AlertSettingsFormModal } from '@/components/alerts';
+import { AlertSettingsFormModal } from '@/components/alerts/AlertSettingsForm/AlertSettingsFormModal';
 
 interface ProjectHeaderDropdownItemAlertSettingsProps {
 	id: string;
 }
 
-const ProjectHeaderDropdownItemAlertSettings = ({
+export const ProjectHeaderDropdownItemAlertSettings = ({
 	id,
 }: ProjectHeaderDropdownItemAlertSettingsProps) => {
 	return <AlertSettingsFormModal id={id} type="project" />;
 };
-
-export default ProjectHeaderDropdownItemAlertSettings;

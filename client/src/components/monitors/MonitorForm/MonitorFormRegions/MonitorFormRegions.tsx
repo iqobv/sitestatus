@@ -1,15 +1,15 @@
 'use client';
 
-import { getAllRegions } from '@/api';
+import { getAllRegions } from '@/api/region/region.api';
 import { Checkbox, SectionHeader } from '@/components/ui';
-import { QUERY_KEYS } from '@/config';
-import { BaseRegionsMonitorDto } from '@/dto';
+import { QUERY_KEYS } from '@/config/queryClient.config';
+import { BaseRegionsMonitorDto } from '@/dto/monitor.dto';
 import { useQuery } from '@tanstack/react-query';
 import { useFormContext } from 'react-hook-form';
 import styles from './MonitorFormRegions.module.scss';
-import MonitorFormRegionsLoader from './MonitorFormRegionsLoader';
+import { MonitorFormRegionsLoader } from './MonitorFormRegionsLoader';
 
-const MonitorFormRegions = () => {
+export const MonitorFormRegions = () => {
 	const {
 		register,
 		formState: { errors },
@@ -17,7 +17,7 @@ const MonitorFormRegions = () => {
 
 	const { data, isLoading } = useQuery({
 		queryFn: getAllRegions,
-		queryKey: QUERY_KEYS.region.list,
+		queryKey: QUERY_KEYS.regions.lists(),
 	});
 
 	return (
@@ -26,7 +26,11 @@ const MonitorFormRegions = () => {
 				<MonitorFormRegionsLoader />
 			) : (
 				<>
-					<SectionHeader title="Regions" titleComponent="h2" padding={0} />
+					<SectionHeader
+						title="Regions"
+						titleProps={{ variant: 'h2' }}
+						padding={0}
+					/>
 					<ul className={styles.list}>
 						{data?.map((region) => (
 							<li key={region.id} className={styles.item}>
@@ -48,5 +52,3 @@ const MonitorFormRegions = () => {
 		</div>
 	);
 };
-
-export default MonitorFormRegions;

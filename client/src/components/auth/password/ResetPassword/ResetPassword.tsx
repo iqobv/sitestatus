@@ -1,18 +1,18 @@
 'use client';
 
-import { resetPassword } from '@/api';
-import { Form, TextField } from '@/components/ui';
-import { AUTH_PAGES } from '@/config';
-import { ResetPasswordDto } from '@/dto';
-import { resetPasswordSchema } from '@/schemas';
+import { resetPassword } from '@/api/auth/resetPassword.api';
+import { Form, FormField, FormSubmit, TextField } from '@/components/ui';
+import { AUTH_PAGES } from '@/config/authPages.config';
+import { ResetPasswordDto } from '@/dto/auth.dto';
+import { resetPasswordSchema } from '@/schemas/auth/resetPassword.schema';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { parseAsString, useQueryState } from 'nuqs';
 import { toast } from 'react-toastify';
-import AuthWrapper from '../../AuthWrapper/AuthWrapper';
+import { AuthWrapper } from '../../AuthWrapper/AuthWrapper';
 import { RESET_PASSWORD_FORM_FIELDS } from './resetPasswordFields';
 
-const ResetPassword = () => {
+export const ResetPassword = () => {
 	const router = useRouter();
 
 	const [token] = useQueryState('token', parseAsString);
@@ -47,26 +47,25 @@ const ResetPassword = () => {
 						{RESET_PASSWORD_FORM_FIELDS.map(
 							({ name, isRequired, leftIcon, rightIcon: _, ...rest }) => {
 								const Icon = leftIcon;
+								const fieldName = name as keyof ResetPasswordDto;
 								return (
-									<Form.Field key={name} name={name}>
+									<FormField key={name} name={name}>
 										<TextField
 											required={isRequired}
 											leftIcon={Icon ? <Icon /> : undefined}
-											error={errors[name]?.message}
+											error={errors[fieldName]?.message}
 											{...rest}
 										/>
-									</Form.Field>
+									</FormField>
 								);
 							},
 						)}
-						<Form.Submit buttonProps={{ fullWidth: true, loading: isPending }}>
+						<FormSubmit buttonProps={{ fullWidth: true, loading: isPending }}>
 							Reset Password
-						</Form.Submit>
+						</FormSubmit>
 					</>
 				)}
 			</Form>
 		</AuthWrapper>
 	);
 };
-
-export default ResetPassword;

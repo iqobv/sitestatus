@@ -1,7 +1,7 @@
+import { BaseRegionDto } from '@api/public/region/dto/base-region.dto';
 import { SiteStatus } from '@generated/turso/enums';
-import { DefaultFieldsDto } from '@libs/dto';
+import { DefaultFieldsDto } from '@libs/dto/default-fields.dto';
 import { ApiProperty } from '@nestjs/swagger';
-import { BaseRegionDto } from '../../region/dto';
 import { MonitorTimelineDto } from './monitor-timeline.dto';
 
 export class BaseMonitorDto extends DefaultFieldsDto {
@@ -22,6 +22,9 @@ export class BaseMonitorDto extends DefaultFieldsDto {
 
 	@ApiProperty({ example: 'f77d8a89-3af8-43d3-91d2-47348ec2ac45' })
 	projectId: string | null;
+
+	@ApiProperty({ example: 'cd244178-f42d-4e8d-aa1e-8ff164bb8d35' })
+	userId: string;
 }
 
 export class MonitorDto extends BaseMonitorDto {
@@ -29,9 +32,13 @@ export class MonitorDto extends BaseMonitorDto {
 	nextCheckAt: Date;
 
 	@ApiProperty({ example: new Date().toISOString() })
-	lastCheckedAt?: Date;
+	lastCheckedAt?: Date | null;
 
-	@ApiProperty({ example: SiteStatus.UP })
+	@ApiProperty({
+		example: SiteStatus.UP,
+		enum: SiteStatus,
+		enumName: 'SiteStatus',
+	})
 	lastStatus?: SiteStatus;
 
 	@ApiProperty({ example: '100.000%' })

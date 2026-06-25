@@ -25,7 +25,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
-import { Throttle } from '@nestjs/throttler';
+import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import type { Request, Response } from 'express';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { UserWithoutPasswordDto } from '../user/dto/user.dto';
@@ -46,7 +46,10 @@ export class AuthController {
 	) {}
 
 	@IsPublic()
-	@Throttle({ strict: { limit: 5, ttl: 60000 } })
+	@Throttle({
+		short: { limit: 2, ttl: 1000 },
+		default: { limit: 5, ttl: 60000 },
+	})
 	@ApiOperation({ summary: 'Register a new user' })
 	@ApiSuccessResponse(HttpStatus.OK, {
 		...SUCCESS_MESSAGES.AUTH.REGISTER_SUCCESS,
@@ -60,7 +63,10 @@ export class AuthController {
 	}
 
 	@IsPublic()
-	@Throttle({ strict: { limit: 5, ttl: 60000 } })
+	@Throttle({
+		short: { limit: 2, ttl: 1000 },
+		default: { limit: 5, ttl: 60000 },
+	})
 	@ApiOperation({ summary: 'Log in a user and create a session' })
 	@Post('login')
 	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.AUTH.LOGIN_SUCCESS)
@@ -123,7 +129,7 @@ export class AuthController {
 	}
 
 	@IsPublic()
-	@Throttle({ strict: { limit: 10, ttl: 60000 } })
+	@SkipThrottle()
 	@Post('refresh')
 	@ApiOperation({ summary: 'Refresh authentication tokens' })
 	@ApiErrorResponse(
@@ -153,7 +159,10 @@ export class AuthController {
 		}
 	}
 
-	@Throttle({ strict: { limit: 3, ttl: 60000 } })
+	@Throttle({
+		short: { limit: 2, ttl: 1000 },
+		default: { limit: 5, ttl: 60000 },
+	})
 	@ApiOperation({ summary: 'Resend verification email to user' })
 	@ApiSuccessResponse(
 		HttpStatus.OK,
@@ -185,7 +194,10 @@ export class AuthController {
 		return await this.userService.findById(userId);
 	}
 
-	@Throttle({ strict: { limit: 3, ttl: 60000 } })
+	@Throttle({
+		short: { limit: 2, ttl: 1000 },
+		default: { limit: 5, ttl: 60000 },
+	})
 	@ApiOperation({ summary: 'Request a password reset link' })
 	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.AUTH.FORGOT_PASSWORD)
 	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.USER.DELETED)
@@ -198,7 +210,10 @@ export class AuthController {
 		return SUCCESS_MESSAGES.AUTH.FORGOT_PASSWORD;
 	}
 
-	@Throttle({ strict: { limit: 3, ttl: 60000 } })
+	@Throttle({
+		short: { limit: 2, ttl: 1000 },
+		default: { limit: 5, ttl: 60000 },
+	})
 	@Post('reset-password')
 	@ApiOperation({ summary: 'Reset user password' })
 	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.AUTH.RESET_PASSWORD)
@@ -211,7 +226,10 @@ export class AuthController {
 	}
 
 	@Auth()
-	@Throttle({ strict: { limit: 3, ttl: 60000 } })
+	@Throttle({
+		short: { limit: 2, ttl: 1000 },
+		default: { limit: 5, ttl: 60000 },
+	})
 	@ApiOperation({ summary: 'Change user password' })
 	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.AUTH.CHANGE_PASSWORD)
 	@ApiErrorResponse(
@@ -232,7 +250,10 @@ export class AuthController {
 		return SUCCESS_MESSAGES.AUTH.CHANGE_PASSWORD;
 	}
 
-	@Throttle({ strict: { limit: 3, ttl: 60000 } })
+	@Throttle({
+		short: { limit: 2, ttl: 1000 },
+		default: { limit: 5, ttl: 60000 },
+	})
 	@ApiOperation({ summary: 'Generate account restore token' })
 	@ApiSuccessResponse(
 		HttpStatus.OK,
@@ -247,6 +268,10 @@ export class AuthController {
 		return SUCCESS_MESSAGES.AUTH.SEND_RESTORE_ACCOUNT_EMAIL;
 	}
 
+	@Throttle({
+		short: { limit: 2, ttl: 1000 },
+		default: { limit: 5, ttl: 60000 },
+	})
 	@ApiOperation({ summary: 'Generate account restore token' })
 	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.AUTH.RESTORE_ACCOUNT)
 	@Post('restore-account')

@@ -4,5 +4,5 @@ export const getPrivateSwaggerConfig = () =>
 	basicSwaggerConfig(
 		'SiteStatus Private API',
 		'SiteStatus Private API documentation.',
-		'1.0.0',
+		'1.2.0',
 	).build();

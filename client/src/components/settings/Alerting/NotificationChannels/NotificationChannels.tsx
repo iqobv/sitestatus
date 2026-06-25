@@ -18,15 +18,11 @@ export const NotificationChannels = () => {
 	return (
 		<div>
 			<SectionHeader
-				title={
-					<div className={styles.header}>
-						<span>Notification Channels</span>
-						<CreateNotificationChannel />
-					</div>
-				}
+				title="Notification Channels"
 				titleProps={{
 					variant: 'h3',
 				}}
+				rightSlot={<CreateNotificationChannel />}
 			/>
 			{isLoading && <NotificationChannelsLoader />}
 			{data && data.length > 0 && (

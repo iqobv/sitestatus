@@ -1,5 +1,5 @@
 import { Button, SectionHeader } from '@/components/ui';
-import { AUTH_PAGES } from '@/config/authPages.config';
+import { CROSS_DOMAIN_ROUTES } from '@/config/navigation.config';
 import styles from './Action.module.scss';
 
 export const Action = () => {
@@ -11,8 +11,11 @@ export const Action = () => {
 				titleProps={{
 					variant: 'h3',
 				}}
+				textAlign="center"
 			/>
-			<Button href={AUTH_PAGES.REGISTER}>CREATE FREE ACCOUNT</Button>
+			<Button href={CROSS_DOMAIN_ROUTES.APP_REGISTER} asNative>
+				CREATE FREE ACCOUNT
+			</Button>
 		</div>
 	);
 };

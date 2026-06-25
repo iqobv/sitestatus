@@ -1,5 +1,16 @@
 # Client changelog
 
+## [1.2.0] - 2026-06-25
+
+### Added
+
+- Added pagination and sorting to monitors, projects, status pages and notifications components.
+- Added text for empty notifications list.
+
+### Changed
+
+- Updated dashboard page to support the new dashboard endpoint.
+
 ## [0.2.1] - 2026-05-12
 
 ### Fixed

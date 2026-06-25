@@ -23,7 +23,6 @@ import { NotificationChannelDto } from './dto/notification-channel.dto';
 import { UpdateNotificationChannelDto } from './dto/update-notification-channel.dto';
 import { NotificationChannelService } from './notification-channel.service';
 
-@Auth()
 @ApiTags('Notification Channels')
 @Controller('notification-channels')
 export class NotificationChannelController {
@@ -31,6 +30,7 @@ export class NotificationChannelController {
 		private readonly notificationChannelService: NotificationChannelService,
 	) {}
 
+	@Auth()
 	@ApiOperation({ summary: 'Create a new notification channel' })
 	@ApiSuccessResponse(
 		HttpStatus.CREATED,
@@ -51,6 +51,7 @@ export class NotificationChannelController {
 		);
 	}
 
+	@Auth()
 	@ApiOperation({
 		summary: 'Get all notification channels for the authenticated user',
 	})
@@ -74,16 +75,13 @@ export class NotificationChannelController {
 	)
 	@ApiErrorResponse(HttpStatus.BAD_REQUEST, ERROR_MESSAGES.TOKEN.INVALID)
 	@HttpCode(HttpStatus.OK)
-	async verifyNotificationChannel(
-		@Authorized('id') userId: string,
-		@Query('token') token: string,
-	) {
+	async verifyNotificationChannel(@Query('token') token: string) {
 		return await this.notificationChannelService.verifyNotificationChannel(
-			userId,
 			token,
 		);
 	}
 
+	@Auth()
 	@ApiOperation({ summary: 'Update a notification channel' })
 	@ApiOkResponse({ type: NotificationChannelDto })
 	@ApiErrorResponse(
@@ -103,6 +101,7 @@ export class NotificationChannelController {
 		);
 	}
 
+	@Auth()
 	@Post('resend-verification-email/:id')
 	@ApiOperation({
 		summary: 'Resend verification email for a notification channel',
@@ -130,6 +129,7 @@ export class NotificationChannelController {
 		);
 	}
 
+	@Auth()
 	@ApiOperation({ summary: 'Remove a notification channel' })
 	@ApiSuccessResponse(
 		HttpStatus.OK,

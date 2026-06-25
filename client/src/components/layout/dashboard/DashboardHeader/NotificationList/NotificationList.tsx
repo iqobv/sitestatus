@@ -28,7 +28,7 @@ export const NotificationList = () => {
 			queryFn: ({ pageParam }) =>
 				getAllNotifications({
 					page: pageParam,
-					limit: 5,
+					limit: 20,
 				}),
 			getNextPageParam: (lastPage, _, lastPageParam) =>
 				lastPage.hasNextPage ? lastPageParam + 1 : undefined,

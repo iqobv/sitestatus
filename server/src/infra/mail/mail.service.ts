@@ -79,7 +79,7 @@ export class MailService {
 		email: string,
 		token: string,
 	): Promise<SentMessageInfo> {
-		const url = `/settings/alerting/verify?token=${token}`;
+		const url = `/verify-channel?token=${token}`;
 		const html = await this.generateTemplate(
 			EmailNotificationChannelVerifyTemplate,
 			url,

@@ -24,6 +24,7 @@ export const Button = ({
 	contentClassName = '',
 	isActive,
 	ref,
+	asNative = false,
 	...rest
 }: ButtonProps) => {
 	const isLink = !!href && !disabled && !loading;
@@ -43,8 +44,10 @@ export const Button = ({
 	};
 
 	if (isLink) {
+		const Component = asNative ? 'a' : Link;
+
 		return (
-			<Link
+			<Component
 				href={href}
 				className={`${styles} ${className || ''}`}
 				style={style}
@@ -57,7 +60,7 @@ export const Button = ({
 				>)}
 			>
 				<ButtonContent {...buttonContentProps}>{children}</ButtonContent>
-			</Link>
+			</Component>
 		);
 	}
 

@@ -1,5 +1,12 @@
 # Server changelog
 
+## [1.2.0] - 2026-06-25
+
+### Added
+
+- Added pagination to monitors, projects, status pages and notifications endpoints.
+- Added dashboard endpoint.
+
 ## [1.1.1] - 2026-05-12
 
 ### Fixed

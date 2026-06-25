@@ -217,7 +217,7 @@ export class NotificationChannelService {
 		);
 	}
 
-	async verifyNotificationChannel(userId: string, token: string) {
+	async verifyNotificationChannel(token: string) {
 		await this.prismaService.$transaction(async (tx) => {
 			const tokenData = await this.tokenService.verifyAndConsumeToken(
 				token,
@@ -233,7 +233,7 @@ export class NotificationChannelService {
 			await tx.notificationChannel.update({
 				where: {
 					id: tokenData.channel.id,
-					userId,
+					userId: tokenData.id,
 					type: tokenData.channel.type,
 				},
 				data: {

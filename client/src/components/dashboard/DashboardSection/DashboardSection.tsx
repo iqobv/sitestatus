@@ -33,23 +33,21 @@ export const DashboardSection = ({
 
 	return (
 		<div className={styles.section}>
-			<div className={styles.header}>
-				<SectionHeader
-					title={title}
-					description={description}
-					padding={0}
-					titleProps={{
-						variant: 'h2',
-					}}
-					{...(href && {
-						rightSlot: (
-							<Button href={href} variant="secondary">
-								View All
-							</Button>
-						),
-					})}
-				/>
-			</div>
+			<SectionHeader
+				title={title}
+				description={description}
+				padding={0}
+				titleProps={{
+					variant: 'h2',
+				}}
+				{...(href && {
+					rightSlot: (
+						<Button href={href} variant="secondary">
+							View All
+						</Button>
+					),
+				})}
+			/>
 			<Sepator />
 			<div className={styles.content}>
 				{items && items.length > 0 ? (

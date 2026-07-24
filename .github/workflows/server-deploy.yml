@@ -1,11 +1,11 @@
 name: Deploy server to DigitalOcean
 
 on:
-  push:
-    branches: ['main']
-    paths:
-      - 'server/**'
-      - '.github/workflows/**'
+  # push:
+  #  branches: ['main']
+  # paths:
+  #    - 'server/**'
+  #    - '.github/workflows/**'
   workflow_dispatch:
 
 jobs:

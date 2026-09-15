@@ -24,7 +24,7 @@ export class ResultProcessorService implements OnModuleInit, OnModuleDestroy {
 	) {}
 
 	public onModuleInit(): void {
-		this.receiver = this.sbClient.createReceiver('monitor-results');
+		this.initializeReceiver();
 		this.isRunning = true;
 		this.processBatchesContinuously().catch((error: unknown) => {
 			this.logger.error('Fatal error in background processor', error);
@@ -33,23 +33,27 @@ export class ResultProcessorService implements OnModuleInit, OnModuleDestroy {
 
 	public async onModuleDestroy(): Promise<void> {
 		this.isRunning = false;
-		if (this.receiver) {
-			await this.receiver.close();
-		}
+		if (this.receiver) await this.receiver.close();
+	}
+
+	private initializeReceiver(): void {
+		if (this.receiver) this.receiver.close().catch(() => {});
+
+		this.receiver = this.sbClient.createReceiver('monitor-results');
 	}
 
 	private async processBatchesContinuously(): Promise<void> {
-		while (this.isRunning && this.receiver) {
+		while (this.isRunning) {
+			if (!this.receiver) this.initializeReceiver();
+
 			let messages: ServiceBusReceivedMessage[] = [];
 
 			try {
-				messages = await this.receiver.receiveMessages(50, {
+				messages = await this.receiver!.receiveMessages(50, {
 					maxWaitTimeInMs: 5000,
 				});
 
-				if (messages.length === 0) {
-					continue;
-				}
+				if (messages.length === 0) continue;
 
 				const payloads: PingResultDto[] = messages.map(
 					(m) => m.body as PingResultDto,
@@ -70,6 +74,16 @@ export class ResultProcessorService implements OnModuleInit, OnModuleDestroy {
 						),
 					);
 					await Promise.allSettled(abandonPromises);
+				}
+
+				const typedError = error as { code?: string; errno?: number | string };
+				if (
+					typedError.code === 'GeneralError' ||
+					typedError.errno === 'ECONNRESET' ||
+					typedError.errno === -104
+				) {
+					this.logger.warn('Connection reset detected, recreating receiver');
+					this.initializeReceiver();
 				}
 
 				await this.delay(5000);

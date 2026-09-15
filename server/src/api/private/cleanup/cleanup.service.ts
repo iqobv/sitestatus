@@ -1,10 +1,12 @@
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class CleanupService {
+	private readonly logger = new Logger(CleanupService.name);
+
 	constructor(
 		private readonly pgPrismaService: PgPrismaService,
 		private readonly tursoPrismaService: TursoPrismaService,
@@ -24,6 +26,8 @@ export class CleanupService {
 				},
 				select: { id: true },
 			});
+
+			if (deletedMonitors.length === 0) return;
 
 			const monitorIds = deletedMonitors.map((m) => m.id);
 
@@ -53,7 +57,7 @@ export class CleanupService {
 				});
 			});
 		} catch (error) {
-			console.log(error);
+			this.logger.error('Failed to cleanup deleted monitors', error);
 		}
 	}
 
@@ -62,13 +66,17 @@ export class CleanupService {
 		const thirtyDaysAgo = new Date();
 		thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-		await this.pgPrismaService.project.deleteMany({
-			where: {
-				deletedAt: {
-					lt: thirtyDaysAgo,
+		try {
+			await this.pgPrismaService.project.deleteMany({
+				where: {
+					deletedAt: {
+						lt: thirtyDaysAgo,
+					},
 				},
-			},
-		});
+			});
+		} catch (error) {
+			this.logger.error('Failed to cleanup deleted projects', error);
+		}
 	}
 
 	@Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
@@ -76,12 +84,16 @@ export class CleanupService {
 		const thirtyDaysAgo = new Date();
 		thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-		await this.pgPrismaService.user.deleteMany({
-			where: {
-				deletedAt: {
-					lt: thirtyDaysAgo,
+		try {
+			await this.pgPrismaService.user.deleteMany({
+				where: {
+					deletedAt: {
+						lt: thirtyDaysAgo,
+					},
 				},
-			},
-		});
+			});
+		} catch (error) {
+			this.logger.error('Failed to cleanup deleted users', error);
+		}
 	}
 }

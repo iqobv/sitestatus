@@ -39,78 +39,81 @@ export class EngineDbService implements OnModuleInit, OnModuleDestroy {
 		const monitors = this.cache.getMonitors();
 		const messagesToSend: ServiceBusIncedentPayload[] = [];
 
-		await this.tursoPrismaService.$transaction(async (tx) => {
-			const mappedRegions = new Map(regions.map((r) => [r.key, r.id]));
-			const monitorMap = new Map(monitors.map((m) => [m.id, m]));
+		const mappedRegions = new Map(regions.map((r) => [r.key, r.id]));
+		const monitorMap = new Map(monitors.map((m) => [m.id, m]));
 
-			const monitorAggregates = new Map<
-				string,
-				{ status: SiteStatus; nextCheckAt: number }
-			>();
+		await this.tursoPrismaService.$transaction(
+			async (tx) => {
+				const monitorAggregates = new Map<
+					string,
+					{ status: SiteStatus; nextCheckAt: number }
+				>();
 
-			const activeIncidents = await tx.monitorIncident.findMany({
-				where: { monitorId: { in: monitorIds }, resolved: false },
-				select: {
-					id: true,
-					monitorId: true,
-					regionId: true,
-					alertTriggered: true,
-				},
-			});
+				const activeIncidents = await tx.monitorIncident.findMany({
+					where: { monitorId: { in: monitorIds }, resolved: false },
+					select: {
+						id: true,
+						monitorId: true,
+						regionId: true,
+						alertTriggered: true,
+					},
+				});
 
-			const activeIncidentMap = new Map(
-				activeIncidents.map((a) => [`${a.monitorId}-${a.regionId}`, a]),
-			);
+				const activeIncidentMap = new Map(
+					activeIncidents.map((a) => [`${a.monitorId}-${a.regionId}`, a]),
+				);
 
-			const logsData = results.map((r) => ({
-				monitorId: r.monitorId,
-				regionId: mappedRegions.get(r.region)!,
-				status: r.status,
-				statusCode: r.statusCode || null,
-				responseTimeMs: r.responseTimeMs,
-				errorMessage: r.errorMessage || null,
-			}));
+				const logsData = results.map((r) => ({
+					monitorId: r.monitorId,
+					regionId: mappedRegions.get(r.region)!,
+					status: r.status,
+					statusCode: r.statusCode || null,
+					responseTimeMs: r.responseTimeMs,
+					errorMessage: r.errorMessage || null,
+				}));
 
-			const monitorLogs = await tx.monitorLog.createManyAndReturn({
-				data: logsData,
-			});
-			const logMap = new Map(
-				monitorLogs.map((log) => [`${log.monitorId}-${log.regionId}`, log.id]),
-			);
+				const monitorLogs = await tx.monitorLog.createManyAndReturn({
+					data: logsData,
+				});
 
-			const incidentsToCreate: Prisma.MonitorIncidentCreateManyInput[] = [];
-			const incidentsToResolveIds: string[] = [];
-			const monitorRegionUpdates: Promise<unknown>[] = [];
+				const logMap = new Map(
+					monitorLogs.map((log) => [
+						`${log.monitorId}-${log.regionId}`,
+						log.id,
+					]),
+				);
 
-			for (const result of results) {
-				const { monitorId, status, region } = result;
-				const regionId = mappedRegions.get(region);
-				const monitor = monitorMap.get(monitorId);
+				const incidentsToCreate: Prisma.MonitorIncidentCreateManyInput[] = [];
+				const incidentsToResolveIds: string[] = [];
 
-				if (!regionId || !monitor) continue;
+				for (const result of results) {
+					const { monitorId, status, region } = result;
+					const regionId = mappedRegions.get(region);
+					const monitor = monitorMap.get(monitorId);
 
-				const isDown =
-					status === SiteStatus.DOWN || status === SiteStatus.UNKNOWN;
+					if (!regionId || !monitor) continue;
 
-				const nextInterval = isDown
-					? Math.min(30, monitor.checkIntervalSeconds)
-					: monitor.checkIntervalSeconds;
+					const isDown =
+						status === SiteStatus.DOWN || status === SiteStatus.UNKNOWN;
 
-				const calculatedNextRun = checkedAtMs + nextInterval * 1000;
+					const nextInterval = isDown
+						? Math.min(30, monitor.checkIntervalSeconds)
+						: monitor.checkIntervalSeconds;
 
-				const currentAggregate = monitorAggregates.get(monitorId);
-				if (
-					!currentAggregate ||
-					(isDown && currentAggregate.status === SiteStatus.UP)
-				) {
-					monitorAggregates.set(monitorId, {
-						status,
-						nextCheckAt: calculatedNextRun,
-					});
-				}
+					const calculatedNextRun = checkedAtMs + nextInterval * 1000;
 
-				monitorRegionUpdates.push(
-					tx.monitorRegion.upsert({
+					const currentAggregate = monitorAggregates.get(monitorId);
+					if (
+						!currentAggregate ||
+						(isDown && currentAggregate.status === SiteStatus.UP)
+					) {
+						monitorAggregates.set(monitorId, {
+							status,
+							nextCheckAt: calculatedNextRun,
+						});
+					}
+
+					await tx.monitorRegion.upsert({
 						where: { monitorId_regionId: { monitorId, regionId } },
 						create: {
 							monitorId,
@@ -124,91 +127,91 @@ export class EngineDbService implements OnModuleInit, OnModuleDestroy {
 							lastCheckedAt: checkedAt,
 							isQueued: false,
 						},
-					}),
-				);
-
-				const incidentKey = `${monitorId}-${regionId}`;
-				const activeIncident = activeIncidentMap.get(incidentKey);
-
-				if (isDown && !activeIncident) {
-					incidentsToCreate.push({
-						monitorId,
-						regionId,
-						errorMessage: result.errorMessage || null,
-						statusCode: result.statusCode || null,
-						triggerLogId: logMap.get(incidentKey) || null,
 					});
-					activeIncidentMap.set(incidentKey, {
-						id: 'pending-creation',
-						monitorId,
-						regionId,
-						alertTriggered: false,
-					});
-				} else if (status === SiteStatus.UP && activeIncident) {
-					incidentsToResolveIds.push(activeIncident.id);
-					activeIncidentMap.delete(incidentKey);
 
-					if (activeIncident.alertTriggered) {
-						messagesToSend.push({
-							body: {
-								type: SiteStatus.UP,
-								incidentId: activeIncident.id,
-								monitorId,
-								regionId,
-							},
-							contentType: 'application/json',
+					const incidentKey = `${monitorId}-${regionId}`;
+					const activeIncident = activeIncidentMap.get(incidentKey);
+
+					if (isDown && !activeIncident) {
+						incidentsToCreate.push({
+							monitorId,
+							regionId,
+							errorMessage: result.errorMessage || null,
+							statusCode: result.statusCode || null,
+							triggerLogId: logMap.get(incidentKey) || null,
 						});
+						activeIncidentMap.set(incidentKey, {
+							id: 'pending-creation',
+							monitorId,
+							regionId,
+							alertTriggered: false,
+						});
+					} else if (status === SiteStatus.UP && activeIncident) {
+						incidentsToResolveIds.push(activeIncident.id);
+						activeIncidentMap.delete(incidentKey);
+
+						if (activeIncident.alertTriggered) {
+							messagesToSend.push({
+								body: {
+									type: SiteStatus.UP,
+									incidentId: activeIncident.id,
+									monitorId,
+									regionId,
+								},
+								contentType: 'application/json',
+							});
+						}
 					}
 				}
-			}
 
-			const stateUpdates: Promise<unknown>[] = [];
+				for (const [monitorId, agg] of monitorAggregates.entries()) {
+					this.cache.updateMonitorNextCheck(monitorId, agg.nextCheckAt);
 
-			for (const [monitorId, agg] of monitorAggregates.entries()) {
-				this.cache.updateMonitorNextCheck(monitorId, agg.nextCheckAt);
-
-				stateUpdates.push(
-					tx.monitorState.update({
+					await tx.monitorState.update({
 						where: { monitorId },
 						data: {
 							lastStatus: agg.status,
 							lastCheckedAt: checkedAt,
 							nextCheckAt: new Date(agg.nextCheckAt),
 						},
-					}),
-				);
-			}
-
-			await Promise.all([...monitorRegionUpdates, ...stateUpdates]);
-
-			if (incidentsToCreate.length > 0) {
-				const createdIncidents = await tx.monitorIncident.createManyAndReturn({
-					data: incidentsToCreate,
-				});
-
-				const scheduledEnqueueTimeUtc = new Date(Date.now() + 60 * 1000);
-
-				for (const incedent of createdIncidents) {
-					messagesToSend.push({
-						body: {
-							type: SiteStatus.DOWN,
-							incidentId: incedent.id,
-							monitorId: incedent.monitorId,
-							regionId: incedent.regionId,
-						},
-						contentType: 'application/json',
-						scheduledEnqueueTimeUtc,
 					});
 				}
-			}
 
-			if (incidentsToResolveIds.length > 0) {
-				await tx.monitorIncident.updateMany({
-					where: { id: { in: incidentsToResolveIds } },
-					data: { resolved: true, resolvedAt: checkedAt },
-				});
-			}
-		});
+				if (incidentsToCreate.length > 0) {
+					const createdIncidents = await tx.monitorIncident.createManyAndReturn(
+						{
+							data: incidentsToCreate,
+						},
+					);
+
+					const scheduledEnqueueTimeUtc = new Date(Date.now() + 60 * 1000);
+
+					for (const incedent of createdIncidents) {
+						messagesToSend.push({
+							body: {
+								type: SiteStatus.DOWN,
+								incidentId: incedent.id,
+								monitorId: incedent.monitorId,
+								regionId: incedent.regionId,
+							},
+							contentType: 'application/json',
+							scheduledEnqueueTimeUtc,
+						});
+					}
+				}
+
+				if (incidentsToResolveIds.length > 0) {
+					await tx.monitorIncident.updateMany({
+						where: { id: { in: incidentsToResolveIds } },
+						data: { resolved: true, resolvedAt: checkedAt },
+					});
+				}
+			},
+			{
+				maxWait: 10000,
+				timeout: 20000,
+			},
+		);
 
 		if (messagesToSend.length > 0 && this.sender) {
 			await this.sender.sendMessages(messagesToSend);

@@ -55,6 +55,7 @@ export class TaskDispatcherService implements OnModuleDestroy {
 		const monitorStatesToUpdate: {
 			monitorId: string;
 			nextCheckAt: number;
+			method: string;
 		}[] = [];
 
 		for (const monitor of monitors) {
@@ -85,6 +86,7 @@ export class TaskDispatcherService implements OnModuleDestroy {
 				monitorStatesToUpdate.push({
 					monitorId: monitor.id,
 					nextCheckAt: nextRun,
+					method: monitor.method,
 				});
 			}
 		}

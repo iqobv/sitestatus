@@ -1,6 +1,6 @@
-import { StatPeriod } from '@generated/turso/enums';
+import { StatPeriod } from '@generated/engine/enums';
+import { EnginePrismaService } from '@infra/prisma/engine-prisma.service';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
-import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AnalyticsService } from './analytics.service';
 
@@ -50,7 +50,7 @@ describe('AnalyticsService', () => {
 			providers: [
 				AnalyticsService,
 				{ provide: PgPrismaService, useValue: pgPrisma },
-				{ provide: TursoPrismaService, useValue: tursoPrisma },
+				{ provide: EnginePrismaService, useValue: tursoPrisma },
 			],
 		}).compile();
 

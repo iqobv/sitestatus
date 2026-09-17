@@ -1,5 +1,5 @@
 model MonitorLog {
-  id String @id @default(uuid())
+  id String @default(uuid())
 
   monitorId String @map("monitor_id")
   regionId  String @map("region_id")
@@ -12,8 +12,7 @@ model MonitorLog {
 
   createdAt DateTime @default(now()) @map("created_at")
 
-  monitorIncidents MonitorIncident[]
-
-  @@index([monitorId, createdAt])
+  @@id([id, createdAt])
+  @@index([monitorId, createdAt(sort: Desc)])
   @@map("monitor_logs")
 }

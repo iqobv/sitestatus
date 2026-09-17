@@ -1,7 +1,7 @@
 import { AnalyticsRawDataDto } from '@api/public/analytics/dto/analytics-raw-log.dto';
+import { SiteStatus } from '@generated/engine/enums';
 import { Monitor } from '@generated/postgres/client';
-import { SiteStatus } from '@generated/turso/enums';
-import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
+import { EnginePrismaService } from '@infra/prisma/engine-prisma.service';
 import { calculateUptime } from '@libs/utils/calculates/calculate-uptime.util';
 import { formatResult } from '@libs/utils/calculates/format-result.util';
 import { Injectable } from '@nestjs/common';
@@ -11,17 +11,17 @@ import { LogEntry } from '../interfaces/log-entyry.interface';
 
 @Injectable()
 export class MonitorCalculationService {
-	constructor(private readonly tursoPrismaService: TursoPrismaService) {}
+	constructor(private readonly enginePrismaService: EnginePrismaService) {}
 
 	public async calculateMonitorStats(
 		monitors: Monitor[],
 		targetHours: number,
 	): Promise<MonitorDto[]> {
-		const monitorStates = await this.tursoPrismaService.monitorState.findMany({
+		const monitorStates = await this.enginePrismaService.monitorState.findMany({
 			where: { monitorId: { in: monitors.map((m) => m.id) } },
 		});
 
-		const monitorStats = await this.tursoPrismaService.monitorStats.findMany({
+		const monitorStats = await this.enginePrismaService.monitorStats.findMany({
 			where: {
 				monitorId: { in: monitors.map((m) => m.id) },
 				period: 'HOURLY',

@@ -1,7 +1,7 @@
 import { ServiceBusClient, ServiceBusSender } from '@azure/service-bus';
-import { Prisma } from '@generated/turso/client';
-import { SiteStatus } from '@generated/turso/enums';
-import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
+import { Prisma } from '@generated/engine/client';
+import { SiteStatus } from '@generated/engine/enums';
+import { EnginePrismaService } from '@infra/prisma/engine-prisma.service';
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { ServiceBusIncedentPayload } from '../dto/incedent-payload.dto';
 import { PingResultDto } from '../dto/ping-result.dto';
@@ -12,7 +12,7 @@ export class EngineDbService implements OnModuleInit, OnModuleDestroy {
 	private sender: ServiceBusSender | null = null;
 
 	constructor(
-		private readonly tursoPrismaService: TursoPrismaService,
+		private readonly enginePrismaService: EnginePrismaService,
 		private readonly cache: MonitorCacheService,
 		private readonly sbClient: ServiceBusClient,
 	) {}
@@ -42,7 +42,7 @@ export class EngineDbService implements OnModuleInit, OnModuleDestroy {
 		const mappedRegions = new Map(regions.map((r) => [r.key, r.id]));
 		const monitorMap = new Map(monitors.map((m) => [m.id, m]));
 
-		await this.tursoPrismaService.$transaction(
+		await this.enginePrismaService.$transaction(
 			async (tx) => {
 				const monitorAggregates = new Map<
 					string,

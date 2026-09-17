@@ -1,5 +1,5 @@
+import { EnginePrismaService } from '@infra/prisma/engine-prisma.service';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
-import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import {
 	MonitorCache,
@@ -14,7 +14,7 @@ export class MonitorCacheService implements OnModuleInit {
 
 	constructor(
 		private readonly prismaService: PgPrismaService,
-		private readonly tursoPrismaService: TursoPrismaService,
+		private readonly enginePrismaService: EnginePrismaService,
 	) {}
 
 	public async onModuleInit(): Promise<void> {
@@ -47,7 +47,7 @@ export class MonitorCacheService implements OnModuleInit {
 					},
 				},
 			}),
-			this.tursoPrismaService.monitorState.findMany(),
+			this.enginePrismaService.monitorState.findMany(),
 		]);
 
 		const now = new Date();

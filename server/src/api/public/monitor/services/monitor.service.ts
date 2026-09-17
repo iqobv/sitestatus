@@ -1,8 +1,8 @@
 import { CACHE_EMIT_EVENTS } from '@api/private/monitor-engine/constants/emit-events.constants';
 import { MonitorUpdatePayload } from '@api/private/monitor-engine/interfaces/cache-storage.interface';
 import { Monitor, Prisma } from '@generated/postgres/client';
+import { EnginePrismaService } from '@infra/prisma/engine-prisma.service';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
-import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
 import { paginate } from '@libs/utils/paginate.util';
 import { Injectable, NotFoundException } from '@nestjs/common';
@@ -18,7 +18,7 @@ import { MonitorCalculationService } from './monitor-calculation.service';
 export class MonitorService {
 	constructor(
 		private readonly pgPrismaService: PgPrismaService,
-		private readonly tursoPrismaService: TursoPrismaService,
+		private readonly enginePrismaService: EnginePrismaService,
 		private readonly eventEmitter: EventEmitter2,
 		private readonly regionService: RegionService,
 		private readonly monitorCalculationService: MonitorCalculationService,
@@ -131,7 +131,7 @@ export class MonitorService {
 		const monitorIds = monitors.map((m) => m.id);
 
 		const [logs, monitorStates] = await Promise.all([
-			this.tursoPrismaService.monitorLog.findMany({
+			this.enginePrismaService.monitorLog.findMany({
 				where: {
 					monitorId: { in: monitorIds },
 					createdAt: { gte: startDate, lte: endDate },
@@ -146,7 +146,7 @@ export class MonitorService {
 					regionId: true,
 				},
 			}),
-			this.tursoPrismaService.monitorState.findMany({
+			this.enginePrismaService.monitorState.findMany({
 				where: { monitorId: { in: monitorIds } },
 				select: { monitorId: true, lastStatus: true },
 			}),
@@ -209,12 +209,12 @@ export class MonitorService {
 			},
 		});
 
-		const monitorState = await this.tursoPrismaService.monitorState.findFirst({
+		const monitorState = await this.enginePrismaService.monitorState.findFirst({
 			where: { monitorId: id },
 			select: { lastStatus: true, lastCheckedAt: true, nextCheckAt: true },
 		});
 
-		const monitorLogs = await this.tursoPrismaService.monitorLog.findMany({
+		const monitorLogs = await this.enginePrismaService.monitorLog.findMany({
 			where: {
 				monitorId: id,
 				createdAt: {
@@ -270,7 +270,7 @@ export class MonitorService {
 			},
 		});
 
-		const monitorState = await this.tursoPrismaService.monitorState.findFirst({
+		const monitorState = await this.enginePrismaService.monitorState.findFirst({
 			where: { monitorId: id },
 			select: {
 				lastStatus: true,

@@ -18,7 +18,6 @@ model MonitorIncident {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  triggerLog    MonitorLog?   @relation(fields: [triggerLogId], references: [id], onDelete: SetNull)
   monitorRegion MonitorRegion @relation(fields: [monitorId, regionId], references: [monitorId, regionId], onDelete: Cascade)
 
   @@index([monitorId])

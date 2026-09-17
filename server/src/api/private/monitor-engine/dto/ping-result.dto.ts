@@ -1,4 +1,4 @@
-import { SiteStatus } from '@generated/turso/enums';
+import { SiteStatus } from '@generated/engine/enums';
 import { IsEmpty, IsEnum, IsNumber, IsString, IsUUID } from 'class-validator';
 
 export class PingResultDto {

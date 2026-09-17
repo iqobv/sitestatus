@@ -1,4 +1,4 @@
-import { SiteStatus } from '@generated/turso/enums';
+import { SiteStatus } from '@generated/engine/enums';
 
 export interface LogEntry {
 	status: SiteStatus;

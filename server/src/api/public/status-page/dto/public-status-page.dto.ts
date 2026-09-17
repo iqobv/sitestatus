@@ -1,5 +1,5 @@
 import { MonitorTimelineDto } from '@api/public/monitor/dto/monitor-timeline.dto';
-import { SiteStatus } from '@generated/turso/enums';
+import { SiteStatus } from '@generated/engine/enums';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class PublicMonitorDto {

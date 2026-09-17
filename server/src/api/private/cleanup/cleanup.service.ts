@@ -1,5 +1,5 @@
+import { EnginePrismaService } from '@infra/prisma/engine-prisma.service';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
-import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 
@@ -9,7 +9,7 @@ export class CleanupService {
 
 	constructor(
 		private readonly pgPrismaService: PgPrismaService,
-		private readonly tursoPrismaService: TursoPrismaService,
+		private readonly enginePrismaService: EnginePrismaService,
 	) {}
 
 	@Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
@@ -35,7 +35,7 @@ export class CleanupService {
 				where: { id: { in: monitorIds } },
 			});
 
-			await this.tursoPrismaService.$transaction(async (tx) => {
+			await this.enginePrismaService.$transaction(async (tx) => {
 				await tx.monitorState.deleteMany({
 					where: { monitorId: { in: monitorIds } },
 				});

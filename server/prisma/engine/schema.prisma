@@ -1,9 +1,9 @@
 generator client {
   provider     = "prisma-client"
-  output       = "../../generated/turso"
+  output       = "../../generated/engine"
   moduleFormat = "cjs"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }

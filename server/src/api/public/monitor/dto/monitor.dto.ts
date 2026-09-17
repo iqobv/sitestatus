@@ -1,5 +1,5 @@
 import { BaseRegionDto } from '@api/public/region/dto/base-region.dto';
-import { SiteStatus } from '@generated/turso/enums';
+import { SiteStatus } from '@generated/engine/enums';
 import { DefaultFieldsDto } from '@libs/dto/default-fields.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { MonitorTimelineDto } from './monitor-timeline.dto';

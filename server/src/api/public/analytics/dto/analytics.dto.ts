@@ -1,5 +1,5 @@
 import { IncidentDto } from '@api/public/incident/dto/incident.dto';
-import { StatPeriod } from '@generated/turso/enums';
+import { StatPeriod } from '@generated/engine/enums';
 import { ApiProperty } from '@nestjs/swagger';
 import { AnalyticsRawDataDto } from './analytics-raw-log.dto';
 import { AnalyticsStatLogDto } from './analytics-stat-log.dto';

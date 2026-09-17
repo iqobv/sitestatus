@@ -7,6 +7,6 @@ export default defineConfig({
 		path: './migrations',
 	},
 	datasource: {
-		url: env('TURSO_URI'),
+		url: env('ENGINE_DATABASE_URI'),
 	},
 });

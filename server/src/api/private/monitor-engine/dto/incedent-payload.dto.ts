@@ -1,5 +1,5 @@
 import { ServiceBusMessage } from '@azure/service-bus';
-import { SiteStatus } from '@generated/turso/enums';
+import { SiteStatus } from '@generated/engine/enums';
 import { IsEnum, IsString } from 'class-validator';
 
 export class IncedentPayloadDto {

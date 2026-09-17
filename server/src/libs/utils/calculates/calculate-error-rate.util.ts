@@ -1,4 +1,4 @@
-import { SiteStatus } from '@generated/turso/enums';
+import { SiteStatus } from '@generated/engine/enums';
 import { CalculateLogs } from '@libs/types/calculate-logs.types';
 import { formatResult } from './format-result.util';
 

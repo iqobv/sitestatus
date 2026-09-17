@@ -1,12 +1,12 @@
-import { Prisma } from '@generated/turso/client';
-import { SiteStatus, StatPeriod } from '@generated/turso/enums';
-import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
+import { Prisma } from '@generated/engine/client';
+import { SiteStatus, StatPeriod } from '@generated/engine/enums';
+import { EnginePrismaService } from '@infra/prisma/engine-prisma.service';
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class AnalyticsCronService {
-	constructor(private readonly prismaService: TursoPrismaService) {}
+	constructor(private readonly prismaService: EnginePrismaService) {}
 
 	@Cron(CronExpression.EVERY_HOUR)
 	public async aggregateHourly(): Promise<void> {

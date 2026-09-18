@@ -3,6 +3,7 @@ import { AUTH_PAGES } from './config/authPages.config';
 import { PRIVATE_PAGES } from './config/privatePages.config';
 import { SUBDOMAINS } from './config/subdomains.config';
 import { TOKEN_PAGES } from './config/tokenPages.config';
+import { env } from './env';
 import { appendCorsHeaders, getValidatedOrigin } from './utils/cors.util';
 
 export async function proxy(request: NextRequest) {
@@ -29,16 +30,13 @@ export async function proxy(request: NextRequest) {
 
 	if (!accessToken && refreshToken) {
 		try {
-			const res = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/v1/auth/refresh`,
-				{
-					method: 'POST',
-					headers: {
-						Cookie: `refreshToken=${refreshToken}`,
-					},
-					cache: 'no-store',
+			const res = await fetch(`${env.NEXT_PUBLIC_API_URL}/v1/auth/refresh`, {
+				method: 'POST',
+				headers: {
+					Cookie: `refreshToken=${refreshToken}`,
 				},
-			);
+				cache: 'no-store',
+			});
 
 			if (res.ok) {
 				isAuthenticated = true;
@@ -102,7 +100,7 @@ export async function proxy(request: NextRequest) {
 			path.startsWith(PRIVATE_PAGES.BASE_SETTINGS);
 
 		if (isPrivateSection || isAuthPage || isTokenPage) {
-			const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || '';
+			const rootDomain = env.NEXT_PUBLIC_ROOT_DOMAIN || '';
 			url.host = `${SUBDOMAINS.APP}.${rootDomain}`;
 			url.pathname = path.replace('/app', '');
 			url.search = search;

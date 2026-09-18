@@ -1,10 +1,11 @@
 'use client';
 
+import { env } from '@/env';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import Script from 'next/script';
 
 export const GoogleAnalyticsHandler = () => {
-	const gaId = process.env.NEXT_PUBLIC_GA_ID as string;
+	const gaId = env.NEXT_PUBLIC_GA_ID;
 
 	return (
 		<>

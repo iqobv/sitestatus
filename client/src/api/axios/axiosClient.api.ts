@@ -1,6 +1,7 @@
 'use client';
 
 import { AUTH_PAGES } from '@/config/authPages.config';
+import { env } from '@/env';
 import { useUserStore } from '@/store/user.store';
 import { ApiErrorResponse } from '@/types/api/messageResponse.api';
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
@@ -10,7 +11,7 @@ interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
 }
 
 const apiClient = axios.create({
-	baseURL: process.env.NEXT_PUBLIC_API_URL,
+	baseURL: env.NEXT_PUBLIC_API_URL,
 	withCredentials: true,
 	headers: {
 		'Content-Type': 'application/json',
@@ -66,7 +67,7 @@ apiClient.interceptors.response.use(
 
 			try {
 				await axios.post(
-					`${process.env.NEXT_PUBLIC_API_URL}/v1/auth/refresh`,
+					`${env.NEXT_PUBLIC_API_URL}/v1/auth/refresh`,
 					{},
 					{ withCredentials: true },
 				);

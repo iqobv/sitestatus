@@ -2,6 +2,7 @@
 
 import { googleOneTapLogin } from '@/api/auth/googleOneTap.api';
 import { CROSS_DOMAIN_ROUTES } from '@/config/navigation.config';
+import { env } from '@/env';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
@@ -27,7 +28,7 @@ export const useGoogleOneTap = () => {
 		const initializeGoogleOneTap = (): void => {
 			if (typeof window !== 'undefined' && window.google) {
 				window.google.accounts.id.initialize({
-					client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string,
+					client_id: env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
 					callback: handleCredentialResponse,
 					auto_select: true,
 					cancel_on_tap_outside: true,

@@ -1,0 +1,31 @@
+sitestatus.iqob.dev {
+    tls internal
+    reverse_proxy localhost:3000
+}
+
+www.sitestatus.iqob.dev {
+    tls internal
+    reverse_proxy localhost:3000
+}
+
+api.sitestatus.iqob.dev {
+    tls internal
+    reverse_proxy localhost:5000 {
+        flush_interval -1
+
+        transport http {
+            read_timeout 1h
+            write_timeout 1h
+        }
+    }
+}
+
+app.sitestatus.iqob.dev {
+    tls internal
+    reverse_proxy localhost:3000
+}
+
+status.sitestatus.iqob.dev {
+    tls internal
+    reverse_proxy localhost:3000
+}

@@ -1,7 +1,8 @@
 import { getMailerConfig } from '@config/mailer.config';
+import { smtpEnvSchema } from '@config/schemas/smtp.schema';
 import { SiteStatus } from '@generated/engine/enums';
+import { EnvService } from '@infra/env/env.service';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { render } from '@react-email/components';
 import type { SendMailOptions, SentMessageInfo } from 'nodemailer';
 import { createElement } from 'react';
@@ -23,14 +24,14 @@ export class MailService {
 	private readonly defaultFromName: string;
 	private readonly defaultFromAddress: string;
 
-	constructor(private readonly configService: ConfigService) {
-		this.domain = this.configService.getOrThrow<string>('APP_URL');
-		this.iconUrl = this.configService.getOrThrow<string>('ICON_URL');
-		this.defaultFromName =
-			this.configService.getOrThrow<string>('MAIL_FROM_NAME');
-		this.defaultFromAddress =
-			this.configService.getOrThrow<string>('MAIL_FROM_ADDRESS');
-		this.transport = getMailerConfig(this.configService);
+	constructor(private readonly envService: EnvService) {
+		const config = envService.getGroup(smtpEnvSchema);
+
+		this.domain = envService.get('APP_URL');
+		this.iconUrl = envService.get('ICON_URL');
+		this.defaultFromName = config.MAIL_FROM_NAME;
+		this.defaultFromAddress = config.MAIL_FROM_ADDRESS;
+		this.transport = getMailerConfig(config);
 	}
 
 	public async sendVerificationEmail(

@@ -1,25 +1,25 @@
-FROM node:22-alpine AS deps
+FROM node:24-alpine AS deps
 RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --legacy-peer-deps
 
-FROM node:22-alpine AS builder
+FROM node:24-alpine AS builder
 WORKDIR /app
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
 
 ARG POSTGRES_URI="postgresql://dummy"
-ARG TURSO_URI="libsql://dummy"
+ARG ENGINE_DATABASE_URI="postgresql://dummy"
 
 ENV POSTGRES_URI=$POSTGRES_URI
-ENV TURSO_URI=$TURSO_URI
+ENV ENGINE_DATABASE_URI=$ENGINE_DATABASE_URI
 
 RUN npm run prisma:generate
 RUN npm run build
 RUN npm prune --production
 
-FROM node:22-alpine AS runner
+FROM node:24-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production

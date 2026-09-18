@@ -7,7 +7,6 @@ import {
 import { Auth } from '@libs/decorators/auth.decorator';
 import { Authorized } from '@libs/decorators/authorized.decorator';
 import { MessageResponse } from '@libs/types/messages/message-detail.types';
-import { clearAuthCookies } from '@libs/utils/cookie.util';
 import {
 	Body,
 	Controller,
@@ -17,9 +16,9 @@ import {
 	Post,
 	Res,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
+import { CookieService } from '../auth/cookie/cookie.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserWithoutPasswordDto } from './dto/user.dto';
 import { UserService } from './user.service';
@@ -29,7 +28,7 @@ import { UserService } from './user.service';
 export class UserController {
 	constructor(
 		private readonly userService: UserService,
-		private readonly configService: ConfigService,
+		private readonly cookieService: CookieService,
 	) {}
 
 	@Auth()
@@ -68,7 +67,7 @@ export class UserController {
 	): Promise<MessageResponse> {
 		await this.userService.removeAccount(userId);
 
-		clearAuthCookies(res, this.configService);
+		this.cookieService.clearAuthCookies(res);
 
 		return SUCCESS_MESSAGES.USER.DELETED;
 	}

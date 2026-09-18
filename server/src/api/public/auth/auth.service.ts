@@ -1,5 +1,6 @@
 import { Prisma } from '@generated/postgres/client';
 import { TokenType } from '@generated/postgres/enums';
+import { EnvService } from '@infra/env/env.service';
 import { MailService } from '@infra/mail/mail.service';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
@@ -15,7 +16,6 @@ import {
 	Injectable,
 	UnauthorizedException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import crypto from 'crypto';
 import { SessionService } from '../session/session.service';
@@ -35,7 +35,7 @@ export class AuthService {
 	constructor(
 		private readonly userService: UserService,
 		private readonly tokenService: TokenService,
-		private readonly configService: ConfigService,
+		private readonly envService: EnvService,
 		private readonly mailService: MailService,
 		private readonly prismaService: PgPrismaService,
 		private readonly jwtService: JwtService,
@@ -272,7 +272,7 @@ export class AuthService {
 		};
 
 		const accessToken = this.jwtService.sign(payload, {
-			secret: this.configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
+			secret: this.envService.get('JWT_ACCESS_SECRET'),
 			expiresIn: '15m',
 		});
 
@@ -391,7 +391,7 @@ export class AuthService {
 		};
 
 		const accessToken = this.jwtService.sign(payload, {
-			secret: this.configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
+			secret: this.envService.get('JWT_ACCESS_SECRET'),
 			expiresIn: '15m',
 		});
 

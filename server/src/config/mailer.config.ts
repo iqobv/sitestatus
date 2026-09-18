@@ -1,19 +1,15 @@
-import { ConfigService } from '@nestjs/config';
 import nodemailer from 'nodemailer';
+import { SmtpConfig } from './schemas/smtp.schema';
 
-export const getMailerConfig = (
-	configService: ConfigService,
-): nodemailer.Transporter => {
-	const host = configService.getOrThrow<string>('SMTP_HOST');
-	const portString = configService.getOrThrow<string>('SMTP_PORT');
-	const user = configService.getOrThrow<string>('SMTP_USER');
-	const pass = configService.getOrThrow<string>('SMTP_PASSWORD');
+export const getMailerConfig = (config: SmtpConfig): nodemailer.Transporter => {
+	const host = config.SMTP_HOST;
+	const portString = config.SMTP_PORT;
+	const user = config.SMTP_USER;
+	const pass = config.SMTP_PASSWORD;
 
 	const port = Number(portString);
 
-	if (Number.isNaN(port)) {
-		throw new Error('SMTP_PORT must be a valid number');
-	}
+	if (Number.isNaN(port)) throw new Error('SMTP_PORT must be a valid number');
 
 	return nodemailer.createTransport({
 		host,

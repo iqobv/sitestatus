@@ -1,18 +1,19 @@
+import { EnvService } from '@infra/env/env.service';
 import { extractClientInfo } from '@libs/utils/client-info.util';
-import { setAuthCookies } from '@libs/utils/cookie.util';
 import { Controller, forwardRef, Get, Inject, Req, Res } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import type { Request, Response } from 'express';
 import { AuthService } from '../../auth.service';
+import { CookieService } from '../../cookie/cookie.service';
 import { GithubAuth } from '../../decorators/github-auth.decorator';
 import { OAuthDto } from '../../dto/o-auth.dto';
 
 @Controller('oauth/github')
 export class GithubController {
 	constructor(
-		private readonly configService: ConfigService,
 		@Inject(forwardRef(() => AuthService))
 		private readonly authService: AuthService,
+		private readonly envService: EnvService,
+		private readonly cookieService: CookieService,
 	) {}
 
 	@Get()
@@ -31,11 +32,9 @@ export class GithubController {
 		const { accessToken, refreshToken } =
 			await this.authService.validateOAuthLogin(user, clientInfo);
 
-		setAuthCookies(res, accessToken, refreshToken, this.configService);
+		this.cookieService.setAuthCookies(res, accessToken, refreshToken);
 
-		const targetOrigin = this.configService.getOrThrow<string>(
-			'OAUTH_REDIRECT_ORIGIN',
-		);
+		const targetOrigin = this.envService.get('OAUTH_REDIRECT_ORIGIN');
 
 		res.send(`
 			<script>

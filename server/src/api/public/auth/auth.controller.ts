@@ -9,7 +9,6 @@ import { Cookie } from '@libs/decorators/cookie.decorator';
 import { IsPublic } from '@libs/decorators/is-public.decorator';
 import { MessageResponse } from '@libs/types/messages/message-detail.types';
 import { extractClientInfo } from '@libs/utils/client-info.util';
-import { clearAuthCookies, setAuthCookies } from '@libs/utils/cookie.util';
 import { withField } from '@libs/utils/error-with-field.util';
 import {
 	Body,
@@ -23,7 +22,6 @@ import {
 	Res,
 	UnauthorizedException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import type { Request, Response } from 'express';
@@ -31,6 +29,7 @@ import { CreateUserDto } from '../user/dto/create-user.dto';
 import { UserWithoutPasswordDto } from '../user/dto/user.dto';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
+import { CookieService } from './cookie/cookie.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { LoginDto } from './dto/login.dto';
@@ -42,7 +41,7 @@ export class AuthController {
 	constructor(
 		private readonly authService: AuthService,
 		private readonly userService: UserService,
-		private readonly configService: ConfigService,
+		private readonly cookieService: CookieService,
 	) {}
 
 	@IsPublic()
@@ -82,7 +81,7 @@ export class AuthController {
 			clientInfo,
 		);
 
-		setAuthCookies(res, accessToken, refreshToken, this.configService);
+		this.cookieService.setAuthCookies(res, accessToken, refreshToken);
 
 		return SUCCESS_MESSAGES.AUTH.LOGIN_SUCCESS;
 	}
@@ -100,7 +99,7 @@ export class AuthController {
 	): Promise<MessageResponse> {
 		if (rt) await this.authService.logout(rt, userId);
 
-		clearAuthCookies(res, this.configService);
+		this.cookieService.clearAuthCookies(res);
 
 		return SUCCESS_MESSAGES.AUTH.LOGOUT_SUCCESS;
 	}
@@ -123,7 +122,7 @@ export class AuthController {
 
 		const { accessToken, refreshToken } = result;
 
-		setAuthCookies(res, accessToken, refreshToken, this.configService);
+		this.cookieService.setAuthCookies(res, accessToken, refreshToken);
 
 		return SUCCESS_MESSAGES.AUTH.EMAIL_VERIFIED;
 	}
@@ -151,10 +150,10 @@ export class AuthController {
 			const info = extractClientInfo(req);
 			const { accessToken, refreshToken } =
 				await this.authService.refreshTokens(rt, info);
-			setAuthCookies(res, accessToken, refreshToken, this.configService);
+			this.cookieService.setAuthCookies(res, accessToken, refreshToken);
 			return SUCCESS_MESSAGES.AUTH.REFRESH_TOKENS;
 		} catch (error) {
-			clearAuthCookies(res, this.configService);
+			this.cookieService.clearAuthCookies(res);
 			throw error;
 		}
 	}
@@ -291,7 +290,7 @@ export class AuthController {
 			info,
 		);
 
-		setAuthCookies(res, accessToken, refreshToken, this.configService);
+		this.cookieService.setAuthCookies(res, accessToken, refreshToken);
 
 		return SUCCESS_MESSAGES.AUTH.RESTORE_ACCOUNT;
 	}

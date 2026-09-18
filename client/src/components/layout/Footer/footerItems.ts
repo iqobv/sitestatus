@@ -1,5 +1,6 @@
 import { LEGAL_PAGES } from '@/config/legalPage.config';
 import { PUBLIC_PAGES } from '@/config/publicPages.config';
+import { env } from '@/env';
 
 interface LinkItem {
 	label: string;
@@ -26,7 +27,7 @@ export const FOOTER_ITEMS: FooterItem[] = [
 		links: [
 			{
 				label: 'API Documentation',
-				href: `${process.env.NEXT_PUBLIC_API_URL}/docs`,
+				href: `${env.NEXT_PUBLIC_API_URL}/docs`,
 			},
 		],
 	},

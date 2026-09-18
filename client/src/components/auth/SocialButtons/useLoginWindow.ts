@@ -1,10 +1,11 @@
 'use client';
 
 import { PRIVATE_PAGES } from '@/config/privatePages.config';
+import { env } from '@/env';
 import { useRouter } from 'next/navigation';
 
 export const useLoginWindow = (url: string) => {
-	const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+	const apiUrl = env.NEXT_PUBLIC_API_URL;
 	const apiOrigin = apiUrl ? new URL(apiUrl).origin : null;
 
 	const router = useRouter();

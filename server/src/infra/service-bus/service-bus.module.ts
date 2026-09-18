@@ -1,6 +1,7 @@
 import { ServiceBusClient } from '@azure/service-bus';
+import { EnvService } from '@infra/env/env.service';
 import { Global, Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 
 @Global()
 @Module({
@@ -8,13 +9,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 	providers: [
 		{
 			provide: ServiceBusClient,
-			useFactory: (configService: ConfigService) => {
-				const connectionString = configService.getOrThrow<string>(
+			inject: [EnvService],
+			useFactory: (envService: EnvService) => {
+				const connectionString = envService.get(
 					'SERVICE_BUS_CONNECTION_STRING',
 				);
 				return new ServiceBusClient(connectionString);
 			},
-			inject: [ConfigService],
 		},
 	],
 	exports: [ServiceBusClient],

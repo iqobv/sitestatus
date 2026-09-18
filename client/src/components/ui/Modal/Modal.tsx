@@ -1,5 +1,6 @@
 'use client';
 
+import { env } from '@/env';
 import React, { ReactElement, useState } from 'react';
 import { ModalContext } from './ModalContext';
 import { ModalContent } from './parts/ModalContent/ModalContent';
@@ -35,7 +36,7 @@ export const Modal = ({
 
 	const content = childrenArray.find((child) => child.type === ModalContent);
 
-	if (process.env.NODE_ENV === 'development') {
+	if (env.NODE_ENV === 'development') {
 		if (!trigger && !withoutTrigger) {
 			throw new Error('Modal must have a Modal.Trigger component as a child.');
 		}

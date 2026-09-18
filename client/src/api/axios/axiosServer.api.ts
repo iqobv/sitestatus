@@ -1,14 +1,19 @@
 'use server';
 
 import { AUTH_PAGES } from '@/config/authPages.config';
+import { env } from '@/env';
 import { ApiErrorResponse } from '@/types/api/messageResponse.api';
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import https from 'https';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 const apiServer = axios.create({
-	baseURL: process.env.NEXT_PUBLIC_API_URL,
+	baseURL: env.NEXT_PUBLIC_API_URL,
 	withCredentials: true,
+	httpsAgent: new https.Agent({
+		rejectUnauthorized: env.NODE_ENV !== 'development',
+	}),
 });
 
 apiServer.interceptors.request.use(

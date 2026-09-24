@@ -16,7 +16,6 @@ export const SelectContent = ({
 	style,
 	onScrollEnd,
 	scrollThreshold = 50,
-	zIndex,
 	...props
 }: SelectContentProps) => {
 	const widthStyles: React.CSSProperties = {
@@ -47,7 +46,7 @@ export const SelectContent = ({
 				className={clsx(styles.content, className)}
 				position={position}
 				sideOffset={sideOffset}
-				style={{ ...widthStyles, ...(zIndex && { zIndex }), ...style }}
+				style={{ ...widthStyles, ...style }}
 				onCloseAutoFocus={handleCloseAutoFocus}
 				{...props}
 			>

@@ -11,6 +11,9 @@ export const env = createEnv({
 		API_URL: z.url().nonempty('API_URL is required'),
 	},
 	client: {
+		NEXT_PUBLIC_CLIENT_URL: z
+			.url()
+			.nonempty('NEXT_PUBLIC_CLIENT_URL is required'),
 		NEXT_PUBLIC_ROOT_DOMAIN: z
 			.string()
 			.nonempty('NEXT_PUBLIC_ROOT_DOMAIN is required'),
@@ -33,6 +36,7 @@ export const env = createEnv({
 	runtimeEnv: {
 		NODE_ENV: process.env.NODE_ENV,
 		API_URL: process.env.API_URL,
+		NEXT_PUBLIC_CLIENT_URL: process.env.NEXT_PUBLIC_CLIENT_URL,
 		NEXT_PUBLIC_ROOT_DOMAIN: process.env.NEXT_PUBLIC_ROOT_DOMAIN,
 		NEXT_PUBLIC_PROTOCOL: process.env.NEXT_PUBLIC_PROTOCOL,
 		NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,

@@ -78,5 +78,3 @@ export const NotificationChannelsItem = ({
 		/>
 	);
 };
-
-export default NotificationChannelsItem;

@@ -1,6 +1,6 @@
 import { LoginDto, RegisterDto } from '@/dto/auth.dto';
 import { User } from '@/types/user/user.types';
-import { apiClient, apiServer } from '../axios';
+import { apiClient } from '../axios';
 
 export const login = async (dto: LoginDto) =>
 	(await apiClient.post<User>(`/v1/auth/login`, dto)).data;
@@ -13,11 +13,8 @@ export const register = async (dto: RegisterDto) =>
 		)
 	).data;
 
-export const getProfile = async () =>
+export const getUser = async () =>
 	(await apiClient.get<User>(`/v1/auth/me`)).data;
-
-export const getServerProfile = async () =>
-	(await apiServer.get<User>(`/v1/auth/me`)).data;
 
 export const logout = async () =>
 	(await apiClient.post(`/v1/auth/logout`)).data;

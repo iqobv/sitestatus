@@ -5,7 +5,6 @@ import {
 	Form,
 	FormActions,
 	FormField,
-	FormLabel,
 	FormReset,
 	FormSubmit,
 	Modal,
@@ -51,7 +50,7 @@ export const NotificationChannelsItemEdit = ({
 
 	return (
 		<Modal>
-			<ModalTrigger>
+			<ModalTrigger asChild>
 				<Button variant="outlined">Edit</Button>
 			</ModalTrigger>
 			<ModalContent>
@@ -68,8 +67,7 @@ export const NotificationChannelsItemEdit = ({
 				>
 					<ModalHeader>Edit Notification Channel: {channel.name}</ModalHeader>
 					<ModalBody>
-						<FormField name="name">
-							<FormLabel>{channelTypeLabels.nameLabel}</FormLabel>
+						<FormField name="name" label={channelTypeLabels.nameLabel}>
 							<TextField placeholder={channelTypeLabels.namePlaceholder} />
 						</FormField>
 						<FormField name="isActive">

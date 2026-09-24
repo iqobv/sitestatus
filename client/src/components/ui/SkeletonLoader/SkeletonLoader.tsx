@@ -1,4 +1,4 @@
-import { pxToRem } from '@/hooks/fromPxToRem.util';
+import { pxToRem } from '@/utils/fromPxToRem.util';
 import Skeleton, { SkeletonProps } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 

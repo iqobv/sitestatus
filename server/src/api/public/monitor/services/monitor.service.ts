@@ -81,6 +81,15 @@ export class MonitorService {
 
 		const targetHours = 24;
 
+		if (projectId) {
+			const project = await this.pgPrismaService.project.findUnique({
+				where: { id: projectId, ownerId: userId, deletedAt: null },
+			});
+
+			if (!project)
+				throw new NotFoundException(ERROR_MESSAGES.PROJECT.NOT_FOUND);
+		}
+
 		const { data, meta } = await paginate(
 			{ page, limit },
 			async (limit, offset) => {

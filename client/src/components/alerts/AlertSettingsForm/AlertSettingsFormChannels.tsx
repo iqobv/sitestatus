@@ -1,6 +1,7 @@
 'use client';
 
-import { FormField, Select } from '@/components/ui';
+import { Field, FormMultiCombobox } from '@/components/ui';
+import { UpsertAlertSettingsDto } from '@/dto/alertSettings.dto';
 import { NotificationChannel } from '@/types/notificationChannel/notificationChannel.types';
 
 interface AlertSettingsFormChannelsProps {
@@ -15,23 +16,23 @@ export const AlertSettingsFormChannels = ({
 	overrideSettings,
 }: AlertSettingsFormChannelsProps) => {
 	return (
-		<FormField isController name="channelIds">
-			{({ field }) => (
-				<Select
-					label="Notification Channels"
-					placeholder="Select notification channels"
-					options={notificationChannels
-						.filter((c) => c.isActive)
-						.map((channel) => ({
-							label: channel.name,
-							value: channel.id,
-						}))}
-					value={field.value}
-					onChange={(value) => field.onChange(value)}
-					multiple
-					disabled={isGlobalSettings && !overrideSettings}
-				/>
-			)}
-		</FormField>
+		<Field
+			disabled={isGlobalSettings && !overrideSettings}
+			label="Notification Channels"
+		>
+			<FormMultiCombobox<UpsertAlertSettingsDto>
+				name="channelIds"
+				placeholder="Select notification channels"
+				options={notificationChannels
+					.filter((c) => c.isActive)
+					.map((c) => ({
+						label: c.name,
+						value: c.id,
+					}))}
+				disabled={isGlobalSettings && !overrideSettings}
+				zIndex={1050}
+				menuWidth="trigger"
+			/>
+		</Field>
 	);
 };

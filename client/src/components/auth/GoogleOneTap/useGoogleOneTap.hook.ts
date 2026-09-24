@@ -1,7 +1,6 @@
 'use client';
 
 import { googleOneTapLogin } from '@/api/auth/googleOneTap.api';
-import { CROSS_DOMAIN_ROUTES } from '@/config/navigation.config';
 import { env } from '@/env';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
@@ -13,9 +12,6 @@ type GoogleCredentialResponse = {
 export const useGoogleOneTap = () => {
 	const { mutate: verifyCredential } = useMutation({
 		mutationFn: (credential: string) => googleOneTapLogin(credential),
-		onSuccess: () => {
-			window.location.assign(CROSS_DOMAIN_ROUTES.APP_DASHBOARD);
-		},
 	});
 
 	useEffect(() => {

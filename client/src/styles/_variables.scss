@@ -51,3 +51,95 @@ $button-variants: (
 		'bg-hover': var(--btn-danger-bg-hover),
 	),
 );
+
+$button-matrix: (
+	contained: (
+		primary: (
+			bg: var(--btn-contained-bg),
+			color: var(--btn-contained-color),
+			border: transparent,
+			bg-hover: var(--btn-contained-bg-hover),
+		),
+		secondary: (
+			bg: var(--btn-contained-bg-secondary),
+			color: var(--btn-contained-color-secondary),
+			border: transparent,
+			bg-hover: var(--btn-contained-bg-hover-secondary),
+		),
+		danger: (
+			bg: var(--btn-contained-bg-danger),
+			color: var(--btn-contained-color-danger),
+			border: transparent,
+			bg-hover: var(--btn-contained-bg-hover-danger),
+		),
+	),
+	outlined: (
+		primary: (
+			bg: transparent,
+			color: var(--btn-outlined-color),
+			border: var(--btn-outlined-border),
+			bg-hover: var(--btn-outlined-bg-hover),
+			border-hover: var(--btn-outlined-border-hover),
+		),
+		secondary: (
+			bg: transparent,
+			color: var(--btn-outlined-color-secondary),
+			border: var(--btn-outlined-border-secondary),
+			bg-hover: var(--btn-outlined-bg-hover-secondary),
+			border-hover: var(--btn-outlined-border-hover-secondary),
+		),
+		danger: (
+			bg: transparent,
+			color: var(--btn-outlined-color-danger),
+			border: var(--btn-outlined-border-danger),
+			bg-hover: var(--btn-outlined-bg-hover-danger),
+			border-hover: var(--btn-outlined-border-hover-danger),
+		),
+	),
+	text: (
+		primary: (
+			bg: transparent,
+			color: var(--btn-text-color),
+			border: transparent,
+			bg-hover: var(--btn-text-bg-hover),
+		),
+		secondary: (
+			bg: var(--btn-text-bg-secondary),
+			color: var(--btn-text-color-secondary),
+			border: transparent,
+			bg-hover: var(--btn-text-bg-hover-secondary),
+		),
+		danger: (
+			bg: var(--btn-text-bg-danger),
+			color: var(--btn-text-color-danger),
+			border: transparent,
+			bg-hover: var(--btn-text-bg-hover-danger),
+		),
+	),
+	link: (
+		primary: (
+			bg: transparent,
+			color: var(--btn-link-color),
+			border: transparent,
+			text-decoration: none,
+			text-underline-offset: 6px,
+			text-decoration-hover: underline,
+		),
+		secondary: (
+			bg: transparent,
+			color: var(--btn-link-color-secondary),
+			border: transparent,
+			text-decoration: none,
+			text-underline-offset: 6px,
+			text-decoration-hover: underline,
+		),
+		danger: (
+			bg: transparent,
+			color: var(--btn-link-color-danger),
+			border: transparent,
+			text-decoration: none,
+			text-underline-offset: 6px,
+			text-decoration-hover: underline,
+		),
+	),
+);

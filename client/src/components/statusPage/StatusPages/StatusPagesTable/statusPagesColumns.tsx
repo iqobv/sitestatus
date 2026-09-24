@@ -39,7 +39,13 @@ export const STATUS_PAGES_COLUMNS: ColumnDef<StatusPage>[] = [
 			return (
 				<span className={styles.slug}>
 					{row.original.slug}
-					<Button size="sm" variant="text" isIcon onClick={handleCopy}>
+					<Button
+						size="sm"
+						variant="text"
+						isIcon
+						onClick={handleCopy}
+						title="Copy status page URL"
+					>
 						<MdCopyAll />
 					</Button>
 				</span>
@@ -64,15 +70,14 @@ export const STATUS_PAGES_COLUMNS: ColumnDef<StatusPage>[] = [
 		meta: { center: true, disableLink: true },
 		cell: ({ row }) => (
 			<div className={styles.actions}>
-				<Button
-					variant="outlined"
-					isIcon
-					size="sm"
-					href={PUBLIC_PAGES.STATUS_PAGE(row.original.slug)}
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					<LuExternalLink size={20} />
+				<Button variant="outlined" isIcon size="sm" asChild>
+					<a
+						href={PUBLIC_PAGES.STATUS_PAGE(row.original.slug)}
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						<LuExternalLink size={20} />
+					</a>
 				</Button>
 				<StatusPageDropdown statusPage={row.original} />
 			</div>

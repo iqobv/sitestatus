@@ -16,7 +16,7 @@ export const ProjectFormActions = ({
 	return (
 		<FormActions justifyContent="flex-end">
 			{isEdit && (
-				<FormReset buttonProps={{ variant: 'secondary' }} disabledOnEmpty>
+				<FormReset buttonProps={{ color: 'secondary' }} disabledOnEmpty>
 					Cancel
 				</FormReset>
 			)}

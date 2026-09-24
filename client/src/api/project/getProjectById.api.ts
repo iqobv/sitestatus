@@ -1,8 +1,5 @@
 import { Project } from '@/types/project/project.types';
-import { apiClient, apiServer } from '../axios';
+import { apiClient } from '../axios';
 
 export const getProjectById = async (projectId: string) =>
 	(await apiClient.get<Project>(`/v1/projects/id/${projectId}`)).data;
-
-export const getServerProjectById = async (projectId: string) =>
-	(await apiServer.get<Project>(`/v1/projects/id/${projectId}`)).data;

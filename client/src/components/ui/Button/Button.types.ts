@@ -1,50 +1,14 @@
-export type ButtonVariant =
-	| 'contained'
-	| 'outlined'
-	| 'text'
-	| 'link'
-	| 'secondary'
-	| 'danger';
-export type ButtonType = 'button' | 'submit' | 'reset';
-export type ButtonSize = 'sm' | 'md' | 'lg';
+import { VariantProps } from 'class-variance-authority';
+import { buttonVariants } from './buttonVariants';
 
-export interface ButtonBaseProps {
+export type ButtonVariants = VariantProps<typeof buttonVariants>;
+
+export interface ButtonProps
+	extends
+		Omit<React.ComponentPropsWithRef<'button'>, 'color'>,
+		Omit<ButtonVariants, 'disabled'> {
 	children: React.ReactNode;
-	variant?: ButtonVariant;
-	onClick?: (
-		event: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>,
-	) => void;
-	disabled?: boolean;
+	asChild?: boolean;
 	loading?: boolean;
-	className?: string;
-	style?: React.CSSProperties;
-	id?: string;
-	size?: ButtonSize;
-	fullWidth?: boolean;
-	isIcon?: boolean;
-	rounded?: boolean;
-	contentClassName?: string;
-	isActive?: boolean;
+	onClick?: React.MouseEventHandler<HTMLElement>;
 }
-
-interface AnchorButtonProps
-	extends
-		Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, keyof ButtonBaseProps>,
-		ButtonBaseProps {
-	href: string;
-	type?: never;
-	ref?: React.Ref<HTMLAnchorElement>;
-	asNative?: boolean;
-}
-
-interface NativeButtonProps
-	extends
-		Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof ButtonBaseProps>,
-		ButtonBaseProps {
-	href?: undefined;
-	type?: ButtonType;
-	ref?: React.Ref<HTMLButtonElement>;
-	asNative?: undefined;
-}
-
-export type ButtonProps = AnchorButtonProps | NativeButtonProps;

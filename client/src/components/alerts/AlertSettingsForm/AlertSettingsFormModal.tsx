@@ -13,12 +13,10 @@ export const AlertSettingsFormModal = ({
 }: AlertSettingsFormProps) => {
 	return (
 		<Modal>
-			<ModalTrigger>
-				<DropdownItem asChild closeOnClick={false}>
-					<button>
-						<MdOutlineNotificationsActive size={20} />
-						Alert Settings
-					</button>
+			<ModalTrigger asChild>
+				<DropdownItem onSelect={(e) => e.preventDefault()}>
+					<MdOutlineNotificationsActive size={20} />
+					Alert Settings
 				</DropdownItem>
 			</ModalTrigger>
 			<ModalContent>

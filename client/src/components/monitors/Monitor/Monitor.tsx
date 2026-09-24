@@ -3,6 +3,7 @@
 import { getMonitorByIdFull } from '@/api/monitor/getMonitorById.api';
 import { getMonitorAnalytics } from '@/api/monitor/monitorAnalytics.api';
 import { QUERY_KEYS } from '@/config/queryClient.config';
+import { usePageTitle } from '@/hooks/usePageTitle.hook';
 import { monitorRangeParser } from '@/parsers/monitorRange.parser';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { parseAsString, useQueryStates } from 'nuqs';
@@ -40,6 +41,8 @@ export const Monitor = ({ id }: MonitorProps) => {
 			queryFn: () => getMonitorAnalytics(id, range, region),
 			placeholderData: keepPreviousData,
 		});
+
+	usePageTitle(monitor && monitor.name);
 
 	if (isLoading) return <MonitorLoader />;
 	if (!monitor) return null;

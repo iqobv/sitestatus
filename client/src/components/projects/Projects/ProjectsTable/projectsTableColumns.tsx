@@ -2,6 +2,7 @@ import { Button } from '@/components/ui';
 import { PRIVATE_PAGES } from '@/config/privatePages.config';
 import { Project } from '@/types/project/project.types';
 import { ColumnDef } from '@tanstack/react-table';
+import Link from 'next/link';
 
 export const PROJECTS_TABLE_COLUMNS: ColumnDef<Project>[] = [
 	{
@@ -26,12 +27,8 @@ export const PROJECTS_TABLE_COLUMNS: ColumnDef<Project>[] = [
 			const projectId = props.row.original.id;
 
 			return (
-				<Button
-					size="sm"
-					variant="link"
-					href={PRIVATE_PAGES.PROJECTS.ID(projectId)}
-				>
-					View
+				<Button size="sm" variant="link" asChild>
+					<Link href={PRIVATE_PAGES.PROJECTS.ID(projectId)}>View</Link>
 				</Button>
 			);
 		},

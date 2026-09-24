@@ -11,3 +11,30 @@
 .rounded {
 	border-radius: 50%;
 }
+
+.uppercase {
+	text-transform: uppercase;
+}
+
+.lowercase {
+	text-transform: lowercase;
+}
+
+.capitalize {
+	text-transform: capitalize;
+}
+
+.textAlignLeft {
+	text-align: left;
+	justify-content: flex-start;
+}
+
+.textAlignCenter {
+	text-align: center;
+	justify-content: center;
+}
+
+.textAlignRight {
+	text-align: right;
+	justify-content: flex-end;
+}

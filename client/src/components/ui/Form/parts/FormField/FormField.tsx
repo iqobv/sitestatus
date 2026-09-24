@@ -1,98 +1,74 @@
 'use client';
 
-import React, {
-	ComponentPropsWithRef,
-	ElementType,
-	isValidElement,
-} from 'react';
-import {
-	Controller,
-	FieldValues,
-	get,
-	Path,
-	UseControllerReturn,
-	useFormContext,
-} from 'react-hook-form';
+import { Field } from '@/components/ui/Field/Field';
+import clsx from 'clsx';
+import React, { cloneElement, ReactElement } from 'react';
+import { FieldValues, useController, useFormContext } from 'react-hook-form';
 import styles from './FormField.module.scss';
+import { FormFieldProps } from './FormField.types';
 
-type ControlledRenderFn<T extends FieldValues> = (
-	props: UseControllerReturn<T, Path<T>>,
-) => React.ReactNode;
-
-type FormChild<T extends FieldValues> = React.ReactNode | ControlledRenderFn<T>;
-
-interface FormFieldProps<T extends FieldValues> {
-	name: Path<T>;
-	children: FormChild<T>;
-	isController?: boolean;
-}
-
-export const FormField = <T extends FieldValues>({
+export const FormField = <D extends FieldValues>({
 	name,
 	children,
-	isController = false,
-}: FormFieldProps<T>) => {
+	className,
+	disabled,
+	id,
+	label,
+	required,
+	hidden,
+	style,
+}: FormFieldProps<D>) => {
+	const { control } = useFormContext<D>();
 	const {
-		register,
-		control,
-		formState: { errors },
-	} = useFormContext<T>();
+		field,
+		fieldState: { error },
+	} = useController<D>({ name, control, disabled });
 
-	const fieldError = get(errors, name);
-	const errorMessage = fieldError?.message as string | undefined;
+	if (!React.isValidElement(children)) {
+		throw new Error(
+			'FormField requires a single valid React element as a child.',
+		);
+	}
 
-	const renderChildren = (child: FormChild<T>): React.ReactNode => {
-		if (typeof child === 'function') {
-			return (
-				<Controller
-					name={name}
-					control={control}
-					render={(props) =>
-						(child as ControlledRenderFn<T>)(props) as React.ReactElement
-					}
-				/>
-			);
-		}
+	const childProps = children.props as Record<string, unknown>;
+	const customOnChange = childProps.onChange as
+		| ((...args: unknown[]) => void)
+		| undefined;
+	const customOnBlur = childProps.onBlur as (() => void) | undefined;
 
-		return React.Children.map(child, (item) => {
-			if (!isValidElement(item)) return item;
+	const isBooleanValue = typeof field.value === 'boolean';
 
-			const itemType = item.type as ElementType;
-			const isLabel =
-				item.type === 'label' ||
-				(typeof itemType !== 'string' &&
-					'displayName' in itemType &&
-					itemType.displayName === 'FormLabel');
+	const controlledChild = cloneElement(
+		children as ReactElement<Record<string, unknown>>,
+		{
+			...field,
+			checked: isBooleanValue ? field.value : undefined,
+			value: isBooleanValue ? undefined : (field.value ?? ''),
+			...childProps,
+			name,
+			onChange: (...args: unknown[]) => {
+				field.onChange(...args);
+				if (customOnChange) customOnChange(...args);
+			},
+			onBlur: () => {
+				field.onBlur();
+				if (customOnBlur) customOnBlur();
+			},
+		} as Record<string, unknown>,
+	);
 
-			if (isLabel) return item;
-
-			const { ref, ...registerProps } = register(name);
-
-			if (isController) {
-				return (
-					<Controller
-						name={name}
-						control={control}
-						render={({ field }) =>
-							React.cloneElement(
-								item as React.ReactElement<ComponentPropsWithRef<ElementType>>,
-								{ ...field, error: errorMessage },
-							)
-						}
-					/>
-				);
-			}
-
-			return React.cloneElement(
-				item as React.ReactElement<ComponentPropsWithRef<ElementType>>,
-				{
-					...registerProps,
-					ref,
-					error: errorMessage,
-				},
-			);
-		});
-	};
-
-	return <div className={styles.formField}>{renderChildren(children)}</div>;
+	return (
+		<Field
+			label={label}
+			error={error?.message?.toString()}
+			required={required}
+			disabled={disabled}
+			id={id}
+			className={clsx(hidden && styles.hidden, className)}
+			style={style}
+			hidden={hidden}
+		>
+			{controlledChild}
+		</Field>
+	);
 };

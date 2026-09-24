@@ -12,7 +12,7 @@
 	flex-direction: column;
 	justify-content: space-between;
 	top: 0;
-	z-index: 1400;
+	z-index: 200;
 	position: fixed;
 	left: 0;
 	width: 100%;
@@ -76,7 +76,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	z-index: 1500;
+	z-index: 210;
 	transform: translateX(0);
 	transition:
 		transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
@@ -100,7 +100,7 @@
 	height: 100dvh;
 	background-color: rgba(0, 0, 0, 0.5);
 	width: 100vw;
-	z-index: 1300;
+	z-index: 190;
 	pointer-events: none;
 	transition: opacity 0.3s ease;
 	opacity: 0;
@@ -113,7 +113,7 @@
 	@include respond-to(xxl) {
 		width: 0;
 		height: 0;
-		z-index: -1000;
+		z-index: -10;
 	}
 }
 

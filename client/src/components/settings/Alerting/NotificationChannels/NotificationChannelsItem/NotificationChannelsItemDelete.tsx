@@ -29,7 +29,11 @@ export const NotificationChannelsItemDelete = ({
 		<ConfirmAction
 			title="Delete Notification Channel"
 			description="Are you sure you want to delete this notification channel?"
-			trigger={<Button variant="danger">Delete</Button>}
+			trigger={
+				<Button color="danger" variant="outlined">
+					Delete
+				</Button>
+			}
 			onConfirm={() => mutate()}
 		/>
 	);

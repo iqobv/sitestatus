@@ -21,16 +21,11 @@ export const HeaderMain = () => {
 				</span>
 			</a>
 			<div className={styles.buttons}>
-				<Button
-					variant="link"
-					href={CROSS_DOMAIN_ROUTES.APP_LOGIN}
-					size="sm"
-					asNative
-				>
-					Log in
+				<Button variant="link" size="sm" asChild>
+					<a href={CROSS_DOMAIN_ROUTES.APP_LOGIN}>Log in</a>
 				</Button>
-				<Button href={CROSS_DOMAIN_ROUTES.APP_REGISTER} asNative>
-					Sign Up
+				<Button asChild>
+					<a href={CROSS_DOMAIN_ROUTES.APP_REGISTER}>Sign up</a>
 				</Button>
 			</div>
 		</HeaderContainer>

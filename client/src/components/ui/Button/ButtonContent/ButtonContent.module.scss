@@ -1,24 +1,10 @@
-.inner {
-	position: relative;
-	font-weight: 600;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-
-	&.loading {
-		.content {
-			opacity: 0;
-		}
-	}
-}
-
 .content {
 	display: flex;
-	align-items: center;
-	justify-content: center;
+	flex-direction: row;
 	gap: 0.5rem;
 	white-space: nowrap;
-	opacity: 1;
+	align-items: inherit;
+	justify-content: inherit;
 }
 
 .loader {

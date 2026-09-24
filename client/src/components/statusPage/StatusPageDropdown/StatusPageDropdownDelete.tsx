@@ -1,7 +1,7 @@
 'use client';
 
 import { deleteStatusPage } from '@/api/statusPage/deleteStatusPage.api';
-import { ConfirmAction, DropdownItem } from '@/components/ui';
+import { Button, ConfirmAction, DropdownItem } from '@/components/ui';
 import { PRIVATE_PAGES } from '@/config/privatePages.config';
 import { QUERY_KEYS } from '@/config/queryClient.config';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -12,11 +12,13 @@ import { iconProps } from './StatusPageDropdown';
 
 interface StatusPageDropdownDeleteProps {
 	id: string;
+	name: string;
 	redirectOnDelete?: boolean;
 }
 
 export const StatusPageDropdownDelete = ({
 	id,
+	name,
 	redirectOnDelete,
 }: StatusPageDropdownDeleteProps) => {
 	const router = useRouter();
@@ -29,9 +31,7 @@ export const StatusPageDropdownDelete = ({
 				queryKey: QUERY_KEYS.statusPages.lists(),
 			});
 			toast.success(data.message || 'Status page deleted successfully');
-			if (redirectOnDelete) {
-				router.push(PRIVATE_PAGES.STATUS_PAGES.ALL);
-			}
+			if (redirectOnDelete) router.push(PRIVATE_PAGES.STATUS_PAGES.ALL);
 		},
 	});
 
@@ -41,11 +41,15 @@ export const StatusPageDropdownDelete = ({
 			description="Are you sure you want to delete this status page? This action cannot be undone."
 			confirmButtonText="Delete"
 			trigger={
-				<DropdownItem closeOnClick={false} isDelete>
-					<MdDelete {...iconProps} /> Delete
+				<DropdownItem asChild onSelect={(e) => e.preventDefault()}>
+					<Button color="danger" variant="text">
+						<MdDelete {...iconProps} /> Delete
+					</Button>
 				</DropdownItem>
 			}
 			onConfirm={() => mutate()}
+			confirmWithInput
+			exceptedInputValue={name}
 		/>
 	);
 };

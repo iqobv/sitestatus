@@ -1,3 +1,4 @@
+import { Prisma } from '@generated/postgres/client';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
 import { projectSelect } from '@libs/prisma/project-select.prisma';
@@ -24,9 +25,8 @@ export class ProjectService {
 	}
 
 	async getProjectById(id: string, userId: string) {
-		if (!isUUID(id) || !id) {
+		if (!isUUID(id) || !id)
 			throw new NotFoundException(ERROR_MESSAGES.PROJECT.NOT_FOUND);
-		}
 
 		const project = await this.prismaService.project.findFirst({
 			where: { id, ownerId: userId, deletedAt: null },
@@ -47,19 +47,26 @@ export class ProjectService {
 			limit = 20,
 			sortBy = 'createdAt',
 			sortOrder = 'desc',
+			search,
 		} = query || {};
+
+		const where: Prisma.ProjectWhereInput = {
+			ownerId: userId,
+			name: { contains: search, mode: 'insensitive' },
+			deletedAt: null,
+		};
 
 		const result = await paginate({ page, limit }, async (limit, offset) => {
 			const [data, total] = await this.prismaService.$transaction([
 				this.prismaService.project.findMany({
-					where: { ownerId: userId, deletedAt: null },
+					where,
 					orderBy: { [sortBy]: sortOrder },
 					skip: offset,
 					take: limit,
 					select: projectSelect,
 				}),
 				this.prismaService.project.count({
-					where: { ownerId: userId, deletedAt: null },
+					where,
 				}),
 			]);
 

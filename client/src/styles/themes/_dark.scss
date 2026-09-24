@@ -49,25 +49,45 @@ html.dark {
 	/* Buttons */
 	--btn-contained-bg: #e5e5e5;
 	--btn-contained-bg-hover: #d4d4d4;
-	--btn-contained-text: #111111;
+	--btn-contained-color: #111111;
 
-	--btn-secondary-bg: #262626;
-	--btn-secondary-bg-hover: #333333;
-	--btn-secondary-text: #fafafa;
+	--btn-contained-bg-secondary: #262626;
+	--btn-contained-bg-hover-secondary: #333333;
+	--btn-contained-color-secondary: #fafafa;
+
+	--btn-contained-bg-danger: #ff6467;
+	--btn-contained-bg-hover-danger: #ff6467bd;
+	--btn-contained-color-danger: #ffffff;
 
 	--btn-outlined-bg-hover: #262626;
 	--btn-outlined-border: #333333;
 	--btn-outlined-border-hover: #4d4d4d;
-	--btn-outlined-text: #ededed;
+	--btn-outlined-color: #ededed;
 
-	--btn-text-bg-hover: #262626;
+	--btn-outlined-bg-hover-secondary: #32323243;
+	--btn-outlined-border-secondary: #ffffff1c;
+	--btn-outlined-border-hover-secondary: #ffffff33;
+	--btn-outlined-color-secondary: #eeeeee;
+
+	--btn-outlined-bg-hover-danger: #ff6467;
+	--btn-outlined-border-danger: #ff6467;
+	--btn-outlined-border-hover-danger: #ff6467;
+	--btn-outlined-color-danger: #ffffff;
+
 	--btn-text-color: #ededed;
+	--btn-text-bg-hover: #262626;
 
-	--btn-danger-bg: #ff6467;
-	--btn-danger-bg-hover: #ff6467b3;
-	--btn-danger-text: #ffffff;
+	--btn-text-bg-secondary: #262626;
+	--btn-text-color-secondary: #ededed;
+	--btn-text-bg-hover-secondary: #333333;
 
-	--btn-link-text: #e5e5e5;
+	--btn-text-bg-danger: transparent;
+	--btn-text-color-danger: #ededed;
+	--btn-text-bg-hover-danger: #ff6a6d8d;
+
+	--btn-link-color: #ededed;
+	--btn-link-color-secondary: #ededed;
+	--btn-link-color-danger: #ff6467;
 
 	/* Input */
 	--input-bg: #151515;
@@ -106,6 +126,23 @@ html.dark {
 	--dropdown-item-hover-bg: #262626;
 	--dropdown-item-hover-text: #ffffff;
 	--dropdown-item-disabled-text: #737373;
+
+	/* Select */
+	--select-bg: #1a1a1a;
+	--select-border: #262626;
+	--select-item-hover-bg: #262626;
+	--select-item-hover-text: #ffffff;
+	--select-item-disabled-text: #737373;
+	--select-placeholder-text: #737373;
+	--select-value-text: #ffffff;
+
+	/* Chips */
+	--chip-bg: #262626;
+	--chip-text: #ffffff;
+	--chip-border-color: #4d4d4d;
+	--chip-remove-btn-bg-hover: #4d4d4d;
+	--chip-remove-btn-color: #ffffff;
+	--chip-remove-btn-color-hover: #ffffff;
 
 	/* Modal */
 	--modal-bg: #151515;

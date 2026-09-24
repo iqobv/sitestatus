@@ -50,7 +50,7 @@ export const GlobalAlertSettingsEdit = ({
 
 	return (
 		<Modal>
-			<ModalTrigger>
+			<ModalTrigger asChild>
 				<Button variant="outlined" disabled={isPending}>
 					Edit
 				</Button>
@@ -75,36 +75,19 @@ export const GlobalAlertSettingsEdit = ({
 								<ModalHeader>Edit Global Alert Settings</ModalHeader>
 								<ModalBody>
 									{GLOBAL_ALERT_SETTINGS_FIELDS.map((f) => (
-										<FormField
+										<FormField<UpsertAlertSettingsDto>
 											key={f.name}
-											name={f.name as keyof UpsertAlertSettingsDto}
+											name={f.name}
 										>
-											{({ field }) => {
-												const errorMessage =
-													(errors[f.name as keyof typeof errors]
-														?.message as string) ?? '';
-
-												if (f.type === 'checkbox') {
-													return (
-														<Checkbox
-															label={f.label}
-															error={errorMessage}
-															{...field}
-															checked={Boolean(field.value)}
-														/>
-													);
-												}
-
-												return (
-													<TextField
-														type={f.type}
-														label={f.label}
-														placeholder={f.placeholder}
-														error={errorMessage}
-														{...field}
-													/>
-												);
-											}}
+											{f.type === 'checkbox' ? (
+												<Checkbox label={f.label} />
+											) : (
+												<TextField
+													type={f.type}
+													label={f.label}
+													placeholder={f.placeholder}
+												/>
+											)}
 										</FormField>
 									))}
 								</ModalBody>

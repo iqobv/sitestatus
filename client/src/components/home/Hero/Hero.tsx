@@ -16,8 +16,8 @@ export const Hero = () => {
 						Global distributed checks, hybrid project grouping, and public
 						status pages. Forever free.
 					</p>
-					<Button href={CROSS_DOMAIN_ROUTES.APP_REGISTER} asNative>
-						Start Monitoring Now
+					<Button asChild>
+						<a href={CROSS_DOMAIN_ROUTES.APP_REGISTER}>Start Monitoring Now</a>
 					</Button>
 				</div>
 			</div>

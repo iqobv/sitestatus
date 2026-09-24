@@ -1,6 +1,7 @@
 'use client';
 
 import { Button, SectionHeader, Sepator } from '@/components/ui';
+import Link from 'next/link';
 import { IconType } from 'react-icons';
 import styles from './DashboardSection.module.scss';
 import {
@@ -42,8 +43,8 @@ export const DashboardSection = ({
 				}}
 				{...(href && {
 					rightSlot: (
-						<Button href={href} variant="secondary">
-							View All
+						<Button asChild color="secondary">
+							<Link href={href}>View All</Link>
 						</Button>
 					),
 				})}
@@ -67,8 +68,8 @@ export const DashboardSection = ({
 							<div>{emptyText}</div>
 						</div>
 						{createButtonText && createHref && (
-							<Button href={createHref} variant="secondary">
-								{createButtonText}
+							<Button asChild color="secondary">
+								<Link href={createHref}>{createButtonText}</Link>
 							</Button>
 						)}
 					</div>

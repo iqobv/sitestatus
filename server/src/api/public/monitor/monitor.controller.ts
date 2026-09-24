@@ -64,6 +64,7 @@ export class MonitorController {
 	@Auth()
 	@ApiOperation({ summary: 'Get all monitors by projectId' })
 	@ApiOkResponse({ type: PaginatedMonitorsDto })
+	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.PROJECT.NOT_FOUND)
 	@Get('projects/:projectId')
 	async findAllMonitorsByProjectId(
 		@Authorized('id') userId: string,

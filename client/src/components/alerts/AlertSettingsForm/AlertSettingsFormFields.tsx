@@ -20,33 +20,25 @@ export const AlertSettingsFormFields = ({
 		<>
 			{GLOBAL_ALERT_SETTINGS_FIELDS.map((f) => (
 				<FormField key={f.name} name={f.name as keyof UpsertAlertSettingsDto}>
-					{({ field }) => {
-						const errorMessage =
-							(errors[f.name as keyof typeof errors]?.message as string) ?? '';
-
-						if (f.type === 'checkbox') {
-							return (
-								<Checkbox
-									label={f.label}
-									error={errorMessage}
-									disabled={isGlobalSettings && !overrideSettings}
-									{...field}
-									checked={Boolean(field.value)}
-								/>
-							);
-						}
-
-						return (
-							<TextField
-								type={f.type}
-								label={f.label}
-								placeholder={f.placeholder}
-								error={errorMessage}
-								disabled={isGlobalSettings && !overrideSettings}
-								{...field}
-							/>
-						);
-					}}
+					{f.type === 'checkbox' ? (
+						<Checkbox
+							label={f.label}
+							error={
+								(errors[f.name as keyof typeof errors]?.message as string) ?? ''
+							}
+							disabled={isGlobalSettings && !overrideSettings}
+						/>
+					) : (
+						<TextField
+							type={f.type}
+							label={f.label}
+							placeholder={f.placeholder}
+							error={
+								(errors[f.name as keyof typeof errors]?.message as string) ?? ''
+							}
+							disabled={isGlobalSettings && !overrideSettings}
+						/>
+					)}
 				</FormField>
 			))}
 		</>

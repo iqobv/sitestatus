@@ -1,8 +1,5 @@
 import { Region } from '@/types/region/region.types';
-import { apiClient, apiServer } from '../axios';
+import { apiClient } from '../axios';
 
 export const getAllRegions = async () =>
 	(await apiClient.get<Region[]>('/v1/regions')).data;
-
-export const getServerAllRegions = async () =>
-	(await apiServer.get<Region[]>('/v1/regions')).data;

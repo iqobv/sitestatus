@@ -80,7 +80,10 @@ describe('ProjectController', () => {
 		it('should return all projects for a given user', async () => {
 			service.getAllProjects.mockResolvedValue([mockProject]);
 
-			const result = await controller.getAllProjects(ownerId);
+			const result = await controller.getAllProjects(ownerId, {
+				limit: 10,
+				page: 1,
+			});
 
 			expect(service.getAllProjects).toHaveBeenCalledWith(ownerId);
 			expect(result).toEqual([mockProject]);

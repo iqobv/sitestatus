@@ -1,16 +1,13 @@
-'use client';
-
 import { createContext, useContext } from 'react';
-import { DropdownContextType } from './DropdownContext.types';
+import { DropdownContextType } from './Dropdown.types';
 
-export const DropdownContext = createContext<DropdownContextType | undefined>(
-	undefined,
-);
+export const DropdownContext = createContext<DropdownContextType | null>(null);
 
-export const useDropdown = (): DropdownContextType => {
+export const useDropdownContext = () => {
 	const context = useContext(DropdownContext);
-	if (!context) {
-		throw new Error('useDropdown must be used within a DropdownProvider');
-	}
+
+	if (!context)
+		throw new Error('useDropdownContext must be used within a Dropdown');
+
 	return context;
 };

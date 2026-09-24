@@ -1,4 +1,4 @@
-import { parseAsIndex, parseAsInteger, parseAsStringEnum } from 'nuqs/server';
+import { parseAsIndex, parseAsInteger, parseAsStringEnum } from 'nuqs';
 
 const createStringEnumParser = <T extends Record<string, string>>(
 	obj: T,

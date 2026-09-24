@@ -7,7 +7,7 @@ export interface ConfirmActionProps {
 	confirmButtonText?: string;
 	cancelButtonText?: string;
 	confirmWithInput?: boolean;
-	inputLabel?: string;
+	inputLabel?: string | React.ReactNode;
 	inputPlaceholder?: string;
 	exceptedInputValue?: string;
 }

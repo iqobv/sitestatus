@@ -1,10 +1,9 @@
 'use client';
 
-import { login as apiLogin } from '@/api/auth/auth.api';
+import { login } from '@/api/auth/auth.api';
 import { SectionHeader } from '@/components/ui';
 import { AUTH_PAGES } from '@/config/authPages.config';
 import { LoginDto } from '@/dto/auth.dto';
-import { useAuth } from '@/hooks/useAuth.hook';
 import { loginSchema } from '@/schemas/auth/login.schema';
 import { User } from '@/types/user/user.types';
 import Link from 'next/link';
@@ -14,7 +13,6 @@ import { AuthWrapper } from '../AuthWrapper/AuthWrapper';
 import { LOGIN_FIELDS } from './loginFields';
 
 export const Login = () => {
-	const { login } = useAuth();
 	const router = useRouter();
 
 	return (
@@ -26,12 +24,9 @@ export const Login = () => {
 					password: '',
 				}}
 				onSuccess={(data) => {
-					if (data) {
-						login(data);
-						router.refresh();
-					}
+					if (data) router.refresh();
 				}}
-				mutationFn={apiLogin}
+				mutationFn={login}
 				schema={loginSchema}
 				buttonLabel="Log in"
 				bottomText={

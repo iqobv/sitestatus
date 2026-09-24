@@ -107,7 +107,7 @@ export class StatusPageService {
 
 		const statusPageMonitors =
 			await this.pgPrismaService.statusPageMonitor.findMany({
-				where: { statusPageId: statusPage.id },
+				where: { statusPageId: statusPage.id, monitor: { deletedAt: null } },
 				select: {
 					id: true,
 					displayName: true,
@@ -187,10 +187,14 @@ export class StatusPageService {
 	}
 
 	async getStatusPageById(id: string, userId: string) {
-		const statusPage = await this.pgPrismaService.statusPage.findUnique({
-			where: { id, userId },
+		const statusPage = await this.pgPrismaService.statusPage.findFirst({
+			where: {
+				id,
+				userId,
+			},
 			include: {
 				monitors: {
+					where: { monitor: { deletedAt: null } },
 					include: {
 						monitor: true,
 					},
@@ -210,9 +214,8 @@ export class StatusPageService {
 
 		const statusPage = await this.getStatusPageById(id, userId);
 
-		if (!monitors || monitors?.length === 0) {
+		if (!monitors || monitors?.length === 0)
 			return await this.saveUpdateStatusPage(id, userId, dto);
-		}
 
 		const monitorIds = monitors.map((m) => m.id);
 
@@ -221,9 +224,8 @@ export class StatusPageService {
 			select: { id: true },
 		});
 
-		if (existingMonitors.length !== monitorIds.length) {
+		if (existingMonitors.length !== monitorIds.length)
 			throw new NotFoundException(ERROR_MESSAGES.MONITOR.NOT_FOUND);
-		}
 
 		const { toCreate, toDeleteIds, toUpdate } = this.calculateDiff(
 			statusPage.monitors,
@@ -239,7 +241,7 @@ export class StatusPageService {
 
 			for (const updatePayload of toUpdate) {
 				await tx.statusPageMonitor.update({
-					where: { id: updatePayload.id },
+					where: { id: updatePayload.id, monitor: { deletedAt: null } },
 					data: updatePayload.data,
 				});
 			}

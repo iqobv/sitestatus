@@ -1,0 +1,28 @@
+@use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins' as *;
+
+@mixin hover-effect {
+	background-color: var(--btn-text-bg-hover);
+}
+
+.item {
+	padding: 12px 10px !important;
+	display: inline-flex;
+	align-items: center;
+	justify-content: flex-start;
+	outline: none;
+	cursor: pointer;
+	width: 100%;
+	border-radius: var(--border-radius);
+	transition: background-color 0.2s ease-in-out;
+	gap: 0.5rem;
+
+	&[data-highlighted] {
+		@include hover-effect;
+	}
+
+	&[data-disabled] {
+		opacity: 0.5;
+		pointer-events: none;
+	}
+}

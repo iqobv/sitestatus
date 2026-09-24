@@ -3,6 +3,7 @@
 import { getStatusPageBySlug } from '@/api/statusPage/getStatusPageBySlug.api';
 import { SectionHeader } from '@/components/ui';
 import { QUERY_KEYS } from '@/config/queryClient.config';
+import { usePageTitle } from '@/hooks/usePageTitle.hook';
 import { useQuery } from '@tanstack/react-query';
 import { notFound } from 'next/navigation';
 import styles from './StatusPageHeader.module.scss';
@@ -18,6 +19,8 @@ export const StatusPageHeader = ({ slug }: StatusPageHeaderProps) => {
 		queryFn: () => getStatusPageBySlug(slug),
 		enabled: !!slug,
 	});
+
+	usePageTitle(data && data.title);
 
 	if (error) return notFound();
 	if (isLoading) return <StatusPageHeaderLoader />;

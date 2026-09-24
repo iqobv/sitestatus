@@ -1,81 +1,77 @@
 'use client';
 
-import Link from 'next/link';
+import { Slot, Slottable } from '@radix-ui/react-slot';
+import clsx from 'clsx';
 import React from 'react';
-import { buttonVariants } from './butonStyles';
+import { Loader } from '../Loader/Loader';
 import { ButtonProps } from './Button.types';
 import { ButtonContent } from './ButtonContent/ButtonContent';
+import { buttonVariants } from './buttonVariants';
+import styles from './styles/Button.module.scss';
 
 export const Button = ({
 	children,
 	variant = 'contained',
+	color = 'primary',
 	className = '',
 	disabled = false,
-	href = '',
-	id,
-	onClick,
-	style,
 	type = 'button',
 	loading = false,
 	size = 'md',
 	fullWidth = false,
 	isIcon = false,
-	rounded = false,
-	contentClassName = '',
-	isActive,
+	isRounded = false,
 	ref,
-	asNative = false,
-	...rest
+	asChild = false,
+	onClick,
+	textTransform = 'none',
+	textAlign = 'center',
+	...props
 }: ButtonProps) => {
-	const isLink = !!href && !disabled && !loading;
+	const isDisabled = disabled || loading;
+	const Component = asChild ? Slot : 'button';
 
-	const styles = buttonVariants({
+	const classNames = buttonVariants({
 		variant,
+		color,
 		size,
 		fullWidth,
 		isIcon,
-		disabled,
-		rounded,
+		disabled: isDisabled,
+		isRounded,
+		textTransform,
+		textAlign,
 	});
 
-	const buttonContentProps = {
-		loading,
-		className: contentClassName,
+	const handleClick = (e: React.MouseEvent<HTMLElement>) => {
+		if (isDisabled) {
+			e.preventDefault();
+			return;
+		}
+
+		onClick?.(e);
 	};
 
-	if (isLink) {
-		const Component = asNative ? 'a' : Link;
-
-		return (
-			<Component
-				href={href}
-				className={`${styles} ${className || ''}`}
-				style={style}
-				id={id}
-				onClick={onClick as React.MouseEventHandler<HTMLAnchorElement>}
-				ref={ref as React.Ref<HTMLAnchorElement>}
-				{...(rest as Omit<
-					React.AnchorHTMLAttributes<HTMLAnchorElement>,
-					'href'
-				>)}
-			>
-				<ButtonContent {...buttonContentProps}>{children}</ButtonContent>
-			</Component>
-		);
-	}
-
 	return (
-		<button
-			className={`${styles} ${className || ''}`}
-			onClick={onClick as React.MouseEventHandler<HTMLButtonElement>}
-			style={style}
-			disabled={disabled || loading}
-			type={type}
-			id={id}
-			ref={ref as React.Ref<HTMLButtonElement>}
-			{...(rest as React.ButtonHTMLAttributes<HTMLButtonElement>)}
+		<Component
+			ref={ref}
+			className={clsx(classNames, className)}
+			disabled={asChild ? undefined : isDisabled}
+			aria-disabled={isDisabled}
+			data-loading={loading ? '' : undefined}
+			type={asChild ? undefined : type}
+			onClick={handleClick}
+			{...props}
 		>
-			<ButtonContent {...buttonContentProps}>{children}</ButtonContent>
-		</button>
+			{loading && (
+				<Loader
+					disablePadding
+					size={22}
+					thickness={4}
+					containerClassName={styles.loader}
+				/>
+			)}
+			<Slottable>{ButtonContent({ children, loading, asChild })}</Slottable>
+		</Component>
 	);
 };

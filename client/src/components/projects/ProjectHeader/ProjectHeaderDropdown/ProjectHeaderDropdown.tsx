@@ -3,15 +3,15 @@
 import {
 	Button,
 	Dropdown,
+	DropdownContent,
 	DropdownItem,
-	DropdownMenu,
 	DropdownTrigger,
 } from '@/components/ui';
 import { PRIVATE_PAGES } from '@/config/privatePages.config';
 import { Project } from '@/types/project/project.types';
 import Link from 'next/link';
-import { MdMoreVert, MdOutlineDelete, MdOutlineEdit } from 'react-icons/md';
-import styles from './ProjectHeaderDropdown.module.scss';
+import { MdMoreVert, MdOutlineEdit } from 'react-icons/md';
+import { ProjectHeaderDropdownDelete } from './ProjectHeaderDropdownDelete';
 import { ProjectHeaderDropdownItemAlertSettings } from './ProjectHeaderDropdownItems/ProjectHeaderDropdownItemAlertSettings';
 
 interface ProjectHeaderDropdownProps {
@@ -22,13 +22,18 @@ export const ProjectHeaderDropdown = ({
 	projectData,
 }: ProjectHeaderDropdownProps) => {
 	return (
-		<Dropdown placement="bottom-end">
-			<DropdownTrigger>
+		<Dropdown>
+			<DropdownTrigger asChild>
 				<Button isIcon variant="text">
 					<MdMoreVert size={20} />
 				</Button>
 			</DropdownTrigger>
-			<DropdownMenu zIndex={1400}>
+			<DropdownContent
+				side="bottom"
+				align="end"
+				menuWidth="max-content"
+				collisionPadding={{ right: 16 }}
+			>
 				<DropdownItem asChild>
 					<Link href={PRIVATE_PAGES.PROJECTS.EDIT(projectData.id)}>
 						<MdOutlineEdit size={20} />
@@ -36,11 +41,11 @@ export const ProjectHeaderDropdown = ({
 					</Link>
 				</DropdownItem>
 				<ProjectHeaderDropdownItemAlertSettings id={projectData.id} />
-				<DropdownItem asChild className={styles.deleteButton} isDelete>
-					<MdOutlineDelete size={20} />
-					Delete
-				</DropdownItem>
-			</DropdownMenu>
+				<ProjectHeaderDropdownDelete
+					id={projectData.id}
+					projectName={projectData.name}
+				/>
+			</DropdownContent>
 		</Dropdown>
 	);
 };

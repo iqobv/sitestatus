@@ -1,56 +1,28 @@
 'use client';
 
-import { env } from '@/env';
-import React, { ReactElement, useState } from 'react';
+import * as Dialog from '@radix-ui/react-dialog';
+import { useState } from 'react';
+import { ModalProps } from './Modal.types';
 import { ModalContext } from './ModalContext';
-import { ModalContent } from './parts/ModalContent/ModalContent';
-import { ModalTrigger } from './parts/ModalTrigger';
-
-interface ModalProps {
-	children: React.ReactNode;
-	withoutTrigger?: boolean;
-	renderOnMount?: boolean;
-	onClose?: () => void;
-}
 
 export const Modal = ({
 	children,
-	withoutTrigger = false,
-	renderOnMount = false,
-	onClose,
+	open,
+	onOpenChange,
+	...props
 }: ModalProps) => {
-	const [open, setOpen] = useState(renderOnMount);
-
-	const openModal = () => setOpen(true);
-
-	const closeModal = () => {
-		setOpen(false);
-		if (onClose) {
-			onClose();
-		}
-	};
-
-	const childrenArray = React.Children.toArray(children) as ReactElement[];
-
-	const trigger = childrenArray.find((child) => child.type === ModalTrigger);
-
-	const content = childrenArray.find((child) => child.type === ModalContent);
-
-	if (env.NODE_ENV === 'development') {
-		if (!trigger && !withoutTrigger) {
-			throw new Error('Modal must have a Modal.Trigger component as a child.');
-		}
-
-		if (!content) {
-			throw new Error('Modal must have a Modal.Content component as a child.');
-		}
-	}
+	const [internalOpen, setInternalOpen] = useState(false);
+	const isOpen = open !== undefined ? open : internalOpen;
+	const setIsOpen = onOpenChange !== undefined ? onOpenChange : setInternalOpen;
 
 	return (
-		<ModalContext.Provider
-			value={{ open, onOpen: openModal, onClose: closeModal }}
-		>
-			{children}
+		<ModalContext.Provider value={{ isOpen }}>
+			<Dialog.Root open={isOpen} onOpenChange={setIsOpen} {...props}>
+				{children}
+			</Dialog.Root>
 		</ModalContext.Provider>
 	);
 };
+
+export const ModalTrigger = Dialog.Trigger;
+export const ModalClose = Dialog.Close;

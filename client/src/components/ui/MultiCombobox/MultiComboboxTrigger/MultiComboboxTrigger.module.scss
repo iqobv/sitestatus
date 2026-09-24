@@ -1,0 +1,67 @@
+@use '../../../../styles/shared/select-trigger-styles' as *;
+@use '../../../../styles/mixins' as *;
+
+.container {
+	position: relative;
+	width: 100%;
+}
+
+.trigger {
+	@include trigger;
+	height: auto;
+	padding: 0.5rem 0.75rem;
+}
+
+.chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	align-items: center;
+	overflow: hidden;
+}
+
+.chip {
+	font-size: 0.95rem;
+	display: flex;
+	flex-direction: row;
+	gap: 0.5rem;
+	align-items: center;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	background-color: var(--chip-bg);
+	columns: var(--chip-text);
+	border-radius: var(--border-radius);
+	border: 1px solid var(--chip-border-color);
+	padding: 0.3125rem 0.625rem;
+}
+
+@mixin chip-remove-btn-hover {
+	background-color: var(--chip-remove-btn-bg-hover);
+	color: var(--chip-remove-btn-color-hover);
+}
+
+.triggerButton {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.chipRemoveBtn {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 0.25rem;
+	color: var(--chip-remove-btn-color);
+	outline: none;
+	border-radius: 50%;
+
+	&:focus {
+		@include chip-remove-btn-hover;
+	}
+
+	@include hover {
+		&:hover {
+			@include chip-remove-btn-hover;
+		}
+	}
+}

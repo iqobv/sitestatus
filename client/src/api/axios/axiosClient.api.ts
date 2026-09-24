@@ -2,16 +2,21 @@
 
 import { AUTH_PAGES } from '@/config/authPages.config';
 import { env } from '@/env';
-import { useUserStore } from '@/store/user.store';
-import { ApiErrorResponse } from '@/types/api/messageResponse.api';
-import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import { ApiMessageResponse } from '@/types/api/messageResponse.api';
+import axios, {
+	AxiosError,
+	InternalAxiosRequestConfig,
+	isAxiosError,
+} from 'axios';
 
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
 	_retry?: boolean;
 }
 
+const url = env.NEXT_PUBLIC_API_URL;
+
 const apiClient = axios.create({
-	baseURL: env.NEXT_PUBLIC_API_URL,
+	baseURL: url,
 	withCredentials: true,
 	headers: {
 		'Content-Type': 'application/json',
@@ -24,20 +29,14 @@ let failedQueue: Array<{
 	reject: (reason?: unknown) => void;
 }> = [];
 
-const processQueue = (error: Error | null = null) => {
-	failedQueue.forEach((prom) => {
-		if (error) {
-			prom.reject(error);
-		} else {
-			prom.resolve();
-		}
-	});
+const processQueue = (error: ApiMessageResponse | null = null) => {
+	failedQueue.forEach((prom) => (error ? prom.reject(error) : prom.resolve()));
 	failedQueue = [];
 };
 
 apiClient.interceptors.response.use(
 	(response) => response,
-	async (error: AxiosError<ApiErrorResponse>) => {
+	async (error: AxiosError<ApiMessageResponse>) => {
 		const originalRequest = error.config as CustomAxiosRequestConfig;
 		const requestUrl = originalRequest?.url || '';
 
@@ -50,24 +49,19 @@ apiClient.interceptors.response.use(
 			!isAuthEndpoint &&
 			!originalRequest._retry
 		) {
-			if (isRefreshing) {
+			if (isRefreshing)
 				return new Promise(function (resolve, reject) {
 					failedQueue.push({ resolve, reject });
 				})
-					.then(() => {
-						return apiClient(originalRequest);
-					})
-					.catch((err) => {
-						return Promise.reject(err);
-					});
-			}
+					.then(() => apiClient(originalRequest))
+					.catch((err) => Promise.reject(err));
 
 			originalRequest._retry = true;
 			isRefreshing = true;
 
 			try {
 				await axios.post(
-					`${env.NEXT_PUBLIC_API_URL}/v1/auth/refresh`,
+					`${url}/v1/auth/refresh`,
 					{},
 					{ withCredentials: true },
 				);
@@ -75,12 +69,12 @@ apiClient.interceptors.response.use(
 				processQueue(null);
 				return apiClient(originalRequest);
 			} catch (refreshError) {
-				processQueue(refreshError as Error);
+				if (isAxiosError(refreshError))
+					processQueue(refreshError.response?.data);
 
-				useUserStore.getState().removeUser();
-				if (typeof window !== 'undefined') {
-					window.location.href = AUTH_PAGES.LOGIN;
-				}
+				if (typeof window !== 'undefined')
+					window.dispatchEvent(new Event('auth:unauthorized'));
+
 				return Promise.reject(refreshError);
 			} finally {
 				isRefreshing = false;

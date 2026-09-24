@@ -1,13 +1,21 @@
 .label {
 	display: inline-flex;
 	width: 100%;
-	padding: 6px;
+	padding: 0.375rem;
 	font-size: 1rem;
 	align-items: center;
 	gap: 4px;
-}
 
-.required {
-	user-select: none;
-	color: var(--input-required-color);
+	&.required {
+		&::after {
+			content: '*';
+			color: var(--input-color-error);
+			margin-left: 0.25rem;
+		}
+	}
+
+	&.disabled {
+		opacity: 0.6;
+		pointer-events: none;
+	}
 }

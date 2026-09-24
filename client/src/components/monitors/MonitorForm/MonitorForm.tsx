@@ -39,11 +39,12 @@ export const MonitorForm = <D extends FieldValues, R extends { id: string }>({
 			<MonitorFormRegions />
 			<MonitorFormProject />
 			<FormActions>
-				<FormReset buttonProps={{ variant: 'secondary' }}>Cancel</FormReset>
+				<FormReset buttonProps={{ color: 'secondary' }}>Cancel</FormReset>
 				<FormSubmit
 					buttonProps={{
 						loading: isLoading,
 					}}
+					disabledOnEmpty
 				>
 					{buttonLabel}
 				</FormSubmit>

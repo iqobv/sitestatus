@@ -1,35 +1,40 @@
 'use client';
 
-import { Loader } from '../../Loader/Loader';
+import { cloneElement, isValidElement, ReactElement, ReactNode } from 'react';
 import styles from './ButtonContent.module.scss';
 
 interface ButtonContentProps {
 	children: React.ReactNode;
 	loading: boolean;
 	className?: string;
+	asChild?: boolean;
 }
 
 export const ButtonContent = ({
 	children,
 	loading,
-	className,
+	asChild,
 }: ButtonContentProps) => {
-	const classNames = [styles.inner, loading && styles.loading, className]
-		.filter(Boolean)
-		.join(' ')
-		.trim();
+	const contentStyle = {
+		visibility: loading ? 'hidden' : 'visible',
+		opacity: loading ? 0 : 1,
+	} as const;
+
+	if (asChild && isValidElement(children)) {
+		const childElement = children as ReactElement<{ children?: ReactNode }>;
+
+		return cloneElement(
+			childElement,
+			undefined,
+			<span className={styles.content} style={contentStyle}>
+				{childElement.props.children}
+			</span>,
+		);
+	}
 
 	return (
-		<div className={classNames}>
-			<div className={styles.content}>{children}</div>
-			{loading && (
-				<Loader
-					containerClassName={styles.loader}
-					disablePadding
-					thickness={4}
-					size={22}
-				/>
-			)}
-		</div>
+		<span className={styles.content} style={contentStyle}>
+			{children}
+		</span>
 	);
 };

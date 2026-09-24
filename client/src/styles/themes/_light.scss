@@ -55,25 +55,45 @@
 	/* Buttons */
 	--btn-contained-bg: #171717f2;
 	--btn-contained-bg-hover: #171717cc;
-	--btn-contained-text: #fafafa;
+	--btn-contained-color: #fafafa;
 
-	--btn-secondary-bg: #ebebeb;
-	--btn-secondary-bg-hover: #ebebeb99;
-	--btn-secondary-text: #171717;
+	--btn-contained-bg-secondary: #ebebeb;
+	--btn-contained-bg-hover-secondary: #c6c6c699;
+	--btn-contained-color-secondary: #171717;
 
-	--btn-outlined-bg-hover: #f5f5f5;
+	--btn-contained-bg-danger: #e7000bb3;
+	--btn-contained-bg-hover-danger: #e7000bcc;
+	--btn-contained-color-danger: #ffffff;
+
+	--btn-outlined-bg-hover: #e3e3e3;
 	--btn-outlined-border: #e5e5e5;
 	--btn-outlined-border-hover: #e5e5e5;
-	--btn-outlined-text: #111111;
+	--btn-outlined-color: #111111;
 
-	--btn-text-bg-hover: #eaeaeacc;
-	--btn-text-color: #111111;
+	--btn-outlined-bg-hover-secondary: #f1f1f1;
+	--btn-outlined-border-secondary: #d4d4d4;
+	--btn-outlined-border-hover-secondary: #a3a3a3;
+	--btn-outlined-color-secondary: #252525;
 
-	--btn-danger-bg: #e7000bb3;
-	--btn-danger-bg-hover: #e7000bcc;
-	--btn-danger-text: #ffffff;
+	--btn-outlined-bg-hover-danger: #ffdfdf;
+	--btn-outlined-border-danger: #ff6467;
+	--btn-outlined-border-hover-danger: #fb5659;
+	--btn-outlined-color-danger: #111111;
 
-	--btn-link-text: #171717;
+	--btn-text-color: #171717;
+	--btn-text-bg-hover: #eaeaea;
+
+	--btn-text-bg-secondary: #f7f7f7;
+	--btn-text-color-secondary: #171717;
+	--btn-text-bg-hover-secondary: #eaeaea;
+
+	--btn-text-bg-danger: transparent;
+	--btn-text-color-danger: #171717;
+	--btn-text-bg-hover-danger: #fddfdf;
+
+	--btn-link-color: #171717;
+	--btn-link-color-secondary: #171717;
+	--btn-link-color-danger: #e7000b;
 
 	/* Input */
 	--input-bg: #f8f8f8;
@@ -112,6 +132,24 @@
 	--dropdown-item-hover-bg: #e5e5e5;
 	--dropdown-item-hover-text: #111111;
 	--dropdown-item-disabled-text: #8f9294;
+
+	/* Select */
+	--select-bg: #f7f7f7;
+	--select-border: #eaeaea;
+	--select-item-hover-bg: #e5e5e5;
+	--select-item-hover-text: #111111;
+	--select-item-disabled-text: #8f9294;
+	--select-placeholder-text: #8f9294;
+	--select-value-text: #111111;
+
+	/* Chips */
+	--chip-bg: #e5e5e5;
+	--chip-text: #111111;
+	--chip-border-color: #d1d1d1;
+	--chip-remove-btn-bg-hover: #d1d1d1;
+	--chip-remove-btn-color: #111111;
+	--chip-remove-btn-color-hover: #000000;
+	--chip-border-radius: 4px;
 
 	/* Modal */
 	--modal-bg: #eaeaea;

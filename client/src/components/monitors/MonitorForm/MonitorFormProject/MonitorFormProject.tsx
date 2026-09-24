@@ -1,24 +1,29 @@
 'use client';
 
 import { getAllProjects } from '@/api/project/getAllProjects.api';
-import { Select } from '@/components/ui';
+import { Field, FormCombobox } from '@/components/ui';
 import { QUERY_KEYS } from '@/config/queryClient.config';
 import { BaseProjectMonitorDto } from '@/dto/monitor.dto';
+import { useDebounce } from '@/hooks/useDebounce.hook';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { Controller, useFormContext } from 'react-hook-form';
+import { useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 export const MonitorFormProject = () => {
 	const { control } = useFormContext<BaseProjectMonitorDto>();
+	const [searchValue, setSearchValue] = useState('');
+	const debouncedSearchValue = useDebounce(searchValue, 300);
 
 	const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
 		useInfiniteQuery({
-			queryKey: QUERY_KEYS.projects.infinite(),
+			queryKey: QUERY_KEYS.projects.infinite({ search: debouncedSearchValue }),
 			queryFn: ({ pageParam }) =>
 				getAllProjects({
 					page: pageParam,
 					limit: 20,
 					sortOrder: 'asc',
 					sortBy: 'name',
+					search: debouncedSearchValue,
 				}),
 			initialPageParam: 1,
 			getNextPageParam: (lastPage) =>
@@ -30,27 +35,25 @@ export const MonitorFormProject = () => {
 	const options = data?.pages.flatMap((page) => page.data) || [];
 
 	return (
-		<Controller
-			name="projectId"
-			control={control}
-			render={({ field: { value, onChange }, fieldState: { error } }) => (
-				<Select
-					label="Project"
-					options={[
-						{ value: '', label: 'Select a project' },
-						...options.map((project) => ({
-							value: project.id,
-							label: project.name,
-						})),
-					]}
-					onScrollEnd={hasNextPage ? fetchNextPage : undefined}
-					isLoading={isFetchingNextPage}
-					error={error?.message}
-					placeholder="Select a project"
-					value={value || ''}
-					onChange={onChange}
-				/>
-			)}
-		/>
+		<Field>
+			<FormCombobox<BaseProjectMonitorDto>
+				name="projectId"
+				control={control}
+				options={options.map((project) => ({
+					label: project.name,
+					value: project.id,
+				}))}
+				placeholder="Select a project"
+				isClearable
+				isLoading={isFetchingNextPage}
+				onScrollEnd={() => {
+					if (hasNextPage && !isFetchingNextPage) fetchNextPage();
+				}}
+				emptyMessage="No projects found"
+				searchValue={searchValue}
+				onSearchChange={setSearchValue}
+				shouldFilter={false}
+			/>
+		</Field>
 	);
 };

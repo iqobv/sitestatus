@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui';
 import { Breakpoint } from '@/types/ui/breakpoint.types';
+import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { TbLayoutSidebarRightCollapse } from 'react-icons/tb';
 import styles from './Sidebar.module.scss';
@@ -17,11 +18,9 @@ export const Sidebar = () => {
 		const xxlBreakpoint = Breakpoint.xxl;
 
 		const handleResize = () => {
-			if (window.innerWidth >= xxlBreakpoint) {
-				setIsMobile(false);
-			} else {
-				setIsMobile(true);
-			}
+			window.innerWidth >= xxlBreakpoint
+				? setIsMobile(false)
+				: setIsMobile(true);
 		};
 
 		handleResize();
@@ -29,9 +28,7 @@ export const Sidebar = () => {
 		const resizeObserver = new ResizeObserver(handleResize);
 		resizeObserver.observe(document.body);
 
-		return () => {
-			resizeObserver.unobserve(document.body);
-		};
+		return () => resizeObserver.unobserve(document.body);
 	}, [setExpanded]);
 
 	const handleClose = () => setExpanded((prev) => !prev);
@@ -40,10 +37,10 @@ export const Sidebar = () => {
 	return (
 		<>
 			<div
-				className={`${styles.overlay} ${expanded ? styles.active : ''}`}
+				className={clsx(styles.overlay, expanded && styles.active)}
 				onClick={handleClose}
 			/>
-			<aside className={`${styles.sidebar} ${expanded ? styles.expanded : ''}`}>
+			<aside className={clsx(styles.sidebar, expanded && styles.expanded)}>
 				<div className={styles.content}>
 					<SidebarHeader onClick={handleClick} />
 					<SidebarBody onClick={handleClick} />
@@ -56,11 +53,11 @@ export const Sidebar = () => {
 					onClick={handleClose}
 					isIcon
 					variant="text"
-					rounded
+					isRounded
 				>
 					<TbLayoutSidebarRightCollapse
 						size={24}
-						className={`${styles.toggleIcon} ${expanded ? styles.expanded : ''}`}
+						className={clsx(styles.toggleIcon, expanded && styles.expanded)}
 					/>
 				</Button>
 			</div>

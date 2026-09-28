@@ -1,19 +1,18 @@
 'use client';
 
-import { PRIVATE_PAGES } from '@/config/privatePages.config';
+import { CROSS_DOMAIN_ROUTES } from '@/config/navigation.config';
 import { env } from '@/env';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export const useLoginWindow = (url: string) => {
 	const apiUrl = env.NEXT_PUBLIC_API_URL;
 	const apiOrigin = apiUrl ? new URL(apiUrl).origin : null;
 
+	const searchParams = useSearchParams();
 	const router = useRouter();
 
 	const handleOpen = () => {
-		if (!apiUrl || !apiOrigin) {
-			return;
-		}
+		if (!apiUrl || !apiOrigin) return;
 
 		const width = 600;
 		const height = 800;
@@ -34,8 +33,13 @@ export const useLoginWindow = (url: string) => {
 
 			if (event.data?.success) {
 				window.removeEventListener('message', messageListener);
-				router.push(PRIVATE_PAGES.DASHBOARD);
-				router.refresh();
+
+				const redirect =
+					searchParams.get('redirect') || CROSS_DOMAIN_ROUTES.APP_DASHBOARD;
+
+				setTimeout(() => {
+					router.push(redirect);
+				}, 100);
 			}
 		};
 

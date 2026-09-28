@@ -1,15 +1,17 @@
 'use client';
 
 import { useAuth } from '@/hooks/useAuth.hook';
+import { useMounted } from '@/hooks/useMounted.hook';
 import Script from 'next/script';
 import { useGoogleOneTap } from './useGoogleOneTap.hook';
 
 export const GoogleOneTap = () => {
+	const mounted = useMounted();
 	const { user, isLoading: isAuthLoading } = useAuth();
 
 	useGoogleOneTap();
 
-	if (user || isAuthLoading) return null;
+	if (!mounted || user || isAuthLoading) return null;
 
 	return (
 		<Script

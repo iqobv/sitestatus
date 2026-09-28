@@ -1,5 +1,6 @@
 import { Register } from '@/components/auth/Register/Register';
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 import styles from '../authPage.module.scss';
 
 export const metadata: Metadata = {
@@ -10,7 +11,9 @@ export const metadata: Metadata = {
 export default function SignUpPage() {
 	return (
 		<div className={styles.page}>
-			<Register />
+			<Suspense fallback={null}>
+				<Register />
+			</Suspense>
 		</div>
 	);
 }

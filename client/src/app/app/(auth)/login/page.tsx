@@ -1,7 +1,8 @@
 import { Metadata } from 'next';
 
-import styles from '../authPage.module.scss';
 import { Login } from '@/components/auth/Login/Login';
+import { Suspense } from 'react';
+import styles from '../authPage.module.scss';
 
 export const metadata: Metadata = {
 	title: 'Log in',
@@ -11,7 +12,9 @@ export const metadata: Metadata = {
 export default function LoginPage() {
 	return (
 		<div className={styles.page}>
-			<Login />
+			<Suspense fallback={null}>
+				<Login />
+			</Suspense>
 		</div>
 	);
 }

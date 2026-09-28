@@ -1,10 +1,16 @@
 'use client';
 
-import { cloneElement, isValidElement, ReactElement, ReactNode } from 'react';
+import {
+	Children,
+	cloneElement,
+	isValidElement,
+	ReactElement,
+	ReactNode,
+} from 'react';
 import styles from './ButtonContent.module.scss';
 
 interface ButtonContentProps {
-	children: React.ReactNode;
+	children: ReactNode;
 	loading: boolean;
 	className?: string;
 	asChild?: boolean;
@@ -20,16 +26,21 @@ export const ButtonContent = ({
 		opacity: loading ? 0 : 1,
 	} as const;
 
-	if (asChild && isValidElement(children)) {
-		const childElement = children as ReactElement<{ children?: ReactNode }>;
+	if (asChild) {
+		const childArray = Children.toArray(children);
+		const child = childArray[0];
 
-		return cloneElement(
-			childElement,
-			undefined,
-			<span className={styles.content} style={contentStyle}>
-				{childElement.props.children}
-			</span>,
-		);
+		if (isValidElement(child)) {
+			const childElement = child as ReactElement<{ children?: ReactNode }>;
+
+			return cloneElement(
+				childElement,
+				undefined,
+				<span className={styles.content} style={contentStyle}>
+					{childElement.props.children}
+				</span>,
+			);
+		}
 	}
 
 	return (

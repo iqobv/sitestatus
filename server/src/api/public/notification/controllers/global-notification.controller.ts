@@ -5,6 +5,7 @@ import {
 	ApiSuccessResponse,
 } from '@libs/decorators/api-response.decorator';
 import { Auth } from '@libs/decorators/auth.decorator';
+import { MessageResponse } from '@libs/types/messages/message-detail.types';
 import {
 	Body,
 	Controller,
@@ -16,7 +17,7 @@ import {
 	Patch,
 	Post,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { ApiOkResponse } from '@nestjs/swagger';
 import { CreateGlobalNotificationDto } from '../dto/create-global-notification.dto';
 import { GlobalNotificationDto } from '../dto/global-notification.dto';
 import { GlobalNotificationService } from '../services/global-notification.service';
@@ -28,49 +29,54 @@ export class GlobalNotificationController {
 		private readonly globalNotificationService: GlobalNotificationService,
 	) {}
 
-	@ApiOperation({ summary: 'Create a global notification' })
-	@ApiOkResponse({ type: GlobalNotificationDto })
+	/** Create a new global notification */
 	@Post()
-	async createGlobalNotification(@Body() dto: CreateGlobalNotificationDto) {
+	@ApiOkResponse({ type: GlobalNotificationDto })
+	public async createGlobalNotification(
+		@Body() dto: CreateGlobalNotificationDto,
+	): Promise<GlobalNotificationDto> {
 		return await this.globalNotificationService.createGlobalNotification(dto);
 	}
 
-	@ApiOperation({ summary: 'Get all global notifications' })
-	@ApiOkResponse({ type: [GlobalNotificationDto] })
+	/** Get all global notifications */
 	@Get('all')
-	async getAllGlobalNotifications() {
+	@ApiOkResponse({ type: [GlobalNotificationDto] })
+	public async getAllGlobalNotifications(): Promise<GlobalNotificationDto[]> {
 		return await this.globalNotificationService.getAllNotifications();
 	}
 
-	@ApiOperation({ summary: 'Get a global notification by ID' })
+	/** Get global notification by ID */
+	@Get(':id')
 	@ApiOkResponse({ type: GlobalNotificationDto })
 	@ApiErrorResponse(
 		HttpStatus.NOT_FOUND,
 		ERROR_MESSAGES.NOTIFICATION.GLOBAL_NOT_FOUND,
 	)
-	@Get(':id')
-	async getGlobalNotificationById(@Param('id', ParseUUIDPipe) id: string) {
+	public async getGlobalNotificationById(
+		@Param('id', ParseUUIDPipe) id: string,
+	): Promise<GlobalNotificationDto> {
 		return await this.globalNotificationService.getGlobalNotificationById(id);
 	}
 
-	@ApiOperation({ summary: 'Update a global notification' })
+	/** Update a global notification */
+	@Patch(':id')
 	@ApiOkResponse({ type: GlobalNotificationDto })
 	@ApiErrorResponse(
 		HttpStatus.NOT_FOUND,
 		ERROR_MESSAGES.NOTIFICATION.GLOBAL_NOT_FOUND,
 	)
-	@Patch(':id')
-	async updateGlobalNotification(
+	public async updateGlobalNotification(
 		@Param('id', ParseUUIDPipe) id: string,
 		@Body() dto: CreateGlobalNotificationDto,
-	) {
+	): Promise<GlobalNotificationDto> {
 		return await this.globalNotificationService.updateGlobalNotification(
 			id,
 			dto,
 		);
 	}
 
-	@ApiOperation({ summary: 'Delete a global notification' })
+	/** Delete a global notification */
+	@Delete(':id')
 	@ApiSuccessResponse(
 		HttpStatus.OK,
 		SUCCESS_MESSAGES.NOTIFICATION.GLOBAL_DELETED,
@@ -79,8 +85,9 @@ export class GlobalNotificationController {
 		HttpStatus.NOT_FOUND,
 		ERROR_MESSAGES.NOTIFICATION.GLOBAL_NOT_FOUND,
 	)
-	@Delete(':id')
-	async deleteGlobalNotification(@Param('id', ParseUUIDPipe) id: string) {
+	public async deleteGlobalNotification(
+		@Param('id', ParseUUIDPipe) id: string,
+	): Promise<MessageResponse> {
 		return await this.globalNotificationService.deleteGlobalNotification(id);
 	}
 }

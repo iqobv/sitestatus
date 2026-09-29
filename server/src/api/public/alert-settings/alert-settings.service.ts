@@ -4,7 +4,11 @@ import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
 import { MessageResponse } from '@libs/types/messages/message-detail.types';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { AlertSettingsDto, FullAlertSettingsDto } from './dto/alert-settings.dto';
+import { plainToInstance } from 'class-transformer';
+import {
+	AlertSettingsDto,
+	FullAlertSettingsDto,
+} from './dto/alert-settings.dto';
 import { CreateAlertSettingsDto } from './dto/create-alert-settings.dto';
 
 @Injectable()
@@ -18,12 +22,14 @@ export class AlertSettingsService {
 	): Promise<AlertSettingsDto> {
 		const prisma = tx ?? this.prismaService;
 
-		return await prisma.alertSettings.create({
+		const alertSettings = await prisma.alertSettings.create({
 			data: {
 				userId,
 				...dto,
 			},
 		});
+
+		return plainToInstance(AlertSettingsDto, alertSettings);
 	}
 
 	public async getEffectiveSettings(
@@ -71,13 +77,15 @@ export class AlertSettingsService {
 		});
 
 		const monitorLevel = settings.find((s) => s.monitorId === monitor.id);
-		if (monitorLevel) return monitorLevel;
+		if (monitorLevel)
+			return plainToInstance(FullAlertSettingsDto, monitorLevel);
 
 		if (monitor.projectId) {
 			const projectLevel = settings.find(
 				(s) => s.projectId === monitor.projectId && s.monitorId === null,
 			);
-			if (projectLevel) return projectLevel;
+			if (projectLevel)
+				return plainToInstance(FullAlertSettingsDto, projectLevel);
 		}
 
 		const userLevel = settings.find(
@@ -86,7 +94,7 @@ export class AlertSettingsService {
 				s.projectId === null &&
 				s.monitorId === null,
 		);
-		if (userLevel) return userLevel;
+		if (userLevel) return plainToInstance(FullAlertSettingsDto, userLevel);
 
 		return null;
 	}
@@ -116,7 +124,7 @@ export class AlertSettingsService {
 		};
 
 		if (existingSetting) {
-			return await prisma.alertSettings.update({
+			const updated = await prisma.alertSettings.update({
 				where: { id: existingSetting.id },
 				data: {
 					...rest,
@@ -130,9 +138,11 @@ export class AlertSettingsService {
 				},
 				include,
 			});
+
+			return plainToInstance(AlertSettingsDto, updated);
 		}
 
-		return await prisma.alertSettings.create({
+		const created = await prisma.alertSettings.create({
 			data: {
 				...searchData,
 				...rest,
@@ -142,13 +152,15 @@ export class AlertSettingsService {
 			},
 			include,
 		});
+
+		return plainToInstance(AlertSettingsDto, created);
 	}
 
 	public async getSettingsHierarchy(
 		userId: string,
 		projectId?: string,
 		monitorId?: string,
-	): Promise<AlertSettingsDto[]> {
+	): Promise<FullAlertSettingsDto[]> {
 		let resolvedProjectId = projectId;
 
 		if (monitorId) {
@@ -157,30 +169,27 @@ export class AlertSettingsService {
 				select: { projectId: true },
 			});
 
-			if (monitor?.projectId) {
-				resolvedProjectId = monitor.projectId;
-			}
+			if (monitor?.projectId) resolvedProjectId = monitor.projectId;
 		}
 
 		const filters: Prisma.AlertSettingsWhereInput[] = [
 			{ userId, projectId: null, monitorId: null },
 		];
 
-		if (resolvedProjectId) {
+		if (resolvedProjectId)
 			filters.push({ userId, projectId: resolvedProjectId, monitorId: null });
-		}
 
-		if (monitorId) {
-			filters.push({ userId, monitorId });
-		}
+		if (monitorId) filters.push({ userId, monitorId });
 
-		return await this.prismaService.alertSettings.findMany({
+		const alertSettings = await this.prismaService.alertSettings.findMany({
 			where: { OR: filters },
 			include: { channels: true },
 		});
+
+		return plainToInstance(FullAlertSettingsDto, alertSettings);
 	}
 
-	async deleteAlertSettings(
+	public async deleteAlertSettings(
 		userId: string,
 		id: string,
 	): Promise<MessageResponse> {

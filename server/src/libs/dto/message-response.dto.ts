@@ -1,17 +1,11 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { BaseMessage } from '@libs/types/messages/message-detail.types';
+import { Expose } from 'class-transformer';
 
-export class MessageResponseDto {
-	@ApiProperty({ example: 'INVALID_INPUT' })
-	code: string;
-
-	@ApiProperty({ example: 'The input provided is invalid.' })
-	message: string;
-
-	@ApiPropertyOptional({ example: 'email' })
-	field?: string;
-
-	@ApiPropertyOptional({ example: { additionalInfo: 'Some extra details' } })
-	meta?: Record<string, unknown>;
+export class MessageResponseDto implements BaseMessage {
+	@Expose() code: string;
+	@Expose() message: string;
+	@Expose() field?: string;
+	@Expose() meta?: Record<string, unknown>;
 
 	constructor(partial: Partial<MessageResponseDto>) {
 		Object.assign(this, partial);

@@ -3,8 +3,8 @@ import { ApiErrorResponse } from '@libs/decorators/api-response.decorator';
 import { Auth } from '@libs/decorators/auth.decorator';
 import { Authorized } from '@libs/decorators/authorized.decorator';
 import { Controller, Get, HttpStatus, Param } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { IncidentDetailsDto } from './dto/incident-details.dto';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { IncidentDetailsDto } from './dto/incident.dto';
 import { IncidentService } from './incident.service';
 
 @Auth()
@@ -13,13 +13,13 @@ import { IncidentService } from './incident.service';
 export class IncidentController {
 	constructor(private readonly incidentService: IncidentService) {}
 
-	@ApiOperation({ summary: 'Get details of a specific incident' })
+	/** Get incident details by monitorId and incidentId */
+	@Get('monitor/:monitorId/incident/:incidentId')
 	@ApiOkResponse({ type: IncidentDetailsDto })
 	@ApiErrorResponse(HttpStatus.NOT_FOUND, [
 		ERROR_MESSAGES.MONITOR.NOT_FOUND,
 		ERROR_MESSAGES.INCIDENT.NOT_FOUND,
 	])
-	@Get('monitor/:monitorId/incident/:incidentId')
 	public async getIncidentDetails(
 		@Param('monitorId') monitorId: string,
 		@Param('incidentId') incidentId: string,

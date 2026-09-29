@@ -1,6 +1,7 @@
 import { IncidentDto } from '@api/public/incident/dto/incident.dto';
 import { StatPeriod } from '@generated/engine/enums';
 import { ApiProperty } from '@nestjs/swagger';
+import { Expose, Type } from 'class-transformer';
 import { AnalyticsRawDataDto } from './analytics-raw-log.dto';
 import { AnalyticsStatLogDto } from './analytics-stat-log.dto';
 import { AnalyticsStatisticsDto } from './analytics-statistics.dto';
@@ -13,15 +14,23 @@ const PeriodEnum = {
 type Period = (typeof PeriodEnum)[keyof typeof PeriodEnum];
 
 export class AnalyticsDto {
-	@ApiProperty({ example: StatPeriod.HOURLY, enum: PeriodEnum })
+	@Expose()
+	@ApiProperty({
+		example: StatPeriod.HOURLY,
+		enum: PeriodEnum,
+		enumName: 'StatPeriod',
+	})
 	period: Period;
 
-	@ApiProperty({ type: AnalyticsStatisticsDto })
+	@Expose()
+	@Type(() => AnalyticsStatisticsDto)
 	statistics: AnalyticsStatisticsDto;
 
-	@ApiProperty({ type: [IncidentDto] })
+	@Expose()
+	@Type(() => IncidentDto)
 	incidents: IncidentDto[];
 
-	@ApiProperty({ type: [AnalyticsStatLogDto] })
+	@Expose()
+	@Type(() => AnalyticsRawDataDto || AnalyticsStatLogDto)
 	data: AnalyticsRawDataDto[] | AnalyticsStatLogDto[];
 }

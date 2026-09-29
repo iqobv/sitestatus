@@ -88,7 +88,7 @@ export class MonitorCalculationService {
 		return mappedMonitors;
 	}
 
-	buildRollingTimeline(
+	public buildRollingTimeline(
 		logs: LogEntry[],
 		endTime: Date,
 		hours: number,
@@ -159,13 +159,16 @@ export class MonitorCalculationService {
 		});
 	}
 
-	calculateTimeline(
+	public calculateTimeline(
 		monitor: Monitor,
 		logs: AnalyticsRawDataDto[],
 		targetHours: number,
 		endDate: Date,
 		lastStatus: SiteStatus = SiteStatus.UNKNOWN,
-	) {
+	): {
+		uptime: string;
+		timeline: MonitorTimelineDto[];
+	} {
 		const timelineLogs: AnalyticsRawDataDto[] = logs.map((log) => ({
 			status: log.status,
 			responseTimeMs: log.responseTimeMs || 0,

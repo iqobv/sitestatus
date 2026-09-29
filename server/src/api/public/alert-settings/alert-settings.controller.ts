@@ -17,7 +17,7 @@ import {
 	Post,
 	Query,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AlertSettingsService } from './alert-settings.service';
 import {
 	AlertSettingsDto,
@@ -32,11 +32,9 @@ import { GetHierarchyQueryDto } from './dto/get-hierarchy-query.dto';
 export class AlertSettingsController {
 	constructor(private readonly alertSettingsService: AlertSettingsService) {}
 
-	@ApiOperation({
-		summary: 'Create or update alert settings for a monitor or project',
-	})
-	@ApiOkResponse({ type: AlertSettingsDto })
+	/** Create or update alert settings */
 	@Post()
+	@ApiOkResponse({ type: AlertSettingsDto })
 	public async createAlertSettings(
 		@Authorized('id') userId: string,
 		@Body() dto: CreateAlertSettingsDto,
@@ -44,26 +42,23 @@ export class AlertSettingsController {
 		return await this.alertSettingsService.upsertSettings(userId, dto);
 	}
 
-	@ApiOperation({ summary: 'Get effective alert settings for a monitor' })
+	/** Get effective alert settings for a monitor */
+	@Get('effective/:monitorId')
 	@ApiOkResponse({ type: FullAlertSettingsDto })
 	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.MONITOR.NOT_FOUND)
-	@Get('effective/:monitorId')
 	public async getEffectiveSettings(
 		@Param('monitorId', ParseUUIDPipe) monitorId: string,
 	): Promise<FullAlertSettingsDto | null> {
 		return await this.alertSettingsService.getEffectiveSettings(monitorId);
 	}
 
-	@ApiOperation({
-		summary:
-			'Get alert settings hierarchy for a user, optionally filtered by project or monitor',
-	})
-	@ApiOkResponse({ example: [AlertSettingsDto] })
+	/** Get alert settings hierarchy for a user */
 	@Get('hierarchy')
+	@ApiOkResponse({ example: [FullAlertSettingsDto] })
 	public async getSettingsHierarchy(
 		@Authorized('id') userId: string,
 		@Query() query: GetHierarchyQueryDto,
-	): Promise<AlertSettingsDto[]> {
+	): Promise<FullAlertSettingsDto[]> {
 		return await this.alertSettingsService.getSettingsHierarchy(
 			userId,
 			query.projectId,
@@ -71,10 +66,10 @@ export class AlertSettingsController {
 		);
 	}
 
-	@ApiOperation({ summary: 'Delete alert settings by ID' })
+	/** Delete alert settings by ID */
+	@Delete(':id')
 	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.ALERT.DELETED)
 	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.ALERT.NOT_FOUND)
-	@Delete(':id')
 	public async deleteSetting(
 		@Authorized('id') userId: string,
 		@Param('id', ParseUUIDPipe) id: string,

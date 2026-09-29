@@ -18,7 +18,7 @@ import {
 	Patch,
 	Post,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AdminRegionService } from './admin-region.service';
 import { CreateRegionDto } from './dto/create-region.dto';
 import { UpdateRegionDto } from './dto/update-region.dto';
@@ -29,49 +29,37 @@ import { UpdateRegionDto } from './dto/update-region.dto';
 export class AdminRegionController {
 	constructor(private readonly adminRegionService: AdminRegionService) {}
 
-	@ApiOperation({
-		summary: 'Create a new region',
-		description: 'Creates a new region with the provided details',
-	})
+	/** Create a new region */
+	@Post()
 	@ApiErrorResponse(HttpStatus.CONFLICT, ERROR_MESSAGES.REGION.ALREADY_EXISTS)
 	@ApiOkResponse({ type: RegionDto })
-	@Post()
 	public async createRegion(@Body() dto: CreateRegionDto): Promise<RegionDto> {
 		return await this.adminRegionService.createRegion(dto);
 	}
 
-	@ApiOperation({
-		summary: 'Get region by key',
-		description: 'Retrieves a region by its unique key',
-	})
+	/** Get region by key */
+	@Get('key/:key')
 	@ApiOkResponse({ type: RegionDto })
 	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.REGION.NOT_FOUND)
-	@Get('key/:key')
 	public async getRegionByKey(@Param('key') key: string): Promise<RegionDto> {
 		return await this.adminRegionService.getRegionByKey(key);
 	}
 
-	@ApiOperation({
-		summary: 'Get region by ID',
-		description: 'Retrieves a region by its unique ID',
-	})
+	/** Get region by ID */
+	@Get('id/:id')
 	@ApiOkResponse({ type: RegionDto })
 	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.REGION.NOT_FOUND)
-	@Get('id/:id')
 	public async getRegionById(
 		@Param('id', ParseUUIDPipe) id: string,
 	): Promise<RegionDto> {
 		return await this.adminRegionService.getRegionById(id);
 	}
 
-	@ApiOperation({
-		summary: 'Update region by ID',
-		description: 'Updates a region by its unique ID',
-	})
+	/** Update region by ID */
+	@Patch(':id')
 	@ApiOkResponse({ type: RegionDto })
 	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.REGION.NOT_FOUND)
 	@ApiErrorResponse(HttpStatus.CONFLICT, ERROR_MESSAGES.REGION.ALREADY_EXISTS)
-	@Patch(':id')
 	public async updateRegion(
 		@Param('id', ParseUUIDPipe) id: string,
 		@Body() dto: UpdateRegionDto,
@@ -79,13 +67,10 @@ export class AdminRegionController {
 		return await this.adminRegionService.updateRegion(id, dto);
 	}
 
-	@ApiOperation({
-		summary: 'Delete region by ID',
-		description: 'Deletes a region by its unique ID',
-	})
+	/** Delete region by ID */
+	@Delete(':id')
 	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.REGION.DELETED)
 	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.REGION.NOT_FOUND)
-	@Delete(':id')
 	public async deleteRegion(
 		@Param('id', ParseUUIDPipe) id: string,
 	): Promise<MessageResponse> {

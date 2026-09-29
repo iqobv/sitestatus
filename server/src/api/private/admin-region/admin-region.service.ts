@@ -9,6 +9,7 @@ import {
 	NotFoundException,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { plainToInstance } from 'class-transformer';
 import { CACHE_EMIT_EVENTS } from '../monitor-engine/constants/emit-events.constants';
 import { RegionCachePayload } from '../monitor-engine/interfaces/cache-storage.interface';
 import { CreateRegionDto } from './dto/create-region.dto';
@@ -45,7 +46,7 @@ export class AdminRegionService {
 
 			this.eventEmitter.emit(CACHE_EMIT_EVENTS.REGION.UPDATED, emitPayload);
 
-			return region;
+			return plainToInstance(RegionDto, region);
 		} catch (error) {
 			this.handlePrismaConflictError(error);
 
@@ -58,11 +59,9 @@ export class AdminRegionService {
 			where: { key },
 		});
 
-		if (!region) {
-			throw new NotFoundException(ERROR_MESSAGES.REGION.NOT_FOUND);
-		}
+		if (!region) throw new NotFoundException(ERROR_MESSAGES.REGION.NOT_FOUND);
 
-		return region;
+		return plainToInstance(RegionDto, region);
 	}
 
 	public async getRegionById(id: string): Promise<RegionDto> {
@@ -70,11 +69,9 @@ export class AdminRegionService {
 			where: { id },
 		});
 
-		if (!region) {
-			throw new NotFoundException(ERROR_MESSAGES.REGION.NOT_FOUND);
-		}
+		if (!region) throw new NotFoundException(ERROR_MESSAGES.REGION.NOT_FOUND);
 
-		return region;
+		return plainToInstance(RegionDto, region);
 	}
 
 	public async updateRegion(
@@ -107,7 +104,7 @@ export class AdminRegionService {
 
 			this.eventEmitter.emit(CACHE_EMIT_EVENTS.REGION.UPDATED, emitPayload);
 
-			return updatedRegion;
+			return plainToInstance(RegionDto, updatedRegion);
 		} catch (error) {
 			this.handlePrismaConflictError(error);
 

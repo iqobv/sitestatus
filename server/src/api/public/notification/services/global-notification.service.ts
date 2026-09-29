@@ -2,29 +2,34 @@ import { Prisma, User } from '@generated/postgres/client';
 import { GlobalNotificationReadCreateManyInput } from '@generated/postgres/models';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
+import { MessageResponse } from '@libs/types/messages/message-detail.types';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import { CreateGlobalNotificationDto } from '../dto/create-global-notification.dto';
+import { GlobalNotificationDto } from '../dto/global-notification.dto';
 import { UpdateGlobalNotificationDto } from '../dto/update-global-notification.dto';
 
 @Injectable()
 export class GlobalNotificationService {
 	constructor(private readonly prismaService: PgPrismaService) {}
 
-	async createGlobalNotification(
+	public async createGlobalNotification(
 		dto: CreateGlobalNotificationDto,
 		tx?: Prisma.TransactionClient,
-	) {
+	): Promise<GlobalNotificationDto> {
 		const prisma = tx ?? this.prismaService;
 
-		return await prisma.globalNotification.create({
+		const created = await prisma.globalNotification.create({
 			data: dto,
 		});
+
+		return plainToInstance(GlobalNotificationDto, created);
 	}
 
-	async markAllGlobalNotificationsAsRead(
+	public async markAllGlobalNotificationsAsRead(
 		user: User,
 		tx?: Prisma.TransactionClient,
-	) {
+	): Promise<MessageResponse> {
 		const prisma = tx ?? this.prismaService;
 
 		const globalNotifications = await prisma.globalNotification.findMany({
@@ -49,17 +54,24 @@ export class GlobalNotificationService {
 				userId: user.id,
 			}));
 
-		return await prisma.globalNotificationRead.createMany({
+		await prisma.globalNotificationRead.createMany({
 			data: readEntries,
 			skipDuplicates: true,
 		});
+
+		return SUCCESS_MESSAGES.NOTIFICATION.ALL_MARKED_AS_READ;
 	}
 
-	async getAllNotifications() {
-		return await this.prismaService.globalNotification.findMany();
+	public async getAllNotifications(): Promise<GlobalNotificationDto[]> {
+		const notifications =
+			await this.prismaService.globalNotification.findMany();
+
+		return plainToInstance(GlobalNotificationDto, notifications);
 	}
 
-	async getGlobalNotificationById(id: string) {
+	public async getGlobalNotificationById(
+		id: string,
+	): Promise<GlobalNotificationDto> {
 		const notification = await this.prismaService.globalNotification.findUnique(
 			{ where: { id } },
 		);
@@ -67,21 +79,26 @@ export class GlobalNotificationService {
 		if (!notification)
 			throw new NotFoundException(ERROR_MESSAGES.NOTIFICATION.GLOBAL_NOT_FOUND);
 
-		return notification;
+		return plainToInstance(GlobalNotificationDto, notification);
 	}
 
-	async updateGlobalNotification(id: string, dto: UpdateGlobalNotificationDto) {
+	public async updateGlobalNotification(
+		id: string,
+		dto: UpdateGlobalNotificationDto,
+	): Promise<GlobalNotificationDto> {
 		const notification = await this.getGlobalNotificationById(id);
 
-		return await this.prismaService.globalNotification.update({
+		const updated = await this.prismaService.globalNotification.update({
 			where: { id: notification.id },
 			data: {
 				...dto,
 			},
 		});
+
+		return plainToInstance(GlobalNotificationDto, updated);
 	}
 
-	async deleteGlobalNotification(id: string) {
+	public async deleteGlobalNotification(id: string): Promise<MessageResponse> {
 		const notification = await this.getGlobalNotificationById(id);
 
 		await this.prismaService.globalNotification.delete({

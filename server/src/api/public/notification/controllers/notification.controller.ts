@@ -14,7 +14,7 @@ import {
 	Post,
 	Query,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UserNotificationsDto } from '../dto/notification.dto';
 import { NotificationService } from '../services/notification.service';
 
@@ -25,8 +25,8 @@ import { NotificationService } from '../services/notification.service';
 export class NotificationController {
 	constructor(private readonly notificationService: NotificationService) {}
 
+	/** Get user notifications */
 	@Get()
-	@ApiOperation({ summary: 'Get user notifications' })
 	@ApiOkResponse({ example: UserNotificationsDto })
 	public async getUserNotifications(
 		@Authorized() user: User,
@@ -35,8 +35,8 @@ export class NotificationController {
 		return await this.notificationService.getUserNotifications(user, query);
 	}
 
+	/** Mark all user notifications as read */
 	@Post('mark-all-as-read')
-	@ApiOperation({ summary: 'Mark all notifications as read' })
 	@ApiSuccessResponse(
 		HttpStatus.OK,
 		SUCCESS_MESSAGES.NOTIFICATION.ALL_MARKED_AS_READ,

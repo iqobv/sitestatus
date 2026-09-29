@@ -1,6 +1,7 @@
 import { EnginePrismaService } from '@infra/prisma/engine-prisma.service';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { Injectable } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import { DashboardDto, DashboardIncidentDto } from './dto/dashboard.dto';
 
 @Injectable()
@@ -45,11 +46,13 @@ export class DashboardService {
 			orderBy: { createdAt: 'desc' },
 		});
 
-		return {
+		const result: DashboardDto = {
 			monitors,
 			incidents: mappedIncidents,
 			statusPages,
 			projects,
 		};
+
+		return plainToInstance(DashboardDto, result);
 	}
 }

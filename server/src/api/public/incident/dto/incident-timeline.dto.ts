@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Expose } from 'class-transformer';
 import { IsDate, IsEnum, IsString } from 'class-validator';
 
 export const IncidentTimelineType = {
@@ -14,15 +15,17 @@ export class IncidentTimelineDto {
 	@ApiProperty({
 		example: IncidentTimelineType.CREATED,
 		enum: IncidentTimelineType,
+		enumName: 'IncidentTimelineType',
 	})
+	@Expose()
 	@IsEnum(IncidentTimelineType)
 	type: IncidentTimelineType;
 
-	@ApiProperty({ example: new Date() })
+	@Expose()
 	@IsDate()
 	timestamp: Date;
 
-	@ApiProperty({ example: 'region-1' })
+	@Expose()
 	@IsString()
 	metadata: string;
 }

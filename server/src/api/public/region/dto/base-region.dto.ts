@@ -1,9 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { PickType } from '@nestjs/swagger';
+import { RegionEntityDto } from './region.entity.dto';
 
-export class BaseRegionDto {
-	@ApiProperty({ example: 'us-east' })
-	key: string;
-
-	@ApiProperty({ example: 'United States' })
-	name: string;
-}
+export class BaseRegionDto extends PickType(RegionEntityDto, ['key', 'name']) {}

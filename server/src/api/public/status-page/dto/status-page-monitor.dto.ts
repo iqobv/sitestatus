@@ -1,6 +1,7 @@
 import { BaseMonitorDto } from '@api/public/monitor/dto/monitor.dto';
 import { DefaultFieldsDto } from '@libs/dto/default-fields.dto';
-import { ApiProperty, IntersectionType } from '@nestjs/swagger';
+import { IntersectionType } from '@nestjs/swagger';
+import { Expose, Type } from 'class-transformer';
 import {
 	IsNumber,
 	IsOptional,
@@ -11,17 +12,17 @@ import {
 } from 'class-validator';
 
 export class StatusPageMonitorDto {
-	@ApiProperty({ example: 'monitor-1' })
+	@Expose()
 	@IsUUID('4')
 	id: string;
 
-	@ApiProperty({ example: 'My Monitor' })
+	@Expose()
 	@IsOptional()
 	@IsString()
 	@MinLength(3)
 	displayName?: string | null;
 
-	@ApiProperty({ example: 0 })
+	@Expose()
 	@IsNumber()
 	@Min(0)
 	sortOrder: number;
@@ -31,12 +32,10 @@ export class FullStatusPageMonitorDto extends IntersectionType(
 	StatusPageMonitorDto,
 	DefaultFieldsDto,
 ) {
-	@ApiProperty({ type: BaseMonitorDto })
+	@Expose()
+	@Type(() => BaseMonitorDto)
 	monitor: BaseMonitorDto;
 
-	@ApiProperty({ example: 'status-page-1' })
-	statusPageId: string;
-
-	@ApiProperty({ example: 'monitor-1' })
-	monitorId: string;
+	@Expose() statusPageId: string;
+	@Expose() monitorId: string;
 }

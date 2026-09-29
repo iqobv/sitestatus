@@ -10,6 +10,7 @@ import {
 	Injectable,
 	NotFoundException,
 } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import { UAParser } from 'ua-parser-js';
 import { AllSessionsDto } from './dto/all-sessions.dto';
 import { CreateSessionDto } from './dto/create-session.dto';
@@ -91,7 +92,7 @@ export class SessionService {
 		if (!session)
 			throw new NotFoundException(ERROR_MESSAGES.SESSIONS.NOT_FOUND);
 
-		return session;
+		return plainToInstance(SessionDto, session);
 	}
 
 	public async getUserSessions(
@@ -112,10 +113,10 @@ export class SessionService {
 			({ refreshToken: _rt, userAgent: _ua, ...rest }) => rest,
 		);
 
-		return {
+		return plainToInstance(AllSessionsDto, {
 			currentSession,
 			otherSessions: mappedSessions.filter((s) => s.id !== currentSession.id),
-		};
+		});
 	}
 
 	public async deleteSession(

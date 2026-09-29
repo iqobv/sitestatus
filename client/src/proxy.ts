@@ -17,6 +17,7 @@ export async function proxy(request: NextRequest) {
 	const hostname = request.headers.get('host') || '';
 
 	const isAppSubdomain = hostname.startsWith(`${SUBDOMAINS.APP}.`);
+	const isStatusSubdomain = hostname.startsWith(`${SUBDOMAINS.STATUS}.`);
 
 	if (path.startsWith(`/${SUBDOMAINS.APP}`)) {
 		if (!isAppSubdomain) {
@@ -24,6 +25,19 @@ export async function proxy(request: NextRequest) {
 			return NextResponse.rewrite(url);
 		}
 		return NextResponse.next();
+	}
+
+	if (path.startsWith('/s/')) {
+		if (!isStatusSubdomain) {
+			url.pathname = '/404';
+			return NextResponse.rewrite(url);
+		}
+		return NextResponse.next();
+	}
+
+	if (isStatusSubdomain) {
+		url.pathname = `/s${path === '/' ? '' : path}`;
+		return NextResponse.rewrite(url);
 	}
 
 	if (!isAppSubdomain) return NextResponse.next();

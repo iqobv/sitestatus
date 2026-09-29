@@ -2,11 +2,14 @@ import { Prisma } from '@generated/postgres/client';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
 import { projectSelect } from '@libs/prisma/project-select.prisma';
+import { MessageResponse } from '@libs/types/messages/message-detail.types';
 import { paginate } from '@libs/utils/paginate.util';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import { isUUID } from 'class-validator';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { PaginatedProjectsDto } from './dto/paginated-projects.dto';
+import { ProjectDto, ProjectWithMonitorsDto } from './dto/project.dto';
 import { ProjectsQueryDto } from './dto/projects-query.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 
@@ -14,17 +17,22 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 export class ProjectService {
 	constructor(private readonly prismaService: PgPrismaService) {}
 
-	async createProject(dto: CreateProjectDto, userId: string) {
-		return await this.prismaService.project.create({
+	public async createProject(
+		dto: CreateProjectDto,
+		userId: string,
+	): Promise<ProjectDto> {
+		const project = await this.prismaService.project.create({
 			data: {
 				...dto,
 				owner: { connect: { id: userId } },
 			},
 			select: projectSelect,
 		});
+
+		return plainToInstance(ProjectDto, project);
 	}
 
-	async getProjectById(id: string, userId: string) {
+	public async getProjectById(id: string, userId: string): Promise<ProjectDto> {
 		if (!isUUID(id) || !id)
 			throw new NotFoundException(ERROR_MESSAGES.PROJECT.NOT_FOUND);
 
@@ -35,7 +43,7 @@ export class ProjectService {
 
 		if (!project) throw new NotFoundException(ERROR_MESSAGES.PROJECT.NOT_FOUND);
 
-		return project;
+		return plainToInstance(ProjectDto, project);
 	}
 
 	public async getAllProjects(
@@ -73,29 +81,42 @@ export class ProjectService {
 			return { data, total };
 		});
 
-		return result;
+		return plainToInstance(PaginatedProjectsDto, result);
 	}
 
-	async getAllProjectsWithMonitors(userId: string) {
-		return await this.prismaService.project.findMany({
+	public async getAllProjectsWithMonitors(
+		userId: string,
+	): Promise<ProjectWithMonitorsDto[]> {
+		const projects = await this.prismaService.project.findMany({
 			where: { ownerId: userId, deletedAt: null },
 			select: { ...projectSelect, monitors: true },
 		});
+
+		return plainToInstance(ProjectWithMonitorsDto, projects);
 	}
 
-	async updateProject(id: string, userId: string, dto: UpdateProjectDto) {
+	public async updateProject(
+		id: string,
+		userId: string,
+		dto: UpdateProjectDto,
+	): Promise<ProjectDto> {
 		await this.getProjectById(id, userId);
 
-		return await this.prismaService.project.update({
+		const project = await this.prismaService.project.update({
 			where: { id, ownerId: userId, deletedAt: null },
 			data: {
 				...dto,
 			},
 			select: projectSelect,
 		});
+
+		return plainToInstance(ProjectDto, project);
 	}
 
-	async deleteProject(id: string, userId: string) {
+	public async deleteProject(
+		id: string,
+		userId: string,
+	): Promise<MessageResponse> {
 		await this.getProjectById(id, userId);
 
 		await this.prismaService.project.update({

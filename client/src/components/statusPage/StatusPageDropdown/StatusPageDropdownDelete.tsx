@@ -42,7 +42,7 @@ export const StatusPageDropdownDelete = ({
 			confirmButtonText="Delete"
 			trigger={
 				<DropdownItem asChild onSelect={(e) => e.preventDefault()}>
-					<Button color="danger" variant="text">
+					<Button color="danger" variant="outlined">
 						<MdDelete {...iconProps} /> Delete
 					</Button>
 				</DropdownItem>

@@ -5,12 +5,13 @@ import { userSelect } from '@libs/prisma/user-select.prisma';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import crypto from 'crypto';
 import { CreateTokenDto } from './dto/create-token.dto';
+import { VerifyTokenDto } from './dto/token.dto';
 
 @Injectable()
 export class TokenService {
 	constructor(private readonly prismaService: PgPrismaService) {}
 
-	async createToken(
+	public async createToken(
 		dto: CreateTokenDto,
 		tx?: Prisma.TransactionClient,
 	): Promise<string> {
@@ -37,11 +38,11 @@ export class TokenService {
 		return token;
 	}
 
-	async verifyAndConsumeToken(
+	public async verifyAndConsumeToken(
 		token: string,
 		type: TokenType,
 		tx?: Prisma.TransactionClient,
-	) {
+	): Promise<VerifyTokenDto> {
 		const prisma = tx ?? this.prismaService;
 
 		const hashedToken = crypto.createHash('sha256').update(token).digest('hex');

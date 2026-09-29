@@ -1,18 +1,15 @@
 import { getApiVersioningConfig } from '@config/api-versioning.config';
 import { getCorsConfig } from '@config/cors.config';
 import { appEnvSchema } from '@config/schemas/app.schema';
-import { getPrivateSwaggerConfig } from '@config/swagger/private-swagger.config';
-import { getPublicSwaggerConfig } from '@config/swagger/public-swagger.config';
 import { getValidationPipeConfig } from '@config/validation-pipe.config';
 import { EnvService } from '@infra/env/env.service';
 import { CustomExceptionFilter } from '@libs/filters/custom-exception.filter';
-import { filterSwaggerDocument } from '@libs/utils/filter-swagger.util';
 import { isDev } from '@libs/utils/is-dev.util';
 import { setupSwagger } from '@libs/utils/swagger.util';
+import { ClassSerializerInterceptor } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 import { json, urlencoded } from 'express';
 import basicAuth from 'express-basic-auth';
@@ -52,8 +49,8 @@ async function bootstrap() {
 						"'self'",
 						'data:',
 						'https://cdn.jsdelivr.net',
-						'https://cdn.sleeptrackly.com',
-						'https://www.sleeptrackly.com',
+						'https://cdn.sitestatus.dev',
+						'https://www.sitestatus.dev',
 					],
 					'connect-src': [
 						"'self'",
@@ -75,53 +72,30 @@ async function bootstrap() {
 
 	app.set('trust proxy', true);
 
-	const privateDocs = '/docs/private';
-
 	app.useGlobalFilters(new CustomExceptionFilter());
 
-	app.use(
-		privateDocs,
-		basicAuth({
-			challenge: true,
-			users: {
-				[appConfig.ADMIN_DOCS_USER]: appConfig.ADMIN_DOCS_PASSWORD,
-			},
-		}),
-	);
+	if (isProd) {
+		app.use(
+			'/docs{*splat}',
+			basicAuth({
+				challenge: true,
+				users: {
+					[appConfig.ADMIN_DOCS_USER]: appConfig.ADMIN_DOCS_PASSWORD,
+				},
+			}),
+		);
+	}
 
 	app.useGlobalPipes(getValidationPipeConfig());
 	app.enableVersioning(getApiVersioningConfig());
 
-	const publicConfig = getPublicSwaggerConfig();
-	const privateConfig = getPrivateSwaggerConfig();
-
-	const fullDocument = SwaggerModule.createDocument(app, publicConfig, {
-		deepScanRoutes: true,
-	});
-
-	const publicDocument = filterSwaggerDocument(
-		fullDocument,
-		true,
-		publicConfig,
+	app.useGlobalInterceptors(
+		new ClassSerializerInterceptor(app.get(Reflector), {
+			strategy: 'excludeAll',
+		}),
 	);
 
-	const privateDocument = filterSwaggerDocument(
-		fullDocument,
-		false,
-		privateConfig,
-	);
-
-	setupSwagger({
-		app,
-		document: publicDocument,
-		path: '/docs',
-	});
-
-	setupSwagger({
-		app,
-		document: privateDocument,
-		path: privateDocs,
-	});
+	setupSwagger(app);
 
 	await app.listen(appConfig.PORT, '0.0.0.0');
 }

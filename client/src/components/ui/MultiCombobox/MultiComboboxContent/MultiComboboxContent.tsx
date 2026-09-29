@@ -30,8 +30,6 @@ export const MultiComboboxContent = ({
 			width === 'trigger' ? 'var(--radix-popover-trigger-width)' : undefined,
 	};
 
-	console.log(width);
-
 	const handleScroll = (e: UIEvent<HTMLDivElement>) => {
 		if (!onScrollEnd) return;
 

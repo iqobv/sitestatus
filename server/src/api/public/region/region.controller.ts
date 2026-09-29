@@ -1,6 +1,6 @@
 import { IsPublic } from '@libs/decorators/is-public.decorator';
 import { Controller, Get } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { RegionDto } from './dto/region.dto';
 import { RegionService } from './region.service';
 
@@ -10,10 +10,10 @@ import { RegionService } from './region.service';
 export class RegionController {
 	constructor(private readonly regionService: RegionService) {}
 
-	@ApiOperation({ summary: 'Get all active regions' })
-	@ApiOkResponse({ type: [RegionDto] })
+	/** Get all active regions */
 	@Get()
-	async getAllActiveRegions() {
+	@ApiOkResponse({ type: [RegionDto] })
+	public async getAllActiveRegions(): Promise<RegionDto[]> {
 		return await this.regionService.getAllActiveRegions();
 	}
 }

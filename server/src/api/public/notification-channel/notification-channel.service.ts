@@ -7,14 +7,17 @@ import {
 import { MailService } from '@infra/mail/mail.service';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
+import { MessageResponse } from '@libs/types/messages/message-detail.types';
 import {
 	ConflictException,
 	Injectable,
 	NotFoundException,
 } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import { TokenService } from '../token/token.service';
 import { CreateNotificationChannelDto } from './dto/create-notification-channel.dto';
 import { InternalCreateNotificationChannelDto } from './dto/internal-create-notification-channel.dto';
+import { NotificationChannelDto } from './dto/notification-channel.dto';
 import { UpdateNotificationChannelDto } from './dto/update-notification-channel.dto';
 
 @Injectable()
@@ -25,11 +28,11 @@ export class NotificationChannelService {
 		private readonly tokenService: TokenService,
 	) {}
 
-	async initPrimaryNotificationChannel(
+	public async initPrimaryNotificationChannel(
 		userId: string,
 		email: string,
 		tx?: Prisma.TransactionClient,
-	) {
+	): Promise<NotificationChannelDto> {
 		return await this.saveNotificationChannel(
 			userId,
 			{
@@ -44,10 +47,10 @@ export class NotificationChannelService {
 		);
 	}
 
-	async createNotificationChannel(
+	public async createNotificationChannel(
 		userId: string,
 		dto: CreateNotificationChannelDto,
-	) {
+	): Promise<MessageResponse | void> {
 		const { name, type, value } = dto;
 
 		const existing = await this.prismaService.notificationChannel.findFirst({
@@ -83,7 +86,9 @@ export class NotificationChannelService {
 		});
 	}
 
-	async getAllNotificationChannelsForUser(userId: string) {
+	public async getAllNotificationChannelsForUser(
+		userId: string,
+	): Promise<NotificationChannelDto[]> {
 		const notificationChannels =
 			await this.prismaService.notificationChannel.findMany({
 				where: { userId },
@@ -96,10 +101,13 @@ export class NotificationChannelService {
 			return 0;
 		});
 
-		return sortedChannels;
+		return plainToInstance(NotificationChannelDto, sortedChannels);
 	}
 
-	async getNotificationChannelById(userId: string, channelId: string) {
+	public async getNotificationChannelById(
+		userId: string,
+		channelId: string,
+	): Promise<NotificationChannelDto> {
 		const channel = await this.prismaService.notificationChannel.findFirst({
 			where: { id: channelId, userId },
 		});
@@ -109,14 +117,14 @@ export class NotificationChannelService {
 				ERROR_MESSAGES.NOTIFICATION_CHANNEL.NOT_FOUND,
 			);
 
-		return channel;
+		return plainToInstance(NotificationChannelDto, channel);
 	}
 
-	async updateNotificationChannel(
+	public async updateNotificationChannel(
 		userId: string,
 		channelId: string,
 		dto: UpdateNotificationChannelDto,
-	) {
+	): Promise<NotificationChannelDto> {
 		const { isActive, isPrimary, name } = dto;
 
 		return await this.prismaService.$transaction(async (tx) => {
@@ -159,11 +167,14 @@ export class NotificationChannelService {
 				},
 			});
 
-			return updatedChannel;
+			return plainToInstance(NotificationChannelDto, updatedChannel);
 		});
 	}
 
-	async removeNotificationChannel(userId: string, channelId: string) {
+	public async removeNotificationChannel(
+		userId: string,
+		channelId: string,
+	): Promise<MessageResponse> {
 		const channel = await this.prismaService.notificationChannel.findFirst({
 			where: { id: channelId, userId },
 		});
@@ -194,7 +205,10 @@ export class NotificationChannelService {
 		return SUCCESS_MESSAGES.NOTIFICATION_CHANNEL.DELETED;
 	}
 
-	async resendVerificationEmail(userId: string, channelId: string) {
+	public async resendVerificationEmail(
+		userId: string,
+		channelId: string,
+	): Promise<MessageResponse | void> {
 		const channel = await this.prismaService.notificationChannel.findFirst({
 			where: { id: channelId, userId },
 		});
@@ -217,7 +231,9 @@ export class NotificationChannelService {
 		);
 	}
 
-	async verifyNotificationChannel(token: string) {
+	public async verifyNotificationChannel(
+		token: string,
+	): Promise<MessageResponse> {
 		await this.prismaService.$transaction(async (tx) => {
 			const tokenData = await this.tokenService.verifyAndConsumeToken(
 				token,
@@ -252,7 +268,7 @@ export class NotificationChannelService {
 		type: ChannelType,
 		value: string,
 		tx?: Prisma.TransactionClient,
-	) {
+	): Promise<MessageResponse | void> {
 		if (type === ChannelType.EMAIL) {
 			const token = await this.tokenService.createToken(
 				{
@@ -273,7 +289,7 @@ export class NotificationChannelService {
 		userId: string,
 		channelData: InternalCreateNotificationChannelDto,
 		tx?: Prisma.TransactionClient,
-	) {
+	): Promise<NotificationChannelDto> {
 		const prisma = tx ?? this.prismaService;
 
 		return await prisma.notificationChannel.create({

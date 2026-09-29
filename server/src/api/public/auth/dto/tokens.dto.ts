@@ -1,4 +1,6 @@
+import { Expose } from 'class-transformer';
+
 export class TokensDto {
-	accessToken: string;
-	refreshToken: string;
+	@Expose() accessToken: string;
+	@Expose() refreshToken: string;
 }

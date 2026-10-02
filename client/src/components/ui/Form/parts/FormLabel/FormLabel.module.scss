@@ -9,7 +9,7 @@
 	&.required {
 		&::after {
 			content: '*';
-			color: var(--input-color-error);
+			color: var(--color-required);
 			margin-left: 0.25rem;
 		}
 	}

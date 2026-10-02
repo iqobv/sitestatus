@@ -1,3 +1,4 @@
+import { MonitorMethod } from '@/types/monitors/monitorMethod.types';
 import z from 'zod';
 import { baseProjectMonitorSchema } from './monitorProject.schema';
 import { baseRegionsMonitorSchema } from './regionsMonitor.schema';
@@ -17,6 +18,7 @@ export const createMonitorSchema = z
 				.min(300, 'Check interval must be at least 5 minutes')
 				.max(86400, 'Check interval cannot exceed 1440 minutes (24 hours)'),
 		),
+		method: z.enum(MonitorMethod).default(MonitorMethod.GET),
 	})
 	.extend(baseRegionsMonitorSchema.shape)
 	.extend(baseProjectMonitorSchema.shape);

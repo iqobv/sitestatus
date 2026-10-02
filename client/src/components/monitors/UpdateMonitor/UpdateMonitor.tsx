@@ -5,7 +5,7 @@ import { updateMonitor } from '@/api/monitor/updateMonitor.api';
 import { QUERY_KEYS } from '@/config/queryClient.config';
 import { UpdateMonitorDto } from '@/dto/monitor.dto';
 import { updateMonitorSchema } from '@/schemas/monitor/updateMonitor.schema';
-import { MonitorWithRegionsIds } from '@/types/monitors/monitor.types';
+import { MonitorMethod } from '@/types/monitors/monitorMethod.types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { MonitorForm } from '../MonitorForm/MonitorForm';
@@ -45,7 +45,7 @@ export const UpdateMonitor = ({ monitorId }: UpdateMonitorProps) => {
 		<div>
 			{isLoading && <UpdateMonitorLoader />}
 			{!isLoading && data && (
-				<MonitorForm<UpdateMonitorDto, MonitorWithRegionsIds>
+				<MonitorForm<UpdateMonitorDto>
 					fields={UPDATE_MONITOR_FIELDS}
 					isLoading={isPending}
 					onSubmit={(data) => mutate(data)}
@@ -57,6 +57,7 @@ export const UpdateMonitor = ({ monitorId }: UpdateMonitorProps) => {
 						checkIntervalSeconds: 300,
 						regions: [],
 						projectId: '',
+						method: 'GET',
 					}}
 					values={{
 						name: data.name,
@@ -64,6 +65,7 @@ export const UpdateMonitor = ({ monitorId }: UpdateMonitorProps) => {
 						checkIntervalSeconds: data.checkIntervalSeconds,
 						regions: data.regionIds,
 						projectId: data.projectId || '',
+						method: (data.method as MonitorMethod) || 'GET',
 					}}
 				/>
 			)}

@@ -5,7 +5,6 @@ import { PRIVATE_PAGES } from '@/config/privatePages.config';
 import { QUERY_KEYS } from '@/config/queryClient.config';
 import { CreateMonitorDto } from '@/dto/monitor.dto';
 import { createMonitorSchema } from '@/schemas/monitor/createMonitor.schema';
-import { BaseMonitor } from '@/types/monitors/monitor.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useQueryState } from 'nuqs';
@@ -33,7 +32,7 @@ export const CreateMonitor = () => {
 	});
 
 	return (
-		<MonitorForm<CreateMonitorDto, BaseMonitor>
+		<MonitorForm<CreateMonitorDto>
 			fields={CREATE_MONITOR_FIELDS}
 			schema={createMonitorSchema}
 			buttonLabel="Create Monitor"
@@ -42,6 +41,7 @@ export const CreateMonitor = () => {
 				checkIntervalSeconds: 300,
 				url: '',
 				projectId: projectId || '',
+				method: 'GET',
 				regions: [],
 			}}
 			isLoading={isPending}

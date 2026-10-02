@@ -1197,11 +1197,10 @@ export interface components {
             /** Format: date-time */
             updatedAt: string;
         };
-        CreateUserDto: {
+        PublicCreateUserDto: {
             /** Format: email */
             email: string;
             password?: string;
-            emailVerified?: boolean;
         };
         LoginDto: {
             /** Format: email */
@@ -1251,6 +1250,8 @@ export interface components {
             currentSession: components["schemas"]["SessionDto"];
             otherSessions: components["schemas"]["SessionDto"][];
         };
+        /** @enum {string} */
+        Method: "GET" | "OPTIONS";
         CreateMonitorDto: {
             /** @example My Website */
             name: string;
@@ -1271,6 +1272,8 @@ export interface components {
              * @example f77d8a89-3af8-43d3-91d2-47348ec2ac45
              */
             projectId?: string;
+            /** @example GET */
+            method?: components["schemas"]["Method"];
             /**
              * @example [
              *       "f77d8a89-3af8-43d3-91d2-47348ec2ac45",
@@ -1421,6 +1424,8 @@ export interface components {
              * @example f77d8a89-3af8-43d3-91d2-47348ec2ac45
              */
             projectId?: string;
+            /** @example GET */
+            method?: components["schemas"]["Method"];
             /**
              * @example [
              *       "f77d8a89-3af8-43d3-91d2-47348ec2ac45",
@@ -1430,7 +1435,7 @@ export interface components {
             regions?: string[];
             /**
              * Format: date-time
-             * @example 2026-10-02T12:29:36.513Z
+             * @example 2026-10-02T16:08:38.130Z
              */
             nextCheckAt?: string;
         };
@@ -2550,7 +2555,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateUserDto"];
+                "application/json": components["schemas"]["PublicCreateUserDto"];
             };
         };
         responses: {

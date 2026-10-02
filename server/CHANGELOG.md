@@ -1,5 +1,17 @@
 # Server changelog
 
+## [1.3.0] - 2026-10-02
+
+### Added
+
+- Added Sentry integration for error tracking.
+- Added environment variables validation.
+
+### Changed
+
+- Migrated from TursoDB to PostgreSQL for logs.
+- Migrated API docs from Swagger to Scalar.
+
 ## [1.2.0] - 2026-06-25
 
 ### Added

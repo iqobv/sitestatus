@@ -1,11 +1,12 @@
 # Client changelog
 
-## [0.3.1] - 2026-09-
+## [0.3.1] - 2026-10-02
 
 ### Added
 
 - Added `manifest.ts`.
 - Added meta icons for the app.
+- Added environment variables validation.
 
 ### Changed
 

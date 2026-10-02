@@ -1,7 +1,7 @@
-import nodemailer from 'nodemailer';
+import nodemailer, { Transporter } from 'nodemailer';
 import { SmtpConfig } from './schemas/smtp.schema';
 
-export const getMailerConfig = (config: SmtpConfig): nodemailer.Transporter => {
+export const getMailerConfig = (config: SmtpConfig): Transporter => {
 	const host = config.SMTP_HOST;
 	const portString = config.SMTP_PORT;
 	const user = config.SMTP_USER;

@@ -24,7 +24,7 @@ import {
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import type { Request, Response } from 'express';
-import { CreateUserDto } from '../user/dto/create-user.dto';
+import { PublicCreateUserDto } from '../user/dto/create-user.dto';
 import { UserWithoutPasswordDto } from '../user/dto/user.dto';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
@@ -55,7 +55,9 @@ export class AuthController {
 	})
 	@ApiErrorResponse(HttpStatus.CONFLICT, ERROR_MESSAGES.USER.ALREADY_EXISTS)
 	@HttpCode(HttpStatus.CREATED)
-	public async register(@Body() dto: CreateUserDto): Promise<MessageResponse> {
+	public async register(
+		@Body() dto: PublicCreateUserDto,
+	): Promise<MessageResponse> {
 		return await this.authService.register(dto);
 	}
 

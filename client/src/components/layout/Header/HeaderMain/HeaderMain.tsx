@@ -1,7 +1,6 @@
 'use client';
 
-import { Logo } from '@/components/icons/Logo';
-import { Button } from '@/components/ui';
+import { Button, LogoLink } from '@/components/ui';
 import { CROSS_DOMAIN_ROUTES } from '@/config/navigation.config';
 import { PUBLIC_PAGES } from '@/config/publicPages.config';
 import { HeaderContainer } from '../HeaderContainer';
@@ -13,13 +12,7 @@ export const HeaderMain = () => {
 			headerClassName={styles.header}
 			containerClassName={styles.container}
 		>
-			<a href={PUBLIC_PAGES.HOME} className={styles.logo}>
-				<Logo width={32} height={32} />
-				<span className={styles.logoText}>
-					<span className={styles.highlight}>Site</span>
-					Status
-				</span>
-			</a>
+			<LogoLink href={PUBLIC_PAGES.HOME} />
 			<div className={styles.buttons}>
 				<Button variant="link" size="sm" asChild>
 					<a href={CROSS_DOMAIN_ROUTES.APP_LOGIN}>Log in</a>

@@ -1,26 +1,3 @@
-import { ChannelStatus, ChannelType } from '@generated/postgres/enums';
-import { DefaultFieldsDto } from '@libs/dto/default-fields.dto';
-import { ApiProperty } from '@nestjs/swagger';
+import { NotificationChannelEntityDto } from './notification-channel.entity.dto';
 
-export class NotificationChannelDto extends DefaultFieldsDto {
-	@ApiProperty({ example: 'cd244178-f42d-4e8d-aa1e-8ff164bb8d35' })
-	userId: string;
-
-	@ApiProperty({ example: 'Primary Email' })
-	name: string;
-
-	@ApiProperty({ example: ChannelType.EMAIL, enum: ChannelType })
-	type: ChannelType;
-
-	@ApiProperty({ example: ChannelStatus.VERIFIED, enum: ChannelStatus })
-	status: ChannelStatus;
-
-	@ApiProperty({ example: 'user@example.com' })
-	value: string;
-
-	@ApiProperty({ example: true })
-	isActive: boolean;
-
-	@ApiProperty({ example: true })
-	isPrimary: boolean;
-}
+export class NotificationChannelDto extends NotificationChannelEntityDto {}

@@ -7,6 +7,7 @@ import { Auth } from '@libs/decorators/auth.decorator';
 import { Authorized } from '@libs/decorators/authorized.decorator';
 import { IsPublic } from '@libs/decorators/is-public.decorator';
 import { OptionalAuth } from '@libs/decorators/optional-auth.decorator';
+import { MessageResponse } from '@libs/types/messages/message-detail.types';
 import { withField } from '@libs/utils/error-with-field.util';
 import {
 	Body,
@@ -20,7 +21,7 @@ import {
 	Post,
 	Query,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { CreateStatusPageDto } from './dto/create-status-page.dto';
 import { PaginatedStatusPagesDto } from './dto/paginated-status-pages.dto';
 import {
@@ -38,63 +39,63 @@ import { StatusPageService } from './status-page.service';
 export class StatusPageController {
 	constructor(private readonly statusPageService: StatusPageService) {}
 
+	/** Create a new status page */
 	@Auth()
-	@ApiOperation({ summary: 'Create a new status page' })
+	@Post()
 	@ApiOkResponse({ type: FullStatusPageDto })
 	@ApiErrorResponse(HttpStatus.CONFLICT, ERROR_MESSAGES.STATUS_PAGE.SLUG_EXISTS)
 	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.MONITOR.NOT_FOUND)
-	@Post()
 	public async createStatusPage(
 		@Authorized('id') userId: string,
 		@Body() dto: CreateStatusPageDto,
-	) {
+	): Promise<FullStatusPageDto> {
 		return await this.statusPageService.createStatusPage(userId, dto);
 	}
 
+	/** Get a status page by slug */
 	@OptionalAuth()
-	@ApiOperation({ summary: 'Get a status page by slug' })
+	@Get('slug/:slug')
 	@ApiOkResponse({ type: PublicStatusPageDto })
 	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.STATUS_PAGE.NOT_FOUND)
-	@Get('slug/:slug')
 	public async getStatusPageBySlug(
 		@Param('slug') slug: string,
 		@Authorized('id') userId?: string,
-	) {
+	): Promise<PublicStatusPageDto> {
 		return await this.statusPageService.getStatusPageBySlug(
 			slug,
 			userId ?? null,
 		);
 	}
 
+	/** Get monitors for a status page by slug */
 	@OptionalAuth()
-	@ApiOperation({ summary: 'Get monitors for a status page by slug' })
+	@Get('slug/:slug/monitors')
 	@ApiOkResponse({ type: [PublicStatusPageMonitorsDto] })
 	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.STATUS_PAGE.NOT_FOUND)
-	@Get('slug/:slug/monitors')
 	public async getMonitorsBySlug(
 		@Param('slug') slug: string,
 		@Authorized('id') userId?: string,
-	) {
+	): Promise<PublicStatusPageMonitorsDto[]> {
 		return await this.statusPageService.getMonitorsBySlug(slug, userId ?? null);
 	}
 
+	/** Get a status page by ID */
 	@Auth()
-	@ApiOperation({ summary: 'Get a status page by id' })
-	@ApiOkResponse({ type: [FullStatusPageDto] })
-	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.STATUS_PAGE.NOT_FOUND)
 	@Get('id/:id')
+	@ApiOkResponse({ type: FullStatusPageDto })
+	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.STATUS_PAGE.NOT_FOUND)
 	public async getStatusPageById(
 		@Param('id', ParseUUIDPipe) id: string,
 		@Authorized('id') userId: string,
-	) {
+	): Promise<FullStatusPageDto> {
 		return await this.statusPageService.getStatusPageById(id, userId);
 	}
 
+	/** Get all status pages for the authenticated user */
 	@Auth()
-	@ApiOperation({ summary: 'Get status pages for a user' })
+	@Get('me')
 	@ApiOkResponse({ type: PaginatedStatusPagesDto })
 	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.STATUS_PAGE.NOT_FOUND)
-	@Get('me')
 	public async getStatusPagesByUserId(
 		@Authorized('id') userId: string,
 		@Query() query: StatusPagesQueryDto,
@@ -102,9 +103,10 @@ export class StatusPageController {
 		return await this.statusPageService.getStatusPagesByUserId(userId, query);
 	}
 
+	/** Update a status page */
 	@Auth()
-	@ApiOperation({ summary: 'Update a status page' })
-	@ApiOkResponse({ type: [FullStatusPageDto] })
+	@Patch(':id')
+	@ApiOkResponse({ type: FullStatusPageDto })
 	@ApiErrorResponse(
 		HttpStatus.CONFLICT,
 		withField(ERROR_MESSAGES.STATUS_PAGE.SLUG_EXISTS, 'slug'),
@@ -113,24 +115,23 @@ export class StatusPageController {
 		ERROR_MESSAGES.STATUS_PAGE.NOT_FOUND,
 		ERROR_MESSAGES.MONITOR.NOT_FOUND,
 	])
-	@Patch(':id')
 	public async updateStatusPage(
 		@Param('id', ParseUUIDPipe) id: string,
 		@Authorized('id') userId: string,
 		@Body() dto: UpdateStatusPageDto,
-	) {
+	): Promise<FullStatusPageDto> {
 		return await this.statusPageService.updateStatusPage(id, userId, dto);
 	}
 
+	/** Delete a status page */
 	@Auth()
-	@ApiOperation({ summary: 'Delete a status page' })
+	@Delete(':id')
 	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.STATUS_PAGE.DELETED)
 	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.STATUS_PAGE.NOT_FOUND)
-	@Delete(':id')
 	public async deleteStatusPage(
 		@Param('id', ParseUUIDPipe) id: string,
 		@Authorized('id') userId: string,
-	) {
+	): Promise<MessageResponse> {
 		return await this.statusPageService.deleteStatusPage(id, userId);
 	}
 }

@@ -21,12 +21,12 @@ export const SessionCard = ({
 	const { terminateAllOtherSessionsMutation, terminateSessionMutation } =
 		useTerminateMutations();
 
-	const { device, os, browser, city, country } = session;
+	const { device, os, browser, city, countryCode } = session;
 
 	const deviceLabel = [device && capitalize(device), os, browser]
 		.filter(Boolean)
 		.join(', ');
-	const location = [city, country].filter(Boolean).join(', ');
+	const location = [city, countryCode].filter(Boolean).join(', ');
 
 	return (
 		<div className={styles.card}>
@@ -34,7 +34,7 @@ export const SessionCard = ({
 				<SessionDevice deviceType={device} />
 				<div>
 					<p>{deviceLabel}</p>
-					<p>{location}</p>
+					{location && <p>{location}</p>}
 				</div>
 			</div>
 			{!isCurrentSession && (

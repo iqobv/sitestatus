@@ -1,9 +1,3 @@
-import { DefaultFields } from '../defaultFields.types';
-import { BaseRegion } from './baseRegion.types';
+import { getAllRegions } from '@/api/region/region.api';
 
-export interface Region extends BaseRegion, DefaultFields {
-	continent: string;
-	isActive: boolean;
-	longitude: number | null;
-	latitude: number | null;
-}
+export type Region = Awaited<ReturnType<typeof getAllRegions>>[number];

@@ -2,6 +2,7 @@ import { User } from '@generated/postgres/client';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { PaginationQueryDto } from '@libs/dto/pagination.dto';
 import { Injectable } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import { NotificationDto, UserNotificationsDto } from '../dto/notification.dto';
 import { getNotificationsSql } from '../sql/get-notifications.sql';
 import { unreadCountSql } from '../sql/unread-count.sql';
@@ -46,7 +47,14 @@ export class NotificationService {
 			? rawNotifications.slice(0, limit)
 			: rawNotifications;
 
-		return { notifications, hasUnread, countUnread, hasNextPage };
+		const result: UserNotificationsDto = {
+			notifications,
+			hasUnread,
+			countUnread,
+			hasNextPage,
+		};
+
+		return plainToInstance(UserNotificationsDto, result);
 	}
 
 	public async markAllAsRead(user: User): Promise<void> {

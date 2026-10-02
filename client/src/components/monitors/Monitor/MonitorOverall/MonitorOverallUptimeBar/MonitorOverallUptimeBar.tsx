@@ -1,6 +1,6 @@
 'use client';
 
-import { MonitorTimeline } from '@/types/monitors/monitoTimeline.types';
+import { MonitorTimeline } from '@/types/monitors/monitorTimeline.types';
 import styles from './MonitorOverallUptimeBar.module.scss';
 import { MonitorOverallUptimeBarItem } from './MonitorOverallUptimeBarItem';
 

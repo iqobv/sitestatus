@@ -1,12 +1,14 @@
 import { EnvService } from '@infra/env/env.service';
 import { extractClientInfo } from '@libs/utils/client-info.util';
 import { Controller, forwardRef, Get, Inject, Req, Res } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import type { Request, Response } from 'express';
 import { AuthService } from '../../auth.service';
 import { CookieService } from '../../cookie/cookie.service';
 import { GithubAuth } from '../../decorators/github-auth.decorator';
 import { OAuthDto } from '../../dto/o-auth.dto';
 
+@ApiTags('Github OAuth')
 @Controller('oauth/github')
 export class GithubController {
 	constructor(
@@ -16,10 +18,12 @@ export class GithubController {
 		private readonly cookieService: CookieService,
 	) {}
 
+	/** Github OAuth login */
 	@Get()
 	@GithubAuth()
 	public async githubAuth(): Promise<void> {}
 
+	/** Github OAuth callback */
 	@Get('callback')
 	@GithubAuth()
 	public async githubAuthRedirect(

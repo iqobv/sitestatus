@@ -1,7 +1,7 @@
 'use client';
 
 import { Form } from '@/components/ui';
-import { ApiErrorResponse } from '@/types/api/messageResponse.api';
+import { ApiMessageResponse } from '@/types/api/messageResponse.api';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { BaseSyntheticEvent } from 'react';
@@ -38,7 +38,7 @@ export const ProjectForm = <D extends FieldValues>({
 			},
 			onError: (error) => {
 				if (isAxiosError(error) && error.response) {
-					const apiData = error.response.data as ApiErrorResponse;
+					const apiData = error.response.data as ApiMessageResponse;
 					if (apiData.field) {
 						methods.setError(apiData.field as Path<D>, {
 							type: 'server',

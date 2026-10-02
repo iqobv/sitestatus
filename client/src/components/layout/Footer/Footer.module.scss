@@ -85,6 +85,7 @@
 .linkItems {
 	display: flex;
 	flex-direction: column;
+	align-items: center;
 	gap: 8px;
 }
 
@@ -93,6 +94,7 @@
 	font-size: 14px;
 	font-weight: 300;
 	transition: color 0.2s ease;
+	width: fit-content;
 
 	&:hover {
 		color: var(--footer-link-hover);

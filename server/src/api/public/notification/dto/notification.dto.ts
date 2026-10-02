@@ -1,40 +1,14 @@
-import { NotificationType } from '@generated/postgres/enums';
-import { DefaultFieldsDto } from '@libs/dto/default-fields.dto';
-import { ApiProperty } from '@nestjs/swagger';
+import { Expose, Type } from 'class-transformer';
+import { NotificationEntityDto } from './notification.entity.dto';
 
-export class NotificationDto extends DefaultFieldsDto {
-	@ApiProperty({
-		example: NotificationType.INCIDENT,
-		enum: NotificationType,
-	})
-	type: NotificationType;
-
-	@ApiProperty({ example: false })
-	isRead: boolean;
-
-	@ApiProperty({ example: false })
-	isGlobal: boolean;
-
-	@ApiProperty({ example: 'New Incident' })
-	title: string;
-
-	@ApiProperty({ example: 'We detected a new incident.' })
-	message: string;
-
-	@ApiProperty({ example: 'https://example.com/incident/123' })
-	actionUrl?: string | null;
-}
+export class NotificationDto extends NotificationEntityDto {}
 
 export class UserNotificationsDto {
-	@ApiProperty({ type: [NotificationDto] })
+	@Expose()
+	@Type(() => NotificationDto)
 	notifications: NotificationDto[];
 
-	@ApiProperty({ example: true })
-	hasUnread: boolean;
-
-	@ApiProperty({ example: 5 })
-	countUnread: number;
-
-	@ApiProperty({ example: true })
-	hasNextPage: boolean;
+	@Expose() hasUnread: boolean;
+	@Expose() countUnread: number;
+	@Expose() hasNextPage: boolean;
 }

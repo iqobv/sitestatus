@@ -3,7 +3,7 @@
 .card {
 	background-color: var(--bg-card);
 	border: 1px solid var(--border-color-card);
-	padding: 20px;
+	padding: 1.25rem;
 	border-radius: var(--border-radius);
 	display: flex;
 	flex-direction: column;
@@ -14,7 +14,7 @@
 		flex-direction: row;
 
 		.terminateButton {
-			max-width: 300px;
+			max-width: 18.75rem;
 		}
 	}
 }
@@ -22,7 +22,8 @@
 .info {
 	display: flex;
 	flex-direction: row;
-	gap: 8px;
+	align-items: center;
+	gap: 0.5rem;
 	flex: 1;
 	width: 100%;
 }

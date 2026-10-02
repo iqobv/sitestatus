@@ -1,16 +1,16 @@
-import { MonitorDto } from '@api/public/monitor/dto/monitor.dto';
-import { DefaultFieldsDto } from '@libs/dto/default-fields.dto';
-import { ApiProperty } from '@nestjs/swagger';
+import { MonitorFullDto } from '@api/public/monitor/dto/monitor.dto';
+import { OmitType } from '@nestjs/swagger';
+import { Expose, Type } from 'class-transformer';
+import { ProjectEntityDto } from './project.entity.dto';
 
-export class ProjectDto extends DefaultFieldsDto {
-	@ApiProperty({ example: 'My Project' })
-	name: string;
+export class ProjectDto extends OmitType(ProjectEntityDto, [
+	'monitors',
+] as const) {}
 
-	@ApiProperty({ example: 'A simple project' })
-	description: string | null;
-}
+export class ProjectWithMonitorsDto extends ProjectEntityDto {}
 
-export class ProjectWithMonitorsDto extends ProjectDto {
-	@ApiProperty({ type: () => [MonitorDto] })
-	monitors: MonitorDto[];
+export class PublicProjectDto extends ProjectDto {
+	@Expose()
+	@Type(() => MonitorFullDto)
+	monitors: MonitorFullDto[];
 }

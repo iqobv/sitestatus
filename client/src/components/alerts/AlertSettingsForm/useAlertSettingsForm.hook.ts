@@ -5,7 +5,7 @@ import { upsertAlertSettings } from '@/api/alertSettings/upsertAlertSettings.api
 import { getAllNotificationChannels } from '@/api/notificationChannel/getAllNotificationChannel.api';
 import { QUERY_KEYS } from '@/config/queryClient.config';
 import { UpsertAlertSettingsDto } from '@/dto/alertSettings.dto';
-import { AlertSettings } from '@/types/notificationChannel/alertSettings.types';
+import { AlertSettings } from '@/types/alertSettings/alertSettings.types';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';

@@ -1,16 +1,12 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { Expose, Type } from 'class-transformer';
 import { AnalyticsStatisticsResponseDto } from './analytics-statistics-response.dto';
 
 export class AnalyticsStatisticsDto {
-	@ApiProperty({ example: 95 })
-	p95: number;
+	@Expose() p95: number;
+	@Expose() uptime: string;
+	@Expose() errorRate: string;
 
-	@ApiProperty({ example: '97.655%' })
-	uptime: string;
-
-	@ApiProperty({ example: '2.345%' })
-	errorRate: string;
-
-	@ApiProperty({ type: AnalyticsStatisticsResponseDto })
+	@Expose()
+	@Type(() => AnalyticsStatisticsResponseDto)
 	responseTime: AnalyticsStatisticsResponseDto;
 }

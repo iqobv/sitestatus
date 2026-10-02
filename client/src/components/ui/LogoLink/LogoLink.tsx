@@ -1,5 +1,5 @@
 import { Logo, LogoProps } from '@/components/icons/Logo';
-import Link from 'next/link';
+import clsx from 'clsx';
 import styles from './LogoLink.module.scss';
 
 interface LogoLinkProps {
@@ -16,11 +16,7 @@ export const LogoLink = ({
 	onClick,
 }: LogoLinkProps) => {
 	return (
-		<Link
-			href={href}
-			className={`${styles.logo} ${className || ''}`}
-			onClick={onClick}
-		>
+		<a href={href} className={clsx(styles.logo, className)} onClick={onClick}>
 			<Logo
 				width={logoProps?.width || 32}
 				height={logoProps?.height || 32}
@@ -30,6 +26,6 @@ export const LogoLink = ({
 				<span className={styles.highlight}>Site</span>
 				Status
 			</span>
-		</Link>
+		</a>
 	);
 };

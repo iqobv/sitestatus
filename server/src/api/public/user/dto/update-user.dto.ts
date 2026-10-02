@@ -3,15 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsEmail, IsEnum, IsOptional } from 'class-validator';
 
 export class UpdateUserDto {
-	@ApiProperty({
-		description: 'The email of the user',
-		example: 'user@gmail.com',
-		required: false,
-	})
-	@IsEmail(
-		{ host_whitelist: ['gmail.com'] },
-		{ message: 'Invalid email format. Only gmail.com is allowed.' },
-	)
+	@IsEmail()
 	@IsOptional()
 	email?: string;
 }
@@ -21,11 +13,7 @@ export class InternalUpdateUserDto extends UpdateUserDto {
 	@IsOptional()
 	emailVerified?: boolean;
 
-	@ApiProperty({
-		description: 'The role of the user',
-		example: UserRole.USER,
-		required: false,
-	})
+	@ApiProperty({ example: UserRole.USER, enum: UserRole, enumName: 'UserRole' })
 	@IsEnum(UserRole)
 	@IsOptional()
 	role?: UserRole;

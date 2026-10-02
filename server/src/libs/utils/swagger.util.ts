@@ -1,27 +1,34 @@
+import { basicSwaggerConfig } from '@config/swagger/basic-swagger.config';
 import { INestApplication } from '@nestjs/common';
-import {
-	OpenAPIObject,
-	SwaggerCustomOptions,
-	SwaggerModule,
-} from '@nestjs/swagger';
+import { OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
+import { apiReference } from '@scalar/nestjs-api-reference';
 
-interface SetupSwaggerParams {
-	app: INestApplication;
-	document: OpenAPIObject;
-	path: string;
-	options?: SwaggerCustomOptions;
-}
+export const setupSwagger = (app: INestApplication): void => {
+	const config = basicSwaggerConfig(
+		'SiteStatus API',
+		'SiteStatus API documentation.',
+		'1.3.0',
+	).build();
 
-export const setupSwagger = ({
-	app,
-	document,
-	path,
-	options,
-}: SetupSwaggerParams) => {
-	SwaggerModule.setup(path, app, document, {
-		jsonDocumentUrl: options?.jsonDocumentUrl || `${path}/json`,
-		yamlDocumentUrl: options?.yamlDocumentUrl || `${path}/yaml`,
-		customSiteTitle: options?.customSiteTitle || document.info.title,
-		...options,
+	const documentFactory = (): OpenAPIObject =>
+		SwaggerModule.createDocument(app, config);
+
+	SwaggerModule.setup('docs-raw', app, documentFactory(), {
+		jsonDocumentUrl: '/docs-json',
+		yamlDocumentUrl: '/docs-yaml',
+		ui: false,
 	});
+
+	app.use(
+		'/docs',
+		apiReference({
+			spec: {
+				content: documentFactory(),
+			},
+			title: 'SiteStatus API Docs',
+			pageTitle: 'SiteStatus API Docs',
+			favicon: 'https://cdn.sitestatus.dev/icon.png',
+			theme: 'default',
+		}),
+	);
 };

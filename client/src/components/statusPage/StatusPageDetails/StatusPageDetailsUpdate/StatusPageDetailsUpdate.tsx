@@ -59,7 +59,7 @@ export const StatusPageDetailsUpdate = ({
 				slug: data.slug,
 				monitors: data.monitors.map((m) => ({
 					id: m.monitorId,
-					displayName: m.displayName,
+					displayName: m.displayName || null,
 					sortOrder: m.sortOrder,
 					initMonitorName: m.monitor.name,
 				})),

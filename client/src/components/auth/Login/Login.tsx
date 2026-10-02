@@ -6,7 +6,7 @@ import { AUTH_PAGES } from '@/config/authPages.config';
 import { CROSS_DOMAIN_ROUTES } from '@/config/navigation.config';
 import { LoginDto } from '@/dto/auth.dto';
 import { loginSchema } from '@/schemas/auth/login.schema';
-import { User } from '@/types/user/user.types';
+import { ApiMessageResponse } from '@/types/api/messageResponse.api';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { AuthForm } from '../AuthForm/AuthForm';
@@ -25,7 +25,7 @@ export const Login = () => {
 
 	return (
 		<AuthWrapper header={<SectionHeader title="Log in to your account" />}>
-			<AuthForm<LoginDto, User>
+			<AuthForm<LoginDto, ApiMessageResponse>
 				fields={LOGIN_FIELDS}
 				defaultValues={{
 					email: '',

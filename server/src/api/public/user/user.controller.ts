@@ -1,4 +1,3 @@
-import { UserRole } from '@generated/postgres/enums';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
 import {
 	ApiErrorResponse,
@@ -13,10 +12,9 @@ import {
 	Delete,
 	HttpStatus,
 	Patch,
-	Post,
 	Res,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
 import { CookieService } from '../auth/cookie/cookie.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -31,11 +29,8 @@ export class UserController {
 		private readonly cookieService: CookieService,
 	) {}
 
+	/** Update user information */
 	@Auth()
-	@ApiOperation({
-		summary: 'Update user information',
-		description: 'Updates the information of an existing user',
-	})
 	@ApiOkResponse({ type: UserWithoutPasswordDto })
 	@ApiErrorResponse(HttpStatus.CONFLICT, ERROR_MESSAGES.USER.ALREADY_EXISTS)
 	@ApiErrorResponse(HttpStatus.NOT_FOUND, [
@@ -50,11 +45,8 @@ export class UserController {
 		return await this.userService.update(userId, dto);
 	}
 
+	/** Remove user account */
 	@Auth()
-	@ApiOperation({
-		summary: 'Delete user account',
-		description: 'Deletes a user account permanently',
-	})
 	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.USER.DELETED)
 	@ApiErrorResponse(HttpStatus.NOT_FOUND, [
 		ERROR_MESSAGES.USER.NOT_FOUND,
@@ -70,11 +62,5 @@ export class UserController {
 		this.cookieService.clearAuthCookies(res);
 
 		return SUCCESS_MESSAGES.USER.DELETED;
-	}
-
-	@Auth(UserRole.ADMIN)
-	@Post('initial-data')
-	public async createInitialDataForRegisteredUser(): Promise<void> {
-		return await this.userService.createInitialDataForRegisteredUser();
 	}
 }

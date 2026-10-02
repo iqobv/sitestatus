@@ -1,11 +1,5 @@
-import { DefaultFields } from '../defaultFields.types';
-import { NotificationType } from './notificationType.types';
+import { getAllNotifications } from '@/api/notification/getAllNotifications.api';
 
-export interface Notification extends DefaultFields {
-	type: NotificationType;
-	isRead: boolean;
-	isGlobal: boolean;
-	title: string;
-	message: string;
-	actionUrl: string | null;
-}
+export type Notification = Awaited<
+	ReturnType<typeof getAllNotifications>
+>['notifications'][number];

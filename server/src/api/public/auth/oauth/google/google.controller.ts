@@ -16,6 +16,7 @@ import {
 	Req,
 	Res,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import type { Request, Response } from 'express';
 import { AuthService } from '../../auth.service';
 import { CookieService } from '../../cookie/cookie.service';
@@ -24,6 +25,7 @@ import { OAuthDto } from '../../dto/o-auth.dto';
 import { GoogleOneTapDto } from './dto/google-one-tap.dto';
 import { GoogleService } from './google.service';
 
+@ApiTags('Google OAuth')
 @Controller('oauth/google')
 export class GoogleController {
 	constructor(
@@ -33,10 +35,12 @@ export class GoogleController {
 		private readonly envService: EnvService,
 	) {}
 
+	/** Google OAuth login */
 	@GoogleAuth()
 	@Get()
 	public async googleAuth(): Promise<void> {}
 
+	/** Google OAuth callback */
 	@Get('callback')
 	@GoogleAuth()
 	public async googleAuthCallback(
@@ -60,6 +64,7 @@ export class GoogleController {
 			</script>`);
 	}
 
+	/** Google One Tap Login */
 	@Post('one-tap')
 	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.AUTH.GOOGLE_ONE_TAP_LOGIN)
 	@ApiErrorResponse(HttpStatus.UNAUTHORIZED, [

@@ -1,11 +1,5 @@
-import { DefaultFields } from '../defaultFields.types';
+import { getAlertSettingsHierarchy } from '@/api/alertSettings/getAlertSettings.api';
 
-export interface AlertSettings extends DefaultFields {
-	userId: string;
-	projectId: string | null;
-	monitorId: string | null;
-	isEnabled: boolean;
-	onDown: boolean;
-	onUp: boolean;
-	delay: number;
-}
+export type AlertSettings = Awaited<
+	ReturnType<typeof getAlertSettingsHierarchy>
+>[number];

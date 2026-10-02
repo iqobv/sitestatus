@@ -1,12 +1,5 @@
-import { DefaultFields } from '../defaultFields.types';
-import type { ChannelStatus, ChannelType } from './channelEnums.types';
+import { getAllNotificationChannels } from '@/api/notificationChannel/getAllNotificationChannel.api';
 
-export interface NotificationChannel extends DefaultFields {
-	userId: string;
-	name: string;
-	type: ChannelType;
-	status: ChannelStatus;
-	value: string;
-	isActive: boolean;
-	isPrimary: boolean;
-}
+export type NotificationChannel = Awaited<
+	ReturnType<typeof getAllNotificationChannels>
+>[number];

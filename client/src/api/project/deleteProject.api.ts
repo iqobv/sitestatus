@@ -1,5 +1,8 @@
-import { ApiMessageResponse } from '@/types/api/messageResponse.api';
+import { paths } from '@/types/schema';
 import { apiClient } from '../axios';
 
+type DeleteProjectResponse =
+	paths['/v1/projects/{id}']['delete']['responses']['200']['content']['application/json'];
+
 export const deleteProject = async (id: string) =>
-	(await apiClient.delete<ApiMessageResponse>(`/v1/projects/${id}`)).data;
+	(await apiClient.delete<DeleteProjectResponse>(`/v1/projects/${id}`)).data;

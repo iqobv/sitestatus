@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, TextField } from '@/components/ui';
-import { ApiErrorResponse } from '@/types/api/messageResponse.api';
+import { ApiMessageResponse } from '@/types/api/messageResponse.api';
 import { Field } from '@/types/ui/field.types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
@@ -76,7 +76,7 @@ export const AuthForm = <T extends FieldValues, R>({
 		},
 		onError(error) {
 			if (isAxiosError(error) && error.response) {
-				const apiData = error.response.data as ApiErrorResponse;
+				const apiData = error.response.data as ApiMessageResponse;
 
 				if (apiData.field) {
 					setError(apiData.field as Path<T>, {

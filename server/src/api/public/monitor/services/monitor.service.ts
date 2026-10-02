@@ -4,11 +4,19 @@ import { Monitor, Prisma } from '@generated/postgres/client';
 import { EnginePrismaService } from '@infra/prisma/engine-prisma.service';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
+import { MessageResponse } from '@libs/types/messages/message-detail.types';
 import { paginate } from '@libs/utils/paginate.util';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { plainToInstance } from 'class-transformer';
 import { RegionService } from '../../region/region.service';
 import { CreateMonitorDto } from '../dto/create-monitor.dto';
+import {
+	BaseMonitorDto,
+	BaseMonitorWithRegionsIdsDto,
+	MonitorWithRegionsDto,
+	MonitorWithRegionsIdsDto,
+} from '../dto/monitor.dto';
 import { QueryMonitorsDto } from '../dto/monitors-query.dto';
 import { PaginatedMonitorsDto } from '../dto/paginated-monitors.dto';
 import { UpdateMonitorDto } from '../dto/update-monitor.dto';
@@ -24,7 +32,10 @@ export class MonitorService {
 		private readonly monitorCalculationService: MonitorCalculationService,
 	) {}
 
-	async create(userId: string, dto: CreateMonitorDto) {
+	public async create(
+		userId: string,
+		dto: CreateMonitorDto,
+	): Promise<BaseMonitorDto> {
 		const { regions, projectId, ...monitorData } = dto;
 
 		const safeRegions = regions || [];
@@ -64,7 +75,7 @@ export class MonitorService {
 
 		this.emitUpdateEvent(createdMonitor, resultRegions, true);
 
-		return createdMonitor;
+		return plainToInstance(BaseMonitorDto, createdMonitor);
 	}
 
 	public async findAll(
@@ -121,10 +132,13 @@ export class MonitorService {
 				targetHours,
 			);
 
-		return { data: mappedMonitors, meta };
+		return plainToInstance(PaginatedMonitorsDto, {
+			data: mappedMonitors,
+			meta,
+		});
 	}
 
-	async findAllPublicMonitors(ids: string[]) {
+	public async findAllPublicMonitors(ids: string[]) {
 		const targetHours = 24;
 
 		const endDate = new Date();
@@ -192,7 +206,10 @@ export class MonitorService {
 		return mappedResult;
 	}
 
-	async findByIdFull(userId: string, id: string) {
+	public async findByIdFull(
+		userId: string,
+		id: string,
+	): Promise<MonitorWithRegionsDto> {
 		const targetHours = 24;
 
 		const endDate = new Date();
@@ -218,10 +235,16 @@ export class MonitorService {
 			},
 		});
 
-		const monitorState = await this.enginePrismaService.monitorState.findFirst({
-			where: { monitorId: id },
-			select: { lastStatus: true, lastCheckedAt: true, nextCheckAt: true },
-		});
+		const monitorState = (await this.enginePrismaService.monitorState.findFirst(
+			{
+				where: { monitorId: id },
+				select: { lastStatus: true, lastCheckedAt: true, nextCheckAt: true },
+			},
+		)) || {
+			lastCheckedAt: new Date(),
+			lastStatus: 'UNKNOWN',
+			nextCheckAt: new Date(),
+		};
 
 		const monitorLogs = await this.enginePrismaService.monitorLog.findMany({
 			where: {
@@ -244,7 +267,7 @@ export class MonitorService {
 
 		if (!monitor) throw new NotFoundException(ERROR_MESSAGES.MONITOR.NOT_FOUND);
 
-		const { regionConfigs, userId: _, ...rest } = monitor;
+		const { regionConfigs, ...rest } = monitor;
 
 		const mappedRegions = regionConfigs.map((config) => ({
 			...config.region,
@@ -259,16 +282,21 @@ export class MonitorService {
 				monitorState?.lastStatus,
 			);
 
-		return {
+		const result: MonitorWithRegionsDto = {
 			...rest,
 			...monitorState,
 			uptime,
 			timeline,
 			regions: mappedRegions,
 		};
+
+		return plainToInstance(MonitorWithRegionsDto, result);
 	}
 
-	async findById(userId: string, id: string) {
+	public async findById(
+		userId: string,
+		id: string,
+	): Promise<MonitorWithRegionsIdsDto> {
 		const monitor = await this.pgPrismaService.monitor.findUnique({
 			where: { id, userId, deletedAt: null },
 			include: {
@@ -279,29 +307,31 @@ export class MonitorService {
 			},
 		});
 
-		const monitorState = await this.enginePrismaService.monitorState.findFirst({
-			where: { monitorId: id },
-			select: {
-				lastStatus: true,
-				lastCheckedAt: true,
-				nextCheckAt: true,
-			},
-		});
-
 		if (!monitor) throw new NotFoundException(ERROR_MESSAGES.MONITOR.NOT_FOUND);
+
+		const { uptime, lastCheckedAt, lastStatus, nextCheckAt } = (
+			await this.monitorCalculationService.calculateMonitorStats([monitor], 24)
+		)[0];
 
 		const { regionConfigs, ...rest } = monitor;
 
-		const mappedMonitor = {
+		const mappedMonitor: MonitorWithRegionsIdsDto = {
 			...rest,
-			...monitorState,
-			regions: regionConfigs.map((config) => config.regionId),
+			uptime,
+			lastCheckedAt,
+			lastStatus,
+			nextCheckAt,
+			regionIds: regionConfigs.map((config) => config.regionId),
 		};
 
-		return mappedMonitor;
+		return plainToInstance(MonitorWithRegionsIdsDto, mappedMonitor);
 	}
 
-	async update(id: string, userId: string, dto: UpdateMonitorDto) {
+	public async update(
+		id: string,
+		userId: string,
+		dto: UpdateMonitorDto,
+	): Promise<BaseMonitorWithRegionsIdsDto> {
 		const { regions, ...monitorData } = dto;
 
 		const monitor = await this.ownerCheck(id, userId);
@@ -338,19 +368,22 @@ export class MonitorService {
 			const dbRegions = await this.getMonitorRegionIds(monitor.id, tx);
 
 			return {
-				regions: dbRegions,
+				regionIds: dbRegions,
 				...updatedMonitor,
 			};
 		});
 
-		const { regions: resultRegions, ...resultMonitor } = result;
+		const { regionIds, ...resultMonitor } = result;
 
-		this.emitUpdateEvent(resultMonitor, resultRegions, false);
+		this.emitUpdateEvent(resultMonitor, regionIds, false);
 
-		return result;
+		return plainToInstance(BaseMonitorWithRegionsIdsDto, result);
 	}
 
-	async updateActiveStatus(id: string, userId: string) {
+	public async updateActiveStatus(
+		id: string,
+		userId: string,
+	): Promise<BaseMonitorDto> {
 		const monitor = await this.ownerCheck(id, userId);
 
 		const updatedMonitor = await this.pgPrismaService.monitor.update({
@@ -372,10 +405,10 @@ export class MonitorService {
 			true,
 		);
 
-		return result;
+		return plainToInstance(BaseMonitorDto, result);
 	}
 
-	async remove(id: string, userId: string) {
+	public async remove(id: string, userId: string): Promise<MessageResponse> {
 		const monitor = await this.ownerCheck(id, userId);
 
 		await this.pgPrismaService.monitor.update({
@@ -388,7 +421,10 @@ export class MonitorService {
 		return SUCCESS_MESSAGES.MONITOR.DELETED;
 	}
 
-	private async ownerCheck(id: string, userId: string) {
+	private async ownerCheck(
+		id: string,
+		userId: string,
+	): Promise<BaseMonitorDto> {
 		const monitor = await this.pgPrismaService.monitor.findUnique({
 			where: { id, userId, deletedAt: null },
 		});
@@ -402,7 +438,7 @@ export class MonitorService {
 		monitor: Monitor,
 		regionIds: string[],
 		isNew: boolean = false,
-	) {
+	): void {
 		const emitPayload: MonitorUpdatePayload = {
 			id: monitor.id,
 			checkIntervalSeconds: monitor.checkIntervalSeconds,
@@ -419,7 +455,7 @@ export class MonitorService {
 	private async getMonitorRegionIds(
 		monitorId: string,
 		tx?: Prisma.TransactionClient,
-	) {
+	): Promise<string[]> {
 		const prisma = tx ?? this.pgPrismaService;
 
 		const dbRegions = await prisma.monitorRegionConfig.findMany({

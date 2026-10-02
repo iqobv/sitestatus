@@ -1,6 +1,12 @@
-import { NotificationChannel } from '@/types/notificationChannel/notificationChannel.types';
+import { paths } from '@/types/schema';
 import { apiClient } from '../axios';
 
+type GetAllNotificationChannelsResponse =
+	paths['/v1/notification-channels']['get']['responses']['200']['content']['application/json'];
+
 export const getAllNotificationChannels = async () =>
-	(await apiClient.get<NotificationChannel[]>('/v1/notification-channels'))
-		.data;
+	(
+		await apiClient.get<GetAllNotificationChannelsResponse>(
+			'/v1/notification-channels',
+		)
+	).data;

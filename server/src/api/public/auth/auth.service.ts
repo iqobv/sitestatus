@@ -17,12 +17,13 @@ import {
 	UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { plainToInstance } from 'class-transformer';
 import crypto from 'crypto';
 import { SessionService } from '../session/session.service';
 import { TokenService } from '../token/token.service';
 import { UserProviderService } from '../user-provider/user-provider.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
-import { UserDto } from '../user/dto/user.dto';
+import { UserDto, UserWithoutPasswordDto } from '../user/dto/user.dto';
 import { UserService } from '../user/user.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { LoginDto } from './dto/login.dto';
@@ -99,9 +100,8 @@ export class AuthService {
 			where: { refreshToken: hashedToken },
 		});
 
-		if (session && session.userId === userId) {
+		if (session && session.userId === userId)
 			await this.sessionService.deleteSession(session.id, userId);
-		}
 	}
 
 	public async validateUser(
@@ -235,9 +235,8 @@ export class AuthService {
 		});
 
 		if (!session || session.expiresAt < new Date()) {
-			if (session) {
+			if (session)
 				await this.sessionService.deleteSession(session.id, session.userId);
-			}
 
 			throw new UnauthorizedException(
 				ERROR_MESSAGES.AUTH.INVALID_OR_EXPIRED_REFRESH_TOKEN,
@@ -276,7 +275,12 @@ export class AuthService {
 			expiresIn: '15m',
 		});
 
-		return { accessToken, refreshToken: newRawRefreshToken };
+		const result: TokensDto = {
+			accessToken,
+			refreshToken: rawRefreshToken,
+		};
+
+		return plainToInstance(TokensDto, result);
 	}
 
 	public async validateOAuthLogin(
@@ -301,16 +305,9 @@ export class AuthService {
 				);
 			}
 
-			let user: UserDto | null = await this.userService.findByEmail(
-				email,
-				false,
-				false,
-				tx,
-			);
+			let user = await this.userService.findByEmail(email, false, false, tx);
 
-			if (!user) {
-				user = await this.userService.create({ email }, tx);
-			}
+			if (!user) user = await this.userService.create({ email }, tx);
 
 			await this.userProviderService.create(
 				{
@@ -362,7 +359,7 @@ export class AuthService {
 	}
 
 	private async generateAndSaveTokens(
-		user: UserDto,
+		user: UserDto | UserWithoutPasswordDto,
 		clientInfo: ClientInfoDto,
 		tx?: Prisma.TransactionClient,
 	): Promise<TokensDto> {
@@ -395,6 +392,8 @@ export class AuthService {
 			expiresIn: '15m',
 		});
 
-		return { accessToken, refreshToken: rawRefreshToken };
+		const result: TokensDto = { accessToken, refreshToken: rawRefreshToken };
+
+		return plainToInstance(TokensDto, result);
 	}
 }

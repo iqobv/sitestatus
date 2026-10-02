@@ -1,13 +1,5 @@
-import { DefaultFields } from '../defaultFields.types';
+import { getIncidentDetails } from '@/api/incident/incidentDetails.api';
+import { components } from '../schema';
 
-export interface Incident extends DefaultFields {
-	monitorId: string;
-	regionId: string;
-	triggerLogId: string | null;
-	errorMessage: string | null;
-	statusCode: number | null;
-	resolved: boolean;
-	resolvedAt: Date | null;
-	alertTriggered: boolean;
-	alertSentAt: Date | null;
-}
+export type Incident = components['schemas']['IncidentDto'];
+export type IncidentDetails = Awaited<ReturnType<typeof getIncidentDetails>>;

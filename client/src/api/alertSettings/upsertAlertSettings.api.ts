@@ -1,6 +1,10 @@
 import { UpsertAlertSettingsDto } from '@/dto/alertSettings.dto';
-import { AlertSettings } from '@/types/alertSettings/alertSettings.types';
+import { paths } from '@/types/schema';
 import { apiClient } from '../axios';
 
+type UpsertAlertSettingsResponse =
+	paths['/v1/alert-settings']['post']['responses']['200']['content']['application/json'];
+
 export const upsertAlertSettings = async (dto: UpsertAlertSettingsDto) =>
-	(await apiClient.post<AlertSettings>('/v1/alert-settings', dto)).data;
+	(await apiClient.post<UpsertAlertSettingsResponse>('/v1/alert-settings', dto))
+		.data;

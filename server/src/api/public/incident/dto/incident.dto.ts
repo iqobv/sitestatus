@@ -1,31 +1,8 @@
-import { DefaultFieldsDto } from '@libs/dto/default-fields.dto';
-import { ApiProperty } from '@nestjs/swagger';
+import { OmitType } from '@nestjs/swagger';
+import { IncidentEntityDto } from './incident.entity.dto';
 
-export class IncidentDto extends DefaultFieldsDto {
-	@ApiProperty({ example: 'monitor-1' })
-	monitorId: string;
+export class IncidentDto extends OmitType(IncidentEntityDto, [
+	'timeline',
+] as const) {}
 
-	@ApiProperty({ example: 'region-1' })
-	regionId: string;
-
-	@ApiProperty({ example: 'log-1' })
-	triggerLogId: string | null;
-
-	@ApiProperty({ example: 'Error message' })
-	errorMessage: string | null;
-
-	@ApiProperty({ example: 500 })
-	statusCode: number | null;
-
-	@ApiProperty({ example: true })
-	resolved: boolean;
-
-	@ApiProperty({ example: new Date() })
-	resolvedAt: Date | null;
-
-	@ApiProperty({ example: true })
-	alertTriggered: boolean;
-
-	@ApiProperty({ example: new Date() })
-	alertSentAt: Date | null;
-}
+export class IncidentDetailsDto extends IncidentEntityDto {}

@@ -21,7 +21,7 @@ import {
 import { QUERY_KEYS } from '@/config/queryClient.config';
 import { UpsertAlertSettingsDto } from '@/dto/alertSettings.dto';
 import { upsertAlertSettingsSchema } from '@/schemas/alertSettings/upsertAlertSettings.schema';
-import { AlertSettings } from '@/types/notificationChannel/alertSettings.types';
+import { AlertSettings } from '@/types/alertSettings/alertSettings.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { GLOBAL_ALERT_SETTINGS_FIELDS } from './globalAlertSettingsFields';

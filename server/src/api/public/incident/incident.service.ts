@@ -2,11 +2,12 @@ import { EnginePrismaService } from '@infra/prisma/engine-prisma.service';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { ERROR_MESSAGES } from '@libs/constants';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { IncidentDetailsDto } from './dto/incident-details.dto';
+import { plainToInstance } from 'class-transformer';
 import {
 	IncidentTimelineDto,
 	IncidentTimelineType,
 } from './dto/incident-timeline.dto';
+import { IncidentDetailsDto } from './dto/incident.dto';
 
 @Injectable()
 export class IncidentService {
@@ -61,9 +62,11 @@ export class IncidentService {
 			(a, b) => b.timestamp.getTime() - a.timestamp.getTime(),
 		);
 
-		return {
+		const result: IncidentDetailsDto = {
 			...incident,
 			timeline: sortedTimeline,
 		};
+
+		return plainToInstance(IncidentDetailsDto, result);
 	}
 }

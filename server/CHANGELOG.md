@@ -1,5 +1,11 @@
 # Server changelog
 
+## [1.3.1] - 2026-10-02
+
+### Added
+
+- Added exponential backoff for failing monitors, scaling from 30-second initial checks to automatic deactivation after 24 hours of downtime.
+
 ## [1.3.0] - 2026-10-02
 
 ### Added

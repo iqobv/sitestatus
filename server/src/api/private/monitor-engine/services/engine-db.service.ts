@@ -2,6 +2,7 @@ import { ServiceBusClient, ServiceBusSender } from '@azure/service-bus';
 import { Prisma } from '@generated/engine/client';
 import { SiteStatus } from '@generated/engine/enums';
 import { EnginePrismaService } from '@infra/prisma/engine-prisma.service';
+import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { ServiceBusIncedentPayload } from '../dto/incedent-payload.dto';
 import { PingResultDto } from '../dto/ping-result.dto';
@@ -13,6 +14,7 @@ export class EngineDbService implements OnModuleInit, OnModuleDestroy {
 
 	constructor(
 		private readonly enginePrismaService: EnginePrismaService,
+		private readonly pgPrismaService: PgPrismaService,
 		private readonly cache: MonitorCacheService,
 		private readonly sbClient: ServiceBusClient,
 	) {}
@@ -56,6 +58,7 @@ export class EngineDbService implements OnModuleInit, OnModuleDestroy {
 						monitorId: true,
 						regionId: true,
 						alertTriggered: true,
+						createdAt: true,
 					},
 				});
 
@@ -85,6 +88,7 @@ export class EngineDbService implements OnModuleInit, OnModuleDestroy {
 
 				const incidentsToCreate: Prisma.MonitorIncidentCreateManyInput[] = [];
 				const incidentsToResolveIds: string[] = [];
+				const monitorsToDeactivate = new Set<string>();
 
 				for (const result of results) {
 					const { monitorId, status, region } = result;
@@ -93,12 +97,36 @@ export class EngineDbService implements OnModuleInit, OnModuleDestroy {
 
 					if (!regionId || !monitor) continue;
 
+					const incidentKey = `${monitorId}-${regionId}`;
+					const activeIncident = activeIncidentMap.get(incidentKey);
+
 					const isDown =
 						status === SiteStatus.DOWN || status === SiteStatus.UNKNOWN;
 
-					const nextInterval = isDown
-						? Math.min(30, monitor.checkIntervalSeconds)
-						: monitor.checkIntervalSeconds;
+					let nextInterval = monitor.checkIntervalSeconds;
+
+					if (isDown) {
+						if (activeIncident && activeIncident.createdAt) {
+							const downTimeMs =
+								checkedAtMs - activeIncident.createdAt.getTime();
+							const downTimeMinutes = downTimeMs / (1000 * 60);
+							const downTimeHours = downTimeMinutes / 60;
+
+							if (downTimeHours >= 24) {
+								monitorsToDeactivate.add(monitorId);
+							} else if (downTimeHours >= 2) {
+								nextInterval = monitor.checkIntervalSeconds * 4;
+							} else if (downTimeMinutes >= 30) {
+								nextInterval = monitor.checkIntervalSeconds * 2;
+							} else if (downTimeMinutes >= 5) {
+								nextInterval = monitor.checkIntervalSeconds;
+							} else {
+								nextInterval = Math.min(30, monitor.checkIntervalSeconds);
+							}
+						} else {
+							nextInterval = Math.min(30, monitor.checkIntervalSeconds);
+						}
+					}
 
 					const calculatedNextRun = checkedAtMs + nextInterval * 1000;
 
@@ -129,9 +157,6 @@ export class EngineDbService implements OnModuleInit, OnModuleDestroy {
 						},
 					});
 
-					const incidentKey = `${monitorId}-${regionId}`;
-					const activeIncident = activeIncidentMap.get(incidentKey);
-
 					if (isDown && !activeIncident) {
 						incidentsToCreate.push({
 							monitorId,
@@ -145,6 +170,7 @@ export class EngineDbService implements OnModuleInit, OnModuleDestroy {
 							monitorId,
 							regionId,
 							alertTriggered: false,
+							createdAt: checkedAt,
 						});
 					} else if (status === SiteStatus.UP && activeIncident) {
 						incidentsToResolveIds.push(activeIncident.id);
@@ -175,6 +201,19 @@ export class EngineDbService implements OnModuleInit, OnModuleDestroy {
 							nextCheckAt: new Date(agg.nextCheckAt),
 						},
 					});
+				}
+
+				if (monitorsToDeactivate.size > 0) {
+					const deadMonitorIds = Array.from(monitorsToDeactivate);
+
+					await this.pgPrismaService.monitor.updateMany({
+						where: { id: { in: deadMonitorIds } },
+						data: { isActive: false },
+					});
+
+					for (const deadId of deadMonitorIds) {
+						this.cache.removeMonitor(deadId);
+					}
 				}
 
 				if (incidentsToCreate.length > 0) {

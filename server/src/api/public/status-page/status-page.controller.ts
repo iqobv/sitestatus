@@ -82,7 +82,7 @@ export class StatusPageController {
 	/** Get a status page by ID */
 	@Auth()
 	@Get('id/:id')
-	@ApiOkResponse({ type: [FullStatusPageDto] })
+	@ApiOkResponse({ type: FullStatusPageDto })
 	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.STATUS_PAGE.NOT_FOUND)
 	public async getStatusPageById(
 		@Param('id', ParseUUIDPipe) id: string,
@@ -106,7 +106,7 @@ export class StatusPageController {
 	/** Update a status page */
 	@Auth()
 	@Patch(':id')
-	@ApiOkResponse({ type: [FullStatusPageDto] })
+	@ApiOkResponse({ type: FullStatusPageDto })
 	@ApiErrorResponse(
 		HttpStatus.CONFLICT,
 		withField(ERROR_MESSAGES.STATUS_PAGE.SLUG_EXISTS, 'slug'),

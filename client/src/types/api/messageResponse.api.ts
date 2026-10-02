@@ -1,7 +1,3 @@
-export interface ApiMessageResponse {
-	code: string;
-	message: string;
-	field?: string;
-}
+import { components } from '../schema';
 
-export interface ApiErrorResponse extends ApiMessageResponse {}
+export type ApiMessageResponse = components['schemas']['MessageResponseDto'];

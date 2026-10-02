@@ -6,6 +6,9 @@ import ms, { StringValue } from 'ms';
 
 @Injectable()
 export class CookieService {
+	private readonly accessTokenCookieName = 'accessToken';
+	private readonly refreshTokenCookieName = 'refreshToken';
+
 	constructor(private readonly envService: EnvService) {}
 
 	private getCookieOptions(maxAge: StringValue | number): CookieOptions {
@@ -31,14 +34,14 @@ export class CookieService {
 		const accessTokenOptions = this.getCookieOptions('15m');
 		const refreshTokenOptions = this.getCookieOptions('30d');
 
-		res.cookie('accessToken', accessToken, accessTokenOptions);
-		res.cookie('refreshToken', refreshToken, refreshTokenOptions);
+		res.cookie(this.accessTokenCookieName, accessToken, accessTokenOptions);
+		res.cookie(this.refreshTokenCookieName, refreshToken, refreshTokenOptions);
 	}
 
 	public clearAuthCookies(res: Response): void {
 		const clearOptions = this.getCookieOptions(0);
 
-		res.cookie('accessToken', '', clearOptions);
-		res.cookie('refreshToken', '', clearOptions);
+		res.cookie(this.accessTokenCookieName, '', clearOptions);
+		res.cookie(this.refreshTokenCookieName, '', clearOptions);
 	}
 }

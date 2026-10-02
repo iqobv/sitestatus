@@ -6,6 +6,7 @@ import { AUTH_PAGES } from '@/config/authPages.config';
 import { LEGAL_PAGES } from '@/config/legalPage.config';
 import { RegisterFormDto } from '@/dto/auth.dto';
 import { registerSchema } from '@/schemas/auth/register.schema';
+import { ApiMessageResponse } from '@/types/api/messageResponse.api';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AuthForm } from '../AuthForm/AuthForm';
@@ -17,7 +18,7 @@ export const Register = () => {
 
 	return (
 		<AuthWrapper header={<SectionHeader title="Create a new account" />}>
-			<AuthForm<RegisterFormDto, { message: string; email: string }>
+			<AuthForm<RegisterFormDto, ApiMessageResponse>
 				fields={REGISTER_FIELDS}
 				bottomText={
 					<>
@@ -34,10 +35,10 @@ export const Register = () => {
 					acceptTerms: false,
 				}}
 				onSuccess={(data) => {
-					if (
-						data.message === 'Registration successful. Please check your email.'
-					) {
-						localStorage.setItem('registrationEmail', data.email);
+					if (data.code === 'AUTH_REGISTER_SUCCESS') {
+						if (typeof data.meta?.email === 'string')
+							localStorage.setItem('registrationEmail', data.meta.email);
+
 						router.push(AUTH_PAGES.VERIFY_EMAIL);
 					}
 				}}

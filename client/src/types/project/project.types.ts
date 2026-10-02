@@ -1,11 +1,8 @@
-import { DefaultFields } from '../defaultFields.types';
-import { BaseMonitor } from '../monitors/monitor.types';
+import { getAllProjectsWithMonitors } from '@/api/project/getAllProjectsWithMonitors.api';
+import { getProjectById } from '@/api/project/getProjectById.api';
 
-export interface Project extends DefaultFields {
-	name: string;
-	description: string | null;
-}
+export type Project = Awaited<ReturnType<typeof getProjectById>>;
 
-export interface ProjectWithMonitors extends Project {
-	monitors: BaseMonitor[];
-}
+export type ProjectWithMonitors = Awaited<
+	ReturnType<typeof getAllProjectsWithMonitors>
+>[number];

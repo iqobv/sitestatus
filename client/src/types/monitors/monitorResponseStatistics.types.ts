@@ -1,5 +1,4 @@
-export interface MonitorResponseStatistics {
-	min: number;
-	max: number;
-	avg: number;
-}
+import { components } from '../schema';
+
+export type MonitorResponseStatistics =
+	components['schemas']['AnalyticsStatisticsResponseDto'];

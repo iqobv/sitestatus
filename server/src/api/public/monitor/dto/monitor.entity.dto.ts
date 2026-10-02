@@ -1,4 +1,4 @@
-import { BaseRegionDto } from '@api/public/region/dto/base-region.dto';
+import { BaseRegionDto } from '@api/public/region/dto/region.dto';
 import { SiteStatus } from '@generated/engine/enums';
 import { DefaultFieldsDto } from '@libs/dto/default-fields.dto';
 import { ApiProperty } from '@nestjs/swagger';

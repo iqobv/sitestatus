@@ -1,9 +1,3 @@
-import { UserRole } from './userRole.types';
+import { getUser } from '@/api/auth/auth.api';
 
-export interface User {
-	id: string;
-	email: string;
-	createdAt: Date;
-	role: UserRole;
-	emailVerified: boolean;
-}
+export type User = Awaited<ReturnType<typeof getUser>>;

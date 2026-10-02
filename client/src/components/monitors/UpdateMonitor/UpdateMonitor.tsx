@@ -62,7 +62,7 @@ export const UpdateMonitor = ({ monitorId }: UpdateMonitorProps) => {
 						name: data.name,
 						url: data.url,
 						checkIntervalSeconds: data.checkIntervalSeconds,
-						regions: data.regions,
+						regions: data.regionIds,
 						projectId: data.projectId || '',
 					}}
 				/>

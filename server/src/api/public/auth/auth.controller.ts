@@ -144,9 +144,12 @@ export class AuthController {
 					ERROR_MESSAGES.AUTH.REFRESH_TOKEN_MISSING,
 				);
 			const info = extractClientInfo(req);
+
 			const { accessToken, refreshToken } =
 				await this.authService.refreshTokens(rt, info);
+
 			this.cookieService.setAuthCookies(res, accessToken, refreshToken);
+
 			return SUCCESS_MESSAGES.AUTH.REFRESH_TOKENS;
 		} catch (error) {
 			this.cookieService.clearAuthCookies(res);

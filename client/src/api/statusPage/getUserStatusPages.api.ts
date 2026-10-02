@@ -1,9 +1,9 @@
 import { StatusPagesQueryDto } from '@/dto/statusPage.dto';
-import { PaginatedData } from '@/types/api/paginatedData.types';
-import { StatusPage } from '@/types/statusPage/statusPage.types';
+import { paths } from '@/types/schema';
 import { apiClient } from '../axios';
 
-type GetUserStatusPagesResponse = PaginatedData<StatusPage>;
+type GetUserStatusPagesResponse =
+	paths['/v1/status-pages/me']['get']['responses']['200']['content']['application/json'];
 
 export const getUserStatusPages = async (params: StatusPagesQueryDto) =>
 	(

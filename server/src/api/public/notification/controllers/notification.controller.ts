@@ -27,7 +27,7 @@ export class NotificationController {
 
 	/** Get user notifications */
 	@Get()
-	@ApiOkResponse({ example: UserNotificationsDto })
+	@ApiOkResponse({ type: UserNotificationsDto })
 	public async getUserNotifications(
 		@Authorized() user: User,
 		@Query() query: PaginationQueryDto,

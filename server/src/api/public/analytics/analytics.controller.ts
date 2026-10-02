@@ -10,11 +10,14 @@ import {
 	ParseUUIDPipe,
 	Query,
 } from '@nestjs/common';
-import { ApiOkResponse } from '@nestjs/swagger';
+import { ApiExtraModels, ApiOkResponse } from '@nestjs/swagger';
 import { AnalyticsService } from './analytics.service';
 import { AnalyticsQueryDto } from './dto/analytics-query.dto';
+import { AnalyticsRawDataDto } from './dto/analytics-raw-log.dto';
+import { AnalyticsStatLogDto } from './dto/analytics-stat-log.dto';
 import { AnalyticsDto } from './dto/analytics.dto';
 
+@ApiExtraModels(AnalyticsRawDataDto, AnalyticsStatLogDto)
 @Auth()
 @Controller('analytics')
 export class AnalyticsController {

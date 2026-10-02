@@ -1,6 +1,9 @@
 import { UpdateProjectDto } from '@/dto/project.dto';
-import { Project } from '@/types/project/project.types';
+import { paths } from '@/types/schema';
 import { apiClient } from '../axios';
 
+type EditProjectResponse =
+	paths['/v1/projects/{id}']['patch']['responses']['200']['content']['application/json'];
+
 export const editProject = async (id: string, dto: UpdateProjectDto) =>
-	(await apiClient.patch<Project>(`/v1/projects/${id}`, dto)).data;
+	(await apiClient.patch<EditProjectResponse>(`/v1/projects/${id}`, dto)).data;

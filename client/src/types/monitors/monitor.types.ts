@@ -1,34 +1,18 @@
-import { PaginatedData } from '../api/paginatedData.types';
-import { DefaultFields } from '../defaultFields.types';
-import { BaseRegion } from '../region/baseRegion.types';
-import { MonitorStatus } from './monitorStatus.types';
-import { MonitorTimeline } from './monitoTimeline.types';
+import { getAllMonitors } from '@/api/monitor/getAllMonitors.api';
+import {
+	getMonitorById,
+	getMonitorByIdFull,
+} from '@/api/monitor/getMonitorById.api';
+import { components } from '../schema';
 
-export interface BaseMonitor extends DefaultFields {
-	projectId: string | null;
-	name: string;
-	url: string;
-	method: string;
-	checkIntervalSeconds: number;
-	isActive: boolean;
-}
+export type BaseMonitor = components['schemas']['BaseMonitorDto'];
 
-export interface FullMonitor extends BaseMonitor {
-	lastCheckedAt: Date;
-	lastStatus: MonitorStatus;
-}
+export type FullMonitor = Awaited<
+	ReturnType<typeof getAllMonitors>
+>['data'][number];
 
-export interface MonitorWithTimeline extends FullMonitor {
-	uptime: string;
-	timeline: MonitorTimeline[];
-}
+export type MonitorWithRegions = Awaited<ReturnType<typeof getMonitorByIdFull>>;
 
-export interface MonitorWithRegions extends MonitorWithTimeline {
-	regions: BaseRegion[];
-}
+export type MonitorWithRegionsIds = Awaited<ReturnType<typeof getMonitorById>>;
 
-export interface MonitorWithRegionsIds extends FullMonitor {
-	regions: string[];
-}
-
-export type PaginatedMonitors = PaginatedData<FullMonitor>;
+export type PaginatedMonitors = Awaited<ReturnType<typeof getAllMonitors>>;

@@ -29,9 +29,9 @@ export const EmailVerification = () => {
 
 	useEffect(() => {
 		if (isSuccess && data && !loginCompleted) {
-			const { user, message } = data;
+			const { code } = data;
 
-			if (message === 'Email verified successfully' && user) {
+			if (code === 'AUTH_EMAIL_VERIFIED') {
 				setLoginCompleted(true);
 				router.push(PRIVATE_PAGES.DASHBOARD);
 			}

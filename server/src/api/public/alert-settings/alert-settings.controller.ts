@@ -54,7 +54,7 @@ export class AlertSettingsController {
 
 	/** Get alert settings hierarchy for a user */
 	@Get('hierarchy')
-	@ApiOkResponse({ example: [FullAlertSettingsDto] })
+	@ApiOkResponse({ type: [FullAlertSettingsDto] })
 	public async getSettingsHierarchy(
 		@Authorized('id') userId: string,
 		@Query() query: GetHierarchyQueryDto,

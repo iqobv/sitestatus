@@ -1,24 +1,25 @@
 import { IncidentDto } from '@api/public/incident/dto/incident.dto';
 import { StatPeriod } from '@generated/engine/enums';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiExtraModels, ApiProperty, getSchemaPath } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 import { AnalyticsRawDataDto } from './analytics-raw-log.dto';
 import { AnalyticsStatLogDto } from './analytics-stat-log.dto';
 import { AnalyticsStatisticsDto } from './analytics-statistics.dto';
 
-const PeriodEnum = {
+const Period = {
 	...StatPeriod,
 	RAW: 'RAW',
 } as const;
 
-type Period = (typeof PeriodEnum)[keyof typeof PeriodEnum];
+type Period = (typeof Period)[keyof typeof Period];
 
+@ApiExtraModels(AnalyticsRawDataDto, AnalyticsStatLogDto)
 export class AnalyticsDto {
 	@Expose()
 	@ApiProperty({
-		example: StatPeriod.HOURLY,
-		enum: PeriodEnum,
-		enumName: 'StatPeriod',
+		example: Period.HOURLY,
+		enum: Period,
+		enumName: 'Period',
 	})
 	period: Period;
 
@@ -31,6 +32,19 @@ export class AnalyticsDto {
 	incidents: IncidentDto[];
 
 	@Expose()
-	@Type(() => AnalyticsRawDataDto || AnalyticsStatLogDto)
+	@ApiProperty({
+		isArray: true,
+		oneOf: [
+			{ $ref: getSchemaPath(AnalyticsRawDataDto) },
+			{ $ref: getSchemaPath(AnalyticsStatLogDto) },
+		],
+	})
+	@Type((options) => {
+		const parentPeriod = (options?.object as AnalyticsDto)?.period;
+
+		if (parentPeriod === Period.RAW) return AnalyticsRawDataDto;
+
+		return AnalyticsStatLogDto;
+	})
 	data: AnalyticsRawDataDto[] | AnalyticsStatLogDto[];
 }

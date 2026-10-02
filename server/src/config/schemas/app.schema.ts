@@ -13,9 +13,9 @@ export const appEnvSchema = z.object({
 	SERVICE_BUS_CONNECTION_STRING: z
 		.string()
 		.nonempty('SERVICE_BUS_CONNECTION_STRING is required'),
-	ADMIN_DOCS_URL: z.url().nonempty('ADMIN_DOCS_URL is required'),
 	ADMIN_DOCS_USER: z.string().nonempty('ADMIN_DOCS_USER is required'),
 	ADMIN_DOCS_PASSWORD: z.string().nonempty('ADMIN_DOCS_PASSWORD is required'),
+	SENTRY_DSN: z.string().nonempty('SENTRY_DSN is required'),
 });
 
 export type AppConfig = z.infer<typeof appEnvSchema>;

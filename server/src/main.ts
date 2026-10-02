@@ -15,6 +15,7 @@ import { json, urlencoded } from 'express';
 import basicAuth from 'express-basic-auth';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
+import './instrument';
 
 async function bootstrap() {
 	const app = await NestFactory.create<NestExpressApplication>(AppModule);

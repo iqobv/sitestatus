@@ -1,10 +1,12 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { Expose, Type } from 'class-transformer';
 import { SessionDto } from './session.dto';
 
 export class AllSessionsDto {
-	@ApiProperty({ type: SessionDto })
+	@Expose()
+	@Type(() => SessionDto)
 	currentSession: SessionDto;
 
-	@ApiProperty({ type: [SessionDto] })
+	@Expose()
+	@Type(() => SessionDto)
 	otherSessions: SessionDto[];
 }

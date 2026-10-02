@@ -1,8 +1,8 @@
 import { Prisma } from '@generated/postgres/client';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
-import { MessageResponseDto } from '@libs/dto/message-response.dto';
 import { publicStatusPageSelect } from '@libs/prisma/status-page-select.prisma';
+import { MessageResponse } from '@libs/types/messages/message-detail.types';
 import { withField } from '@libs/utils/error-with-field.util';
 import { paginate } from '@libs/utils/paginate.util';
 import {
@@ -10,6 +10,7 @@ import {
 	Injectable,
 	NotFoundException,
 } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import { MonitorService } from '../monitor/services/monitor.service';
 import { CreateStatusPageDto } from './dto/create-status-page.dto';
 import { PaginatedStatusPagesDto } from './dto/paginated-status-pages.dto';
@@ -48,19 +49,17 @@ export class StatusPageService {
 			});
 		} catch (error) {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
-				if (error.code === 'P2007') {
+				if (error.code === 'P2007')
 					throw new NotFoundException(ERROR_MESSAGES.MONITOR.NOT_FOUND);
-				}
 			}
 			throw error;
 		}
 
-		if (existingMonitors.length !== monitorIds.length) {
+		if (existingMonitors.length !== monitorIds.length)
 			throw new NotFoundException(ERROR_MESSAGES.MONITOR.NOT_FOUND);
-		}
 
 		return await this.catchUniqueConstraintError(async () => {
-			return await this.pgPrismaService.statusPage.create({
+			const statusPage = await this.pgPrismaService.statusPage.create({
 				data: {
 					...rest,
 					monitors: {
@@ -81,6 +80,8 @@ export class StatusPageService {
 					},
 				},
 			});
+
+			return plainToInstance(FullStatusPageDto, statusPage);
 		});
 	}
 
@@ -99,15 +100,18 @@ export class StatusPageService {
 		if (!statusPage)
 			throw new NotFoundException(ERROR_MESSAGES.STATUS_PAGE.NOT_FOUND);
 
-		return statusPage;
+		return plainToInstance(PublicStatusPageDto, statusPage);
 	}
 
-	async getMonitorsBySlug(slug: string, userId: string | null) {
+	public async getMonitorsBySlug(
+		slug: string,
+		userId: string | null,
+	): Promise<PublicStatusPageMonitorsDto[]> {
 		const statusPage = await this.getStatusPageBySlug(slug, userId);
 
 		const statusPageMonitors =
 			await this.pgPrismaService.statusPageMonitor.findMany({
-				where: { statusPageId: statusPage.id },
+				where: { statusPageId: statusPage.id, monitor: { deletedAt: null } },
 				select: {
 					id: true,
 					displayName: true,
@@ -153,7 +157,7 @@ export class StatusPageService {
 			return acc;
 		}, []);
 
-		return mappedMonitors;
+		return plainToInstance(PublicStatusPageMonitorsDto, mappedMonitors);
 	}
 
 	public async getStatusPagesByUserId(
@@ -183,14 +187,21 @@ export class StatusPageService {
 			return { data, total };
 		});
 
-		return result;
+		return plainToInstance(PaginatedStatusPagesDto, result);
 	}
 
-	async getStatusPageById(id: string, userId: string) {
-		const statusPage = await this.pgPrismaService.statusPage.findUnique({
-			where: { id, userId },
+	public async getStatusPageById(
+		id: string,
+		userId: string,
+	): Promise<FullStatusPageDto> {
+		const statusPage = await this.pgPrismaService.statusPage.findFirst({
+			where: {
+				id,
+				userId,
+			},
 			include: {
 				monitors: {
+					where: { monitor: { deletedAt: null } },
 					include: {
 						monitor: true,
 					},
@@ -202,17 +213,20 @@ export class StatusPageService {
 		if (!statusPage)
 			throw new NotFoundException(ERROR_MESSAGES.STATUS_PAGE.NOT_FOUND);
 
-		return statusPage;
+		return plainToInstance(FullStatusPageDto, statusPage);
 	}
 
-	async updateStatusPage(id: string, userId: string, dto: UpdateStatusPageDto) {
+	public async updateStatusPage(
+		id: string,
+		userId: string,
+		dto: UpdateStatusPageDto,
+	): Promise<FullStatusPageDto> {
 		const { monitors, ...rest } = dto;
 
 		const statusPage = await this.getStatusPageById(id, userId);
 
-		if (!monitors || monitors?.length === 0) {
+		if (!monitors || monitors?.length === 0)
 			return await this.saveUpdateStatusPage(id, userId, dto);
-		}
 
 		const monitorIds = monitors.map((m) => m.id);
 
@@ -221,9 +235,8 @@ export class StatusPageService {
 			select: { id: true },
 		});
 
-		if (existingMonitors.length !== monitorIds.length) {
+		if (existingMonitors.length !== monitorIds.length)
 			throw new NotFoundException(ERROR_MESSAGES.MONITOR.NOT_FOUND);
-		}
 
 		const { toCreate, toDeleteIds, toUpdate } = this.calculateDiff(
 			statusPage.monitors,
@@ -239,7 +252,7 @@ export class StatusPageService {
 
 			for (const updatePayload of toUpdate) {
 				await tx.statusPageMonitor.update({
-					where: { id: updatePayload.id },
+					where: { id: updatePayload.id, monitor: { deletedAt: null } },
 					data: updatePayload.data,
 				});
 			}
@@ -264,11 +277,11 @@ export class StatusPageService {
 		userId: string,
 		dto: Omit<UpdateStatusPageDto, 'monitors'>,
 		tx?: Prisma.TransactionClient,
-	) {
+	): Promise<FullStatusPageDto> {
 		const prisma = tx ?? this.pgPrismaService;
 
 		return await this.catchUniqueConstraintError(async () => {
-			return await prisma.statusPage.update({
+			const statusPage = await prisma.statusPage.update({
 				where: { id, userId },
 				data: dto,
 				include: {
@@ -280,13 +293,15 @@ export class StatusPageService {
 					},
 				},
 			});
+
+			return plainToInstance(FullStatusPageDto, statusPage);
 		});
 	}
 
-	async deleteStatusPage(
+	public async deleteStatusPage(
 		id: string,
 		userId: string,
-	): Promise<MessageResponseDto> {
+	): Promise<MessageResponse> {
 		await this.getStatusPageById(id, userId);
 
 		await this.pgPrismaService.statusPage.delete({
@@ -298,7 +313,7 @@ export class StatusPageService {
 
 	private async catchUniqueConstraintError(
 		callback: () => Promise<FullStatusPageDto>,
-	) {
+	): Promise<FullStatusPageDto> {
 		try {
 			return await callback();
 		} catch (error) {

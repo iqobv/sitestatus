@@ -6,6 +6,7 @@ import { MonitorsQueryDto } from '@/dto/monitor.dto';
 import { monitorsQuerySchema } from '@/schemas/monitor/monitorsQuery.schema';
 import { PaginatedMonitors } from '@/types/monitors/monitor.types';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import Link from 'next/link';
 import { useMemo } from 'react';
 import { MonitorRefresh } from './MonitorRefresh/MonitorRefresh';
 import styles from './Monitors.module.scss';
@@ -50,9 +51,9 @@ export const Monitors = ({
 
 	return (
 		<>
-			<MonitorRefresh queryKey={queryKeyBase} />
 			{!isLoading && data && data.meta.total > 0 && (
 				<>
+					<MonitorRefresh queryKey={queryKeyBase} />
 					<MonitorsTable
 						monitors={data.data}
 						totalPages={data.meta.totalPages}
@@ -60,9 +61,11 @@ export const Monitors = ({
 				</>
 			)}
 			{!isLoading && data && data.meta.total === 0 && (
-				<div className={styles.empty}>
+				<div className={styles.empty} >
 					<p>No monitors found. Please add a monitor to get started.</p>
-					<Button href={createHref}>Add Monitor</Button>
+					<Button asChild>
+						<Link href={createHref}>Add Monitor</Link>
+					</Button>
 				</div>
 			)}
 		</>

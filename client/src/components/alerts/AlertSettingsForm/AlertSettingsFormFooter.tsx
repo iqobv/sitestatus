@@ -18,7 +18,7 @@ export const AlertSettingsFormFooter = ({
 	return (
 		<ModalFooter>
 			<FormActions justifyContent="flex-end">
-				<ModalClose>
+				<ModalClose asChild>
 					<FormReset buttonProps={{ variant: 'outlined' }}>Cancel</FormReset>
 				</ModalClose>
 				<FormSubmit disabledOnEmpty buttonProps={{ loading: isPending }}>

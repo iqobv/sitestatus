@@ -1,37 +1,40 @@
 'use client';
 
-import { login as apiLogin } from '@/api/auth/auth.api';
+import { login } from '@/api/auth/auth.api';
 import { SectionHeader } from '@/components/ui';
 import { AUTH_PAGES } from '@/config/authPages.config';
+import { CROSS_DOMAIN_ROUTES } from '@/config/navigation.config';
 import { LoginDto } from '@/dto/auth.dto';
-import { useAuth } from '@/hooks/useAuth.hook';
 import { loginSchema } from '@/schemas/auth/login.schema';
-import { User } from '@/types/user/user.types';
+import { ApiMessageResponse } from '@/types/api/messageResponse.api';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { AuthForm } from '../AuthForm/AuthForm';
 import { AuthWrapper } from '../AuthWrapper/AuthWrapper';
 import { LOGIN_FIELDS } from './loginFields';
 
 export const Login = () => {
-	const { login } = useAuth();
+	const searchParams = useSearchParams();
 	const router = useRouter();
+
+	const handleLoginSuccess = () => {
+		const redirectUrl =
+			searchParams.get('redirect') || CROSS_DOMAIN_ROUTES.APP_DASHBOARD;
+		router.push(redirectUrl);
+	};
 
 	return (
 		<AuthWrapper header={<SectionHeader title="Log in to your account" />}>
-			<AuthForm<LoginDto, User>
+			<AuthForm<LoginDto, ApiMessageResponse>
 				fields={LOGIN_FIELDS}
 				defaultValues={{
 					email: '',
 					password: '',
 				}}
 				onSuccess={(data) => {
-					if (data) {
-						login(data);
-						router.refresh();
-					}
+					if (data) handleLoginSuccess();
 				}}
-				mutationFn={apiLogin}
+				mutationFn={login}
 				schema={loginSchema}
 				buttonLabel="Log in"
 				bottomText={

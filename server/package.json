@@ -1,6 +1,6 @@
 {
 	"name": "server",
-	"version": "1.2.0",
+	"version": "1.3.0",
 	"description": "",
 	"author": "",
 	"private": true,
@@ -19,15 +19,15 @@
 		"test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
 		"test:e2e": "jest --config ./test/jest-e2e.json",
 		"prisma:migrate:pg": "prisma migrate dev --config ./prisma/postgres/prisma.config.ts",
-		"prisma:migrate:turso": "prisma migrate dev --config ./prisma/turso/prisma.config.ts",
+		"prisma:migrate:engine": "prisma migrate dev --config ./prisma/engine/prisma.config.ts",
 		"prisma:generate:pg": "prisma generate --config ./prisma/postgres/prisma.config.ts",
-		"prisma:push:turso": "prisma db push --config ./prisma/turso/prisma.config.ts",
-		"prisma:generate:turso": "prisma generate --config ./prisma/turso/prisma.config.ts",
-		"prisma:generate": "npm run prisma:generate:pg && npm run prisma:generate:turso",
+		"prisma:push:engine": "prisma db push --config ./prisma/engine/prisma.config.ts",
+		"prisma:generate:engine": "prisma generate --config ./prisma/engine/prisma.config.ts",
+		"prisma:generate": "npm run prisma:generate:pg && npm run prisma:generate:engine",
 		"prisma:studio:pg": "prisma studio --config ./prisma/postgres/prisma.config.ts",
-		"prisma:studio:turso": "prisma studio --config ./prisma/turso/prisma.config.ts",
+		"prisma:studio:engine": "prisma studio --config ./prisma/engine/prisma.config.ts",
 		"prisma:migrate:deploy:pg": "prisma migrate deploy --config ./prisma/postgres/prisma.config.ts",
-		"prisma:migrate:deploy:turso": "prisma migrate deploy --config ./prisma/turso/prisma.config.ts",
+		"prisma:migrate:deploy:engine": "prisma migrate deploy --config ./prisma/engine/prisma.config.ts",
 		"email:dev": "npx email dev --dir src/infra/mail/templates/ --port 3001"
 	},
 	"dependencies": {
@@ -50,6 +50,8 @@
 		"@prisma/client": "^7.6.0",
 		"@react-email/components": "^1.0.11",
 		"@react-email/html": "^0.0.12",
+		"@scalar/nestjs-api-reference": "^1.2.23",
+		"@sentry/nestjs": "^11.3.0",
 		"axios": "^1.15.2",
 		"bcryptjs": "^3.0.3",
 		"class-transformer": "^0.5.1",
@@ -63,7 +65,7 @@
 		"helmet": "^8.1.0",
 		"ipaddr.js": "^2.3.0",
 		"ms": "^2.1.3",
-		"nodemailer": "^9.0.1",
+		"nodemailer": "^10.0.9",
 		"passport": "^0.7.0",
 		"passport-github2": "^0.1.12",
 		"passport-google-oauth20": "^2.0.0",
@@ -74,7 +76,8 @@
 		"react-dom": "^19.2.4",
 		"reflect-metadata": "^0.2.2",
 		"rxjs": "^7.8.2",
-		"ua-parser-js": "^2.0.9"
+		"ua-parser-js": "^2.0.9",
+		"zod": "^4.6.5"
 	},
 	"devDependencies": {
 		"@eslint/eslintrc": "^3.3.5",
@@ -124,7 +127,9 @@
 		"next": "^16.2.6",
 		"js-yaml": "^4.2.0",
 		"multer": "^2.2.0",
-		"esbuild": "^0.28.1"
+		"esbuild": "^0.28.1",
+		"deepmerge-ts": "^8.0.0",
+		"mysql2": "^3.23.1"
 	},
 	"jest": {
 		"moduleFileExtensions": [
@@ -143,5 +148,13 @@
 			"^(\\.{1,2}/.*)\\.js$": "$1"
 		},
 		"testEnvironment": "node"
+	},
+	"allowScripts": {
+		"@prisma/engines@7.10.0": true,
+		"@scarf/scarf@1.4.0": true,
+		"@swc/core@1.15.41": true,
+		"esbuild@0.28.1": true,
+		"prisma@7.10.0": true,
+		"unrs-resolver@1.12.2": true
 	}
 }

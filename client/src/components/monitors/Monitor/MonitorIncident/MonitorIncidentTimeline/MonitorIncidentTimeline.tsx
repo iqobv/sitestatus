@@ -1,6 +1,6 @@
 'use client';
 
-import { IncidentDetails } from '@/types/incident/incidentDetails.types';
+import { IncidentDetails } from '@/types/incident/incident.types';
 import { Region } from '@/types/region/region.types';
 import {
 	MdCheckCircleOutline,

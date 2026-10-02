@@ -5,7 +5,10 @@ import React, { ComponentPropsWithRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { FormSubmitButtonProps } from '../FormSubmit/FormSubmit';
 
-export interface FormResetProps extends ComponentPropsWithRef<'button'> {
+export interface FormResetProps extends Omit<
+	ComponentPropsWithRef<'button'>,
+	'color'
+> {
 	buttonProps?: FormSubmitButtonProps;
 	disabledOnEmpty?: boolean;
 }
@@ -43,6 +46,7 @@ export const FormReset = ({
 			type="button"
 			onClick={handleClick}
 			disabled={disabledOnEmpty && !isDirty}
+			variant="outlined"
 			ref={ref}
 			{...rest}
 			{...props}

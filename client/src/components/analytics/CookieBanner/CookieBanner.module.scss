@@ -68,12 +68,12 @@
 
 .acceptButton {
 	background: var(--btn-contained-bg) !important;
-	color: var(--btn-contained-text) !important;
+	color: var(--btn-contained-color) !important;
 	font-weight: 600 !important;
 }
 
 .declineButton {
 	background: transparent !important;
-	color: var(--btn-outlined-text) !important;
+	color: var(--btn-outlined-color) !important;
 	border: 1px solid var(--btn-outlined-border) !important;
 }

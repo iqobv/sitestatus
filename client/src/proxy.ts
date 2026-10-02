@@ -2,129 +2,90 @@ import { NextRequest, NextResponse } from 'next/server';
 import { AUTH_PAGES } from './config/authPages.config';
 import { PRIVATE_PAGES } from './config/privatePages.config';
 import { SUBDOMAINS } from './config/subdomains.config';
-import { TOKEN_PAGES } from './config/tokenPages.config';
-import { appendCorsHeaders, getValidatedOrigin } from './utils/cors.util';
+
+const extractRoutes = (obj: unknown): string[] => {
+	if (typeof obj === 'string') return [obj];
+	if (typeof obj === 'object' && obj !== null) {
+		return Object.values(obj).flatMap(extractRoutes);
+	}
+	return [];
+};
 
 export async function proxy(request: NextRequest) {
-	const origin = getValidatedOrigin(request);
-
-	if (request.method === 'OPTIONS') {
-		const preflightHeaders = new Headers();
-
-		if (origin) {
-			appendCorsHeaders(preflightHeaders, origin);
-		}
-
-		return new NextResponse(null, {
-			status: 204,
-			headers: preflightHeaders,
-		});
-	}
-
-	const accessToken = request.cookies.get('accessToken')?.value;
-	const refreshToken = request.cookies.get('refreshToken')?.value;
-
-	let isAuthenticated = !!accessToken;
-	let refreshedCookies: string[] = [];
-
-	if (!accessToken && refreshToken) {
-		try {
-			const res = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/v1/auth/refresh`,
-				{
-					method: 'POST',
-					headers: {
-						Cookie: `refreshToken=${refreshToken}`,
-					},
-					cache: 'no-store',
-				},
-			);
-
-			if (res.ok) {
-				isAuthenticated = true;
-				refreshedCookies = res.headers.getSetCookie();
-
-				refreshedCookies.forEach((cookie) => {
-					const [cookiePair] = cookie.split(';');
-					const [name, ...rest] = cookiePair.split('=');
-					const value = rest.join('=');
-					if (name && value) {
-						request.cookies.set(name.trim(), value.trim());
-					}
-				});
-			} else {
-				isAuthenticated = false;
-			}
-		} catch {
-			isAuthenticated = false;
-		}
-	}
-
-	let response: NextResponse;
-
 	const url = request.nextUrl.clone();
-	const hostname = request.headers.get('host') || '';
 	const path = url.pathname;
-
-	const search = request.nextUrl.search;
+	const hostname = request.headers.get('host') || '';
 
 	const isAppSubdomain = hostname.startsWith(`${SUBDOMAINS.APP}.`);
 	const isStatusSubdomain = hostname.startsWith(`${SUBDOMAINS.STATUS}.`);
-	const isAuthPage = Object.values(AUTH_PAGES).some((page) =>
-		path.startsWith(page),
-	);
-	const isTokenPage = Object.values(TOKEN_PAGES).some((page) =>
-		path.startsWith(page),
-	);
 
-	if (isAppSubdomain) {
-		if (!isAuthenticated && !isAuthPage && !isTokenPage) {
-			url.pathname = AUTH_PAGES.LOGIN;
-			url.search = search;
-			response = NextResponse.redirect(url);
-		} else if (isAuthenticated && isAuthPage) {
-			url.pathname = PRIVATE_PAGES.DASHBOARD;
-			response = NextResponse.redirect(url);
-		} else {
-			const internalPath = isAuthPage
-				? path
-				: `/app${path === '/' ? '' : path}`;
-			const targetUrl = new URL(`${internalPath}${search}`, request.url);
-			response = NextResponse.rewrite(targetUrl);
+	if (path.startsWith(`/${SUBDOMAINS.APP}`)) {
+		if (!isAppSubdomain) {
+			url.pathname = '/404';
+			return NextResponse.rewrite(url);
 		}
-	} else if (isStatusSubdomain) {
-		const targetUrl = new URL(`/s${path}${search}`, request.url);
-		response = NextResponse.rewrite(targetUrl);
-	} else {
-		const isPrivateSection =
-			path.startsWith(PRIVATE_PAGES.MONITORS.ALL) ||
-			path.startsWith(PRIVATE_PAGES.PROJECTS.ALL) ||
-			path.startsWith(PRIVATE_PAGES.BASE_SETTINGS);
+		return NextResponse.next();
+	}
 
-		if (isPrivateSection || isAuthPage || isTokenPage) {
-			const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || '';
-			url.host = `${SUBDOMAINS.APP}.${rootDomain}`;
-			url.pathname = path.replace('/app', '');
-			url.search = search;
-			response = NextResponse.redirect(url);
-		} else {
-			response = NextResponse.next({
-				request: {
-					headers: request.headers,
-				},
-			});
+	if (path.startsWith('/s/')) {
+		if (!isStatusSubdomain) {
+			url.pathname = '/404';
+			return NextResponse.rewrite(url);
 		}
+		return NextResponse.next();
 	}
 
-	if (refreshedCookies.length > 0) {
-		refreshedCookies.forEach((cookie) => {
-			response.headers.append('Set-Cookie', cookie);
-		});
+	if (isStatusSubdomain) {
+		url.pathname = `/s${path === '/' ? '' : path}`;
+		return NextResponse.rewrite(url);
 	}
 
-	if (origin) {
-		appendCorsHeaders(response.headers, origin);
+	if (!isAppSubdomain) return NextResponse.next();
+
+	const isAuthenticated = Boolean(
+		request.cookies.get('accessToken')?.value ||
+		request.cookies.get('refreshToken')?.value,
+	);
+
+	const authRoutes = extractRoutes(AUTH_PAGES);
+	const isAuthRoute = authRoutes.some(
+		(route) =>
+			path === route || (route !== '/' && path.startsWith(`${route}/`)),
+	);
+
+	const protectedRoutes = extractRoutes(PRIVATE_PAGES);
+	const isProtectedRoute =
+		!isAuthRoute &&
+		protectedRoutes.some(
+			(route) =>
+				path === route || (route !== '/' && path.startsWith(`${route}/`)),
+		);
+
+	if (!isAuthenticated && isProtectedRoute) {
+		const loginUrl = new URL(AUTH_PAGES.LOGIN, request.url);
+		loginUrl.searchParams.set('redirect', path + request.nextUrl.search);
+		return NextResponse.redirect(loginUrl);
 	}
+
+	if (isAuthenticated && isAuthRoute) {
+		let redirect =
+			request.nextUrl.searchParams.get('redirect') || PRIVATE_PAGES.DASHBOARD;
+
+		if (authRoutes.some((route) => redirect.startsWith(route))) {
+			redirect = PRIVATE_PAGES.DASHBOARD;
+		}
+
+		return NextResponse.redirect(new URL(redirect, request.url));
+	}
+
+	const rewriteUrl = request.nextUrl.clone();
+	rewriteUrl.pathname = `/${SUBDOMAINS.APP}${path}`;
+	const response = NextResponse.rewrite(rewriteUrl, {
+		request: { headers: new Headers(request.headers) },
+	});
+
+	response.headers.set('x-middleware-cache', 'no-cache');
+	response.headers.set('Cache-Control', 'no-store, max-age=0');
 
 	return response;
 }

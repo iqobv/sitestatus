@@ -1,14 +1,9 @@
-import { Incident } from '../incident/incident.types';
-import { AnalyticsRawData } from './analyticsRawData.types';
-import { AnalyticsStatData } from './analyticsStatData.types';
-import { MonitorStatistics } from './monitorStatistics.types';
-import { AnalyticsStatPeriod } from './statPeriod.types';
+import { getMonitorAnalytics } from '@/api/monitor/monitorAnalytics.api';
+import { components } from '../schema';
+
+export type AnalyticsStatData = components['schemas']['AnalyticsStatLogDto'];
+export type AnalyticsRawData = components['schemas']['AnalyticsRawDataDto'];
 
 export type AnalyticsData = AnalyticsRawData | AnalyticsStatData;
 
-export interface MonitorAnalytics {
-	period: AnalyticsStatPeriod;
-	statistics: MonitorStatistics;
-	incidents: Incident[];
-	data: AnalyticsData[];
-}
+export type MonitorAnalytics = Awaited<ReturnType<typeof getMonitorAnalytics>>;

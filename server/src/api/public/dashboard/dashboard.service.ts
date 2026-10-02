@@ -1,13 +1,14 @@
+import { EnginePrismaService } from '@infra/prisma/engine-prisma.service';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
-import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
 import { Injectable } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import { DashboardDto, DashboardIncidentDto } from './dto/dashboard.dto';
 
 @Injectable()
 export class DashboardService {
 	constructor(
 		private readonly pgPrismaService: PgPrismaService,
-		private readonly tursoPrismaService: TursoPrismaService,
+		private readonly enginePrismaService: EnginePrismaService,
 	) {}
 
 	public async getDashboard(userId: string): Promise<DashboardDto> {
@@ -19,7 +20,7 @@ export class DashboardService {
 
 		const monitorIds = monitors.map((monitor) => monitor.id);
 
-		const incidents = await this.tursoPrismaService.monitorIncident.findMany({
+		const incidents = await this.enginePrismaService.monitorIncident.findMany({
 			where: { monitorId: { in: monitorIds } },
 			orderBy: { createdAt: 'desc' },
 			take: 5,
@@ -45,11 +46,13 @@ export class DashboardService {
 			orderBy: { createdAt: 'desc' },
 		});
 
-		return {
+		const result: DashboardDto = {
 			monitors,
 			incidents: mappedIncidents,
 			statusPages,
 			projects,
 		};
+
+		return plainToInstance(DashboardDto, result);
 	}
 }

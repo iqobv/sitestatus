@@ -1,7 +1,7 @@
 import { IsPassword } from '@libs/validators/is-password.validator';
 import { IsBoolean, IsEmail, IsOptional, IsString } from 'class-validator';
 
-export class CreateUserDto {
+export class PublicCreateUserDto {
 	@IsString()
 	@IsEmail()
 	email: string;
@@ -10,7 +10,9 @@ export class CreateUserDto {
 	@IsPassword()
 	@IsOptional()
 	password?: string;
+}
 
+export class CreateUserDto extends PublicCreateUserDto {
 	@IsBoolean()
 	@IsOptional()
 	emailVerified?: boolean;

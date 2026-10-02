@@ -1,12 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { Expose } from 'class-transformer';
 
 export class AnalyticsStatisticsResponseDto {
-	@ApiProperty({ example: 100 })
-	min: number;
-
-	@ApiProperty({ example: 200 })
-	max: number;
-
-	@ApiProperty({ example: 150 })
-	avg: number;
+	@Expose() min: number;
+	@Expose() max: number;
+	@Expose() avg: number;
 }

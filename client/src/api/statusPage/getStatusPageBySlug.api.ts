@@ -1,8 +1,12 @@
-import { PublicStatusPage } from '@/types/statusPage/publicStatusPage.types';
-import { apiClient, apiServer } from '../axios';
+import { paths } from '@/types/schema';
+import { apiClient } from '../axios';
+
+type GetStatusPageBySlugResponse =
+	paths['/v1/status-pages/slug/{slug}']['get']['responses']['200']['content']['application/json'];
 
 export const getStatusPageBySlug = async (slug: string) =>
-	(await apiClient.get<PublicStatusPage>(`/v1/status-pages/slug/${slug}`)).data;
-
-export const getServerStatusPageBySlug = async (slug: string) =>
-	(await apiServer.get<PublicStatusPage>(`/v1/status-pages/slug/${slug}`)).data;
+	(
+		await apiClient.get<GetStatusPageBySlugResponse>(
+			`/v1/status-pages/slug/${slug}`,
+		)
+	).data;

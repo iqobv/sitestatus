@@ -3,8 +3,8 @@
 import {
 	Button,
 	Dropdown,
+	DropdownContent,
 	DropdownItem,
-	DropdownMenu,
 	DropdownTrigger,
 } from '@/components/ui';
 import { PRIVATE_PAGES } from '@/config/privatePages.config';
@@ -34,12 +34,17 @@ export const StatusPageDropdown = ({
 }: StatusPageDropdownProps) => {
 	return (
 		<Dropdown>
-			<DropdownTrigger>
+			<DropdownTrigger asChild>
 				<Button size="sm" isIcon variant="text">
 					<MdMoreVert size={20} />
 				</Button>
 			</DropdownTrigger>
-			<DropdownMenu menuWidth="max-content" zIndex={1000}>
+			<DropdownContent
+				menuWidth="max-content"
+				style={{ minWidth: '180px' }}
+				side="bottom"
+				align="end"
+			>
 				{showEdit && (
 					<DropdownItem asChild>
 						<Link href={PRIVATE_PAGES.STATUS_PAGES.ID(statusPage.id)}>
@@ -53,9 +58,10 @@ export const StatusPageDropdown = ({
 				/>
 				<StatusPageDropdownDelete
 					id={statusPage.id}
+					name={statusPage.title}
 					redirectOnDelete={redirectOnDelete}
 				/>
-			</DropdownMenu>
+			</DropdownContent>
 		</Dropdown>
 	);
 };

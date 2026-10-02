@@ -1,17 +1,14 @@
+import { env } from '@/env';
 import { NextRequest } from 'next/server';
 
 export const getValidatedOrigin = (request: NextRequest): string | null => {
 	const origin = request.headers.get('origin');
 
-	if (!origin) {
-		return null;
-	}
+	if (!origin) return null;
 
-	const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN;
+	const rootDomain = env.NEXT_PUBLIC_ROOT_DOMAIN;
 
-	if (!rootDomain) {
-		return origin;
-	}
+	if (!rootDomain) return origin;
 
 	try {
 		const originUrl = new URL(origin);
@@ -22,9 +19,7 @@ export const getValidatedOrigin = (request: NextRequest): string | null => {
 			hostname.endsWith(`.${rootDomain}`) ||
 			hostname === 'localhost';
 
-		if (isValid) {
-			return origin;
-		}
+		if (isValid) return origin;
 
 		return null;
 	} catch {

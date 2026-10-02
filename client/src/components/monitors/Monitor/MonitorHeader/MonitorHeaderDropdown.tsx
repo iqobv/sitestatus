@@ -3,8 +3,8 @@
 import {
 	Button,
 	Dropdown,
+	DropdownContent,
 	DropdownItem,
-	DropdownMenu,
 	DropdownTrigger,
 } from '@/components/ui';
 import { PRIVATE_PAGES } from '@/config/privatePages.config';
@@ -24,13 +24,18 @@ export const MonitorHeaderDropdown = ({
 	monitor,
 }: MonitorHeaderDropdownProps) => {
 	return (
-		<Dropdown placement="bottom-end">
-			<DropdownTrigger>
+		<Dropdown>
+			<DropdownTrigger asChild>
 				<Button isIcon variant="text">
 					<MdMoreVert size={20} />
 				</Button>
 			</DropdownTrigger>
-			<DropdownMenu zIndex={1300}>
+			<DropdownContent
+				align="end"
+				side="bottom"
+				style={{ minWidth: '180px' }}
+				menuWidth="max-content"
+			>
 				<DropdownItem asChild>
 					<Link
 						href={PRIVATE_PAGES.MONITORS.EDIT(monitor.id)}
@@ -42,8 +47,8 @@ export const MonitorHeaderDropdown = ({
 				</DropdownItem>
 				<MonitorDropdownUpdateActiveStatus monitor={monitor} />
 				<MonitorDropdownAlertSettings id={monitor.id} />
-				<MonitorDeleteModal id={monitor.id} />
-			</DropdownMenu>
+				<MonitorDeleteModal id={monitor.id} name={monitor.name} />
+			</DropdownContent>
 		</Dropdown>
 	);
 };

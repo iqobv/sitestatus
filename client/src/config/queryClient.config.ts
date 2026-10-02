@@ -38,7 +38,8 @@ export const QUERY_KEYS = {
 		list: (query?: ProjectsQueryDto) => ['projects', 'list', query] as const,
 		listWithMonitors: () =>
 			['projects', 'list', { include: 'monitors' }] as const,
-		infinite: () => ['projects', 'infinite'] as const,
+		infinite: (query?: { search?: string }) =>
+			['projects', 'infinite', query] as const,
 		details: () => ['projects', 'detail'] as const,
 		detail: (id: string) => ['projects', 'detail', id] as const,
 		detailBySlug: (slug: string) => ['projects', 'detail', { slug }] as const,
@@ -74,5 +75,9 @@ export const QUERY_KEYS = {
 	},
 	dashboard: {
 		base: ['dashboard'] as const,
+	},
+	user: {
+		base: ['user'] as const,
+		me: () => ['user', 'me'] as const,
 	},
 } as const;

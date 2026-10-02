@@ -5,6 +5,7 @@ import {
 } from '@libs/decorators/api-response.decorator';
 import { Auth } from '@libs/decorators/auth.decorator';
 import { Authorized } from '@libs/decorators/authorized.decorator';
+import { MessageResponse } from '@libs/types/messages/message-detail.types';
 import {
 	Body,
 	Controller,
@@ -30,8 +31,8 @@ export class NotificationChannelController {
 		private readonly notificationChannelService: NotificationChannelService,
 	) {}
 
+	/** Create a new notification channel */
 	@Auth()
-	@ApiOperation({ summary: 'Create a new notification channel' })
 	@ApiSuccessResponse(
 		HttpStatus.CREATED,
 		SUCCESS_MESSAGES.NOTIFICATION_CHANNEL.VERIFICATION_EMAIL_SENT,
@@ -41,23 +42,23 @@ export class NotificationChannelController {
 		ERROR_MESSAGES.NOTIFICATION_CHANNEL.ALREADY_EXISTS,
 	)
 	@Post()
-	async createNotificationChannel(
+	public async createNotificationChannel(
 		@Authorized('id') userId: string,
 		@Body() dto: CreateNotificationChannelDto,
-	) {
+	): Promise<MessageResponse | void> {
 		return await this.notificationChannelService.createNotificationChannel(
 			userId,
 			dto,
 		);
 	}
 
+	/** Get all notification channels */
 	@Auth()
-	@ApiOperation({
-		summary: 'Get all notification channels for the authenticated user',
-	})
 	@ApiOkResponse({ type: [NotificationChannelDto] })
 	@Get()
-	async getAllNotificationChannelsForUser(@Authorized('id') userId: string) {
+	public async getAllNotificationChannelsForUser(
+		@Authorized('id') userId: string,
+	): Promise<NotificationChannelDto[]> {
 		return await this.notificationChannelService.getAllNotificationChannelsForUser(
 			userId,
 		);
@@ -75,25 +76,27 @@ export class NotificationChannelController {
 	)
 	@ApiErrorResponse(HttpStatus.BAD_REQUEST, ERROR_MESSAGES.TOKEN.INVALID)
 	@HttpCode(HttpStatus.OK)
-	async verifyNotificationChannel(@Query('token') token: string) {
+	public async verifyNotificationChannel(
+		@Query('token') token: string,
+	): Promise<MessageResponse> {
 		return await this.notificationChannelService.verifyNotificationChannel(
 			token,
 		);
 	}
 
+	/** Update a notification channel by ID */
 	@Auth()
-	@ApiOperation({ summary: 'Update a notification channel' })
 	@ApiOkResponse({ type: NotificationChannelDto })
 	@ApiErrorResponse(
 		HttpStatus.NOT_FOUND,
 		ERROR_MESSAGES.NOTIFICATION_CHANNEL.NOT_FOUND,
 	)
 	@Patch(':id')
-	async updateNotificationChannel(
+	public async updateNotificationChannel(
 		@Authorized('id') userId: string,
 		@Param('id') channelId: string,
 		@Body() dto: UpdateNotificationChannelDto,
-	) {
+	): Promise<NotificationChannelDto> {
 		return await this.notificationChannelService.updateNotificationChannel(
 			userId,
 			channelId,
@@ -101,11 +104,9 @@ export class NotificationChannelController {
 		);
 	}
 
+	/** Resend verification email for a notification channel */
 	@Auth()
 	@Post('resend-verification-email/:id')
-	@ApiOperation({
-		summary: 'Resend verification email for a notification channel',
-	})
 	@ApiSuccessResponse(
 		HttpStatus.OK,
 		SUCCESS_MESSAGES.NOTIFICATION_CHANNEL.VERIFICATION_EMAIL_SENT,
@@ -119,18 +120,18 @@ export class NotificationChannelController {
 		ERROR_MESSAGES.NOTIFICATION_CHANNEL.ALREADY_VERIFIED,
 	)
 	@HttpCode(HttpStatus.OK)
-	async resendVerificationEmail(
+	public async resendVerificationEmail(
 		@Authorized('id') userId: string,
 		@Param('id') channelId: string,
-	) {
+	): Promise<MessageResponse | void> {
 		return await this.notificationChannelService.resendVerificationEmail(
 			userId,
 			channelId,
 		);
 	}
 
+	/** Delete a notification channel by ID */
 	@Auth()
-	@ApiOperation({ summary: 'Remove a notification channel' })
 	@ApiSuccessResponse(
 		HttpStatus.OK,
 		SUCCESS_MESSAGES.NOTIFICATION_CHANNEL.DELETED,
@@ -144,10 +145,10 @@ export class NotificationChannelController {
 		ERROR_MESSAGES.NOTIFICATION_CHANNEL.NOT_FOUND,
 	)
 	@Delete(':id')
-	async removeNotificationChannel(
+	public async removeNotificationChannel(
 		@Authorized('id') userId: string,
 		@Param('id') channelId: string,
-	) {
+	): Promise<MessageResponse> {
 		return await this.notificationChannelService.removeNotificationChannel(
 			userId,
 			channelId,

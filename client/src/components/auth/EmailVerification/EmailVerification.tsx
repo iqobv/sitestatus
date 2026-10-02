@@ -4,7 +4,6 @@ import { verifyEmail } from '@/api/auth/email.api';
 import { AUTH_PAGES } from '@/config/authPages.config';
 import { PRIVATE_PAGES } from '@/config/privatePages.config';
 import { QUERY_KEYS } from '@/config/queryClient.config';
-import { useAuth } from '@/hooks/useAuth.hook';
 import { useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -19,8 +18,6 @@ export const EmailVerification = () => {
 
 	const [loginCompleted, setLoginCompleted] = useState(false);
 
-	const { login } = useAuth();
-
 	const router = useRouter();
 
 	const { data, isLoading, isSuccess, error } = useQuery({
@@ -32,15 +29,14 @@ export const EmailVerification = () => {
 
 	useEffect(() => {
 		if (isSuccess && data && !loginCompleted) {
-			const { user, message } = data;
+			const { code } = data;
 
-			if (message === 'Email verified successfully' && user) {
-				login(user);
+			if (code === 'AUTH_EMAIL_VERIFIED') {
 				setLoginCompleted(true);
 				router.push(PRIVATE_PAGES.DASHBOARD);
 			}
 		}
-	}, [isSuccess, data, login, router, loginCompleted]);
+	}, [isSuccess, data, router, loginCompleted]);
 
 	useEffect(() => {
 		if (error) {

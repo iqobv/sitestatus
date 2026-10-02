@@ -1,10 +1,10 @@
-import { pxToRem } from '@/hooks/fromPxToRem.util';
-import { ButtonBaseProps } from '../Button/Button.types';
+import { pxToRem } from '@/utils/fromPxToRem.util';
+import { ButtonProps } from '../Button/Button.types';
 import { SkeletonLoader } from '../SkeletonLoader/SkeletonLoader';
 import styles from './IconButton.module.scss';
 
 interface IconButtonLoaderProps {
-	buttonProps?: Omit<ButtonBaseProps, 'children'>;
+	buttonProps?: Omit<ButtonProps, 'children'>;
 	width?: number;
 	withText?: boolean;
 	height?: number;

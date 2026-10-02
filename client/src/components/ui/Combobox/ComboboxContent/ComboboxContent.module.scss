@@ -1,0 +1,36 @@
+@use '../../../../styles/shared/input-styles' as *;
+
+.command {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.searchInput {
+	@include input-base;
+
+	border: none;
+	border-bottom: 1px solid var(--input-border);
+	padding: 12px;
+	font-size: 0.875rem;
+	outline: none;
+	width: 100%;
+	border-radius: 0;
+
+	&:focus {
+		outline: none;
+	}
+}
+
+.commandList {
+	height: 15.625rem;
+	overflow-y: auto;
+	padding: 4px;
+}
+
+.loadingWrapper {
+	padding: 12px;
+	text-align: center;
+	font-size: 0.875rem;
+	color: #6b7280;
+}

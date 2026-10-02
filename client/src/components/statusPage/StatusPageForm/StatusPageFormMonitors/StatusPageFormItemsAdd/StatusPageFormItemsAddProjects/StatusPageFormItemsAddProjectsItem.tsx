@@ -26,7 +26,7 @@ export const StatusPageFormItemsAddProjectsItem = ({
 					isIcon
 					variant="text"
 					onClick={() => setExpanded((prev) => !prev)}
-					rounded
+					isRounded
 					size="sm"
 				>
 					<MdOutlineKeyboardArrowDown size={20} />

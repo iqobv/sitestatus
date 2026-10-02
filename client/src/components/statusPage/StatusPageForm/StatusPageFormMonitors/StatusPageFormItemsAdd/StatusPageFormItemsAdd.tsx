@@ -41,14 +41,12 @@ export const StatusPageFormItemsAdd = ({
 }: StatusPageFormItemsAddProps) => {
 	const [selectedTab, setSelectedTab] = useState<Tab>('monitors');
 
-	const handleTabChange = (tab: Tab) => {
-		setSelectedTab(tab);
-	};
+	const handleTabChange = (tab: Tab) => setSelectedTab(tab);
 
 	return (
 		<Modal>
-			<ModalTrigger>
-				<Button variant="secondary">Add Monitor</Button>
+			<ModalTrigger asChild>
+				<Button color="secondary">Add Monitor</Button>
 			</ModalTrigger>
 			<ModalContent>
 				<ModalHeader>Add Monitor</ModalHeader>

@@ -1,4 +1,5 @@
 import { Button, SectionHeader } from '@/components/ui';
+import Link from 'next/link';
 import { MdErrorOutline } from 'react-icons/md';
 import { NotificationChannelsVerifyWrapper } from './NotificationChannelsVerifyWrapper';
 
@@ -23,7 +24,9 @@ export const NotificationChannelsVerifyError = ({
 				textAlign="center"
 				titleProps={{ variant: 'h2' }}
 			/>
-			<Button href={href}>{hrefText}</Button>
+			<Button asChild>
+				<Link href={href}>{hrefText}</Link>
+			</Button>
 		</NotificationChannelsVerifyWrapper>
 	);
 };

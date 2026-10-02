@@ -14,49 +14,54 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql
 
-  sqledge:
-    image: mcr.microsoft.com/azure-sql-edge:latest
+  engine-db:
+    container_name: sitestatus_engine_db
+    image: timescale/timescaledb:latest-pg18
+    restart: "no"
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: ${ENGINE_DB_USER}
+      POSTGRES_PASSWORD: ${ENGINE_DB_PASSWORD}
+      POSTGRES_DB: ${ENGINE_DB_NAME}
+    networks:
+      - sitestatus_network
+    volumes:
+      - engine-data:/var/lib/postgresql
+
+  sqlserver:
+    container_name: sitestatus_sql
+    image: mcr.microsoft.com/mssql/server:2022-CU25-ubuntu-22.04
     restart: "no"
     environment:
-      - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
     ports:
       - "1433:1433"
     networks:
       - sitestatus_network
 
   servicebus-emulator:
-    image: mcr.microsoft.com/azure-messaging/servicebus-emulator:latest
+    container_name: sitestatus_sb_emulator
+    image: mcr.microsoft.com/azure-messaging/servicebus-emulator:2.0.1
     restart: "no"
     volumes:
       - ./sb-config.json:/ServiceBus_Emulator/ConfigFiles/Config.json
     ports:
       - "5672:5672"
-      - "5300:5300"
     environment:
-      - ACCEPT_EULA=Y
-      - SQL_SERVER=sqledge
-      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+      ACCEPT_EULA: "Y"
+      SQL_SERVER: sqlserver
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
     depends_on:
-      - sqledge
+      - sqlserver
     networks:
       - sitestatus_network
 
-  turso-local:
-    image: ghcr.io/tursodatabase/libsql-server:latest
-    restart: "no"
-    container_name: turso_local
-    ports:
-      - "8080:8080"
-    environment:
-      - SQLD_NODE=primary
-    volumes:
-      - turso_data:/var/lib/sqld
-
 volumes:
   postgres-data:
+  engine-data:
   servicebus-data:
-  turso_data:
 
 networks:
   sitestatus_network:

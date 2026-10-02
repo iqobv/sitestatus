@@ -1,18 +1,19 @@
+import { EnginePrismaService } from '@infra/prisma/engine-prisma.service';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
-import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
 import { ERROR_MESSAGES } from '@libs/constants';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { IncidentDetailsDto } from './dto/incident-details.dto';
+import { plainToInstance } from 'class-transformer';
 import {
 	IncidentTimelineDto,
 	IncidentTimelineType,
 } from './dto/incident-timeline.dto';
+import { IncidentDetailsDto } from './dto/incident.dto';
 
 @Injectable()
 export class IncidentService {
 	constructor(
 		private readonly pgPrismaService: PgPrismaService,
-		private readonly tursoPrismaService: TursoPrismaService,
+		private readonly enginePrismaService: EnginePrismaService,
 	) {}
 
 	public async getIncidentDetails(
@@ -26,7 +27,7 @@ export class IncidentService {
 
 		if (!monitor) throw new NotFoundException(ERROR_MESSAGES.MONITOR.NOT_FOUND);
 
-		const incident = await this.tursoPrismaService.monitorIncident.findUnique({
+		const incident = await this.enginePrismaService.monitorIncident.findUnique({
 			where: { id: incidentId, monitorId },
 		});
 
@@ -61,9 +62,11 @@ export class IncidentService {
 			(a, b) => b.timestamp.getTime() - a.timestamp.getTime(),
 		);
 
-		return {
+		const result: IncidentDetailsDto = {
 			...incident,
 			timeline: sortedTimeline,
 		};
+
+		return plainToInstance(IncidentDetailsDto, result);
 	}
 }

@@ -6,7 +6,8 @@ import {
 	Form,
 	FormActions,
 	FormField,
-	FormLabel,
+	FormReset,
+	FormSelect,
 	FormSubmit,
 	Modal,
 	ModalBody,
@@ -15,7 +16,7 @@ import {
 	ModalFooter,
 	ModalHeader,
 	ModalTrigger,
-	Select,
+	SelectItem,
 	TextField,
 } from '@/components/ui';
 import { QUERY_KEYS } from '@/config/queryClient.config';
@@ -24,7 +25,6 @@ import { createNotificationChannelSchema } from '@/schemas/notificationChannel/c
 import { ChannelType } from '@/types/notificationChannel/channelEnums.types';
 import { capitalize } from '@/utils/capitalize.util';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Controller } from 'react-hook-form';
 import { FiPlus } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import styles from './Alerting.module.scss';
@@ -51,7 +51,7 @@ export const CreateNotificationChannel = () => {
 
 	return (
 		<Modal>
-			<ModalTrigger>
+			<ModalTrigger asChild>
 				<Button className={styles.addButton}>
 					<FiPlus size={20} />
 					<p className={styles.text}>Add New Channel</p>
@@ -67,7 +67,7 @@ export const CreateNotificationChannel = () => {
 						value: '',
 					}}
 				>
-					{({ control, watch }) => {
+					{({ watch }) => {
 						const selectedType = watch('type');
 						const channelTypeLabels =
 							NOTIFICATION_CHANNEL_ITEM_LABELS[selectedType];
@@ -76,43 +76,37 @@ export const CreateNotificationChannel = () => {
 							<>
 								<ModalHeader>Create Notification Channel</ModalHeader>
 								<ModalBody>
-									<FormField name="type">
-										<Controller
-											name="type"
-											control={control}
-											render={({
-												field: { value, onChange },
-												fieldState: { error },
-											}) => (
-												<Select
-													label="Type"
-													options={[
-														{ value: '', label: 'Select a type' },
-														...Object.entries<ChannelType>(ChannelType).map(
-															([key, val]) => ({
-																value: val,
-																label: capitalize(key),
-															}),
-														),
-													]}
-													error={error?.message}
-													placeholder="Select a type"
-													value={value}
-													onChange={onChange}
-												/>
-											)}
-										/>
-									</FormField>
+									<FormSelect<CreateNotificationChannelDto>
+										name="type"
+										width="trigger"
+										zIndex={1050}
+										placeholder="Select a type"
+									>
+										{Object.entries<ChannelType>(ChannelType)
+											.map(([key, val]) => ({
+												value: val,
+												label: capitalize(key),
+											}))
+											.map((option) => (
+												<SelectItem key={option.value} value={option.value}>
+													{option.label}
+												</SelectItem>
+											))}
+									</FormSelect>
 									{selectedType && (
 										<>
-											<FormField name="name">
-												<FormLabel>{channelTypeLabels.nameLabel}</FormLabel>
+											<FormField<CreateNotificationChannelDto>
+												name="name"
+												label={channelTypeLabels.nameLabel}
+											>
 												<TextField
 													placeholder={channelTypeLabels.namePlaceholder}
 												/>
 											</FormField>
-											<FormField name="value">
-												<FormLabel>{channelTypeLabels.valueLabel}</FormLabel>
+											<FormField<CreateNotificationChannelDto>
+												name="value"
+												label={channelTypeLabels.valueLabel}
+											>
 												<TextField
 													placeholder={channelTypeLabels.valuePlaceholder}
 												/>
@@ -122,10 +116,12 @@ export const CreateNotificationChannel = () => {
 								</ModalBody>
 								<ModalFooter>
 									<FormActions justifyContent="end">
-										<ModalClose>
-											<Button variant="outlined">Cancel</Button>
+										<ModalClose asChild>
+											<FormReset buttonProps={{ variant: 'outlined' }}>
+												Cancel
+											</FormReset>
 										</ModalClose>
-										<ModalClose>
+										<ModalClose asChild>
 											<FormSubmit disabledOnEmpty disabled={!selectedType}>
 												Create
 											</FormSubmit>

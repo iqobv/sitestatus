@@ -26,7 +26,7 @@ export const SidebarFooter = ({ onClick }: SidebarFooterProps) => {
 						}}
 						onClick={onClick}
 					/>
-					<Button onClick={() => logout()} variant="secondary" fullWidth>
+					<Button onClick={() => logout()} color="secondary" fullWidth>
 						<MdLogout size={20} /> Logout
 					</Button>
 				</>

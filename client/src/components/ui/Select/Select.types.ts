@@ -1,34 +1,44 @@
-import { IconType } from 'react-icons';
+import * as SelectPrimitive from '@radix-ui/react-select';
+import { Ref } from 'react';
 
-export type OptionValue = string | number;
+export type WidthOption =
+	| 'trigger'
+	| 'fit-content'
+	| 'max-content'
+	| 'min-content'
+	| 'auto'
+	| number
+	| (string & {});
 
-export interface SelectOption {
-	label: string;
-	value: OptionValue;
-	icon?: IconType;
+export interface SelectProps extends SelectPrimitive.SelectProps {
+	children: React.ReactNode;
 }
 
-interface BaseSelectProps {
-	options: SelectOption[];
+export interface SelectTriggerProps extends Omit<
+	SelectPrimitive.SelectTriggerProps,
+	'ref'
+> {
 	placeholder?: string;
-	label?: string;
-	disabled?: boolean;
-	className?: string;
-	error?: string;
+	ref?: Ref<HTMLButtonElement>;
+	showClearButton?: boolean;
+	onClear?: () => void;
+}
+
+export interface SelectItemProps extends Omit<
+	SelectPrimitive.SelectItemProps,
+	'ref'
+> {
+	children: React.ReactNode;
+	ref?: Ref<HTMLDivElement>;
+}
+
+export interface SelectContentProps extends Omit<
+	SelectPrimitive.SelectContentProps,
+	'ref'
+> {
+	children: React.ReactNode;
+	ref?: Ref<HTMLDivElement>;
+	width?: WidthOption;
 	onScrollEnd?: () => void;
-	isLoading?: boolean;
+	scrollThreshold?: number;
 }
-
-export interface SingleSelectProps extends BaseSelectProps {
-	multiple?: false;
-	value: OptionValue | null;
-	onChange: (value: OptionValue) => void;
-}
-
-export interface MultiSelectProps extends BaseSelectProps {
-	multiple: true;
-	value: OptionValue[];
-	onChange: (value: OptionValue[]) => void;
-}
-
-export type SelectProps = SingleSelectProps | MultiSelectProps;

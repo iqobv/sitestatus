@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui';
 import { PUBLIC_PAGES } from '@/config/publicPages.config';
+import { env } from '@/env';
 import { StatusPage } from '@/types/statusPage/statusPage.types';
 import { ColumnDef } from '@tanstack/react-table';
 import { LuExternalLink } from 'react-icons/lu';
@@ -27,7 +28,7 @@ export const STATUS_PAGES_COLUMNS: ColumnDef<StatusPage>[] = [
 
 			const handleCopy = async () => {
 				try {
-					const url = `${process.env.NEXT_PUBLIC_STATUS_PAGE_URL}/${slug}`;
+					const url = `${env.NEXT_PUBLIC_STATUS_PAGE_URL}/${slug}`;
 					await navigator.clipboard.writeText(url);
 					toast.success('Status page URL copied to clipboard!');
 				} catch (err) {
@@ -38,7 +39,13 @@ export const STATUS_PAGES_COLUMNS: ColumnDef<StatusPage>[] = [
 			return (
 				<span className={styles.slug}>
 					{row.original.slug}
-					<Button size="sm" variant="text" isIcon onClick={handleCopy}>
+					<Button
+						size="sm"
+						variant="text"
+						isIcon
+						onClick={handleCopy}
+						title="Copy status page URL"
+					>
 						<MdCopyAll />
 					</Button>
 				</span>
@@ -63,15 +70,14 @@ export const STATUS_PAGES_COLUMNS: ColumnDef<StatusPage>[] = [
 		meta: { center: true, disableLink: true },
 		cell: ({ row }) => (
 			<div className={styles.actions}>
-				<Button
-					variant="outlined"
-					isIcon
-					size="sm"
-					href={PUBLIC_PAGES.STATUS_PAGE(row.original.slug)}
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					<LuExternalLink size={20} />
+				<Button variant="outlined" isIcon size="sm" asChild>
+					<a
+						href={PUBLIC_PAGES.STATUS_PAGE(row.original.slug)}
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						<LuExternalLink size={20} />
+					</a>
 				</Button>
 				<StatusPageDropdown statusPage={row.original} />
 			</div>

@@ -1,16 +1,8 @@
-import { DefaultFields } from '../defaultFields.types';
-import { FullStatusPageMonitor } from './statusPageMonitor.types';
+import { getStatusPageById } from '@/api/statusPage/getStatusPageById.api';
+import { getUserStatusPages } from '@/api/statusPage/getUserStatusPages.api';
 
-export interface StatusPage extends DefaultFields {
-	userId: string;
-	slug: string;
-	title: string;
-	description: string | null;
-	isPublished: boolean;
-	customDomain: string | null;
-	iconUrl: string | null;
-}
+export type StatusPage = Awaited<
+	ReturnType<typeof getUserStatusPages>
+>['data'][number];
 
-export interface FullStatusPage extends StatusPage {
-	monitors: FullStatusPageMonitor[];
-}
+export type FullStatusPage = Awaited<ReturnType<typeof getStatusPageById>>;

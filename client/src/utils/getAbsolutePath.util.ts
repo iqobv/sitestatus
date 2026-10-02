@@ -1,12 +1,8 @@
-export const getAbsoluteUrl = (subdomain: string, path: string): string => {
-	const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN;
-	const protocol = process.env.NEXT_PUBLIC_PROTOCOL;
+import { env } from '@/env';
 
-	if (!rootDomain || !protocol) {
-		throw new Error(
-			'NEXT_PUBLIC_ROOT_DOMAIN and NEXT_PUBLIC_PROTOCOL must be defined',
-		);
-	}
+export const getAbsoluteUrl = (subdomain: string, path: string): string => {
+	const rootDomain = env.NEXT_PUBLIC_ROOT_DOMAIN;
+	const protocol = env.NEXT_PUBLIC_PROTOCOL;
 
 	const host = subdomain ? `${subdomain}.${rootDomain}` : rootDomain;
 

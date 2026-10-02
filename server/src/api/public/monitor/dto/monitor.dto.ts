@@ -1,66 +1,46 @@
-import { BaseRegionDto } from '@api/public/region/dto/base-region.dto';
-import { SiteStatus } from '@generated/turso/enums';
-import { DefaultFieldsDto } from '@libs/dto/default-fields.dto';
-import { ApiProperty } from '@nestjs/swagger';
-import { MonitorTimelineDto } from './monitor-timeline.dto';
+import { IntersectionType, PickType } from '@nestjs/swagger';
+import { MonitorEntityDto } from './monitor.entity.dto';
 
-export class BaseMonitorDto extends DefaultFieldsDto {
-	@ApiProperty({ example: 'My Website' })
-	name: string;
+export class BaseMonitorDto extends PickType(MonitorEntityDto, [
+	'name',
+	'url',
+	'checkIntervalSeconds',
+	'method',
+	'isActive',
+	'projectId',
+	'userId',
+	'id',
+	'createdAt',
+	'updatedAt',
+	'deletedAt',
+] as const) {}
 
-	@ApiProperty({ example: 'https://example.com' })
-	url: string;
+export class MonitorDto extends IntersectionType(
+	BaseMonitorDto,
+	PickType(MonitorEntityDto, [
+		'nextCheckAt',
+		'lastCheckedAt',
+		'lastStatus',
+		'uptime',
+	] as const),
+) {}
 
-	@ApiProperty({ example: 300, description: 'Check interval in seconds' })
-	checkIntervalSeconds: number;
+export class MonitorFullDto extends IntersectionType(
+	MonitorDto,
+	PickType(MonitorEntityDto, ['timeline'] as const),
+) {}
 
-	@ApiProperty({ example: 'GET' })
-	method: string;
+export class MonitorWithRegionsDto extends IntersectionType(
+	MonitorFullDto,
+	PickType(MonitorEntityDto, ['regions'] as const),
+) {}
 
-	@ApiProperty({ example: true })
-	isActive?: boolean;
+export class MonitorWithRegionsIdsDto extends IntersectionType(
+	MonitorDto,
+	PickType(MonitorEntityDto, ['regionIds'] as const),
+) {}
 
-	@ApiProperty({ example: 'f77d8a89-3af8-43d3-91d2-47348ec2ac45' })
-	projectId: string | null;
-
-	@ApiProperty({ example: 'cd244178-f42d-4e8d-aa1e-8ff164bb8d35' })
-	userId: string;
-}
-
-export class MonitorDto extends BaseMonitorDto {
-	@ApiProperty({ example: new Date().toISOString() })
-	nextCheckAt: Date;
-
-	@ApiProperty({ example: new Date().toISOString() })
-	lastCheckedAt?: Date | null;
-
-	@ApiProperty({
-		example: SiteStatus.UP,
-		enum: SiteStatus,
-		enumName: 'SiteStatus',
-	})
-	lastStatus?: SiteStatus;
-
-	@ApiProperty({ example: '100.000%' })
-	uptime: string;
-}
-
-export class MonitorFullDto extends MonitorDto {
-	@ApiProperty({ type: [MonitorTimelineDto] })
-	timeline: MonitorTimelineDto[];
-}
-
-export class MonitorWithRegionsDto extends MonitorFullDto {
-	@ApiProperty({ type: [BaseRegionDto] })
-	regions: BaseRegionDto[];
-}
-
-export class MonitorWithRegionsIdsDto extends MonitorDto {
-	@ApiProperty({
-		example: [
-			'70798955-3cd6-405a-8474-fcd6bbbfbf91',
-			'9002bfe9-f561-4b7d-b418-2fd3dea04474',
-		],
-	})
-	regions: string[];
-}
+export class BaseMonitorWithRegionsIdsDto extends IntersectionType(
+	BaseMonitorDto,
+	PickType(MonitorEntityDto, ['regionIds'] as const),
+) {}

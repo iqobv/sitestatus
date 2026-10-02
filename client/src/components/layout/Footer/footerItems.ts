@@ -22,15 +22,6 @@ export const FOOTER_ITEMS: FooterItem[] = [
 		],
 	},
 	{
-		title: 'Resources',
-		links: [
-			{
-				label: 'API Documentation',
-				href: `${process.env.NEXT_PUBLIC_API_URL}/docs`,
-			},
-		],
-	},
-	{
 		title: 'Company',
 		links: [
 			{
@@ -48,6 +39,15 @@ export const FOOTER_ITEMS: FooterItem[] = [
 			{
 				label: 'Cookie Policy',
 				href: LEGAL_PAGES.COOKIE_POLICY,
+			},
+		],
+	},
+	{
+		title: 'Contact',
+		links: [
+			{
+				label: 'support@sitestatus.dev',
+				href: 'mailto:support@sitestatus.dev',
 			},
 		],
 	},

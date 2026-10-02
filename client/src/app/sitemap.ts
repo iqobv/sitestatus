@@ -1,17 +1,24 @@
-import { LEGAL_PAGES } from '@/config/legalPage.config';
-import { PUBLIC_PAGES } from '@/config/publicPages.config';
+import { PAGES } from '@/config/pages.config';
+import { pagesMetadata } from '@/config/pagesMetadata.config';
+import { env } from '@/env';
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-	const baseUrl = 'https://sitestatus.dev';
+	const baseUrl = env.NEXT_PUBLIC_CLIENT_URL;
 
-	const staticRoutes = [PUBLIC_PAGES.HOME, ...Object.values(LEGAL_PAGES)].map(
-		(route) => ({
-			url: `${baseUrl}${route}`,
-			lastModified: new Date().toISOString().split('T')[0],
-			changeFrequency: 'monthly' as const,
-			priority: route === PUBLIC_PAGES.HOME ? 1 : 0.8,
-		}),
+	const staticRoutes: MetadataRoute.Sitemap = Object.values(PAGES).map(
+		(route) => {
+			const metadata = pagesMetadata[route] ?? {
+				lastModified: new Date().toISOString().split('T')[0],
+				changeFrequency: 'monthly',
+				priority: 0.5,
+			};
+
+			return {
+				url: `${baseUrl}${route}`,
+				...metadata,
+			};
+		},
 	);
 
 	return staticRoutes;

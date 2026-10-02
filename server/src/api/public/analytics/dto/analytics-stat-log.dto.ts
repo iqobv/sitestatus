@@ -1,19 +1,19 @@
-import { SiteStatus } from '@generated/turso/enums';
+import { SiteStatus } from '@generated/engine/enums';
 import { ApiProperty } from '@nestjs/swagger';
+import { Expose } from 'class-transformer';
 
 export class AnalyticsStatLogDto {
-	@ApiProperty({ example: 100 })
-	uptimePercent: number;
+	@Expose() uptimePercent: number;
+	@Expose() avgResponseMs: number;
+	@Expose() timestamp: Date;
 
-	@ApiProperty({ example: 209 })
-	avgResponseMs: number;
-
-	@ApiProperty({ example: new Date() })
-	timestamp: Date;
-
-	@ApiProperty({ example: SiteStatus.UP, enum: SiteStatus })
+	@Expose()
+	@ApiProperty({
+		example: SiteStatus.UP,
+		enum: SiteStatus,
+		enumName: 'SiteStatus',
+	})
 	status: SiteStatus;
 
-	@ApiProperty({ example: '8430dc88-35ec-408d-b888-cf871a9b2375' })
-	regionId: string;
+	@Expose() regionId: string;
 }

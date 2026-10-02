@@ -26,15 +26,14 @@ export const StatusPageDetailsHeader = ({
 				description={data.description}
 			/>
 			<div className={styles.actions}>
-				<Button
-					variant="outlined"
-					isIcon
-					size="sm"
-					href={PUBLIC_PAGES.STATUS_PAGE(data.slug)}
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					<LuExternalLink size={20} />
+				<Button variant="outlined" isIcon size="sm" asChild>
+					<a
+						href={PUBLIC_PAGES.STATUS_PAGE(data.slug)}
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						<LuExternalLink size={20} />
+					</a>
 				</Button>
 				<StatusPageDropdown
 					statusPage={data}

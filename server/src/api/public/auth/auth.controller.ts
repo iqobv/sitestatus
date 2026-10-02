@@ -6,10 +6,8 @@ import {
 import { Auth } from '@libs/decorators/auth.decorator';
 import { Authorized } from '@libs/decorators/authorized.decorator';
 import { Cookie } from '@libs/decorators/cookie.decorator';
-import { IsPublic } from '@libs/decorators/is-public.decorator';
 import { MessageResponse } from '@libs/types/messages/message-detail.types';
 import { extractClientInfo } from '@libs/utils/client-info.util';
-import { clearAuthCookies, setAuthCookies } from '@libs/utils/cookie.util';
 import { withField } from '@libs/utils/error-with-field.util';
 import {
 	Body,
@@ -23,14 +21,14 @@ import {
 	Res,
 	UnauthorizedException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import type { Request, Response } from 'express';
-import { CreateUserDto } from '../user/dto/create-user.dto';
+import { PublicCreateUserDto } from '../user/dto/create-user.dto';
 import { UserWithoutPasswordDto } from '../user/dto/user.dto';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
+import { CookieService } from './cookie/cookie.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { LoginDto } from './dto/login.dto';
@@ -42,32 +40,32 @@ export class AuthController {
 	constructor(
 		private readonly authService: AuthService,
 		private readonly userService: UserService,
-		private readonly configService: ConfigService,
+		private readonly cookieService: CookieService,
 	) {}
 
-	@IsPublic()
+	/** Register a new user */
 	@Throttle({
 		short: { limit: 2, ttl: 1000 },
 		default: { limit: 5, ttl: 60000 },
 	})
-	@ApiOperation({ summary: 'Register a new user' })
+	@Post('register')
 	@ApiSuccessResponse(HttpStatus.OK, {
 		...SUCCESS_MESSAGES.AUTH.REGISTER_SUCCESS,
 		meta: { email: 'user@example.com' },
 	})
 	@ApiErrorResponse(HttpStatus.CONFLICT, ERROR_MESSAGES.USER.ALREADY_EXISTS)
-	@Post('register')
 	@HttpCode(HttpStatus.CREATED)
-	public async register(@Body() dto: CreateUserDto): Promise<MessageResponse> {
+	public async register(
+		@Body() dto: PublicCreateUserDto,
+	): Promise<MessageResponse> {
 		return await this.authService.register(dto);
 	}
 
-	@IsPublic()
+	/** Log in a user */
 	@Throttle({
 		short: { limit: 2, ttl: 1000 },
 		default: { limit: 5, ttl: 60000 },
 	})
-	@ApiOperation({ summary: 'Log in a user and create a session' })
 	@Post('login')
 	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.AUTH.LOGIN_SUCCESS)
 	@HttpCode(HttpStatus.OK)
@@ -82,16 +80,15 @@ export class AuthController {
 			clientInfo,
 		);
 
-		setAuthCookies(res, accessToken, refreshToken, this.configService);
+		this.cookieService.setAuthCookies(res, accessToken, refreshToken);
 
 		return SUCCESS_MESSAGES.AUTH.LOGIN_SUCCESS;
 	}
 
-	@IsPublic()
-	@ApiOperation({ summary: 'Log out the current user' })
-	@ApiOkResponse({ type: Boolean })
+	/** Log out a user */
 	@Auth()
 	@Post('logout')
+	@ApiOkResponse({ type: Boolean })
 	@HttpCode(HttpStatus.OK)
 	public async logout(
 		@Authorized('id') userId: string,
@@ -100,19 +97,19 @@ export class AuthController {
 	): Promise<MessageResponse> {
 		if (rt) await this.authService.logout(rt, userId);
 
-		clearAuthCookies(res, this.configService);
+		this.cookieService.clearAuthCookies(res);
 
 		return SUCCESS_MESSAGES.AUTH.LOGOUT_SUCCESS;
 	}
 
-	@ApiOperation({ summary: 'Verify user email address' })
+	/** Verify email address */
+	@Get('verify-email')
 	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.AUTH.EMAIL_VERIFIED)
 	@ApiErrorResponse(HttpStatus.BAD_REQUEST, [
 		ERROR_MESSAGES.AUTH.ALREADY_VERIFIED,
 		ERROR_MESSAGES.TOKEN.INVALID,
 		ERROR_MESSAGES.TOKEN.EXPIRED,
 	])
-	@Get('verify-email')
 	public async verifyEmail(
 		@Query('token') token: string,
 		@Req() req: Request,
@@ -123,12 +120,12 @@ export class AuthController {
 
 		const { accessToken, refreshToken } = result;
 
-		setAuthCookies(res, accessToken, refreshToken, this.configService);
+		this.cookieService.setAuthCookies(res, accessToken, refreshToken);
 
 		return SUCCESS_MESSAGES.AUTH.EMAIL_VERIFIED;
 	}
 
-	@IsPublic()
+	/** Refresh authentication tokens */
 	@SkipThrottle()
 	@Post('refresh')
 	@ApiOperation({ summary: 'Refresh authentication tokens' })
@@ -149,59 +146,64 @@ export class AuthController {
 					ERROR_MESSAGES.AUTH.REFRESH_TOKEN_MISSING,
 				);
 			const info = extractClientInfo(req);
+
 			const { accessToken, refreshToken } =
 				await this.authService.refreshTokens(rt, info);
-			setAuthCookies(res, accessToken, refreshToken, this.configService);
+
+			this.cookieService.setAuthCookies(res, accessToken, refreshToken);
+
 			return SUCCESS_MESSAGES.AUTH.REFRESH_TOKENS;
 		} catch (error) {
-			clearAuthCookies(res, this.configService);
+			this.cookieService.clearAuthCookies(res);
 			throw error;
 		}
 	}
 
+	/** Resend verification email */
 	@Throttle({
 		short: { limit: 2, ttl: 1000 },
 		default: { limit: 5, ttl: 60000 },
 	})
+	@Post('resend-verification-email')
 	@ApiOperation({ summary: 'Resend verification email to user' })
 	@ApiSuccessResponse(
 		HttpStatus.OK,
 		SUCCESS_MESSAGES.AUTH.RESEND_VERIFICATION_EMAIL,
 	)
-	@Post('resend-verification-email')
 	@HttpCode(HttpStatus.OK)
 	public async resendVerificationEmail(
 		@Body() dto: ResendVerificationEmailDto,
-	) {
+	): Promise<MessageResponse> {
 		await this.authService.resendVerification(dto.email);
 
 		return SUCCESS_MESSAGES.AUTH.RESEND_VERIFICATION_EMAIL;
 	}
 
-	@IsPublic()
-	@ApiOperation({ summary: 'Get current user profile' })
+	/** Get current user */
+	@Get('me')
 	@Auth()
 	@ApiOkResponse({ type: UserWithoutPasswordDto })
 	@ApiErrorResponse(HttpStatus.NOT_FOUND, [
 		ERROR_MESSAGES.USER.NOT_FOUND,
 		ERROR_MESSAGES.USER.DELETED,
 	])
-	@Get('me')
-	public async getProfile(@Authorized('id') userId: string) {
+	public async getProfile(
+		@Authorized('id') userId: string,
+	): Promise<UserWithoutPasswordDto> {
 		if (!userId)
 			throw new UnauthorizedException(ERROR_MESSAGES.AUTH.UNAUTHORIZED);
 
 		return await this.userService.findById(userId);
 	}
 
+	/** Request a password reset link */
 	@Throttle({
 		short: { limit: 2, ttl: 1000 },
 		default: { limit: 5, ttl: 60000 },
 	})
-	@ApiOperation({ summary: 'Request a password reset link' })
+	@Post('forgot-password')
 	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.AUTH.FORGOT_PASSWORD)
 	@ApiErrorResponse(HttpStatus.NOT_FOUND, ERROR_MESSAGES.USER.DELETED)
-	@Post('forgot-password')
 	public async forgotPassword(
 		@Body() dto: ForgotPasswordDto,
 	): Promise<MessageResponse> {
@@ -210,12 +212,12 @@ export class AuthController {
 		return SUCCESS_MESSAGES.AUTH.FORGOT_PASSWORD;
 	}
 
+	/** Reset user password */
 	@Throttle({
 		short: { limit: 2, ttl: 1000 },
 		default: { limit: 5, ttl: 60000 },
 	})
 	@Post('reset-password')
-	@ApiOperation({ summary: 'Reset user password' })
 	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.AUTH.RESET_PASSWORD)
 	public async resetPassword(
 		@Body() dto: ResetPasswordDto,
@@ -225,12 +227,13 @@ export class AuthController {
 		return SUCCESS_MESSAGES.AUTH.RESET_PASSWORD;
 	}
 
+	/** Change user password */
 	@Auth()
 	@Throttle({
 		short: { limit: 2, ttl: 1000 },
 		default: { limit: 5, ttl: 60000 },
 	})
-	@ApiOperation({ summary: 'Change user password' })
+	@Post('change-password')
 	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.AUTH.CHANGE_PASSWORD)
 	@ApiErrorResponse(
 		HttpStatus.BAD_REQUEST,
@@ -240,7 +243,6 @@ export class AuthController {
 		HttpStatus.UNAUTHORIZED,
 		ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS,
 	)
-	@Post('change-password')
 	public async changePassword(
 		@Authorized('id') userId: string,
 		@Body() dto: ChangePasswordDto,
@@ -250,16 +252,17 @@ export class AuthController {
 		return SUCCESS_MESSAGES.AUTH.CHANGE_PASSWORD;
 	}
 
+	/** Generate account restore token */
 	@Throttle({
 		short: { limit: 2, ttl: 1000 },
 		default: { limit: 5, ttl: 60000 },
 	})
+	@Post('generate-restore-token')
 	@ApiOperation({ summary: 'Generate account restore token' })
 	@ApiSuccessResponse(
 		HttpStatus.OK,
 		SUCCESS_MESSAGES.AUTH.SEND_RESTORE_ACCOUNT_EMAIL,
 	)
-	@Post('generate-restore-token')
 	public async generateRestoreToken(
 		@Body() dto: RestoreAccountDto,
 	): Promise<MessageResponse> {
@@ -268,13 +271,13 @@ export class AuthController {
 		return SUCCESS_MESSAGES.AUTH.SEND_RESTORE_ACCOUNT_EMAIL;
 	}
 
+	/** Generate account restore token */
 	@Throttle({
 		short: { limit: 2, ttl: 1000 },
 		default: { limit: 5, ttl: 60000 },
 	})
-	@ApiOperation({ summary: 'Generate account restore token' })
-	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.AUTH.RESTORE_ACCOUNT)
 	@Post('restore-account')
+	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.AUTH.RESTORE_ACCOUNT)
 	@ApiErrorResponse(HttpStatus.BAD_REQUEST, [
 		ERROR_MESSAGES.TOKEN.INVALID,
 		ERROR_MESSAGES.TOKEN.EXPIRED,
@@ -291,7 +294,7 @@ export class AuthController {
 			info,
 		);
 
-		setAuthCookies(res, accessToken, refreshToken, this.configService);
+		this.cookieService.setAuthCookies(res, accessToken, refreshToken);
 
 		return SUCCESS_MESSAGES.AUTH.RESTORE_ACCOUNT;
 	}

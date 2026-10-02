@@ -1,11 +1,8 @@
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
-import { ConfigService } from '@nestjs/config';
+import { AppConfig } from './schemas/app.schema';
 
-export const getCorsConfig = (configService: ConfigService): CorsOptions => ({
-	origin: configService
-		.getOrThrow<string>('ALLOWED_ORIGIN')
-		.split(',')
-		.map((url) => url.trim()),
+export const getCorsConfig = (config: AppConfig): CorsOptions => ({
+	origin: [config.MAIN_URL, config.APP_URL, config.STATUS_URL],
 	credentials: true,
 	allowedHeaders: [
 		'Content-Type',

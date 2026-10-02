@@ -1,5 +1,8 @@
-import { MonitorAnalytics } from '@/types/monitors/monitorAnalytics.types';
+import { paths } from '@/types/schema';
 import { apiClient } from '../axios';
+
+type GetMonitorAnalyticsResponse =
+	paths['/v1/analytics/{monitorId}']['get']['responses']['200']['content']['application/json'];
 
 export const getMonitorAnalytics = async (
 	monitorId: string,
@@ -7,10 +10,13 @@ export const getMonitorAnalytics = async (
 	region: string = 'global',
 ) =>
 	(
-		await apiClient.get<MonitorAnalytics>(`/v1/analytics/${monitorId}`, {
-			params: {
-				daysRange,
-				region,
+		await apiClient.get<GetMonitorAnalyticsResponse>(
+			`/v1/analytics/${monitorId}`,
+			{
+				params: {
+					daysRange,
+					region,
+				},
 			},
-		})
+		)
 	).data;

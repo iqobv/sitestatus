@@ -1,77 +1,40 @@
 'use client';
 
-import {
-	getProfile as apiGetProfile,
-	logout as apiLogout,
-} from '@/api/auth/auth.api';
+import { logout as apiLogout, getUser } from '@/api/auth/auth.api';
 import { QUERY_KEYS } from '@/config/queryClient.config';
-import { useUserStore } from '@/store/user.store';
 import { User } from '@/types/user/user.types';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 
 export const useAuth = () => {
-	const user = useUserStore((state) => state.user);
-	const isLoading = useUserStore((state) => state.isLoading);
-	const isAuthenticated = useUserStore((state) => state.isAuthenticated);
+	const queryClient = useQueryClient();
+	const router = useRouter();
 
-	const setUser = useUserStore((state) => state.setUser);
-	const removeUser = useUserStore((state) => state.removeUser);
-	const setIsLoading = useUserStore((state) => state.setIsLoading);
-	const setIsAuthenticated = useUserStore((state) => state.setIsAuthenticated);
-
-	const login = (userData: User) => {
-		setUser(userData);
-		setIsAuthenticated(true);
-		setIsLoading(false);
-	};
-
-	const storeLogout = () => {
-		removeUser();
-		setIsAuthenticated(false);
-	};
-
-	const { mutate: getProfile } = useMutation({
-		mutationFn: apiGetProfile,
-		mutationKey: QUERY_KEYS.auth.profile,
-		onMutate: () => {
-			setIsLoading(true);
-		},
-		onSuccess: (data) => {
-			if (data?.id) {
-				setUser(data);
-				setIsAuthenticated(true);
-			} else {
-				setIsAuthenticated(false);
-				logout();
-			}
-			setIsLoading(false);
-		},
-		onError: () => {
-			setIsAuthenticated(false);
-			setIsLoading(false);
-			logout();
-		},
+	const { data: user, isLoading } = useQuery({
+		queryKey: QUERY_KEYS.user.me(),
+		queryFn: getUser,
+		retry: false,
+		staleTime: 1000 * 60 * 5,
 	});
+
+	const isAuthenticated = !!user?.id;
 
 	const { mutate: logout } = useMutation({
-		mutationFn: () => apiLogout(),
-		onMutate: () => {
-			setIsLoading(true);
-			storeLogout();
-		},
-		onSettled: () => {
-			setIsLoading(false);
-			window.location.reload();
+		mutationFn: apiLogout,
+		onSuccess: () => {
+			queryClient.clear();
+			router.refresh();
 		},
 	});
 
+	const setUser = (user: User) =>
+		queryClient.setQueryData(QUERY_KEYS.user.me(), user);
+
 	return {
-		user,
-		isLoading,
 		isAuthenticated,
-		setIsLoading,
-		login,
-		getProfile,
+		isLoading,
+		user,
+		setUser,
 		logout,
 	};
 };

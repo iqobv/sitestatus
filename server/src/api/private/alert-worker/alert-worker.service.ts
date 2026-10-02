@@ -7,15 +7,15 @@ import {
 	ServiceBusReceiver,
 	ServiceBusSender,
 } from '@azure/service-bus';
+import { SiteStatus } from '@generated/engine/enums';
 import { ChannelType, NotificationChannel } from '@generated/postgres/client';
-import { SiteStatus } from '@generated/turso/enums';
 import {
 	IncidentAlertDto,
 	RegionInfoDto,
 } from '@infra/mail/dto/incident-alert.dto';
 import { MailService } from '@infra/mail/mail.service';
+import { EnginePrismaService } from '@infra/prisma/engine-prisma.service';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
-import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
 import {
 	Injectable,
 	Logger,
@@ -35,7 +35,7 @@ export class AlertWorkerService implements OnModuleInit, OnModuleDestroy {
 		private readonly sbClient: ServiceBusClient,
 		private readonly alertSettingsService: AlertSettingsService,
 		private readonly mailService: MailService,
-		private readonly tursoPrismaService: TursoPrismaService,
+		private readonly enginePrismaService: EnginePrismaService,
 		private readonly pgPrismaService: PgPrismaService,
 		private readonly cache: MonitorCacheService,
 		private readonly personalNotificationService: PersonalNotificationService,
@@ -95,7 +95,7 @@ export class AlertWorkerService implements OnModuleInit, OnModuleDestroy {
 	}
 
 	private async proccessIncident(body: IncedentPayloadDto): Promise<void> {
-		const incident = await this.tursoPrismaService.monitorIncident.findUnique({
+		const incident = await this.enginePrismaService.monitorIncident.findUnique({
 			where: { id: body.incidentId },
 		});
 
@@ -115,7 +115,7 @@ export class AlertWorkerService implements OnModuleInit, OnModuleDestroy {
 			return;
 
 		const allActiveIncidents =
-			await this.tursoPrismaService.monitorIncident.findMany({
+			await this.enginePrismaService.monitorIncident.findMany({
 				where: { monitorId: body.monitorId, resolved: false },
 			});
 
@@ -167,7 +167,7 @@ export class AlertWorkerService implements OnModuleInit, OnModuleDestroy {
 			);
 
 			if (isAlreadyAlerting) {
-				await this.tursoPrismaService.monitorIncident.update({
+				await this.enginePrismaService.monitorIncident.update({
 					where: { id: incident.id },
 					data: { alertSentAt: new Date(), alertTriggered: true },
 				});
@@ -175,7 +175,7 @@ export class AlertWorkerService implements OnModuleInit, OnModuleDestroy {
 			}
 
 			const claimResult =
-				await this.tursoPrismaService.monitorIncident.updateMany({
+				await this.enginePrismaService.monitorIncident.updateMany({
 					where: {
 						monitorId: body.monitorId,
 						resolved: false,
@@ -210,7 +210,7 @@ export class AlertWorkerService implements OnModuleInit, OnModuleDestroy {
 			if (allActiveIncidents.length > 0) return;
 
 			const tieBreaker =
-				await this.tursoPrismaService.monitorIncident.findFirst({
+				await this.enginePrismaService.monitorIncident.findFirst({
 					where: {
 						monitorId: body.monitorId,
 						resolved: true,

@@ -1,6 +1,6 @@
 'use client';
 
-import { FormField, FormLabel, Textarea, TextField } from '@/components/ui';
+import { FormField, Textarea, TextField } from '@/components/ui';
 import { Field } from '@/types/ui/field.types';
 import { FieldValues } from 'react-hook-form';
 
@@ -14,10 +14,11 @@ export const ProjectFormField = <D extends FieldValues>({
 	isEdit,
 }: ProjectFormFieldProps<D>) => {
 	return (
-		<FormField name={field.name}>
-			<FormLabel htmlFor={field.name} isRequired={!isEdit && field.isRequired}>
-				{field.label}
-			</FormLabel>
+		<FormField
+			name={field.name}
+			label={field.label}
+			required={!isEdit && field.isRequired}
+		>
 			{field.type === 'textarea' ? (
 				<Textarea
 					placeholder={field.placeholder}

@@ -137,7 +137,10 @@ describe('ProjectService', () => {
 		it('should return all projects', async () => {
 			prisma.project.findMany.mockResolvedValue([mockProject]);
 
-			const result = await service.getAllProjects(ownerId);
+			const result = await service.getAllProjects(ownerId, {
+				limit: 10,
+				page: 1,
+			});
 
 			expect(prisma.project.findMany).toHaveBeenCalled();
 			expect(result).toEqual([mockProject]);
@@ -146,7 +149,10 @@ describe('ProjectService', () => {
 		it('should return an empty array if no projects are found', async () => {
 			prisma.project.findMany.mockResolvedValue([]);
 
-			const result = await service.getAllProjects(ownerId);
+			const result = await service.getAllProjects(ownerId, {
+				limit: 10,
+				page: 1,
+			});
 
 			expect(prisma.project.findMany).toHaveBeenCalled();
 			expect(result).toEqual([]);

@@ -2,14 +2,13 @@
 
 import { ChangeEvent, useEffect, useState } from 'react';
 import { Button } from '../Button/Button';
-import { Modal } from '../Modal/Modal';
-import { ModalClose } from '../Modal/parts/ModalClose';
+import { ModalClose } from '../Modal/Modal';
+import { ModalBody } from '../Modal/ModalParts/ModalBody';
+import { ModalFooter } from '../Modal/ModalParts/ModalFooter';
+import { ModalHeader } from '../Modal/ModalParts/ModalHeader';
 import { TextField } from '../TextField/TextField';
 import styles from './ConfirmAction.module.scss';
 import { ConfirmActionProps } from './ConfirmAction.types';
-import { ModalHeader } from '../Modal/parts/ModalHeader/ModalHeader';
-import { ModalBody } from '../Modal/parts/ModalBody/ModalBody';
-import { ModalFooter } from '../Modal/parts/ModalFooter';
 
 type ConfirmActionBodyProps = Omit<ConfirmActionProps, 'trigger'>;
 
@@ -22,6 +21,8 @@ export const ConfirmActionBody = ({
 	confirmButtonText = 'Confirm',
 	confirmWithInput = false,
 	exceptedInputValue = 'DELETE',
+	inputPlaceholder,
+	inputLabel,
 }: ConfirmActionBodyProps) => {
 	const [inputValue, setInputValue] = useState('');
 	const [isConfirmDisabled, setIsConfirmDisabled] = useState(confirmWithInput);
@@ -31,15 +32,12 @@ export const ConfirmActionBody = ({
 	};
 
 	useEffect(() => {
-		if (confirmWithInput && exceptedInputValue) {
+		if (confirmWithInput && exceptedInputValue)
 			setIsConfirmDisabled(inputValue !== exceptedInputValue);
-		}
 	}, [inputValue, confirmWithInput, exceptedInputValue]);
 
 	const handleConfirm = () => {
-		if (!isConfirmDisabled) {
-			onConfirm();
-		}
+		if (!isConfirmDisabled) onConfirm();
 	};
 
 	return (
@@ -50,31 +48,41 @@ export const ConfirmActionBody = ({
 				{confirmWithInput && (
 					<TextField
 						label={
-							<>
-								Enter <strong>{exceptedInputValue}</strong> to confirm
-							</>
+							inputLabel ? (
+								inputLabel
+							) : (
+								<>
+									Type the "
+									<strong
+										style={{
+											display: 'inline-block',
+										}}
+									>
+										{exceptedInputValue}
+									</strong>
+									" to confirm
+								</>
+							)
 						}
-						placeholder={exceptedInputValue}
+						placeholder={inputPlaceholder || exceptedInputValue}
 						value={inputValue}
 						onChange={handleInputChange}
 						autoComplete="off"
 					/>
 				)}
 				<div className={styles.buttons}>
-					<ModalClose>
+					<ModalClose asChild>
 						<Button variant="outlined" onClick={onCancel}>
 							{cancelButtonText}
 						</Button>
 					</ModalClose>
-					<ModalClose>
-						<Button
-							variant="danger"
-							onClick={handleConfirm}
-							disabled={isConfirmDisabled}
-						>
-							{confirmButtonText}
-						</Button>
-					</ModalClose>
+					<Button
+						color="danger"
+						onClick={handleConfirm}
+						disabled={isConfirmDisabled}
+					>
+						{confirmButtonText}
+					</Button>
 				</div>
 			</ModalFooter>
 		</>

@@ -1,47 +1,39 @@
 'use server';
 
-import { AUTH_PAGES } from '@/config/authPages.config';
-import { ApiErrorResponse } from '@/types/api/messageResponse.api';
+import { env } from '@/env';
+import { ApiMessageResponse } from '@/types/api/messageResponse.api';
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
+import https from 'https';
+import { headers } from 'next/headers';
+
+const url = env.NEXT_PUBLIC_API_URL;
 
 const apiServer = axios.create({
-	baseURL: process.env.NEXT_PUBLIC_API_URL,
+	baseURL: url,
 	withCredentials: true,
+	httpsAgent: new https.Agent({
+		rejectUnauthorized: env.NODE_ENV !== 'development',
+	}),
 });
 
 apiServer.interceptors.request.use(
 	async (config: InternalAxiosRequestConfig) => {
-		const cookieStore = await cookies();
-		const cookieHeader = cookieStore.toString();
+		const headersList = await headers();
+		const cookieHeader = headersList.get('cookie');
 
-		if (cookieHeader) {
-			config.headers.set('Cookie', cookieHeader);
-		}
+		if (cookieHeader) config.headers.set('Cookie', cookieHeader);
 
 		return config;
 	},
-	(error: AxiosError<ApiErrorResponse>) => {
-		return Promise.reject(error);
-	},
+	(error: AxiosError<ApiMessageResponse>) => Promise.reject(error),
 );
 
 apiServer.interceptors.response.use(
 	(response) => response,
-	(error: AxiosError<ApiErrorResponse>) => {
-		const requestUrl = error.config?.url || '';
-
-		const isAuthEndpoint = Object.values(AUTH_PAGES).some((path) =>
-			requestUrl.includes(path),
-		);
-
-		if (error.response?.status === 401 && !isAuthEndpoint) {
-			redirect(AUTH_PAGES.LOGIN);
-		}
-
+	async (error: AxiosError<ApiMessageResponse>) => {
 		if (error.response?.data?.message) {
 			error.message = error.response.data.message;
+			error.code = error.response.data.code;
 		}
 
 		return Promise.reject(error);

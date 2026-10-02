@@ -21,7 +21,9 @@ export const NotFoundWrapper = ({
 					{description ||
 						'The page you are looking for does not exist or has been moved.'}
 				</p>
-				<Button href={href}>Back to Home</Button>
+				<Button asChild>
+					<a href={href}>Back to Home</a>
+				</Button>
 			</div>
 		</div>
 	);

@@ -1,11 +1,12 @@
 'use client';
 
 import { LEGAL_PAGES } from '@/config/legalPage.config';
+import { env } from '@/env';
 import CookieConsent from 'react-cookie-consent';
 import styles from './CookieBanner.module.scss';
 
 export const CookieBanner = () => {
-	const cookieDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN;
+	const cookieDomain = env.NEXT_PUBLIC_COOKIE_DOMAIN;
 
 	const handleConsentUpdate = (isGranted: boolean) => {
 		if (typeof window.gtag === 'function') {

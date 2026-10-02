@@ -1,13 +1,18 @@
-import { SiteStatus } from '@generated/turso/enums';
+import { SiteStatus } from '@generated/engine/enums';
 import { ApiProperty } from '@nestjs/swagger';
+import { Expose } from 'class-transformer';
 
 export class MonitorTimelineDto {
-	@ApiProperty({ example: new Date() })
-	timestamp: Date;
+	@Expose() timestamp: Date;
 
-	@ApiProperty({ example: '100.000%' })
-	uptime: string;
+	/** @example 100.000% */
+	@Expose() uptime: string;
 
-	@ApiProperty({ example: SiteStatus.UP, enum: SiteStatus })
+	@Expose()
+	@ApiProperty({
+		example: SiteStatus.UP,
+		enum: SiteStatus,
+		enumName: 'SiteStatus',
+	})
 	status: SiteStatus;
 }

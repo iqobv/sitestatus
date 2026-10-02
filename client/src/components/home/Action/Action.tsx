@@ -13,8 +13,8 @@ export const Action = () => {
 				}}
 				textAlign="center"
 			/>
-			<Button href={CROSS_DOMAIN_ROUTES.APP_REGISTER} asNative>
-				CREATE FREE ACCOUNT
+			<Button asChild>
+				<a href={CROSS_DOMAIN_ROUTES.APP_REGISTER}>CREATE FREE ACCOUNT</a>
 			</Button>
 		</div>
 	);

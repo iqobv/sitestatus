@@ -1,4 +1,3 @@
-import { UserRole } from '@generated/postgres/enums';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@libs/constants';
 import {
 	ApiErrorResponse,
@@ -7,19 +6,17 @@ import {
 import { Auth } from '@libs/decorators/auth.decorator';
 import { Authorized } from '@libs/decorators/authorized.decorator';
 import { MessageResponse } from '@libs/types/messages/message-detail.types';
-import { clearAuthCookies } from '@libs/utils/cookie.util';
 import {
 	Body,
 	Controller,
 	Delete,
 	HttpStatus,
 	Patch,
-	Post,
 	Res,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
+import { CookieService } from '../auth/cookie/cookie.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserWithoutPasswordDto } from './dto/user.dto';
 import { UserService } from './user.service';
@@ -29,14 +26,11 @@ import { UserService } from './user.service';
 export class UserController {
 	constructor(
 		private readonly userService: UserService,
-		private readonly configService: ConfigService,
+		private readonly cookieService: CookieService,
 	) {}
 
+	/** Update user information */
 	@Auth()
-	@ApiOperation({
-		summary: 'Update user information',
-		description: 'Updates the information of an existing user',
-	})
 	@ApiOkResponse({ type: UserWithoutPasswordDto })
 	@ApiErrorResponse(HttpStatus.CONFLICT, ERROR_MESSAGES.USER.ALREADY_EXISTS)
 	@ApiErrorResponse(HttpStatus.NOT_FOUND, [
@@ -51,11 +45,8 @@ export class UserController {
 		return await this.userService.update(userId, dto);
 	}
 
+	/** Remove user account */
 	@Auth()
-	@ApiOperation({
-		summary: 'Delete user account',
-		description: 'Deletes a user account permanently',
-	})
 	@ApiSuccessResponse(HttpStatus.OK, SUCCESS_MESSAGES.USER.DELETED)
 	@ApiErrorResponse(HttpStatus.NOT_FOUND, [
 		ERROR_MESSAGES.USER.NOT_FOUND,
@@ -68,14 +59,8 @@ export class UserController {
 	): Promise<MessageResponse> {
 		await this.userService.removeAccount(userId);
 
-		clearAuthCookies(res, this.configService);
+		this.cookieService.clearAuthCookies(res);
 
 		return SUCCESS_MESSAGES.USER.DELETED;
-	}
-
-	@Auth(UserRole.ADMIN)
-	@Post('initial-data')
-	public async createInitialDataForRegisteredUser(): Promise<void> {
-		return await this.userService.createInitialDataForRegisteredUser();
 	}
 }

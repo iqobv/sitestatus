@@ -1,5 +1,18 @@
 # Client changelog
 
+## [0.3.1] - 2026-10-02
+
+### Added
+
+- Added `manifest.ts`.
+- Added meta icons for the app.
+- Added environment variables validation.
+
+### Changed
+
+- Removed server-side prefetching from private pages.
+- Updated `robots.ts` and `sitemap.ts`.
+
 ## [0.3.0] - 2026-06-25
 
 ### Added

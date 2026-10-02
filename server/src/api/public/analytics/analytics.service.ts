@@ -1,6 +1,6 @@
-import { StatPeriod } from '@generated/turso/enums';
+import { StatPeriod } from '@generated/engine/enums';
+import { EnginePrismaService } from '@infra/prisma/engine-prisma.service';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
-import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
 import { ERROR_MESSAGES } from '@libs/constants';
 import { CalculateLogs } from '@libs/types/calculate-logs.types';
 import { calculateErrorRate } from '@libs/utils/calculates/calculate-error-rate.util';
@@ -8,6 +8,7 @@ import { calculateP95 } from '@libs/utils/calculates/calculate-p95.util';
 import { calculateResponseTime } from '@libs/utils/calculates/calculate-response-time.util';
 import { calculateUptime } from '@libs/utils/calculates/calculate-uptime.util';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import { AnalyticsQueryDto } from './dto/analytics-query.dto';
 import { AnalyticsStatisticsDto } from './dto/analytics-statistics.dto';
 import { AnalyticsDto } from './dto/analytics.dto';
@@ -16,7 +17,7 @@ import { AnalyticsDto } from './dto/analytics.dto';
 export class AnalyticsService {
 	constructor(
 		private readonly prismaService: PgPrismaService,
-		private readonly tursoPrismaService: TursoPrismaService,
+		private readonly enginePrismaService: EnginePrismaService,
 	) {}
 
 	public async getAnalyticsByMonitorId(
@@ -50,13 +51,13 @@ export class AnalyticsService {
 			regionId = foundRegion.id;
 		}
 
-		const incidents = await this.tursoPrismaService.monitorIncident.findMany({
+		const incidents = await this.enginePrismaService.monitorIncident.findMany({
 			where: { monitorId, regionId },
 			orderBy: { createdAt: 'desc' },
 		});
 
 		if (daysRange <= 1) {
-			const rawLogs = await this.tursoPrismaService.monitorLog.findMany({
+			const rawLogs = await this.enginePrismaService.monitorLog.findMany({
 				where: { monitorId, createdAt: { gte: startDate }, regionId },
 				select: {
 					status: true,
@@ -69,18 +70,20 @@ export class AnalyticsService {
 
 			const statistics = this.calculateStatistics(rawLogs);
 
-			return {
+			const result: AnalyticsDto = {
 				period: 'RAW',
 				statistics,
 				incidents,
 				data: rawLogs,
 			};
+
+			return plainToInstance(AnalyticsDto, result);
 		}
 
 		const periodToFetch = daysRange <= 7 ? StatPeriod.HOURLY : StatPeriod.DAILY;
 
-		const aggregatedStats = await this.tursoPrismaService.monitorStats.findMany(
-			{
+		const aggregatedStats =
+			await this.enginePrismaService.monitorStats.findMany({
 				where: {
 					monitorId,
 					period: periodToFetch,
@@ -95,17 +98,18 @@ export class AnalyticsService {
 					status: true,
 					regionId: true,
 				},
-			},
-		);
+			});
 
 		const statistics = this.calculateStatistics(aggregatedStats);
 
-		return {
+		const result: AnalyticsDto = {
 			period: periodToFetch,
 			statistics,
 			incidents,
 			data: aggregatedStats,
 		};
+
+		return plainToInstance(AnalyticsDto, result);
 	}
 
 	private calculateStatistics(logs: CalculateLogs): AnalyticsStatisticsDto {
@@ -114,11 +118,13 @@ export class AnalyticsService {
 		const errorRate = calculateErrorRate(logs);
 		const responseTime = calculateResponseTime(logs);
 
-		return {
+		const result: AnalyticsStatisticsDto = {
 			p95,
 			uptime,
 			errorRate,
 			responseTime,
 		};
+
+		return plainToInstance(AnalyticsStatisticsDto, result);
 	}
 }

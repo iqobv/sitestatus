@@ -1,6 +1,6 @@
 'use client';
 
-import { Table } from '@/components/ui';
+import { Pagination, Table } from '@/components/ui';
 import { useTablePagination } from '@/hooks/useTablePagination.hook';
 import { useTableSorting } from '@/hooks/useTableSorting.hook';
 import { Project } from '@/types/project/project.types';
@@ -30,19 +30,26 @@ export const ProjectsTable = ({ projects, totalPages }: ProjectsTableProps) => {
 	});
 
 	return (
-		<Table
-			columns={PROJECTS_TABLE_COLUMNS}
-			data={projects}
-			manualPagination
-			manualSorting
-			state={{
-				pagination,
-				sorting,
-			}}
-			onPaginationChange={handlePaginationChange}
-			onSortingChange={handleSortingChange}
-			pageCount={totalPages}
-			getCoreRowModel={getCoreRowModel()}
-		/>
+		<>
+			<Table
+				columns={PROJECTS_TABLE_COLUMNS}
+				data={projects}
+				manualPagination
+				manualSorting
+				state={{
+					pagination,
+					sorting,
+				}}
+				onPaginationChange={handlePaginationChange}
+				onSortingChange={handleSortingChange}
+				pageCount={totalPages}
+				getCoreRowModel={getCoreRowModel()}
+			/>
+			<Pagination
+				currentPage={page + 1}
+				totalPages={totalPages}
+				onPageChange={(newPage) => setFilters({ page: newPage - 1 })}
+			/>
+		</>
 	);
 };

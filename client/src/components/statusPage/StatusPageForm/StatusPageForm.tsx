@@ -6,6 +6,7 @@ import {
 	FormActions,
 	FormField,
 	FormProps,
+	FormReset,
 	FormSubmit,
 	Textarea,
 	TextField,
@@ -86,6 +87,7 @@ export const StatusPageForm = <D extends FieldValues>({
 								}
 							/>
 							<FormActions className={styles.formActions}>
+								<FormReset disabledOnEmpty>Reset</FormReset>
 								<FormSubmit disabledOnEmpty>Save</FormSubmit>
 							</FormActions>
 						</>

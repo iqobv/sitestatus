@@ -1,4 +1,4 @@
-import { pxToRem } from '@/hooks/fromPxToRem.util';
+import { pxToRem } from '@/utils/fromPxToRem.util';
 import clsx from 'clsx';
 import { Typography } from '../Typography/Typography';
 import styles from './SectionHeader.module.scss';

@@ -1,0 +1,39 @@
+@use './input-styles' as *;
+
+@mixin trigger {
+	@include input-base;
+
+	display: flex;
+	flex-direction: row;
+	gap: var(--gap);
+	align-items: center;
+	justify-content: space-between;
+	font-size: 1rem;
+	cursor: pointer;
+
+	&:focus {
+		border-color: var(--input-border-focus);
+		outline: 1px solid var(--input-border-focus);
+	}
+
+	&[aria-disabled='true'] {
+		opacity: 0.6;
+		pointer-events: none;
+	}
+
+	button[data-state='open'],
+	&[data-state='open'] {
+		.icon {
+			transform: rotate(180deg);
+		}
+	}
+
+	.placeholder {
+		color: var(--select-placeholder-text);
+	}
+
+	.icon {
+		transition: transform 0.3s ease;
+		transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+	}
+}

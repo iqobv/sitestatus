@@ -1,5 +1,6 @@
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { Injectable } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import { RegionDto } from './dto/region.dto';
 
 @Injectable()
@@ -7,9 +8,11 @@ export class RegionService {
 	constructor(private readonly prismaService: PgPrismaService) {}
 
 	public async getAllActiveRegions(): Promise<RegionDto[]> {
-		return await this.prismaService.region.findMany({
+		const regions = await this.prismaService.region.findMany({
 			where: { isActive: true },
 		});
+
+		return plainToInstance(RegionDto, regions);
 	}
 
 	public async isRegionsActive(regionIds: string[]): Promise<boolean> {

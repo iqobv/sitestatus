@@ -8,6 +8,7 @@ import {
 	Injectable,
 	NotFoundException,
 } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import { AlertSettingsService } from '../alert-settings/alert-settings.service';
 import { NotificationChannelService } from '../notification-channel/notification-channel.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -25,7 +26,7 @@ export class UserService {
 	public async create(
 		dto: CreateUserDto,
 		tx?: Prisma.TransactionClient,
-	): Promise<UserDto> {
+	): Promise<UserWithoutPasswordDto> {
 		const { email, password, ...rest } = dto;
 
 		const prisma = tx || this.prismaService;
@@ -62,7 +63,7 @@ export class UserService {
 			tx,
 		);
 
-		return user;
+		return plainToInstance(UserWithoutPasswordDto, user);
 	}
 
 	public async findById(
@@ -105,7 +106,7 @@ export class UserService {
 		if (user.deletedAt)
 			throw new NotFoundException(ERROR_MESSAGES.USER.DELETED);
 
-		return user;
+		return plainToInstance(full ? UserDto : UserWithoutPasswordDto, user);
 	}
 
 	public async findByEmail(
@@ -152,7 +153,7 @@ export class UserService {
 				throw new NotFoundException(ERROR_MESSAGES.USER.DELETED);
 		}
 
-		return user;
+		return plainToInstance(full ? UserDto : UserWithoutPasswordDto, user);
 	}
 
 	public async update(
@@ -176,7 +177,7 @@ export class UserService {
 			select: userSelect,
 		});
 
-		return updatedUser;
+		return plainToInstance(UserWithoutPasswordDto, updatedUser);
 	}
 
 	public async updateInternal(
@@ -202,7 +203,7 @@ export class UserService {
 			select: userSelect,
 		});
 
-		return updatedUser;
+		return plainToInstance(UserWithoutPasswordDto, updatedUser);
 	}
 
 	public async removeAccount(userId: string): Promise<void> {
@@ -214,34 +215,6 @@ export class UserService {
 		});
 
 		await this.prismaService.session.deleteMany({ where: { userId: user.id } });
-	}
-
-	public async createInitialDataForRegisteredUser(): Promise<void> {
-		return await this.prismaService.$transaction(async (tx) => {
-			const usersWithoutChannels = await tx.user.findMany({
-				where: {
-					notificationChannels: { none: {} },
-					deletedAt: null,
-				},
-			});
-
-			for (const user of usersWithoutChannels) {
-				const primaryChannel =
-					await this.notificationChannelService.initPrimaryNotificationChannel(
-						user.id,
-						user.email,
-						tx,
-					);
-
-				await this.alertSettingsService.upsertSettings(
-					user.id,
-					{
-						channelIds: [primaryChannel.id],
-					},
-					tx,
-				);
-			}
-		});
 	}
 
 	private async alreadyExists(

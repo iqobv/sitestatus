@@ -1,4 +1,4 @@
-import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
+import { EnginePrismaService } from '@infra/prisma/engine-prisma.service';
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { CACHE_EMIT_EVENTS } from '../constants/emit-events.constants';
@@ -12,7 +12,7 @@ import { MonitorCacheService } from '../services/monitor-cache.service';
 export class CacheListener {
 	constructor(
 		private readonly cacheService: MonitorCacheService,
-		private readonly tursoPrismaService: TursoPrismaService,
+		private readonly enginePrismaService: EnginePrismaService,
 	) {}
 
 	@OnEvent(CACHE_EMIT_EVENTS.MONITOR.UPDATED)
@@ -31,7 +31,7 @@ export class CacheListener {
 		this.cacheService.removeMonitor(id);
 
 		try {
-			await this.tursoPrismaService.monitorState.delete({
+			await this.enginePrismaService.monitorState.delete({
 				where: { monitorId: id },
 			});
 		} catch {

@@ -1,5 +1,6 @@
 import { Button, SectionHeader } from '@/components/ui';
 import { PRIVATE_PAGES } from '@/config/privatePages.config';
+import Link from 'next/link';
 import { MdCheckCircleOutline } from 'react-icons/md';
 import { NotificationChannelsVerifyWrapper } from './NotificationChannelsVerifyWrapper';
 
@@ -13,8 +14,10 @@ export const NotificationChannelsVerifySuccess = () => {
 				description="Your notification channel has been successfully confirmed"
 				textAlign="center"
 			/>
-			<Button href={PRIVATE_PAGES.SETTINGS.ALERTING}>
-				Go back to alerting settings
+			<Button asChild>
+				<Link href={PRIVATE_PAGES.SETTINGS.ALERTING}>
+					Go back to alerting settings
+				</Link>
 			</Button>
 		</NotificationChannelsVerifyWrapper>
 	);

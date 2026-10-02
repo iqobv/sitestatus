@@ -2,7 +2,6 @@
 	border-radius: var(--border-radius);
 	display: flex;
 	align-items: center;
-	justify-content: center;
 	border: 1px solid transparent;
 	cursor: pointer;
 	transition: all 0.2s ease-in-out;
@@ -13,4 +12,12 @@
 	&:focus-visible {
 		outline: none;
 	}
+}
+
+.loader {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
 }

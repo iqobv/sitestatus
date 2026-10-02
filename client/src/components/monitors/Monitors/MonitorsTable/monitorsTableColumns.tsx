@@ -4,6 +4,7 @@ import { FullMonitor } from '@/types/monitors/monitor.types';
 import { ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import Link from 'next/link';
 
 dayjs.extend(relativeTime);
 
@@ -50,12 +51,10 @@ export const MONITOR_COLUMNS: ColumnDef<FullMonitor>[] = [
 		accessorKey: 'details',
 		enableSorting: false,
 		cell: (props) => (
-			<Button
-				variant="link"
-				size="sm"
-				href={PRIVATE_PAGES.MONITORS.ONE(props.row.original.id)}
-			>
-				View Details
+			<Button variant="link" size="sm" asChild>
+				<Link href={PRIVATE_PAGES.MONITORS.ONE(props.row.original.id)}>
+					View Details
+				</Link>
 			</Button>
 		),
 	},

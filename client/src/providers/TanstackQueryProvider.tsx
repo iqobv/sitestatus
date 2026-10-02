@@ -1,65 +1,29 @@
 'use client';
 
-import { AUTH_PAGES } from '@/config/authPages.config';
-import { useUserStore } from '@/store/user.store';
-import {
-	MutationCache,
-	QueryCache,
-	QueryClient,
-	QueryClientProvider,
-} from '@tanstack/react-query';
-import { AxiosError } from 'axios';
-import { useRouter } from 'next/navigation';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { PropsWithChildren, useState } from 'react';
+
+const nonRetryStatuses = [401, 403, 404];
 
 export const TanstackQueryProvider = ({
 	children,
 }: PropsWithChildren<unknown>) => {
-	const router = useRouter();
-
 	const [client] = useState(
 		() =>
 			new QueryClient({
-				queryCache: new QueryCache({
-					onError: (error: unknown) => {
-						if (error instanceof AxiosError && error.response?.status === 401) {
-							useUserStore.getState().removeUser();
-							router.push(AUTH_PAGES.LOGIN);
-						}
-					},
-				}),
-				mutationCache: new MutationCache({
-					onError: (error: unknown) => {
-						if (error instanceof AxiosError && error.response?.status === 401) {
-							useUserStore.getState().removeUser();
-							router.push(AUTH_PAGES.LOGIN);
-						}
-					},
-				}),
 				defaultOptions: {
 					queries: {
 						refetchOnWindowFocus: false,
 						refetchOnMount: true,
 						retry: (failureCount, error) => {
-							if (
-								error instanceof AxiosError &&
-								error.response?.status === 401
-							) {
-								return false;
+							if (isAxiosError(error)) {
+								const status = error.response?.status;
+
+								if (status && nonRetryStatuses.includes(status)) return false;
 							}
-							if (
-								error instanceof AxiosError &&
-								error.response?.status === 404
-							) {
-								return false;
-							}
-							if (
-								error instanceof AxiosError &&
-								error.response?.status === 429
-							) {
-								return false;
-							}
-							return failureCount < 3;
+
+							return failureCount < 4;
 						},
 					},
 				},

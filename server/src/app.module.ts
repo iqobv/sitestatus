@@ -2,14 +2,16 @@ import { ApiModule } from '@api/api.module';
 import { InfraModule } from '@infra/infra.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { SentryGlobalFilter, SentryModule } from '@sentry/nestjs/setup';
 import { AppController } from './app.controller';
 
 @Module({
 	imports: [
 		ConfigModule.forRoot({ isGlobal: true }),
+		SentryModule.forRoot(),
 		ThrottlerModule.forRoot([
 			{ name: 'short', ttl: 1000, limit: 20 },
 			{ name: 'default', ttl: 60000, limit: 200 },
@@ -22,6 +24,10 @@ import { AppController } from './app.controller';
 		{
 			provide: APP_GUARD,
 			useClass: ThrottlerGuard,
+		},
+		{
+			provide: APP_FILTER,
+			useClass: SentryGlobalFilter,
 		},
 	],
 	controllers: [AppController],

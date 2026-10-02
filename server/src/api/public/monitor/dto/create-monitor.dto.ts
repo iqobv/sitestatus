@@ -1,9 +1,11 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { Method } from '@libs/types/method.types';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
 	ArrayNotEmpty,
 	IsArray,
 	IsBoolean,
+	IsEnum,
 	IsNumber,
 	IsOptional,
 	IsString,
@@ -40,6 +42,15 @@ export class CreateMonitorDto {
 	@IsUUID('4')
 	@Transform(({ value }) => (value === '' ? undefined : String(value)))
 	projectId?: string;
+
+	@ApiPropertyOptional({
+		enumName: 'Method',
+		enum: Method,
+		example: Method.GET,
+	})
+	@IsOptional()
+	@IsEnum(Method)
+	method?: Method;
 
 	@ApiProperty({
 		example: [

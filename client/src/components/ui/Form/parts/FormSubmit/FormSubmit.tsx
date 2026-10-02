@@ -1,16 +1,16 @@
 'use client';
 
 import { Button } from '@/components/ui/Button/Button';
-import { ButtonBaseProps } from '@/components/ui/Button/Button.types';
+import { ButtonProps } from '@/components/ui/Button/Button.types';
 import React, { ComponentPropsWithRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-export type FormSubmitButtonProps = Omit<
-	ButtonBaseProps,
-	'type' | 'href' | 'children'
->;
+export type FormSubmitButtonProps = Omit<ButtonProps, 'type' | 'children'>;
 
-export interface FormSubmitProps extends ComponentPropsWithRef<'button'> {
+export interface FormSubmitProps extends Omit<
+	ComponentPropsWithRef<'button'>,
+	'color'
+> {
 	buttonProps?: FormSubmitButtonProps;
 	disabledOnEmpty?: boolean;
 }
@@ -27,13 +27,9 @@ export const FormSubmit = ({
 		formState: { isDirty },
 	} = useFormContext();
 
-	const handleClick = (
-		e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>,
-	) => {
+	const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
 		if (buttonProps?.onClick) {
-			buttonProps.onClick(
-				e as unknown as React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>,
-			);
+			buttonProps.onClick(e as unknown as React.MouseEvent<HTMLButtonElement>);
 		}
 		if (injectedOnClick) {
 			if (e.currentTarget instanceof HTMLButtonElement) {

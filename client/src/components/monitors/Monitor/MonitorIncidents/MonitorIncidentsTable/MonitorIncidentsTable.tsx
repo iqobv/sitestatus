@@ -8,6 +8,7 @@ import { useTransformSecondsToHours } from '@/hooks/useTransformSecondsToHours.h
 import { Incident } from '@/types/incident/incident.types';
 import { useQuery } from '@tanstack/react-query';
 import { getCoreRowModel } from '@tanstack/react-table';
+import Link from 'next/link';
 import { MonitorIncidentsLoader } from '../MonitorIncidentsLoader';
 import { MonitorIncidentStatus } from '../MonitorIncidentStatus/MonitorIncidentStatus';
 import styles from './MonitorIncidentsTable.module.scss';
@@ -105,12 +106,15 @@ export const MonitorIncidentsTable = ({
 					cell: ({ row }) => {
 						const data = row.original;
 						return (
-							<Button
-								href={PRIVATE_PAGES.MONITORS.INCIDENT(data.monitorId, data.id)}
-								fullWidth
-								variant="link"
-							>
-								View Details
+							<Button asChild fullWidth variant="link">
+								<Link
+									href={PRIVATE_PAGES.MONITORS.INCIDENT(
+										data.monitorId,
+										data.id,
+									)}
+								>
+									View Details
+								</Link>
 							</Button>
 						);
 					},

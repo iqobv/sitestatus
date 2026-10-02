@@ -1,30 +1,36 @@
-import { Prisma } from '@generated/postgres/client';
+import { Prisma, UserProvider } from '@generated/postgres/client';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
+import { userSelect } from '@libs/prisma/user-select.prisma';
 import { Injectable } from '@nestjs/common';
 import { CreateUserProviderDto } from './dto/create-user-provider.dto';
+import { UserProviderWithUserDto } from './dto/user-provider.dto';
 
 @Injectable()
 export class UserProviderService {
 	constructor(private readonly prismaService: PgPrismaService) {}
 
-	async findByProviderAndProviderId(
+	public async findByProviderAndProviderId(
 		provider: string,
 		providerId: string,
 		tx?: Prisma.TransactionClient,
-	) {
+	): Promise<UserProviderWithUserDto | null> {
 		const prisma = tx ?? this.prismaService;
 
 		return await prisma.userProvider.findUnique({
 			where: { provider_providerId: { provider, providerId } },
-			include: { user: true },
+			include: {
+				user: {
+					select: userSelect,
+				},
+			},
 		});
 	}
 
-	async findByUserIdAndProvider(
+	public async findByUserIdAndProvider(
 		userId: string,
 		provider: string,
 		tx?: Prisma.TransactionClient,
-	) {
+	): Promise<UserProviderWithUserDto | null> {
 		const prisma = tx ?? this.prismaService;
 
 		return await prisma.userProvider.findUnique({
@@ -33,7 +39,10 @@ export class UserProviderService {
 		});
 	}
 
-	async create(dto: CreateUserProviderDto, tx?: Prisma.TransactionClient) {
+	public async create(
+		dto: CreateUserProviderDto,
+		tx?: Prisma.TransactionClient,
+	): Promise<UserProvider> {
 		const { provider, providerId, userId } = dto;
 
 		const prisma = tx ?? this.prismaService;

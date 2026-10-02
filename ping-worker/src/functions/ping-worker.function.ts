@@ -1,11 +1,12 @@
 import { app, InvocationContext } from '@azure/functions';
 import { ServiceBusClient, ServiceBusSender } from '@azure/service-bus';
+import { z } from 'zod';
 import { getConfig } from '../config/env.js';
-import { MonitorTask } from '../types/monitor-task.types.js';
+import { monitorTaskSchema } from '../schemas/monitor-task.schema.js';
+import { performPing } from '../services/pinger.service.js';
 import { PingResultPayload } from '../types/ping-result-payload.types.js';
 
 const config = getConfig();
-
 const sbClient = new ServiceBusClient(config.serviceBusConnectionString);
 const resultSender: ServiceBusSender = sbClient.createSender('monitor-results');
 
@@ -13,48 +14,38 @@ export async function processPingTask(
 	message: unknown,
 	context: InvocationContext,
 ): Promise<void> {
-	const payload = message as MonitorTask;
-	const { region } = config;
-	const startTime = Date.now();
+	const parsedMessage = monitorTaskSchema.safeParse(message);
+
+	if (!parsedMessage.success) {
+		context.error(
+			'Invalid message payload received',
+			z.treeifyError(parsedMessage.error),
+		);
+		throw new Error('Message validation failed');
+	}
+
+	const { monitorId, url, method } = parsedMessage.data;
+
+	const pingResult = await performPing({ url, method });
+
+	const result: PingResultPayload = {
+		monitorId,
+		region: config.region,
+		status: pingResult.status,
+		statusCode: pingResult.statusCode,
+		responseTimeMs: pingResult.responseTimeMs,
+		errorMessage: pingResult.errorMessage,
+	};
 
 	try {
-		const response = await fetch(payload.url, { method: payload.method });
-		const duration = Date.now() - startTime;
-
-		const result: PingResultPayload = {
-			monitorId: payload.monitorId,
-			status: response.ok ? 'UP' : 'DOWN',
-			errorMessage: response.statusText === 'OK' ? null : response.statusText,
-			responseTimeMs: duration,
-			statusCode: response.status,
-			region,
-		};
-
 		await resultSender.sendMessages({
 			body: result,
 			contentType: 'application/json',
 		});
 	} catch (error: unknown) {
-		const duration = Date.now() - startTime;
-		let errorMessage = 'Unknown error';
-
-		if (error instanceof Error) {
-			errorMessage = error.message;
-		}
-
-		const result: PingResultPayload = {
-			monitorId: payload.monitorId,
-			status: 'DOWN',
-			responseTimeMs: duration,
-			errorMessage,
-			statusCode: 0,
-			region,
-		};
-
-		await resultSender.sendMessages({
-			body: result,
-			contentType: 'application/json',
-		});
+		const errorMsg = error instanceof Error ? error.message : String(error);
+		context.error('Failed to send monitor result to Service Bus', errorMsg);
+		throw new Error(`Service Bus send failure: ${errorMsg}`);
 	}
 }
 

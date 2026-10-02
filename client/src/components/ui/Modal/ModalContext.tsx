@@ -1,23 +1,12 @@
-'use client';
-
 import { createContext, useContext } from 'react';
+import { ModalContextType } from './Modal.types';
 
-interface ModalContextType {
-	open: boolean;
-	onOpen: () => void;
-	onClose: () => void;
-}
+export const ModalContext = createContext<ModalContextType | null>(null);
 
-export const ModalContext = createContext<ModalContextType | undefined>(
-	undefined,
-);
-
-export const useModalContext = (componentName: string) => {
+export const useModalContext = () => {
 	const context = useContext(ModalContext);
 
-	if (!context) {
-		throw new Error(`${componentName} must be used within <Modal />`);
-	}
+	if (!context) throw new Error('useModalContext must be used within a Modal');
 
 	return context;
 };

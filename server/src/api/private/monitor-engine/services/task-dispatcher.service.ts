@@ -3,7 +3,7 @@ import {
 	ServiceBusMessage,
 	ServiceBusSender,
 } from '@azure/service-bus';
-import { TursoPrismaService } from '@infra/prisma/turso-prisma.service';
+import { EnginePrismaService } from '@infra/prisma/engine-prisma.service';
 import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import { Interval } from '@nestjs/schedule';
 import { MonitorCacheService } from './monitor-cache.service';
@@ -15,7 +15,7 @@ export class TaskDispatcherService implements OnModuleDestroy {
 
 	constructor(
 		private readonly sbClient: ServiceBusClient,
-		private readonly prismaService: TursoPrismaService,
+		private readonly prismaService: EnginePrismaService,
 		private readonly monitorCache: MonitorCacheService,
 	) {}
 
@@ -55,6 +55,7 @@ export class TaskDispatcherService implements OnModuleDestroy {
 		const monitorStatesToUpdate: {
 			monitorId: string;
 			nextCheckAt: number;
+			method: string;
 		}[] = [];
 
 		for (const monitor of monitors) {
@@ -85,6 +86,7 @@ export class TaskDispatcherService implements OnModuleDestroy {
 				monitorStatesToUpdate.push({
 					monitorId: monitor.id,
 					nextCheckAt: nextRun,
+					method: monitor.method,
 				});
 			}
 		}

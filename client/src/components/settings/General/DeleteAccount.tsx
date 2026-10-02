@@ -31,7 +31,7 @@ export const DeleteAccount = () => {
 			description="Are you sure you want to delete your account? You will lose all your data. You will have 7 days to recover your account after deletion. After that, all your data will be permanently deleted."
 			confirmButtonText="Delete"
 			trigger={
-				<Button variant="danger" fullWidth>
+				<Button color="danger" fullWidth>
 					Delete
 				</Button>
 			}

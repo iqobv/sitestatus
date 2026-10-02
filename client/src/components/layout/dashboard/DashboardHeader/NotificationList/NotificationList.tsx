@@ -5,7 +5,7 @@ import { markAllNotificationAsRead } from '@/api/notification/markAllNotificatio
 import {
 	Button,
 	Dropdown,
-	DropdownMenu,
+	DropdownContent,
 	DropdownTrigger,
 } from '@/components/ui';
 import { QUERY_KEYS } from '@/config/queryClient.config';
@@ -14,6 +14,8 @@ import {
 	useMutation,
 	useQueryClient,
 } from '@tanstack/react-query';
+import clsx from 'clsx';
+import { useState } from 'react';
 import { MdNotificationsNone } from 'react-icons/md';
 import styles from './NotificationList.module.scss';
 import { NotificationListItem } from './NotificationListItem/NotificationListItem';
@@ -21,6 +23,7 @@ import { NotificationListLoader } from './NotificationListLoader';
 
 export const NotificationList = () => {
 	const queryClient = useQueryClient();
+	const [isOpen, setIsOpen] = useState(false);
 
 	const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
 		useInfiniteQuery({
@@ -44,12 +47,6 @@ export const NotificationList = () => {
 		},
 	});
 
-	const handleOnClose = () => {
-		if (data && data.pages.some((page) => page.hasUnread)) {
-			markAllAsRead();
-		}
-	};
-
 	const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
 		const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
 
@@ -57,27 +54,32 @@ export const NotificationList = () => {
 			scrollHeight - scrollTop <= clientHeight + 10 &&
 			hasNextPage &&
 			!isFetchingNextPage
-		) {
+		)
 			fetchNextPage();
-		}
 	};
 
 	const hasUnread = data?.pages.some((page) => page.hasUnread) || false;
 
 	const items = data?.pages.flatMap((page) => page.notifications) || [];
 
+	const handleOpenChange = (open: boolean) => {
+		setIsOpen(open);
+
+		if (!open && hasUnread) markAllAsRead();
+	};
+
 	return (
-		<Dropdown onClose={handleOnClose}>
-			<DropdownTrigger>
+		<Dropdown open={isOpen} onOpenChange={handleOpenChange}>
+			<DropdownTrigger asChild>
 				<Button
 					variant="outlined"
 					isIcon
-					className={hasUnread ? styles.unread : ''}
+					className={clsx(hasUnread && styles.unread)}
 				>
 					<MdNotificationsNone size={20} />
 				</Button>
 			</DropdownTrigger>
-			<DropdownMenu onScroll={handleScroll}>
+			<DropdownContent onScroll={handleScroll}>
 				<div className={styles.list} onScroll={handleScroll}>
 					{isLoading && <NotificationListLoader />}
 					{items.length === 0 && (
@@ -91,7 +93,7 @@ export const NotificationList = () => {
 							/>
 						))}
 				</div>
-			</DropdownMenu>
+			</DropdownContent>
 		</Dropdown>
 	);
 };

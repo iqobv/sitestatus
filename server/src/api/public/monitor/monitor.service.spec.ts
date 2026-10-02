@@ -1,5 +1,5 @@
+import { SiteStatus } from '@generated/engine/enums';
 import { Monitor } from '@generated/postgres/client';
-import { SiteStatus } from '@generated/turso/enums';
 import { PgPrismaService } from '@infra/prisma/pg-prisma.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MonitorService } from './services/monitor.service';

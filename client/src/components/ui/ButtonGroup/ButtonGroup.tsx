@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import styles from './ButtonGroup.module.scss';
 
 interface ButtonGroupProps {
@@ -15,14 +16,9 @@ export const ButtonGroup = ({
 	gap = 0,
 	className,
 }: ButtonGroupProps) => {
-	const classNames = [styles.buttonGroup, gap === 0 && styles.noGap, className]
-		.filter(Boolean)
-		.join(' ')
-		.trim();
-
 	return (
 		<div
-			className={classNames}
+			className={clsx(styles.buttonGroup, gap === 0 && styles.noGap, className)}
 			style={
 				{
 					'--padding': `${padding}px`,

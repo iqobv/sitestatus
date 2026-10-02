@@ -35,7 +35,7 @@ export const MonitorFormProject = () => {
 	const options = data?.pages.flatMap((page) => page.data) || [];
 
 	return (
-		<Field>
+		<Field label="Project">
 			<FormCombobox<BaseProjectMonitorDto>
 				name="projectId"
 				control={control}

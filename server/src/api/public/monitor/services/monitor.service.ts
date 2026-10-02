@@ -43,9 +43,8 @@ export class MonitorService {
 		const isRegionsActive =
 			await this.regionService.isRegionsActive(safeRegions);
 
-		if (!isRegionsActive) {
+		if (!isRegionsActive)
 			throw new NotFoundException(ERROR_MESSAGES.REGION.NOT_FOUND);
-		}
 
 		const monitor = await this.pgPrismaService.$transaction(async (tx) => {
 			const createdMonitor = await tx.monitor.create({

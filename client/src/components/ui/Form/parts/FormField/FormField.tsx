@@ -2,7 +2,7 @@
 
 import { Field } from '@/components/ui/Field/Field';
 import clsx from 'clsx';
-import React, { cloneElement, ReactElement } from 'react';
+import React, { cloneElement, ReactElement, useId } from 'react';
 import { FieldValues, useController, useFormContext } from 'react-hook-form';
 import styles from './FormField.module.scss';
 import { FormFieldProps } from './FormField.types';
@@ -23,6 +23,8 @@ export const FormField = <D extends FieldValues>({
 		field,
 		fieldState: { error },
 	} = useController<D>({ name, control, disabled });
+	const generatedId = useId();
+	const finalId = id ?? generatedId;
 
 	if (!React.isValidElement(children)) {
 		throw new Error(
@@ -45,6 +47,7 @@ export const FormField = <D extends FieldValues>({
 			checked: isBooleanValue ? field.value : undefined,
 			value: isBooleanValue ? undefined : (field.value ?? ''),
 			...childProps,
+			id: finalId,
 			name,
 			onChange: (...args: unknown[]) => {
 				field.onChange(...args);
@@ -63,7 +66,7 @@ export const FormField = <D extends FieldValues>({
 			error={error?.message?.toString()}
 			required={required}
 			disabled={disabled}
-			id={id}
+			id={finalId}
 			className={clsx(hidden && styles.hidden, className)}
 			style={style}
 			hidden={hidden}

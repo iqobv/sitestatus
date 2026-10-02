@@ -11,7 +11,7 @@ export default async function EditMonitorPage({
 	const { id } = await params;
 
 	return (
-		<div className="container" style={{ paddingTop: 80, paddingBottom: 80 }}>
+		<div className="container">
 			<BackButton />
 			<SectionHeader
 				title="Edit Monitor"

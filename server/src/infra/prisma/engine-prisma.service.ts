@@ -19,6 +19,7 @@ export class EnginePrismaService
 
 		const pool = new Pool({
 			connectionString: cleanConnectionString,
+			ssl: false,
 		});
 
 		const adapter = new PrismaPg(pool);
